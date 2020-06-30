@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="ossys@localhost" uuid="d475ff27-9d0a-42c8-bc21-6b054a8755b1">
+    <data-source source="LOCAL" name="ossys dalin" uuid="8ca5661e-30bc-403f-a15f-e6a0e1069d9f">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>

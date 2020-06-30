@@ -242,9 +242,19 @@ class OeventController extends Controller
     /**
      * Display a listing of the resource.
      * @param null $year
+     * @param null $from (now, allyear)
      */
-    public function index_devel($year)
+    public function index_devel($year, $from)
     {
+
+        if ($from == 'now') {
+            $from_date = date("Y-m-d");
+        } elseif ( $from == 'year') {
+            $from_date = date("Y").'-01-01';
+        } else {
+            $from_date = '';
+        }
+
 
         $sports = Sport::get();
         $sports = Arr::pluck($sports, 'name', 'id');
@@ -261,6 +271,7 @@ class OeventController extends Controller
         $oevents = Oevent::with(array('legs' => function($query) {
             $query->orderBy('leg_datetime', 'ASC');
         })) ->whereYear('created_at', $year)
+            ->where('from_date', '>', $from_date)
             ->orderBy('from_date', 'asc')
             ->get();
 

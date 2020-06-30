@@ -44,25 +44,36 @@
                 </div>
             </div>
 
-            <div class="px-6 py-1 items-center">
+            <div class="px-6 py-1 items-center bg-gray-100">
 
                 <table class="table-fixed w-full">
 
                     <thead>
                     <tr>
-                        <th class="w-1/4 px-4 py-2">Datum</th>
-                        <th class="w-1/4 px-4 py-2">Název</th>
-                        <th class="w-1/4 px-4 py-2">Místo</th>
-                        <th class="w-1/4 px-4 py-2">Klub</th>
+                        <th class="px-1 py-2" style="width: 5px"></th>
+                        <th class="w-2/12 px-4 py-2">Datum</th>
+                        <th class="w-4/12 px-4 py-2">Název</th>
+                        <th class="w-4/12 px-4 py-2">Místo</th>
+                        <th class="w-2/12 px-4 py-2">Klub</th>
                     </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="oevent in filteredList" :key="oevent.id" class="border-b">
-                            <td class="px-4 py-2">{{ oevent.from_date | moment("DD.MM.YYYY") }}</td>
-                            <td class="px-4 py-2">{{ oevent.title }}</td>
-                            <td class="px-4 py-2">{{ oevent.place }}</td>
-                            <td class="px-4 py-2">
-                                <span v-for="(club, index) in oevent.clubs">{{ club }}, </span>
+                        <tr v-for="oevent in filteredList" :key="oevent.id">
+
+                            <td v-if="oevent.event_category === 1" class="bg-white rounded-l border-l-8 border-blue-500"></td>
+                            <td v-else-if="oevent.event_category === 2" class="bg-white rounded-l border-l-8 border-red-500"></td>
+                            <td v-else-if="oevent.event_category === 3" class="bg-white rounded-l border-l-8 border-blue-500"></td>
+                            <td v-else-if="oevent.event_category === 4" class="bg-white rounded-l border-l-8 border-blue-500"></td>
+                            <td v-else class="bg-white rounded-l border-l-8 border-gray-500"></td>
+
+                            <td class="px-4 py-2 bg-white">{{ oevent.from_date | moment("DD.MM.YYYY") }}</td>
+                            <td class="px-4 py-2 bg-white">
+                                <span v-if="oevent.is_canceled === 1" class="line-through text-gray-600">{{ oevent.title }}</span>
+                                <span v-else>{{ oevent.title }}</span>
+                            </td>
+                            <td class="px-4 py-2 bg-white">{{ oevent.place }}</td>
+                            <td class="px-4 py-2 bg-white rounded-r">
+                                <span v-for="(club, index) in oevent.clubs">{{ club }} </span>
                             </td>
                         </tr>
                     </tbody>
@@ -76,8 +87,11 @@
 </template>
 
 <script>
+
+    import moment from 'moment';
+
     export default {
-        props: ['events_in_year'],
+        props: ['events_in_year', 'is_canceled_show', 'list_limit', 'events_from'],
         data() {
             return {
                 oevents: [],
@@ -89,6 +103,7 @@
                 region: 0,
                 cat: 0,
                 flt_isCancel: 0,
+                flt_list: 10,
                 isToggled: false,
             }
         },
@@ -97,7 +112,7 @@
         },
         methods: {
             readOeventList(){
-                axios.get('/devel/oevents/json/listallinyear/'+this.events_in_year)
+                axios.get('/devel/oevents/json/listallinyear/'+this.events_in_year+'/'+this.events_from)
                     .then(response => {
                         this.oevents = response.data.oevents;
                         this.regions = response.data.regions;
@@ -111,6 +126,7 @@
 
                 let sportFilterArray = [];
                 let catFilterArray = [];
+                let listFilterArray = [];
 
                 // filter by sport
                 if (this.sport == 0) {
@@ -126,13 +142,25 @@
                     catFilterArray = sportFilterArray.filter(obj => obj.event_category == this.cat);
                 }
 
-                return catFilterArray;
+                // filter by num list
+                if (this.list_limit == 0) {
+                    listFilterArray = catFilterArray;
+                } else {
+                    listFilterArray = catFilterArray.slice(0, this.list_limit);
+                }
+
+
+                return listFilterArray;
 
                 //return this.oevents.filter(obj => obj.is_canceled === 1); //funguje
                 //return this.oevents.filter(obj => obj.clubs === 'ABM'); //funguje
 
                 //return this.oevents.filter(obj => obj.regions.includes(this.region) == 1);
                                 //return this.oevents;
+            },
+            testMoment: function(){
+
+                return moment('2010-10-20').isBefore('2010-10-21')
             }
         },
         filters: {
@@ -146,5 +174,13 @@
 
 
 </script>
+
+<style>
+    table {
+        border-collapse:separate;
+        border-spacing: 0 4px;
+    }
+</style>
+
 
 
