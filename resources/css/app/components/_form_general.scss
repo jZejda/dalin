@@ -1,0 +1,21 @@
+.form-input-full {
+  @apply appearance-none block w-full bg-gray-400 text-gray-800 border border-gray-400 rounded py-3 px-4 mb-3 leading-tight;
+}
+
+.form-input-full:hover {
+  @apply border-gray-600;
+}
+
+.form-input-full:focus {
+  @apply outline-none bg-white border-gray-500;
+}
+
+// manage error input somponent
+
+.form-focus-error {
+    @apply border-red-500 bg-white;
+}
+
+.form-label-error {
+    @apply inline text-red-500 text-xs italic ml-2 mb-2;
+}

@@ -1,0 +1,18 @@
+.oevent-card-text {
+        font-family: Oswald;
+        font-weight: 100;
+        src: url(../../fonts/oswald/Oswald-ExtraLight.ttf) format("ttf");
+}
+
+.oe-ribbon-corner {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 22px;
+    margin-right: -50px;
+    margin-top: 15px;
+    -ms-transform: rotate(45deg); /* IE 9 */
+    -webkit-transform: rotate(45deg); /* Safari prior 9.0 */
+    transform: rotate(45deg); /* Standard syntax */
+}

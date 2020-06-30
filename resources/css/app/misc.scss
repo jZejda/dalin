@@ -1,0 +1,10 @@
+.bg-smoke {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-box1 {
+  @apply fixed z-50 inset-0 overflow-auto flex;
+}
+
+.modal-remove {
+  @apply fixed z-50 inset-0 overflow-auto flex;
+}
