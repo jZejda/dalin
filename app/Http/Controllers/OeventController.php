@@ -237,6 +237,18 @@ class OeventController extends Controller
         return 'jede';
     }
 
+    public function event_leg_info($eventid, $legid)
+    {
+        $oevent = Oevent::where('id', '=', $eventid)->first();
+        
+        $legs = Oevent_leg::where('oevent_id', '=', $legid)->get();
+        dump($legs);
+
+
+
+        return view('admin.oevents.show', ['oevent' => $oevent, 'legs' => $legs]);
+    }
+
     // DEVEL classes
 
     /**

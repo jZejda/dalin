@@ -59,6 +59,7 @@ Route::prefix('admin')->group(function () {
     Route::resource('pages', 'PageController');
 
     Route::resource('oevents', 'OeventController');
+    Route::get('oevent/{eventid}/{legid}', 'OeventController@event_leg_info');
 
     Route::get('oevents/list/{year}/{from}', function() {
         return view('admin.oevents.index');
