@@ -23,6 +23,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('manage-category-component', require('./components/ManageCategoryComponent.vue').default);
 Vue.component('user-avatar-component', require('./components/UserAvatarComponent.vue').default);
 Vue.component('oevent-list-component', require('./components/OeventListComponent').default);
+Vue.component('private-news-dashboard-component', require('./components/PrivateNewsDashboardComponent.vue').default);
 
 //Modals
 Vue.component('delete-file-modal-component', require('./components/modals/DeleteFileModalComponent.vue').default);

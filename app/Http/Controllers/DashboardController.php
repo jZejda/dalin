@@ -45,4 +45,22 @@ class DashboardController extends Controller
 
         return view('admin.dashboard.index', ['last_posts' => $last_posts, 'user_posts' => $user_posts, 'user_pages' => $user_pages]);
     }
+
+    public function privatenews ()
+    {
+
+        $last_posts = \DB::table('posts')
+            ->where('private', '=', 1)
+            ->leftJoin('users', 'posts.user_id', '=', 'users.id')
+            ->select('posts.*', 'posts.title', 'posts.created_at', 'posts.private', 'users.name', 'users.avatar', 'users.email', 'users.color')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return response()->json([
+            'private_news' => $last_posts,
+        ], 200);
+
+
+    }
 }

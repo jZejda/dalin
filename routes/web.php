@@ -37,6 +37,7 @@ Route::prefix('admin')->group(function () {
     Route::get('discord/newpost', 'PostController@sendToDiscord');
 
     Route::get('/dashboard', 'DashboardController@index');
+    Route::get('/dashboard/json/privatenews', 'DashboardController@privatenews');
 
     Route::get('/post', 'PostController@index')->name('post');
 
@@ -58,6 +59,13 @@ Route::prefix('admin')->group(function () {
     Route::resource('pages', 'PageController');
 
     Route::resource('oevents', 'OeventController');
+
+    Route::get('oevents/list/{year}/{from}', function() {
+        return view('admin.oevents.index');
+    });
+    Route::get('oevents/json/listallinyear/{year}/{from}', 'OeventController@get_oevent_data_api');
+
+
     Route::resource('legs', 'OeventLegController');
     Route::get('legs/create/{oeventid}', 'OeventLegController@create')->name('legs.create.first');
 
@@ -79,10 +87,10 @@ Route::prefix('devel')->group(function () {
     Route::get('/ui/components', function () {
         return view('devel.ui.components');
     });
-    Route::get('oevents/{year}/{from}', function() {
-        return view('admin.oevents.index-devel');
-    });
-    Route::get('oevents/json/listallinyear/{year}/{from}', 'OeventController@index_devel');
+    //Route::get('oevents/{year}/{from}', function() {
+    //    return view('admin.oevents.index-devel');
+    //});
+    //Route::get('oevents/json/listallinyear/{year}/{from}', 'OeventController@index_devel');
 
 
 });

@@ -38,6 +38,19 @@
                 @include ('errors.list')
             </div>
 
+            <oevent-list-component
+                :events_in_year = "'2020'"
+                :events_from = "'now'"
+                :is_canceled_show = 1
+                :list_limit = 10
+            >
+            </oevent-list-component>
+
+            <private-news-dashboard-component
+                :list_limit = 0
+            >
+            </private-news-dashboard-component>
+
             <!-- Content main part -->
             <div class="px-6 py-4 bg-gray-200">
                 {{-- TODO if conten empty --}}

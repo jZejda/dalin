@@ -3,17 +3,6 @@
     <div class="flex-1 flex flex-row">
 
         <div class="w-full">
-            <div class="px-6 py-1 items-center h-12 bg-gray-200">
-
-                <div class="flex justify-between">
-
-                    <div class="flex justify-start">
-                        <h1 class="adm-h1">Akce</h1>
-                    </div>
-                    <div class="flex justify-start">
-                    </div>
-                </div>
-            </div>
 
             <div class="px-6 py-1 items-center bg-gray-200 border-b">
 
@@ -112,7 +101,7 @@
         },
         methods: {
             readOeventList(){
-                axios.get('/devel/oevents/json/listallinyear/'+this.events_in_year+'/'+this.events_from)
+                axios.get('/admin/oevents/json/listallinyear/'+this.events_in_year+'/'+this.events_from)
                     .then(response => {
                         this.oevents = response.data.oevents;
                         this.regions = response.data.regions;

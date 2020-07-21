@@ -32,35 +32,67 @@
                     <h1 class="adm-h1">Akce - {{ $oevent->title }}</h1>
                 </div>
                 <div class="flex justify-start">
-                    <a href="{{ URL::route('legs.create') }}/{{ $oevent->id }}" title="Přidej akci" class="btn-ico btn-ico-blue">
-                        <svg class="btn-ico-fater" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <a href="{{ URL::route('legs.create') }}/{{ $oevent->id }}" title="Přidej etapu" class="btn-ico btn-ico-blue">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-compass" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z"/>
+                            <polyline points="8 16 10 10 16 8 14 14 8 16" />
+                            <circle cx="12" cy="12" r="9" />
                         </svg>
                     </a>
                 </div>
             </div>
         </div>
 
-        <div class="px-4 py-4 mt-8">
 
-            <h3>Etapy</h3>
+        <!-- main content -->
+        <div class="flex">
+            <!-- Oevent Info -->
+            <div class="w-1/4">
+                <div class="px-4 py-4">
+                    <h1>{{ $oevent->title }}</h1>
+                    <ul>
+                        <li>{{ $oevent->place }}</li>
+                        <li>{{ $oevent->place }}</li>
+                        <li>{{ $oevent->from_date }}</li>
+                        <li>{{ $oevent->to_date }}</li>
+                    </ul>
 
-            @if(count($legs) > 0)
+                    <hr>
+                    <h3>Etapy</h3>
 
-                <p>ukazuje etapy</p>
-                @foreach($legs as $leg)
-                    <p>{{ $leg->title }}</p>
-                @endforeach
-            @else
-                <p>Ukazuje tlačítko na přídání etapy</p>
-            @endif
+                    @if(count($legs) > 0)
 
-            <div class="w-full px-1">
-                <a href="{{route ('legs.create',['oevent_id' => $oevent->id])}}" class="btn btn-blue-outline">Zpět</a>
+                        @foreach($legs as $leg)
+                            <p>{{ $leg->title }}</p>
+                            <p>{{ $leg->leg_datetime }}</p>
+                            <p>{{ $leg->lat }}</p>
+                            <p>{{ $leg->lon }}</p>
+
+                            <hr>
+                        @endforeach
+                    @else
+                        <p>Ukazuje tlačítko na přídání etapy</p>
+                        <a href="{{ URL::route('legs.create') }}/{{ $oevent->id }}" title="Přidej etapu" class="btn-ico btn-ico-blue">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-compass" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z"/>
+                                <polyline points="8 16 10 10 16 8 14 14 8 16" />
+                                <circle cx="12" cy="12" r="9" />
+                            </svg>
+                        </a>
+                    @endif
+
+
+
+
+                </div>
+
             </div>
-
-
-
+            <!-- Legs Info -->
+            <div class="w-3/4">
+                <div class="px-4 py-4">
+                    <p>fsdfsdf</p>
+                </div>
+            </div>
         </div>
+
 @endsection

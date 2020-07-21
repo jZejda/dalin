@@ -244,7 +244,7 @@ class OeventController extends Controller
      * @param null $year
      * @param null $from (now, allyear)
      */
-    public function index_devel($year, $from)
+    public function get_oevent_data_api($year, $from)
     {
 
         if ($from == 'now') {
