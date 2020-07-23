@@ -58,6 +58,11 @@ return [
             'root' => public_path('orisdata'),
             'visibility' => 'public',
         ],
+        'eventdata' => [
+            'driver' => 'local',
+            'root' => public_path('eventdata'),
+            'visibility' => 'public',
+        ],
 
         'public' => [
             'driver' => 'local',

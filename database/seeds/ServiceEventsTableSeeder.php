@@ -3,6 +3,8 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use App\Discipline;
+use App\Leg_links;
+use App\Oevent_link_type;
 use App\Region;
 use App\Sport;
 
@@ -168,6 +170,44 @@ class ServiceEventsTableSeeder extends Seeder
 
         Sport::create([
             'name'  => 'TRAIL',
+        ]);
+
+        //------------------------------------------------------------------------------------------------ Leg_link_type
+
+        Oevent_link_type::create([
+            'title' => 'Odkaz na přihlášky etapy',
+            'description' => 'Odkaz na externí html stránku příhlášek do etapy.',
+            'source' => 'url'
+        ]);
+        Oevent_link_type::create([
+            'title' => 'Odkaz na výsledky etapy',
+            'description' => 'Odkaz na externí html stránku výsledků etapy.',
+            'source' => 'url'
+        ]);
+        Oevent_link_type::create([
+            'title' => 'Odkaz na výsledky etapy s mezičasy',
+            'description' => 'Odkaz na externí html stránku výsledků etapy s mezičasy.',
+            'source' => 'url'
+        ]);
+        Oevent_link_type::create([
+            'title' => 'Odkaz na startovku - kategorie',
+            'description' => 'Odkaz na externí html stránku strártovky po kategoriích.',
+            'source' => 'url'
+        ]);
+        Oevent_link_type::create([
+            'title' => 'Odkaz na startovku - kluby',
+            'description' => 'Odkaz na externí html stránku strártovky po klubech.',
+            'source' => 'url'
+        ]);
+        Oevent_link_type::create([
+            'title' => 'Startovka etapy',
+            'description' => 'Odkaz na interní soubor xml iofv3, zpracuje do formátovaného tvaru',
+            'source' => 'iofv3_xml_file'
+        ]);
+        Oevent_link_type::create([
+            'title' => 'Výsledký etapy',
+            'description' => 'Odkaz na interní soubor xml iofv3, zpracuje do formátovaného tvaru',
+            'source' => 'iofv3_xml_file'
         ]);
     }
 }
