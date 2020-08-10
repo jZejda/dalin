@@ -74,9 +74,9 @@
                             <div class="flex justify-between">
                                 @php($clubs = $oevent->clubs)
                                 <span class="font-bold">
-                        @foreach($clubs as $club)
-                                        {{ $club }}
-                                    @endforeach
+                                @foreach($clubs as $club)
+                                            {{ $club }}
+                                @endforeach
 
                         </span>
                                 <span class="font-bold">
@@ -283,10 +283,6 @@
                             <a href="{{ url('https://bzl.zabiny.club/') }}" target="_blank" class="no-underline hover:underline text-white">BZL WEB</a>                            </div>
                     </div>
                     -->
-                    <div class="visible-print text-center">
-                        {!! QrCode::size(50)->generate('geo:-78.400364,-85.916993'); !!}
-                        <p>Scan me to return to the original page.</p>
-                    </div>
                     <div class="shadow-md">
                         <div class="font-sans container bg-gray-200 mx-auto pb-4 bg-cover rounded-t-sm"
                              style="color:#606F7B;background-color: rgb(165, 182, 198); background-image:url('images/app-default/object-background/forest-path-01.jpeg');">
@@ -294,18 +290,18 @@
                                 <div class="font-bold text-mb-2 text-gray-400 tracking-tight font-thin">
                                     <span>POŘÁDÁME</span>
                                 </div>
-                                <h2 class="text-white mt-2">5 JLL Uhřice</h2>
+                                <h2 class="text-white mt-2">10 JmL Kobeřice u Brna</h2>
                             </div>
                             <div class="px-6 py-4">
                                 <div class="text-gray-500 font-sans">
-                                    <div>13.06.2020</div>
-                                    <span>Uhřice kouplaliště</span>
+                                    <div>10.10.2020</div>
+                                    <span>Kobeřice hřiště</span>
                                 </div>
                             </div>
                         </div>
                         <div class="bg-green-500 px-6 py-2 text-center mb-4 text-white">
-                            <a href="{{ url('stranka/jll-2020-uhrice') }}" class="no-underline hover:underline text-white">WEB</a> |
-                            <a href="https://oris.orientacnisporty.cz/Zavod?id=5994" target="_blank" class="no-underline hover:underline text-white">ORIS</a>
+                            <a href="{{ url('stranka/10-jml-2020-koberice') }}" class="no-underline hover:underline text-white">WEB</a> |
+                            <a href="https://oris.orientacnisporty.cz/Zavod?id=6052" target="_blank" class="no-underline hover:underline text-white">ORIS</a>
                         </div>
                     </div>
 

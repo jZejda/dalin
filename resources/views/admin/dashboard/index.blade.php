@@ -46,29 +46,23 @@
             >
             </oevent-list-component>
 
-            <private-news-dashboard-component
-                :list_limit = 0
-            >
-            </private-news-dashboard-component>
+        </div>
 
-            <!-- Content main part -->
-            <div class="px-6 py-4 bg-gray-200">
-                {{-- TODO if conten empty --}}
-                <div class="container mx-auto html-content">
-                    <div class="px-6 pb-2 bg-white">
-                        @foreach ($last_posts as $post)
 
-                            <div class="md:flex bg-white p-2 app-front-content">
-                                    <div class="text-center md:text-left">
-                                        <h2 class="text-lg">{{ $post->title }}</h2>
-                                               <div class="text-gray-700 mb-2">{{ $post->editorial }}</div>
-                                        <div class="text-gray-900 text-left">{!! $post->content !!}</div>
-                                    </div>
-                            </div>
-                            <hr>
-                        @endforeach
+        <!-- Content main part -->
+        <div class="w-full">
+            {{-- TODO if conten empty --}}
+
+            <div class=" px-6 py-4 ">
+                @foreach ($last_posts as $post)
+                <div class="md:flex bg-white rounded p-6">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-lg">{{ $post->title }}</h2>
+                        <div class="text-gray-700 mb-2">{{ $post->editorial }}</div>
+                        <div class="text-gray-900">{!! $post->content !!}</div>
                     </div>
                 </div>
+                @endforeach
             </div>
         </div>
 
@@ -80,7 +74,7 @@
 
                 <div class="flex flex-col md:flex-row">
                     <div class="w-full md:w-1/2 flex">
-                        <div class="w-full p-4 rounded-lg bg-white mb-2 md:mr-2 md:mb-0">
+                        <div class="w-full p-4 rounded bg-white mb-2 md:mr-2 md:mb-0">
                             <h2 class="text-gray-800">Novinky</h2>
                             @if(count($user_posts) != 0)
                                 @foreach($user_posts as $user_post)
@@ -113,7 +107,7 @@
                         </div>
                     </div>
                     <div class="w-full md:w-1/2 flex">
-                    <div class="w-full p-4 rounded-lg bg-white md:ml-2">
+                    <div class="w-full p-4 rounded bg-white md:ml-2">
                         <h2 class="text-gray-800">Články</h2>
                         @if(count($user_pages) != 0)
                             @foreach($user_pages as $user_page)

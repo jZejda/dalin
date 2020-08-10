@@ -200,12 +200,12 @@ class ServiceEventsTableSeeder extends Seeder
             'source' => 'url'
         ]);
         Oevent_link_type::create([
-            'title' => 'Startovka etapy',
+            'title' => 'Startovka jedné etapy',
             'description' => 'Odkaz na interní soubor xml iofv3, zpracuje do formátovaného tvaru',
             'source' => 'iofv3_xml_file'
         ]);
         Oevent_link_type::create([
-            'title' => 'Výsledký etapy',
+            'title' => 'Výsledký jedné etapy',
             'description' => 'Odkaz na interní soubor xml iofv3, zpracuje do formátovaného tvaru',
             'source' => 'iofv3_xml_file'
         ]);
