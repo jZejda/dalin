@@ -20,7 +20,7 @@ class OeventController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('clearance'); //TODO dodelat prava
+        $this->middleware('clearance')->except('index', 'show');
     }
 
     /**

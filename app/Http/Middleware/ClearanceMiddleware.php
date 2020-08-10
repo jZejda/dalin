@@ -47,7 +47,7 @@ class ClearanceMiddleware
         * Oevent permission
         */
 
-        if ($request->is('admin/oevents')) {
+        if ($request->is('admin/oevents*')) {
             if (! Auth::user()->hasPermissionTo('Show Oevents')) {
                 abort('401');
             } else {
