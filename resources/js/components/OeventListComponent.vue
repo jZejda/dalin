@@ -49,10 +49,10 @@
                     <tbody>
                         <tr v-for="oevent in filteredList" :key="oevent.id">
 
-                            <td v-if="oevent.event_category === 1" class="bg-white rounded-l border-l-8 border-blue-500"></td>
-                            <td v-else-if="oevent.event_category === 2" class="bg-white rounded-l border-l-8 border-red-500"></td>
-                            <td v-else-if="oevent.event_category === 3" class="bg-white rounded-l border-l-8 border-blue-500"></td>
-                            <td v-else-if="oevent.event_category === 4" class="bg-white rounded-l border-l-8 border-blue-500"></td>
+                            <td v-if="oevent.event_category == 1" class="bg-white rounded-l border-l-8 border-blue-500"></td>
+                            <td v-else-if="oevent.event_category == 2" class="bg-white rounded-l border-l-8 border-red-500"></td>
+                            <td v-else-if="oevent.event_category == 3" class="bg-white rounded-l border-l-8 border-purple-500"></td>
+                            <td v-else-if="oevent.event_category == 4" class="bg-white rounded-l border-l-8 border-green-500"></td>
                             <td v-else class="bg-white rounded-l border-l-8 border-gray-500"></td>
 
                             <td class="px-4 py-2 bg-white">{{ oevent.from_date | moment("DD.MM.YYYY") }}</td>

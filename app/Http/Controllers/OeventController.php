@@ -135,8 +135,8 @@ class OeventController extends Controller
         null !== $request['from_date'] ? $input['from_date'] = Carbon::createFromFormat('d.m.Y', $request['from_date'])->toDateString()  : null ;
         null !== $request['to_date'] ? $input['to_date'] = Carbon::createFromFormat('d.m.Y', $request['to_date'])->toDateString() : null ;
 
-        null !== $request['clubs'] ? $input['clubs'] = json_encode($input['clubs'])  : null ;
-        null !== $request['regions'] ? $input['regions'] = json_encode($input['regions'])  : null ;
+        null !== $request['clubs'] ? $input['clubs']  : null ;
+        null !== $request['regions'] ? $input['regions'] : null ;
 
 
         //dd($input['first_date']);
