@@ -70,6 +70,8 @@ Route::prefix('admin')->group(function () {
     Route::resource('legs', 'OeventLegController');
     Route::get('legs/create/{oeventid}', 'OeventLegController@create')->name('legs.create.first');
 
+    Route::resource('oevents/link', 'OeventLinkController');
+
     Route::resource('contentcategories', 'ContentCategoryController');
     Route::get('manage-category', function () {
         return view('admin.category.index');
