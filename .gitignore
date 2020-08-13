@@ -1,5 +1,7 @@
 /node_modules
-/public
+/public/eventdata
+/public/media
+/public/orisdata
 /storage/*.key
 /vendor
 .env
