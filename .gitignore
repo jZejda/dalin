@@ -2,6 +2,7 @@
 /public/eventdata
 /public/media
 /public/orisdata
+/public/vendor
 /storage/*.key
 /vendor
 .env
