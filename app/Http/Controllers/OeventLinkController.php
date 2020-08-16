@@ -18,6 +18,16 @@ class OeventLinkController extends Controller
     public function show()
     {
 
+        return view('admin.oevents.link.show');
+    }
+
+    public function test()
+    {
+        return view('admin.oevents.link.event-iofv3-result');
+    }
+
+    public function eventIofv3Result()
+    {
 
         $exists = Storage::disk('eventdata')->exists('/races/vysledky_iofv3.xml');
 
@@ -53,7 +63,7 @@ class OeventLinkController extends Controller
 
                 $sorted_data['resultData'][$class_short_name] = array(
                     'classCourseData' => $class_course_data,
-                    );
+                );
 
                 $personResult = $class['PersonResult'];
 
@@ -99,16 +109,10 @@ class OeventLinkController extends Controller
             echo 'soubor neexistuje';
         }
 
-        dd($sorted_data);
+        return response()->json([
+            'sorted_data' => $sorted_data
+        ]);
 
-        return view('admin.oevents.link.show');
-
-
-    }
-
-    public function test()
-    {
-        return view('admin.oevents.link.event-iofv3-result');
     }
 
 }

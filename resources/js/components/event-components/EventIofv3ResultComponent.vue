@@ -10,25 +10,26 @@
 
             <div class="px-6 py-1 items-center bg-gray-100">
 
-                <table class="table-fixed w-full">
+                <table class="table-fixed w-full" v-for="(legs, legIndex) in data.resultData">
 
                     <thead>
                     <tr>
-                        <th class="px-1 py-2" style="width: 5px"></th>
-                        <th class="w-2/12 px-4 py-2">Datum</th>
-                        <th class="w-4/12 px-4 py-2">Název</th>
-                        <th class="w-4/12 px-4 py-2">Místo</th>
-                        <th class="w-2/12 px-4 py-2">Klub</th>
+                        <th class="w-2/12 px-4 py-2 text-left">{{ legIndex }}</th>
+                        <th class="w-4/12 px-4 py-2 text-left">regc</th>
+                        <th class="w-4/12 px-4 py-2 text-left">jméno</th>
+                        <th class="w-2/12 px-4 py-2 text-left">oddíl</th>
+                        <th class="w-2/12 px-4 py-2 text-left">cas</th>
+                        <th class="w-2/12 px-4 py-2 text-left">ztrata</th>
                     </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class=""></td>
-                            <td class="px-4 py-2 bg-white">dd</td>
-                            <td class="px-4 py-2 bg-white">dddd</td>
-                            <td class="px-4 py-2 bg-white">dddd</td>
-                            <td class="px-4 py-2 bg-white rounded-r">
-                            </td>
+                        <tr v-for="(personResult, personEntryId) in legs.personCourseData">
+                            <td class="px-4 py-2 bg-white">{{ personResult.personResultPosition}} </td>
+                            <td class="px-4 py-2 bg-white">{{ personResult.personId}}</td>
+                            <td class="px-4 py-2 bg-white">{{ personResult.familyName}} {{ personResult.givenName}}</td>
+                            <td class="px-4 py-2 bg-white">{{ personResult.personOrgShortName}}</td>
+                            <td class="px-4 py-2 bg-white">{{ personResult.personResultTime}}</td>
+                            <td class="px-4 py-2 bg-white">{{ personResult.personResultTimeBehind}}</td>
                         </tr>
                     </tbody>
 
@@ -57,9 +58,9 @@
         },
         methods: {
             readEventIofv3Result(){
-                axios.get('/admin/oevents/json/listallinyear/')
+                axios.get('/admin/link/oevent/eventIofv3Result')
                     .then(response => {
-                        this.data = response.data.rawdata;
+                        this.data = response.data.sorted_data;
                     });
             },
         },

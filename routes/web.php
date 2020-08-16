@@ -71,6 +71,7 @@ Route::prefix('admin')->group(function () {
     Route::get('legs/create/{oeventid}', 'OeventLegController@create')->name('legs.create.first');
 
     Route::get('link/oevent/test', 'OeventLinkController@test');
+    Route::get('link/oevent/eventIofv3Result', 'OeventLinkController@eventIofv3Result');
     Route::resource('link/oevent', 'OeventLinkController');
 
     Route::resource('contentcategories', 'ContentCategoryController');
