@@ -35,6 +35,9 @@ Vue.component('editorial-field-component', require('./components/form-components
 Vue.component('date-time-input-component', require('./components/form-components/DateTimeInputComponent').default);
 Vue.component('date-input-component', require('./components/form-components/DateInputComponent').default);
 
+//EventComponents
+Vue.component('event-iofv3-result-component', require('./components/event-components/EventIofv3ResultComponent.vue').default);
+
 //Vue.component('multiselect-input-component', require('./components/form-components/MultiselectInputCompoenent').default);
 
 Vue.component('toasted-component', require('./components/ToastedComponent.vue').default);
