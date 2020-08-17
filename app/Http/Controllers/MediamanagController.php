@@ -82,7 +82,7 @@ class MediamanagController extends Controller
             $standardImage->resize(1200, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
-            $standardImage->sharpen(15);
+            //$standardImage->sharpen(15);
             $standardImage->save(base_path().'/public/media/'.$autoPath.'/'.$pureFileName.'.jpg');
 
             //Thumbnail
@@ -90,10 +90,8 @@ class MediamanagController extends Controller
             $thumbnailImage->resize(640, null, function ($constraint) {
                 $constraint->aspectRatio();
             });
-            $standardImage->sharpen(15);
+            //$standardImage->sharpen(15);
             $thumbnailImage->save(base_path().'/public/media/'.$autoPath.'/thubnails/'.$fileName);
-
-            //$thumbnailImage->save(base_path() . '/public/media/'.$autoPath.'/thubnails/'. $fileName);
         }
 
         Session::flash('flash_message', 'Soubor '.$mimeType.' byl uložen do adresře '.$autoPath);
