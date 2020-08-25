@@ -25,7 +25,7 @@
             soubor. Soubor se automaticky uloží do adresáře aktuálního roku a měsíce.</p>
         <p class="font-light text-blue-100">Formulář očekává pouze koncovky jpeg,png,gif,zip,pdf,doc,docx,xls,xlsx. Nepoužívejte
             diaktritiku v názvech souborů.</p>
-        <p class="font-light text-blue-100">Soubor nesmí být větší jak 3 MB. Pokud se jedná o velký obrázek, změnši jeho rozlišení pod uvedeou velikost.</p>
+        <p class="font-light text-blue-100">Soubor nesmí být větší jak 1,5 MB. Pokud se jedná o velký obrázek, změnši jeho rozlišení pod uvedeou velikost.</p>
 
         @if(auth()->user()->can('Add File'))
         {!! Form::open(

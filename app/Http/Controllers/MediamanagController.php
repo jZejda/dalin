@@ -27,7 +27,7 @@ class MediamanagController extends Controller
     }
 
     /*
-     * Store a new file into Storeage media.
+     * Store a new file into Storage media.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -35,7 +35,7 @@ class MediamanagController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|mimes:jpeg,jpg,png,gif,zip,pdf,doc,docx,xls,xlsx|max:5000',
+            'file' => 'required|mimes:jpeg,jpg,png,gif,zip,pdf,doc,docx,xls,xlsx|max:1500',
         ]);
 
         // Make directory if not exist
@@ -94,7 +94,7 @@ class MediamanagController extends Controller
             $thumbnailImage->save(base_path().'/public/media/'.$autoPath.'/thubnails/'.$fileName);
         }
 
-        Session::flash('flash_message', 'Soubor '.$mimeType.' byl uložen do adresře '.$autoPath);
+        Session::flash('flash_message', 'Soubor '.$mimeType.' byl uložen do adresáře '.$autoPath);
 
         return redirect()->back();
     }

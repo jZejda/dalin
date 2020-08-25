@@ -2588,7 +2588,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       data: [],
-      test: ''
+      test: '',
+      onlyLegs: ['D35', 'H35']
     };
   },
   mounted: function mounted() {
@@ -2601,6 +2602,31 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/admin/link/oevent/eventIofv3Result').then(function (response) {
         _this.data = response.data.sorted_data;
       });
+    }
+  },
+  computed: {
+    onlySpecificLegs: function onlySpecificLegs() {
+      var personResultData = this.data.resultData;
+      var result = [];
+
+      for (var i = 0; i < this.onlyLegs.length; i++) {
+        var index = this.onlyLegs[i];
+        result.push(personResultData[index]);
+      }
+
+      return result;
+    }
+  },
+  filters: {
+    secondToMinutes: function secondToMinutes(value) {
+      return (Math.round((value / 60 + Number.EPSILON) * 100) / 100).toFixed(2);
+    },
+    secondToMinutesLoss: function secondToMinutesLoss(value) {
+      if (value == 0) {
+        return '';
+      } else {
+        return '+ ' + (Math.round((value / 60 + Number.EPSILON) * 100) / 100).toFixed(2);
+      }
     }
   }
 });
@@ -52909,11 +52935,21 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("td", { staticClass: "px-4 py-2 bg-white" }, [
-                    _vm._v(_vm._s(personResult.personResultTime))
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("secondToMinutes")(personResult.personResultTime)
+                      )
+                    )
                   ]),
                   _vm._v(" "),
                   _c("td", { staticClass: "px-4 py-2 bg-white" }, [
-                    _vm._v(_vm._s(personResult.personResultTimeBehind))
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("secondToMinutesLoss")(
+                          personResult.personResultTimeBehind
+                        )
+                      )
+                    )
                   ])
                 ])
               }),

@@ -67,6 +67,7 @@ class OeventLinkController extends Controller
 
                 $personResult = $class['PersonResult'];
 
+                $person_order = 1; // start person order count
                 foreach ($personResult as $person)
                 {
                     $person_entry_id = $person['EntryId'];
@@ -86,7 +87,7 @@ class OeventLinkController extends Controller
                     }
                     //(isset($person['Person']['Id'][0]) ? $person['Person']['Id'][0] : '')
 
-                    $sorted_data['resultData'][$class_short_name]['personCourseData'][$person_entry_id] = array(
+                    $sorted_data['resultData'][$class_short_name]['personCourseData'][$person_order] = array(
                         'personId' => $personi_id,
                         'familyName' => (isset($person['Person']['Name']['Family']) ? $person['Person']['Name']['Family'] : ''),
                         'givenName' => (isset($person['Person']['Name']['Given']) ? $person['Person']['Name']['Given'] : ''),
@@ -98,6 +99,8 @@ class OeventLinkController extends Controller
                         'personResultTimeBehind' => (isset($person['Result']['TimeBehind']) ? $person['Result']['TimeBehind'] : ''),
                         'personControlCard' => (isset($person['Result']['ControlCard']) ? $person['Result']['ControlCard'] : ''),
                     );
+
+                    $person_order ++;
                 }
 
             }
