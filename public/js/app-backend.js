@@ -2582,6 +2582,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: [],
@@ -2589,7 +2592,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       data: [],
       test: '',
-      onlyLegs: ['D35', 'H35']
+      onlyLegs: ['H35']
     };
   },
   mounted: function mounted() {
@@ -2625,7 +2628,7 @@ __webpack_require__.r(__webpack_exports__);
       if (value == 0) {
         return '';
       } else {
-        return '+ ' + (Math.round((value / 60 + Number.EPSILON) * 100) / 100).toFixed(2);
+        return '+' + (Math.round((value / 60 + Number.EPSILON) * 100) / 100).toFixed(2);
       }
     }
   }
@@ -52872,97 +52875,157 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "flex-1 flex flex-row" }, [
     _c("div", { staticClass: "w-full" }, [
-      _c("div", { staticClass: "px-6 py-1 items-center bg-gray-200 border-b" }),
+      _c("div", { staticClass: "py-1 items-center bg-gray-200 border-b" }),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "px-6 py-1 items-center bg-gray-100" },
-        _vm._l(_vm.data.resultData, function(legs, legIndex) {
-          return _c("table", { staticClass: "table-fixed w-full" }, [
-            _c("thead", [
-              _c("tr", [
-                _c("th", { staticClass: "w-2/12 px-4 py-2 text-left" }, [
-                  _vm._v(_vm._s(legIndex))
-                ]),
+        { staticClass: "px-6 items-center bg-gray-100" },
+        [
+          _c("p", { staticClass: "pt-4 text-2xl" }, [
+            _vm._v(_vm._s(_vm.data.event.name) + " - výsledky")
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.data.resultData, function(legs, legIndex) {
+            return _c("div", { staticClass: "bg-white text-xs lg:text-base" }, [
+              _c(
+                "p",
+                {
+                  staticClass: "px-2 text-3xl border-t-4 border-green-500 mt-4"
+                },
+                [_vm._v(_vm._s(legs.classCourseData.courseName))]
+              ),
+              _vm._v(" "),
+              _c("p", { staticClass: "px-2" }, [
+                _vm._v(
+                  "převýšení: " +
+                    _vm._s(legs.classCourseData.courseClimb) +
+                    ", délka: " +
+                    _vm._s(legs.classCourseData.courseLenght) +
+                    " kontrol: " +
+                    _vm._s(legs.classCourseData.courseNumControls)
+                )
+              ]),
+              _vm._v(" "),
+              _c("table", { staticClass: "table-fixed w-full" }, [
+                _vm._m(0, true),
                 _vm._v(" "),
-                _c("th", { staticClass: "w-4/12 px-4 py-2 text-left" }, [
-                  _vm._v("regc")
-                ]),
-                _vm._v(" "),
-                _c("th", { staticClass: "w-4/12 px-4 py-2 text-left" }, [
-                  _vm._v("jméno")
-                ]),
-                _vm._v(" "),
-                _c("th", { staticClass: "w-2/12 px-4 py-2 text-left" }, [
-                  _vm._v("oddíl")
-                ]),
-                _vm._v(" "),
-                _c("th", { staticClass: "w-2/12 px-4 py-2 text-left" }, [
-                  _vm._v("cas")
-                ]),
-                _vm._v(" "),
-                _c("th", { staticClass: "w-2/12 px-4 py-2 text-left" }, [
-                  _vm._v("ztrata")
-                ])
+                _c(
+                  "tbody",
+                  _vm._l(legs.personCourseData, function(
+                    personResult,
+                    personEntryId
+                  ) {
+                    return _c("tr", [
+                      _c(
+                        "td",
+                        {
+                          staticClass: "px-2 m-b-2 border-b-2 border-gray-400"
+                        },
+                        [_vm._v(_vm._s(personResult.personResultPosition))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "px-2 border-b-2 border-gray-400" },
+                        [_vm._v(_vm._s(personResult.personId))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "px-2 border-b-2 border-gray-400" },
+                        [
+                          _vm._v(
+                            _vm._s(personResult.familyName) +
+                              " " +
+                              _vm._s(personResult.givenName)
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "hidden lg:block px-2 border-b-2 border-gray-400"
+                        },
+                        [_vm._v(_vm._s(personResult.personOrgShortName))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "px-2 border-b-2 border-gray-400" },
+                        [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("secondToMinutes")(
+                                personResult.personResultTime
+                              )
+                            )
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        {
+                          staticClass:
+                            "px-2 border-b-2 border-gray-400 text-gray-600"
+                        },
+                        [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("secondToMinutesLoss")(
+                                personResult.personResultTimeBehind
+                              )
+                            )
+                          )
+                        ]
+                      )
+                    ])
+                  }),
+                  0
+                )
               ])
-            ]),
-            _vm._v(" "),
-            _c(
-              "tbody",
-              _vm._l(legs.personCourseData, function(
-                personResult,
-                personEntryId
-              ) {
-                return _c("tr", [
-                  _c("td", { staticClass: "px-4 py-2 bg-white" }, [
-                    _vm._v(_vm._s(personResult.personResultPosition) + " ")
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "px-4 py-2 bg-white" }, [
-                    _vm._v(_vm._s(personResult.personId))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "px-4 py-2 bg-white" }, [
-                    _vm._v(
-                      _vm._s(personResult.familyName) +
-                        " " +
-                        _vm._s(personResult.givenName)
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "px-4 py-2 bg-white" }, [
-                    _vm._v(_vm._s(personResult.personOrgShortName))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "px-4 py-2 bg-white" }, [
-                    _vm._v(
-                      _vm._s(
-                        _vm._f("secondToMinutes")(personResult.personResultTime)
-                      )
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "px-4 py-2 bg-white" }, [
-                    _vm._v(
-                      _vm._s(
-                        _vm._f("secondToMinutesLoss")(
-                          personResult.personResultTimeBehind
-                        )
-                      )
-                    )
-                  ])
-                ])
-              }),
-              0
-            )
-          ])
-        }),
-        0
+            ])
+          })
+        ],
+        2
       )
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", { staticClass: "bg-gray-400" }, [
+        _c("th", { staticClass: "w-1/12 px-2 py-1 text-left" }),
+        _vm._v(" "),
+        _c("th", { staticClass: "w-2/12 px-4 text-left" }, [_vm._v("reg.č.")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "w-5/12 lg:w-4/12 px-4 text-left" }, [
+          _vm._v("jméno")
+        ]),
+        _vm._v(" "),
+        _c(
+          "th",
+          {
+            staticClass: "hidden lg:block lg:visible lg:w-4/12 px-4 text-left"
+          },
+          [_vm._v("oddíl")]
+        ),
+        _vm._v(" "),
+        _c("th", { staticClass: "w-2/12 lg:w-1/12 px-4 text-left" }, [
+          _vm._v("čas")
+        ]),
+        _vm._v(" "),
+        _c("th", { staticClass: "w-2/12 lg:w-1/12 px-4 text-left" })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 

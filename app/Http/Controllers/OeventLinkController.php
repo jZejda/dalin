@@ -33,7 +33,8 @@ class OeventLinkController extends Controller
 
         if($exists)
         {
-            $file_raw_content = Storage::disk('eventdata')->get('/races/vysledky_iofv3.xml');
+            //$file_raw_content = Storage::disk('eventdata')->get('/races/vysledky_iofv3.xml');
+            $file_raw_content = Storage::disk('eventdata')->get('/races/15/01/20200607_203851_result-kat.xml');
 
             $xml = simplexml_load_string($file_raw_content, "SimpleXMLElement", LIBXML_NOCDATA);
             $json = json_encode($xml);
@@ -70,7 +71,7 @@ class OeventLinkController extends Controller
                 $person_order = 1; // start person order count
                 foreach ($personResult as $person)
                 {
-                    $person_entry_id = $person['EntryId'];
+                    //$person_entry_id = $person['EntryId'];
 
 
                     // Person ID may have an array

@@ -4,39 +4,42 @@
 
         <div class="w-full">
 
-            <div class="px-6 py-1 items-center bg-gray-200 border-b">
+            <div class="py-1 items-center bg-gray-200 border-b">
 
             </div>
 
-            <div class="px-6 py-1 items-center bg-gray-100">
+            <div class="px-6 items-center bg-gray-100">
+            <p class="pt-4 text-2xl">{{ data.event.name }} - výsledky</p>
 
-                <table class="table-fixed w-full" v-for="(legs, legIndex) in data.resultData">
+                <div v-for="(legs, legIndex) in data.resultData" class="bg-white text-xs lg:text-base">
 
-                    <thead>
-                    <tr>
-                        <th class="w-2/12 px-4 py-2 text-left">{{ legIndex }}</th>
-                        <th class="w-4/12 px-4 py-2 text-left">regc</th>
-                        <th class="w-4/12 px-4 py-2 text-left">jméno</th>
-                        <th class="w-2/12 px-4 py-2 text-left">oddíl</th>
-                        <th class="w-2/12 px-4 py-2 text-left">cas</th>
-                        <th class="w-2/12 px-4 py-2 text-left">ztrata</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(personResult, personEntryId) in legs.personCourseData">
-                            <td class="px-4 py-2 bg-white">{{ personResult.personResultPosition}} </td>
-                            <td class="px-4 py-2 bg-white">{{ personResult.personId}}</td>
-                            <td class="px-4 py-2 bg-white">{{ personResult.familyName}} {{ personResult.givenName}}</td>
-                            <td class="px-4 py-2 bg-white">{{ personResult.personOrgShortName}}</td>
-                            <td class="px-4 py-2 bg-white">{{ personResult.personResultTime | secondToMinutes }}</td>
-                            <td class="px-4 py-2 bg-white">{{ personResult.personResultTimeBehind | secondToMinutesLoss}}</td>
+                    <p class="px-2 text-3xl border-t-4 border-green-500 mt-4">{{ legs.classCourseData.courseName}}</p>
+                    <p class="px-2">převýšení: {{ legs.classCourseData.courseClimb}}, délka: {{ legs.classCourseData.courseLenght}} kontrol: {{ legs.classCourseData.courseNumControls}}</p>
+                    <table class="table-fixed w-full">
+
+                        <thead>
+                        <tr class="bg-gray-400">
+                            <th class="w-1/12 px-2 py-1 text-left"></th>
+                            <th class="w-2/12 px-4 text-left">reg.č.</th>
+                            <th class="w-5/12 lg:w-4/12 px-4 text-left">jméno</th>
+                            <th class="hidden lg:block lg:visible lg:w-4/12 px-4 text-left">oddíl</th>
+                            <th class="w-2/12 lg:w-1/12 px-4 text-left">čas</th>
+                            <th class="w-2/12 lg:w-1/12 px-4 text-left"></th>
                         </tr>
-                    </tbody>
-
-                </table>
-
+                        </thead>
+                        <tbody>
+                        <tr v-for="(personResult, personEntryId) in legs.personCourseData">
+                            <td class="px-2 m-b-2 border-b-2 border-gray-400">{{ personResult.personResultPosition}}</td>
+                            <td class="px-2 border-b-2 border-gray-400">{{ personResult.personId}}</td>
+                            <td class="px-2 border-b-2 border-gray-400">{{ personResult.familyName}} {{ personResult.givenName}}</td>
+                            <td class="hidden lg:block px-2 border-b-2 border-gray-400">{{ personResult.personOrgShortName}}</td>
+                            <td class="px-2 border-b-2 border-gray-400">{{ personResult.personResultTime | secondToMinutes }}</td>
+                            <td class="px-2 border-b-2 border-gray-400 text-gray-600">{{ personResult.personResultTimeBehind | secondToMinutesLoss}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
         </div>
     </div>
 </template>
@@ -51,7 +54,7 @@
             return {
                 data: [],
                 test:'',
-                onlyLegs:['D35', 'H35'],
+                onlyLegs:['H35'],
 
             }
         },
@@ -67,7 +70,7 @@
             },
         },
         computed: {
-          onlySpecificLegs: function (){
+            onlySpecificLegs: function (){
               let personResultData = this.data.resultData;
 
               var result = [];
@@ -87,7 +90,7 @@
                 if (value == 0 ){
                     return '';
                 } else {
-                    return '+ '+(Math.round(((value / 60) + Number.EPSILON) * 100) / 100).toFixed(2)
+                    return '+'+(Math.round(((value / 60) + Number.EPSILON) * 100) / 100).toFixed(2)
                 }
             }
         }
