@@ -8,7 +8,12 @@ use App\Post;
 use App\Oevent;
 use App\Region;
 use App\Discipline;
+use App\Oevent_results;
+
 use App\Content_category;
+
+use App\Http\Controllers\Tool\EventResultController;
+use Illuminate\Support\Facades\App;
 
 class FrontEndController extends Controller
 {
@@ -96,5 +101,48 @@ class FrontEndController extends Controller
         //  dd($categoryName);
 
         return view('frontend.page', compact('page', 'pagesMenu', 'categoryName'));
+    }
+
+
+    public function oeventResult($id)
+    {
+        $result = Oevent_results::where('id', '=', $id)->first();
+
+        if(config('app-config.result_type')!== null) {
+            $result_type = config('app-config.result_type');
+        }
+        else
+        {
+            $result_type = null;
+        }
+
+        if ($result['result_type'] == $result_type[1]){
+
+            // TODO test na resource souboru
+
+            $show_result = array (
+                'result_type' => $result_type[1],
+                'resource_exist' => true
+            );
+        }
+        elseif ($result['result_type'] == $result_type[2]) {
+
+            // TODO test na resoure html odkazu
+            
+            $show_result = array (
+                'result_type' => $result_type[2],
+                'resource_exist' => true
+            );
+        }
+        else {
+            $show_result = null;
+        }
+
+        ddd($show_result);
+
+
+
+
+        return view('frontend.event-result');
     }
 }

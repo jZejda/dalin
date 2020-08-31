@@ -38,4 +38,9 @@ return [
         '2' => 'markdown',
     ],
 
+    'result_type' => [
+        '1' => 'xml_iof_v3_file',
+        '2' => 'html_iframe'
+    ]
+
 ];

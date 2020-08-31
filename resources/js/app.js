@@ -19,6 +19,8 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
+Vue.component('event-iofv3-result-component', require('./components/event-components/EventIofv3ResultComponent.vue').default);
+
 const app = new Vue({
     el: '#app'
 });

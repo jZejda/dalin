@@ -1,39 +1,36 @@
 {
-  "_args": [
-    [
-      "tinymce@4.9.0",
-      "/home/jirka/projects/laravel/l58/oplan"
-    ]
-  ],
-  "_development": true,
-  "_from": "tinymce@4.9.0",
-  "_id": "tinymce@4.9.0",
+  "_from": "tinymce",
+  "_id": "tinymce@5.4.2",
   "_inBundle": false,
-  "_integrity": "sha1-KViaNoxGPbbeteOYH3Hkjoh1P38=",
+  "_integrity": "sha512-MRquvKxI28AiSn2ikypgJFD7LH4mQZLtgFn+yROF1bTFp92MdlLeGBrI38/O5mej3cvz27g3Pgr+3MShepbJ+w==",
   "_location": "/tinymce",
   "_phantomChildren": {},
   "_requested": {
-    "type": "version",
+    "type": "tag",
     "registry": true,
-    "raw": "tinymce@4.9.0",
+    "raw": "tinymce",
     "name": "tinymce",
     "escapedName": "tinymce",
-    "rawSpec": "4.9.0",
+    "rawSpec": "",
     "saveSpec": null,
-    "fetchSpec": "4.9.0"
+    "fetchSpec": "latest"
   },
   "_requiredBy": [
-    "#DEV:/"
+    "#USER",
+    "/"
   ],
-  "_resolved": "https://registry.npmjs.org/tinymce/-/tinymce-4.9.0.tgz",
-  "_spec": "4.9.0",
-  "_where": "/home/jirka/projects/laravel/l58/oplan",
+  "_resolved": "https://registry.npmjs.org/tinymce/-/tinymce-5.4.2.tgz",
+  "_shasum": "a1df417ea7e85697c2932269f7f93fbef30d4502",
+  "_spec": "tinymce",
+  "_where": "/home/bobik/projects/laravel/l7x/dalin",
   "author": {
     "name": "Ephox Corporation"
   },
   "bugs": {
     "url": "https://github.com/tinymce/tinymce/issues"
   },
+  "bundleDependencies": false,
+  "deprecated": false,
   "description": "Web based JavaScript HTML WYSIWYG editor control.",
   "homepage": "https://github.com/tinymce/tinymce-dist#readme",
   "keywords": [
@@ -51,5 +48,5 @@
     "type": "git",
     "url": "git+https://github.com/tinymce/tinymce-dist.git"
   },
-  "version": "4.9.0"
+  "version": "5.4.2"
 }

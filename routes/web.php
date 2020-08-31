@@ -25,6 +25,8 @@ Route::get('novinky/vse', 'FrontEndController@postsAll');
 
 Route::get('/stranka/{slug}', 'FrontEndController@stranka');
 
+Route::get('vysledky/{id}', 'FrontEndController@oeventResult');
+
 Route::prefix('cron')->group(function () {
     Route::get('/forecast/yoursecretkey/check', 'Cron\ServiceAppController@legForecast');
 });
