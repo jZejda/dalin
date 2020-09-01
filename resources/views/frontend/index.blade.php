@@ -13,7 +13,7 @@
 
     @import url('https://fonts.googleapis.com/css?family=Oswald&display=swap');
 
-    .my_text {
+    .oswald_text {
         font-family: 'Oswald', sans-serif;
         font-weight:    500;
     }
@@ -41,7 +41,7 @@
                         @php($sport_collor = 'bg-gray-500')
                     @endif
 
-                    <div class="relative m-1 max-w-xs w-full sm:w-full lg:max-w-xs shadow-lg my_text w-x overflow-hidden">
+                    <div class="relative m-1 max-w-xs w-full sm:w-full lg:max-w-xs shadow-lg oswald_text w-x overflow-hidden">
                         @if($oevent->is_canceled)
                         <div class="oe-ribbon-corner bg-red-500 text-sm whitespace-no-wrap px-12">ZRUŠENO</div>
                         @endif

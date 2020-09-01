@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Storage;
+
 use App\Page;
 use App\Post;
 use App\Oevent;
@@ -108,6 +110,7 @@ class FrontEndController extends Controller
     {
         $result = Oevent_results::where('id', '=', $id)->first();
 
+
         if(config('app-config.result_type')!== null) {
             $result_type = config('app-config.result_type');
         }
@@ -116,33 +119,31 @@ class FrontEndController extends Controller
             $result_type = null;
         }
 
-        if ($result['result_type'] == $result_type[1]){
+        if (!empty($result) && $result['result_type'] == $result_type[1]){
 
-            // TODO test na resource souboru
+            $file_exist = Storage::disk('eventdata')->exists($result['result_path']);
 
             $show_result = array (
-                'result_type' => $result_type[1],
-                'resource_exist' => true
+                'result_type'       => $result_type[1],
+                'result_id'         => $result->id,
+                'resource_exist'    => $file_exist
             );
         }
-        elseif ($result['result_type'] == $result_type[2]) {
+        elseif (!empty($result) && $result['result_type'] == $result_type[2]) {
 
             // TODO test na resoure html odkazu
-            
+
             $show_result = array (
-                'result_type' => $result_type[2],
-                'resource_exist' => true
+                'result_type'       => $result_type[2],
+                'result_id'         => $result->id,
+                'resource_exist'    => true
             );
         }
         else {
             $show_result = null;
         }
 
-        ddd($show_result);
 
-
-
-
-        return view('frontend.event-result');
+        return view('frontend.event-result', ['show_result' => $show_result]);
     }
 }

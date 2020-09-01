@@ -5,6 +5,7 @@
 /public/vendor
 /storage/*.key
 /vendor
+/.idea
 .env
 .env.backup
 .phpunit.result.cache
@@ -13,5 +14,8 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 _ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
 .editorconfig
+package-lock.json
 

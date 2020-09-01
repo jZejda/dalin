@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tool;
 
+use App\Oevent_results;
 use Storage;
 use App\Http\Controllers\Controller;
 
@@ -10,12 +11,14 @@ class EventResultController extends Controller
 
     public function eventIofv3Result($id)
     {
-        $exists = Storage::disk('eventdata')->exists('/races/vysledky_iofv3.xml');
+
+        $result = Oevent_results::where('id', '=', $id)->first();
+        $exists = Storage::disk('eventdata')->exists($result['result_path']);
 
         if($exists)
         {
             //$file_raw_content = Storage::disk('eventdata')->get('/races/vysledky_iofv3.xml');
-            $file_raw_content = Storage::disk('eventdata')->get('/races/15/01/20200607_203851_result-kat.xml');
+            $file_raw_content = Storage::disk('eventdata')->get($result['result_path']);
 
             $xml = simplexml_load_string($file_raw_content, "SimpleXMLElement", LIBXML_NOCDATA);
             $json = json_encode($xml);
@@ -53,8 +56,6 @@ class EventResultController extends Controller
                 foreach ($personResult as $person)
                 {
                     //$person_entry_id = $person['EntryId'];
-
-
                     // Person ID may have an array
                     if (isset($person['Person']['Id'])) {
                         if (is_array($person['Person']['Id'])){
@@ -81,13 +82,9 @@ class EventResultController extends Controller
                         'personResultTimeBehind' => (isset($person['Result']['TimeBehind']) ? $person['Result']['TimeBehind'] : ''),
                         'personControlCard' => (isset($person['Result']['ControlCard']) ? $person['Result']['ControlCard'] : ''),
                     );
-
                     $person_order ++;
                 }
-
             }
-
-
         }
         else
         {

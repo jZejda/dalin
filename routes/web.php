@@ -31,6 +31,10 @@ Route::prefix('cron')->group(function () {
     Route::get('/forecast/yoursecretkey/check', 'Cron\ServiceAppController@legForecast');
 });
 
+Route::middleware('throttle:20|60,1')->prefix('app-api')->group(function () {
+   Route::get('/event-ifoxml-result/{id}', 'Tool\EventResultController@eventIofv3Result' );
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

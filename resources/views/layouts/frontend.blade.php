@@ -89,7 +89,6 @@
 
 <!-- Scripts -->
 <script src="{{ mix('js/app.js') }}"></script>
-`<script src="{{ mix('js/app-both.js') }}"></script>`
 
 <script>
     function myFunction() {

@@ -1991,7 +1991,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: [],
+  props: ['result_id'],
   data: function data() {
     return {
       data: [],
@@ -2006,7 +2006,8 @@ __webpack_require__.r(__webpack_exports__);
     readEventIofv3Result: function readEventIofv3Result() {
       var _this = this;
 
-      axios.get('/admin/link/oevent/eventIofv3Result').then(function (response) {
+      //axios.get('/admin/link/oevent/eventIofv3Result')
+      axios.get('/app-api/event-ifoxml-result/' + this.result_id).then(function (response) {
         _this.data = response.data.sorted_data;
       });
     }
@@ -41574,22 +41575,22 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "flex-1 flex flex-row" }, [
     _c("div", { staticClass: "w-full" }, [
-      _c("div", { staticClass: "py-1 items-center bg-gray-200 border-b" }),
+      _c("div", { staticClass: "py-1 items-center" }),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "px-6 items-center bg-gray-100" },
+        { staticClass: "px-6 items-center" },
         [
           _c("p", { staticClass: "pt-4 text-2xl" }, [
             _vm._v(_vm._s(_vm.data.event.name) + " - výsledky")
           ]),
           _vm._v(" "),
           _vm._l(_vm.data.resultData, function(legs, legIndex) {
-            return _c("div", { staticClass: "bg-white text-xs lg:text-base" }, [
+            return _c("div", { staticClass: "bg-white text-sm lg:text-base" }, [
               _c(
                 "p",
                 {
-                  staticClass: "px-2 text-3xl border-t-4 border-green-500 mt-4"
+                  staticClass: "px-2 text-2xl border-t-4 border-green-500 mt-4"
                 },
                 [_vm._v(_vm._s(legs.classCourseData.courseName))]
               ),
@@ -41605,7 +41606,7 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _c("table", { staticClass: "table-fixed w-full" }, [
+              _c("table", { staticClass: "table-fixed w-full mb-12" }, [
                 _vm._m(0, true),
                 _vm._v(" "),
                 _c(
@@ -41614,7 +41615,7 @@ var render = function() {
                     personResult,
                     personEntryId
                   ) {
-                    return _c("tr", [
+                    return _c("tr", { staticClass: "text-sm lg:text-base" }, [
                       _c(
                         "td",
                         {
@@ -41699,7 +41700,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("thead", [
-      _c("tr", { staticClass: "bg-gray-400" }, [
+      _c("tr", { staticClass: "bg-gray-400 text-sm lg:text-base" }, [
         _c("th", { staticClass: "w-1/12 px-2 py-1 text-left" }),
         _vm._v(" "),
         _c("th", { staticClass: "w-2/12 px-4 text-left" }, [_vm._v("reg.č.")]),
