@@ -41648,7 +41648,7 @@ var render = function() {
                           staticClass:
                             "hidden lg:block px-2 border-b-2 border-gray-400"
                         },
-                        [_vm._v(_vm._s(personResult.personOrgShortName))]
+                        [_vm._v(_vm._s(personResult.personOrgLongname))]
                       ),
                       _vm._v(" "),
                       _c(
@@ -41703,25 +41703,25 @@ var staticRenderFns = [
       _c("tr", { staticClass: "bg-gray-400 text-sm lg:text-base" }, [
         _c("th", { staticClass: "w-1/12 px-2 py-1 text-left" }),
         _vm._v(" "),
-        _c("th", { staticClass: "w-2/12 px-4 text-left" }, [_vm._v("reg.č.")]),
+        _c("th", { staticClass: "w-2/12 px-2 text-left" }, [_vm._v("reg.č.")]),
         _vm._v(" "),
-        _c("th", { staticClass: "w-5/12 lg:w-4/12 px-4 text-left" }, [
+        _c("th", { staticClass: "w-5/12 lg:w-4/12 px-2 text-left" }, [
           _vm._v("jméno")
         ]),
         _vm._v(" "),
         _c(
           "th",
           {
-            staticClass: "hidden lg:block lg:visible lg:w-4/12 px-4 text-left"
+            staticClass: "hidden lg:block lg:visible lg:w-4/12 px-2 text-left"
           },
           [_vm._v("oddíl")]
         ),
         _vm._v(" "),
-        _c("th", { staticClass: "w-2/12 lg:w-1/12 px-4 text-left" }, [
+        _c("th", { staticClass: "w-2/12 lg:w-1/12 px-2 text-left" }, [
           _vm._v("čas")
         ]),
         _vm._v(" "),
-        _c("th", { staticClass: "w-2/12 lg:w-1/12 px-4 text-left" })
+        _c("th", { staticClass: "w-2/12 lg:w-1/12 px-2 text-left" })
       ])
     ])
   }

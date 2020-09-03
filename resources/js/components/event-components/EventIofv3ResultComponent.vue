@@ -20,11 +20,11 @@
                         <thead>
                         <tr class="bg-gray-400 text-sm lg:text-base">
                             <th class="w-1/12 px-2 py-1 text-left"></th>
-                            <th class="w-2/12 px-4 text-left">reg.č.</th>
-                            <th class="w-5/12 lg:w-4/12 px-4 text-left">jméno</th>
-                            <th class="hidden lg:block lg:visible lg:w-4/12 px-4 text-left">oddíl</th>
-                            <th class="w-2/12 lg:w-1/12 px-4 text-left">čas</th>
-                            <th class="w-2/12 lg:w-1/12 px-4 text-left"></th>
+                            <th class="w-2/12 px-2 text-left">reg.č.</th>
+                            <th class="w-5/12 lg:w-4/12 px-2 text-left">jméno</th>
+                            <th class="hidden lg:block lg:visible lg:w-4/12 px-2 text-left">oddíl</th>
+                            <th class="w-2/12 lg:w-1/12 px-2 text-left">čas</th>
+                            <th class="w-2/12 lg:w-1/12 px-2 text-left"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -32,7 +32,7 @@
                             <td class="px-2 m-b-2 border-b-2 border-gray-400">{{ personResult.personResultPosition}}</td>
                             <td class="px-2 border-b-2 border-gray-400">{{ personResult.personId}}</td>
                             <td class="px-2 border-b-2 border-gray-400">{{ personResult.familyName}} {{ personResult.givenName}}</td>
-                            <td class="hidden lg:block px-2 border-b-2 border-gray-400">{{ personResult.personOrgShortName}}</td>
+                            <td class="hidden lg:block px-2 border-b-2 border-gray-400">{{ personResult.personOrgLongname}}</td>
                             <td class="px-2 border-b-2 border-gray-400">{{ personResult.personResultTime | secondToMinutes }}</td>
                             <td class="px-2 border-b-2 border-gray-400 text-gray-600">{{ personResult.personResultTimeBehind | secondToMinutesLoss}}</td>
                         </tr>

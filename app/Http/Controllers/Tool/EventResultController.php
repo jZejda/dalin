@@ -37,7 +37,7 @@ class EventResultController extends Controller
 
             foreach ($array['ClassResult'] as $class) {
 
-                $class_short_name = $class['Class']['ShortName'];
+                $class_short_name = $class['Class']['Name'];
                 $class_course_data = array (
                     'courseName'        => $class['Course']['Name'],
                     'courseLenght'      => $class['Course']['Length'],
@@ -74,8 +74,8 @@ class EventResultController extends Controller
                         'personId' => $personi_id,
                         'familyName' => (isset($person['Person']['Name']['Family']) ? $person['Person']['Name']['Family'] : ''),
                         'givenName' => (isset($person['Person']['Name']['Given']) ? $person['Person']['Name']['Given'] : ''),
-                        'personOrgLongname' => (isset($person['Organisation']['Name']) ? $person['Organisation']['Name'] : ''),
-                        'personOrgShortName' => (isset($person['Organisation']['ShortName']) ? $person['Organisation']['ShortName'] : ''),
+                        'personOrgLongname' => (isset($person['Organisation']['Name']) ? $person['Organisation']['Name'] : '-'),
+                        'personOrgShortName' => (isset($person['Organisation']['ShortName']) ? $person['Organisation']['ShortName'] : '-'),
                         'personResultPosition' => (isset($person['Result']['Position']) ? $person['Result']['Position'] : ''),
                         'personResultTime' => (isset($person['Result']['Time']) ? $person['Result']['Time'] : ''),
                         'personResultStatus' => (isset($person['Result']['Status']) ? $person['Result']['Status'] : ''),
