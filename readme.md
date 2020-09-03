@@ -1,6 +1,6 @@
-# Laravel oPlan
+# DaLin
 
-This is an oPlan management system to make orienteering life better.
+This is an DaLin management system to make orienteering life better.
 
 ## Features
 
