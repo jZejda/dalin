@@ -2585,6 +2585,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['result_id'],
@@ -2592,7 +2607,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       data: [],
       test: '',
-      onlyLegs: ['H35']
+      onlyLegs: []
     };
   },
   mounted: function mounted() {
@@ -2606,19 +2621,47 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('/app-api/event-ifoxml-result/' + this.result_id).then(function (response) {
         _this.data = response.data.sorted_data;
       });
+    },
+    legFilterToggle: function legFilterToggle(category) {
+      // add/remove catogory
+      if (this.onlyLegs.includes(category)) {
+        var index = this.onlyLegs.indexOf(category);
+
+        if (index > -1) {
+          this.onlyLegs.splice(index, 1);
+        }
+      } else {
+        this.onlyLegs.push(category);
+      }
     }
   },
   computed: {
+    buttonCategory: function buttonCategory(category) {
+      var filteredCategory = [];
+      return filteredCategory.push(category);
+    },
+    computedCategory: function computedCategory() {
+      // create array Category from result data
+      var resultCategory = this.data.resultData; //ES6 Object.keys
+
+      return Object.keys(resultCategory);
+    },
     onlySpecificLegs: function onlySpecificLegs() {
       var personResultData = this.data.resultData;
-      var result = [];
+      var filteredResult = [];
 
-      for (var i = 0; i < this.onlyLegs.length; i++) {
-        var index = this.onlyLegs[i];
-        result.push(personResultData[index]);
+      if (this.onlyLegs == 0) {
+        filteredResult = personResultData;
+      } else {
+        var result = [];
+
+        for (var i = 0; i < this.onlyLegs.length; i++) {
+          var index = this.onlyLegs[i];
+          filteredResult.push(personResultData[index]);
+        }
       }
 
-      return result;
+      return filteredResult;
     }
   },
   filters: {
@@ -52935,7 +52978,52 @@ var render = function() {
             _vm._v(_vm._s(_vm.data.event.name) + " - výsledky")
           ]),
           _vm._v(" "),
-          _vm._l(_vm.data.resultData, function(legs, legIndex) {
+          _c(
+            "div",
+            { staticClass: "flex flex-wrap" },
+            _vm._l(_vm.computedCategory, function(category) {
+              return _c(
+                "span",
+                { staticClass: "text-sm lg:text-base mr-1 mb-2" },
+                [
+                  _vm.onlyLegs.includes(category)
+                    ? _c("span", [
+                        _c(
+                          "span",
+                          {
+                            staticClass:
+                              "rounded-md px-1 border border-green-800 bg-green-500",
+                            on: {
+                              click: function($event) {
+                                return _vm.legFilterToggle(category)
+                              }
+                            }
+                          },
+                          [_vm._v(_vm._s(category))]
+                        )
+                      ])
+                    : _c("span", [
+                        _c(
+                          "span",
+                          {
+                            staticClass:
+                              "rounded-md px-1 border border-gray-400",
+                            on: {
+                              click: function($event) {
+                                return _vm.legFilterToggle(category)
+                              }
+                            }
+                          },
+                          [_vm._v(_vm._s(category))]
+                        )
+                      ])
+                ]
+              )
+            }),
+            0
+          ),
+          _vm._v(" "),
+          _vm._l(_vm.onlySpecificLegs, function(legs, legIndex) {
             return _c("div", { staticClass: "bg-white text-sm lg:text-base" }, [
               _c(
                 "p",

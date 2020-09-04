@@ -11,7 +11,22 @@
             <div class="px-6 items-center">
             <p class="pt-4 text-2xl">{{ data.event.name }} - výsledky</p>
 
-                <div v-for="(legs, legIndex) in data.resultData" class="bg-white text-sm lg:text-base">
+
+
+                <div class="flex flex-wrap">
+                    <span v-for="category in computedCategory" class="text-sm lg:text-base mr-1 mb-2">
+                    <span v-if="onlyLegs.includes(category)" >
+                        <span v-on:click="legFilterToggle(category)" class="rounded-md px-1 border border-green-800 bg-green-500">{{ category }}</span>
+                    </span>
+                    <span v-else>
+                        <span v-on:click="legFilterToggle(category)" class="rounded-md px-1 border border-gray-400">{{ category }}</span>
+                    </span>
+                </span>
+                </div>
+
+
+                <!-- data.resultData -->
+                <div v-for="(legs, legIndex) in onlySpecificLegs" class="bg-white text-sm lg:text-base">
 
                     <p class="px-2 text-2xl border-t-4 border-green-500 mt-4">{{ legs.classCourseData.courseName}}</p>
                     <p class="px-2">převýšení: {{ legs.classCourseData.courseClimb}}, délka: {{ legs.classCourseData.courseLenght}} kontrol: {{ legs.classCourseData.courseNumControls}}</p>
@@ -54,8 +69,7 @@
             return {
                 data: [],
                 test:'',
-                onlyLegs:['H35'],
-
+                onlyLegs:[],
             }
         },
         mounted() {
@@ -69,18 +83,53 @@
                         this.data = response.data.sorted_data;
                     });
             },
+            legFilterToggle: function (category) {
+                // add/remove catogory
+
+                if(this.onlyLegs.includes(category)){
+                    const index = this.onlyLegs.indexOf(category);
+                    if (index > -1) {
+                        this.onlyLegs.splice(index, 1);
+                    }
+                } else {
+                    this.onlyLegs.push(category);
+                }
+
+            }
         },
         computed: {
+
+            buttonCategory: function(category){
+
+                let filteredCategory = [];
+                return filteredCategory.push(category);
+            },
+
+            computedCategory: function() {
+                // create array Category from result data
+                let resultCategory = this.data.resultData;
+                //ES6 Object.keys
+                return Object.keys(resultCategory);
+            },
+
             onlySpecificLegs: function (){
-              let personResultData = this.data.resultData;
 
-              var result = [];
-              for(var i=0; i<this.onlyLegs.length; i++) {
-                  var index = this.onlyLegs[i];
-                  result.push(personResultData[index]);
-              }
+                let personResultData = this.data.resultData;
 
-              return result;
+                let filteredResult = [];
+
+                if(this.onlyLegs == 0) {
+                    filteredResult = personResultData;
+                } else {
+                    var result = [];
+
+                    for(var i=0; i<this.onlyLegs.length; i++) {
+                        var index = this.onlyLegs[i];
+                        filteredResult.push(personResultData[index]);
+                  }
+                }
+
+              return filteredResult;
           }
         },
         filters: {
