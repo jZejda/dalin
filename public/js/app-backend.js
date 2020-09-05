@@ -2600,14 +2600,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['result_id'],
+  props: ['result_id', 'oevent_url'],
   data: function data() {
     return {
       data: [],
-      test: '',
-      onlyLegs: []
+      onlyLegs: [],
+      sh_filters: false
     };
   },
   mounted: function mounted() {
@@ -2665,6 +2675,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   filters: {
+    toKmLenght: function toKmLenght(value) {
+      if (!value) return '';
+      value = value.toString();
+      return value / 1000;
+    },
     secondToMinutes: function secondToMinutes(value) {
       return (Math.round((value / 60 + Number.EPSILON) * 100) / 100).toFixed(2);
     },
@@ -52980,7 +52995,84 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "flex flex-wrap" },
+            { staticClass: "flex justify-between text-sm lg:text-base" },
+            [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "relative bg-green-500 text-white px-2 rounded overflow-visible",
+                  on: {
+                    click: function($event) {
+                      _vm.sh_filters = !_vm.sh_filters
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                    Fitr kategorie\n                    "
+                  ),
+                  _vm.onlyLegs.length != 0
+                    ? _c(
+                        "div",
+                        {
+                          staticClass:
+                            "absolute top-0 right-0 -mt-3 -mr-3 rounded-full h-4 w-4 flex bg-red-500 items-center justify-center text-xs"
+                        },
+                        [_vm._v(_vm._s(_vm.onlyLegs.length))]
+                      )
+                    : _vm._e()
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "span",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.oevent_url != "",
+                      expression: "oevent_url != ''"
+                    }
+                  ]
+                },
+                [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "rounded-md px-2 border border-gray-400",
+                      attrs: { href: _vm.oevent_url }
+                    },
+                    [_vm._v("Web závodu")]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "rounded-md px-2 border border-gray-400",
+                  on: { click: _vm.readEventIofv3Result }
+                },
+                [_vm._v("Aktualizuj výsledky")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: _vm.sh_filters,
+                  expression: "sh_filters"
+                }
+              ],
+              staticClass: "flex flex-wrap mt-2"
+            },
             _vm._l(_vm.computedCategory, function(category) {
               return _c(
                 "span",
@@ -52992,7 +53084,7 @@ var render = function() {
                           "span",
                           {
                             staticClass:
-                              "rounded-md px-1 border border-green-800 bg-green-500",
+                              "rounded-md px-1 border border-gray-300 bg-green-500 text-gray-100",
                             on: {
                               click: function($event) {
                                 return _vm.legFilterToggle(category)
@@ -53028,7 +53120,7 @@ var render = function() {
               _c(
                 "p",
                 {
-                  staticClass: "px-2 text-2xl border-t-4 border-green-500 mt-4"
+                  staticClass: "px-2 text-2xl border-t-4 border-green-500 mt-2"
                 },
                 [_vm._v(_vm._s(legs.classCourseData.courseName))]
               ),
@@ -53037,9 +53129,11 @@ var render = function() {
                 _vm._v(
                   "převýšení: " +
                     _vm._s(legs.classCourseData.courseClimb) +
-                    ", délka: " +
-                    _vm._s(legs.classCourseData.courseLenght) +
-                    " kontrol: " +
+                    " m | vzdálenost: " +
+                    _vm._s(
+                      _vm._f("toKmLenght")(legs.classCourseData.courseLenght)
+                    ) +
+                    " km | kontrol: " +
                     _vm._s(legs.classCourseData.courseNumControls)
                 )
               ]),

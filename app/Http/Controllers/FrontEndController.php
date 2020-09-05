@@ -110,6 +110,15 @@ class FrontEndController extends Controller
     {
         $result = Oevent_results::where('id', '=', $id)->first();
 
+        // Event data
+        $oevent_data = Oevent::where('id', '=', $result['oevent_id'])->first();
+        if (!is_null($oevent_data['url'])) {
+            $oevent_url = $oevent_data['url'];
+        } else {
+            $oevent_url  = null;
+        }
+
+        //ddd($oevent_url);
 
         if(config('app-config.result_type')!== null) {
             $result_type = config('app-config.result_type');
@@ -144,6 +153,6 @@ class FrontEndController extends Controller
         }
 
 
-        return view('frontend.event-result', ['show_result' => $show_result]);
+        return view('frontend.event-result', ['show_result' => $show_result, 'oevent_url' => $oevent_url]);
     }
 }

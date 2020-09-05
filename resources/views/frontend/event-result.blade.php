@@ -35,7 +35,8 @@
 
                 <div class="oswald_text -mx-8 lg:mx-0">
                     <event-iofv3-result-component
-                        :result_id = {{ $show_result['result_id'] }}
+                        :result_id = "{{ $show_result['result_id'] }}"
+                        :oevent_url = "'{{ $oevent_url }}'"
                     >
                     </event-iofv3-result-component>
                 </div>

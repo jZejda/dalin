@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tool;
 
+use App\Oevent;
 use App\Oevent_results;
 use Storage;
 use App\Http\Controllers\Controller;
@@ -14,6 +15,8 @@ class EventResultController extends Controller
 
         $result = Oevent_results::where('id', '=', $id)->first();
         $exists = Storage::disk('eventdata')->exists($result['result_path']);
+
+
 
         if($exists)
         {
@@ -92,7 +95,7 @@ class EventResultController extends Controller
         }
 
         return response()->json([
-            'sorted_data' => $sorted_data
+            'sorted_data' => $sorted_data,
         ]);
     }
 }
