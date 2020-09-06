@@ -28,9 +28,22 @@ class EventResultController extends Controller
             $array = json_decode($json,TRUE);
 
             $sorted_data = array();
+
+            if(isset($array['@attributes']['createTime'])) {
+                //$unix_timestapm = strtotime($array['@attributes']['createTime']);
+
+                $date = date_create();
+                date_timestamp_set($date, strtotime($array['@attributes']['createTime']));
+                $createDateTime = date_format($date, 'd.m.Y H:i:s');
+            } else {
+                $createDateTime = ' - ';
+            }
+
+
             $sorted_data['resultInfo'] = array(
                 'iofVersion' => $array['@attributes']['iofVersion'],
-                'createTime' => $array['@attributes']['createTime'],
+                //'createTime' => $array['@attributes']['createTime'],
+                'createTime' => $createDateTime,
                 'creator' => $array['@attributes']['creator'],
             );
             $sorted_data['event'] = array(

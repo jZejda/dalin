@@ -2633,6 +2633,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['result_id', 'oevent_url'],
@@ -53012,8 +53018,16 @@ var render = function() {
         "div",
         { staticClass: "px-6 items-center" },
         [
-          _c("p", { staticClass: "pt-4 text-2xl" }, [
-            _vm._v(_vm._s(_vm.data.event.name) + " - výsledky")
+          _c("div", { staticClass: "flex justify-between mb-2" }, [
+            _c("div", { staticClass: "text-2xl" }, [
+              _vm._v(_vm._s(_vm.data.event.name) + " - výsl.")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "text-xs text-gray-500 text-right" }, [
+              _c("div", [_vm._v(_vm._s(_vm.data.resultInfo.creator))]),
+              _vm._v(" "),
+              _c("div", [_vm._v(_vm._s(_vm.data.resultInfo.createTime))])
+            ])
           ]),
           _vm._v(" "),
           _c(

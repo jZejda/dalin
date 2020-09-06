@@ -9,7 +9,13 @@
             </div>
 
             <div class="px-6 items-center">
-            <p class="pt-4 text-2xl">{{ data.event.name }} - výsledky</p>
+                <div class="flex justify-between mb-2">
+                    <div class="text-2xl">{{ data.event.name }} - výsl.</div>
+                    <div class="text-xs text-gray-500 text-right">
+                        <div>{{ data.resultInfo.creator }}</div>
+                        <div>{{ data.resultInfo.createTime }}</div>
+                    </div>
+                </div>
 
                 <div class="flex justify-between text-sm lg:text-base">
                     <button @click="sh_filters = !sh_filters" class='relative bg-green-500 text-white px-2 rounded overflow-visible'>
