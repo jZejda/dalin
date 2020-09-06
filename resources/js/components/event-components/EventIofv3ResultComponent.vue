@@ -54,7 +54,30 @@
                         </thead>
                         <tbody>
                         <tr v-for="(personResult, personEntryId) in legs.personCourseData" class="text-sm lg:text-base">
-                            <td class="px-2 m-b-2 border-b-2 border-gray-400">{{ personResult.personResultPosition}}</td>
+                            <td class="px-2 m-b-2 border-b-2 border-gray-400">
+                                <span v-if="personResult.personResultStatus == 'OK' ">
+                                    {{ personResult.personResultPosition}}
+                                </span>
+                                <span v-else-if="personResult.personResultStatus == 'MissingPunch'">
+                                    disk
+                                </span>
+                                <span v-else-if="personResult.personResultStatus == 'DidNotFinish'">
+                                    vzd.
+                                </span>
+                                <span v-else-if="personResult.personResultStatus == 'NotCompeting'">
+                                    ms
+                                </span>
+                                <span v-else-if="personResult.personResultStatus == 'OverTime'">
+                                    ot
+                                </span>
+                                <span v-else-if="personResult.personResultStatus == 'DidNotStart'">
+                                    chst.
+                                </span>
+                                <span v-else>
+                                    -
+                                </span>
+
+                            </td>
                             <td class="px-2 border-b-2 border-gray-400">{{ personResult.personId}}</td>
                             <td class="px-2 border-b-2 border-gray-400">{{ personResult.familyName}} {{ personResult.givenName}}</td>
                             <td class="hidden lg:block px-2 border-b-2 border-gray-400">{{ personResult.personOrgLongname}}</td>

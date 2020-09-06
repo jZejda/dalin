@@ -112,7 +112,7 @@ class FrontEndController extends Controller
 
         // Event data
         $oevent_data = Oevent::where('id', '=', $result['oevent_id'])->first();
-        if (!is_null($oevent_data['url'])) {
+        if (isset($oevent_data['url'])) {
             $oevent_url = $oevent_data['url'];
         } else {
             $oevent_url  = null;

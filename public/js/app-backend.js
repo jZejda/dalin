@@ -2610,6 +2610,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['result_id', 'oevent_url'],
@@ -53153,7 +53176,51 @@ var render = function() {
                         {
                           staticClass: "px-2 m-b-2 border-b-2 border-gray-400"
                         },
-                        [_vm._v(_vm._s(personResult.personResultPosition))]
+                        [
+                          personResult.personResultStatus == "OK"
+                            ? _c("span", [
+                                _vm._v(
+                                  "\n                                " +
+                                    _vm._s(personResult.personResultPosition) +
+                                    "\n                            "
+                                )
+                              ])
+                            : personResult.personResultStatus == "MissingPunch"
+                            ? _c("span", [
+                                _vm._v(
+                                  "\n                                disk\n                            "
+                                )
+                              ])
+                            : personResult.personResultStatus == "DidNotFinish"
+                            ? _c("span", [
+                                _vm._v(
+                                  "\n                                vzd.\n                            "
+                                )
+                              ])
+                            : personResult.personResultStatus == "NotCompeting"
+                            ? _c("span", [
+                                _vm._v(
+                                  "\n                                ms\n                            "
+                                )
+                              ])
+                            : personResult.personResultStatus == "OverTime"
+                            ? _c("span", [
+                                _vm._v(
+                                  "\n                                ot\n                            "
+                                )
+                              ])
+                            : personResult.personResultStatus == "DidNotStart"
+                            ? _c("span", [
+                                _vm._v(
+                                  "\n                                chst.\n                            "
+                                )
+                              ])
+                            : _c("span", [
+                                _vm._v(
+                                  "\n                                -\n                            "
+                                )
+                              ])
+                        ]
                       ),
                       _vm._v(" "),
                       _c(

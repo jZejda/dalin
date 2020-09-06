@@ -43,9 +43,9 @@ class EventResultController extends Controller
                 $class_short_name = $class['Class']['Name'];
                 $class_course_data = array (
                     'courseName'        => $class['Course']['Name'],
-                    'courseLenght'      => $class['Course']['Length'],
-                    'courseClimb'       => $class['Course']['Climb'],
-                    'courseNumControls' => $class['Course']['NumberOfControls'],
+                    'courseLenght'      => isset($class['Course']['Length']) ? $class['Course']['Length'] : 'neuvedena',
+                    'courseClimb'       => isset($class['Course']['Climb']) ? $class['Course']['Climb'] : 'neuvedeno' ,
+                    'courseNumControls' => isset($class['Course']['NumberOfControls']) ? $class['Course']['NumberOfControls'] : '-',
                 );
 
 
