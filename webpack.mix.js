@@ -1,8 +1,5 @@
 const mix = require('laravel-mix');
 
-require('laravel-mix-tailwind');
-require('laravel-mix-purgecss');
-
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -14,23 +11,7 @@ require('laravel-mix-purgecss');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-   .js('resources/js/app-backend.js', 'public/js')
-   .postCss('resources/css/app.css', 'public/css')
-   .tailwind('./tailwind.config.js')
-   .purgeCss();
-
-/*
- | -------------------------------------------------------------------------
- | Copy from node_modules
- | -------------------------------------------------------------------------
- */
-mix.copyDirectory('node_modules/tinymce', 'public/vendor/tinymce');
-mix.copyDirectory('node_modules/tinymce-i18n/langs', 'public/vendor/tinymce/langs');
-
-
-if (mix.inProduction()) {
-  mix
-   .version()
-   .purgeCss();
-}
+mix.js('resources/js/app.js', 'public/js').postCss('resources/css/app.css', 'public/css', [
+    require('postcss-import'),
+    require('tailwindcss'),
+]);

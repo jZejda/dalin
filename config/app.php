@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => 'cs',
+    'locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'cs',
+    'fallback_locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -166,23 +166,6 @@ return [
          * Package Service Providers...
          */
 
-        Barryvdh\Debugbar\ServiceProvider::class,
-
-        // TailwindCSS
-        LaravelFrontendPresets\TailwindCssPreset\TailwindCssPresetServiceProvider::class,
-
-        // AUTH
-        Spatie\Permission\PermissionServiceProvider::class,
-
-        // HTML Collective
-        Collective\Html\HtmlServiceProvider::class,
-
-        // Slugable
-        Cviebrock\EloquentSluggable\ServiceProvider::class,
-
-        // Image mainupulate
-        Intervention\Image\ImageServiceProvider::class,
-
         /*
          * Application Service Providers...
          */
@@ -191,10 +174,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
-        // QR Code
-        SimpleSoftwareIO\QrCode\ServiceProvider::class,
-
+        App\Providers\FortifyServiceProvider::class,
+        App\Providers\JetstreamServiceProvider::class,
 
     ],
 
@@ -228,6 +209,7 @@ return [
         'File' => Illuminate\Support\Facades\File::class,
         'Gate' => Illuminate\Support\Facades\Gate::class,
         'Hash' => Illuminate\Support\Facades\Hash::class,
+        'Http' => Illuminate\Support\Facades\Http::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
@@ -246,14 +228,6 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
-
-        'Form' => Collective\Html\FormFacade::class,
-        'Html' => Collective\Html\HtmlFacade::class,
-        'Image' => Intervention\Image\Facades\Image::class,
-
-        'QrCode' => SimpleSoftwareIO\QrCode\Facade::class,
 
     ],
 
