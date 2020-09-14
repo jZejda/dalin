@@ -166,6 +166,13 @@ return [
          * Package Service Providers...
          */
 
+
+        Spatie\Permission\PermissionServiceProvider::class, //Auth
+        Collective\Html\HtmlServiceProvider::class, // HTML Collective
+        Cviebrock\EloquentSluggable\ServiceProvider::class,  // Slugable
+        Intervention\Image\ImageServiceProvider::class, // Image mainupulate
+
+
         /*
          * Application Service Providers...
          */
@@ -228,6 +235,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        'Form' => Collective\Html\FormFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
+        'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

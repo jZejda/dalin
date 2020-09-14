@@ -1,22 +1,36 @@
 {
-    "name": "laravel/laravel",
+    "name": "jzejda/dalin",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "The DaLin orienteering CMS.",
     "keywords": [
-        "framework",
-        "laravel"
+        "orienteering",
+        "laravel",
+        "vuejs",
+        "tailwindcss"
     ],
     "license": "MIT",
+    "homepage": "https://oplan.cz",
+    "authors": [
+        {
+            "name": "Jiri Zejda",
+            "email": "me@jirizejda.cz",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": "^7.3",
+        "cviebrock/eloquent-sluggable": "^8.0",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "intervention/image": "^2.5",
         "laravel/framework": "^8.0",
         "laravel/jetstream": "^1.1",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.0",
-        "livewire/livewire": "^2.0"
+        "laravelcollective/html": "^6.2",
+        "livewire/livewire": "^2.0",
+        "spatie/laravel-permission": "^3.16"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
