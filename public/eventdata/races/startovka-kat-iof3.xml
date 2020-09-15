@@ -1,0 +1,1900 @@
+<?xml version="1.0" encoding="windows-1250"?>
+ <StartList xmlns="http://www.orienteering.org/datastandard/3.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ iofVersion="3.0"
+ createTime="2020-08-14T21:00:41.590"
+ creator="SportSoftware OE2010 (M) V.11.0">
+<Event>
+<Name>12 JML Uhřice</Name>
+</Event>
+<ClassStart>
+<Class resultListMode="Default" sex="F" minAge="35">
+<Id>104566</Id>
+<Name>D35</Name>
+<ShortName>D35</ShortName>
+<Fee>
+<Name>Default</Name>
+<Amount>100.00</Amount>
+</Fee>
+<Fee>
+<Name>Startfee 2</Name>
+<Amount>150.00</Amount>
+</Fee>
+</Class>
+<Course>
+<Id>9009</Id>
+<Name>D35</Name>
+<Length>4900</Length>
+<Climb>210</Climb>
+<NumberOfControls>11</NumberOfControls>
+</Course>
+<StartName>1</StartName>
+<PersonStart>
+<EntryId>1539205</EntryId>
+<Person sex="F">
+<Id>SBK7789</Id>
+<Name>
+<Family>Jágrová</Family>
+<Given>Vlasta</Given>
+</Name>
+<BirthDate>1977-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>138</Id>
+<Name>KOB START Blansko</Name>
+<ShortName>KOB START Blansko</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:43:00.000</StartTime>
+<ControlCard>8662315</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539282</EntryId>
+<Person sex="F">
+<Id>ZBM7550</Id>
+<Name>
+<Family>Finstrlová</Family>
+<Given>Alena</Given>
+</Name>
+<BirthDate>1975-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:46:00.000</StartTime>
+<ControlCard>897391</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538752</EntryId>
+<Person sex="F">
+<Id>SBK8151</Id>
+<Id type="IOF">1145</Id>
+<Name>
+<Family>Daňková</Family>
+<Given>Veronika</Given>
+</Name>
+<BirthDate>1981-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>138</Id>
+<Name>KOB START Blansko</Name>
+<ShortName>KOB START Blansko</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:49:00.000</StartTime>
+<ControlCard>8007503</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539291</EntryId>
+<Person sex="F">
+<Id>ZBM8051</Id>
+<Name>
+<Family>Šichová</Family>
+<Given>Radka</Given>
+</Name>
+<BirthDate>1980-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:52:00.000</StartTime>
+<ControlCard>232096</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1537061</EntryId>
+<Person sex="F">
+<Id>SKM7750</Id>
+<Name>
+<Family>Dittrichová</Family>
+<Given>Andrea</Given>
+</Name>
+<BirthDate>1977-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>150</Id>
+<Name>KOB Směr Kroměříž</Name>
+<ShortName>KOB Směr Kroměříž</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:55:00.000</StartTime>
+<ControlCard>8655387</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539304</EntryId>
+<Person sex="F">
+<Id>RBK7451</Id>
+<Name>
+<Family>Broschová</Family>
+<Given>Lucie</Given>
+</Name>
+<BirthDate>1974-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>133</Id>
+<Name>SK Radioklub Blansko</Name>
+<ShortName>SK Radioklub Blansko</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:58:00.000</StartTime>
+<ControlCard>2061836</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1533242</EntryId>
+<Person sex="F">
+<Id>GIG7750</Id>
+<Id type="IOF">3483</Id>
+<Name>
+<Family>Linhartová</Family>
+<Given>Martina</Given>
+</Name>
+<BirthDate>1977-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>1512</Id>
+<Name>GIGANT Orienteering</Name>
+<ShortName>GIGANT Orienteering</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:01:00.000</StartTime>
+<ControlCard>52690</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539116</EntryId>
+<Person sex="F">
+<Id>KVS7360</Id>
+<Name>
+<Family>Pavlicová</Family>
+<Given>Anna</Given>
+</Name>
+<BirthDate>1973-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>77</Id>
+<Name>SKOB Kobra Vsetín</Name>
+<ShortName>SKOB Kobra Vsetín</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:04:00.000</StartTime>
+<ControlCard>2116450</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539273</EntryId>
+<Person sex="F">
+<Id>ZBM6251</Id>
+<Name>
+<Family>Hrušková</Family>
+<Given>Lenka</Given>
+</Name>
+<BirthDate>1962-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:07:00.000</StartTime>
+<ControlCard>49398</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1535928</EntryId>
+<Person sex="F">
+<Id>KVS7750</Id>
+<Name>
+<Family>Mikulčíková</Family>
+<Given>Irena</Given>
+</Name>
+<BirthDate>1977-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>77</Id>
+<Name>SKOB Kobra Vsetín</Name>
+<ShortName>SKOB Kobra Vsetín</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:10:00.000</StartTime>
+<ControlCard>2001910</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538865</EntryId>
+<Person sex="F">
+<Id>LCE8253</Id>
+<Name>
+<Family>Slámová</Family>
+<Given>Alena</Given>
+</Name>
+<BirthDate>1982-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>81</Id>
+<Name>OOB TJ Slovan Luhačovice</Name>
+<ShortName>OOB TJ Slovan Luhačovice</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:13:00.000</StartTime>
+<ControlCard>2080838</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1460056</EntryId>
+<Person sex="F">
+<Id>TBM7861</Id>
+<Name>
+<Family>Kroutilová</Family>
+<Given>Eva</Given>
+</Name>
+<BirthDate>1978-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>169</Id>
+<Name>KOS TJ Tesla Brno</Name>
+<ShortName>KOS TJ Tesla Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:16:00.000</StartTime>
+<ControlCard>2120617</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539283</EntryId>
+<Person sex="F">
+<Id>ZBM7551</Id>
+<Name>
+<Family>Urbánková</Family>
+<Given>Lenka</Given>
+</Name>
+<BirthDate>1975-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:19:00.000</StartTime>
+<ControlCard>2051480</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539285</EntryId>
+<Person sex="F">
+<Id>ZBM7655</Id>
+<Name>
+<Family>Tachovská</Family>
+<Given>Kamila</Given>
+</Name>
+<BirthDate>1976-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:25:00.000</StartTime>
+<ControlCard>2094550</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1535379</EntryId>
+<Person sex="F">
+<Id>TBM7664</Id>
+<Name>
+<Family>Jelínková</Family>
+<Given>Irena</Given>
+</Name>
+<BirthDate>1976-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>169</Id>
+<Name>KOS TJ Tesla Brno</Name>
+<ShortName>KOS TJ Tesla Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:28:00.000</StartTime>
+<ControlCard>8680408</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539284</EntryId>
+<Person sex="F">
+<Id>ZBM7654</Id>
+<Name>
+<Family>Kučerová</Family>
+<Given>Renata</Given>
+</Name>
+<BirthDate>1976-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:31:00.000</StartTime>
+<ControlCard>2090859</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539338</EntryId>
+<Person sex="M">
+<Id>0240001</Id>
+<Name>
+<Family>Fleissigová</Family>
+<Given>Eva</Given>
+</Name>
+</Person>
+<Organisation>
+<Id>6078</Id>
+<Name>Rychtářov</Name>
+<ShortName>Rychtářov</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:34:00.000</StartTime>
+<ControlCard>52010</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<Person sex="M">
+<Name>
+<Family>Vakant</Family>
+<Given></Given>
+</Name>
+</Person>
+<Organisation>
+<Id>0</Id>
+<Name>Vakant</Name>
+<ShortName>Vakant</ShortName>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:37:00.000</StartTime>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1540382</EntryId>
+<Person sex="F">
+<Id>VBM6555</Id>
+<Id type="IOF">30352</Id>
+<Name>
+<Family>Jemelíková</Family>
+<Given>Lada</Given>
+</Name>
+<BirthDate>1965-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>188</Id>
+<Name>VSK Mendelu Brno</Name>
+<ShortName>VSK Mendelu Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:40:00.000</StartTime>
+<ControlCard>53489</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>150.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1533177</EntryId>
+<Person sex="F">
+<Id>LBM7362</Id>
+<Name>
+<Family>Korpasová</Family>
+<Given>Ivana</Given>
+</Name>
+<BirthDate>1973-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>80</Id>
+<Name>TJ Lokomotiva Ingstav Brno</Name>
+<ShortName>TJ Lokomotiva Ingstav Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:43:00.000</StartTime>
+<ControlCard>1409879</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<Person sex="M">
+<Name>
+<Family>Vakant</Family>
+<Given></Given>
+</Name>
+</Person>
+<Organisation>
+<Id>0</Id>
+<Name>Vakant</Name>
+<ShortName>Vakant</ShortName>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:46:00.000</StartTime>
+</Start>
+</PersonStart>
+<PersonStart>
+<Person sex="M">
+<Name>
+<Family>Vakant</Family>
+<Given></Given>
+</Name>
+</Person>
+<Organisation>
+<Id>0</Id>
+<Name>Vakant</Name>
+<ShortName>Vakant</ShortName>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:49:00.000</StartTime>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1537886</EntryId>
+<Person sex="F">
+<Id>TZL7351</Id>
+<Name>
+<Family>Batani</Family>
+<Given>Hana</Given>
+</Name>
+<BirthDate>1973-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>183</Id>
+<Name>SKOB Zlín</Name>
+<ShortName>SKOB Zlín</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:52:00.000</StartTime>
+<ControlCard>8100202</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538974</EntryId>
+<Person sex="F">
+<Id>TBM7761</Id>
+<Name>
+<Family>Doušková</Family>
+<Given>Klára</Given>
+</Name>
+<BirthDate>1977-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>169</Id>
+<Name>KOS TJ Tesla Brno</Name>
+<ShortName>KOS TJ Tesla Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:55:00.000</StartTime>
+<ControlCard>2067214</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539169</EntryId>
+<Person sex="F">
+<Id>HLV7060</Id>
+<Name>
+<Family>Sedláčková</Family>
+<Given>Jana</Given>
+</Name>
+<BirthDate>1970-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>41</Id>
+<Name>KČT - OB Holešov</Name>
+<ShortName>KČT - OB Holešov</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:58:00.000</StartTime>
+<ControlCard>416084</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538481</EntryId>
+<Person sex="F">
+<Id>TBM7652</Id>
+<Name>
+<Family>La Carbonara</Family>
+<Given>Hana</Given>
+</Name>
+<BirthDate>1976-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>169</Id>
+<Name>KOS TJ Tesla Brno</Name>
+<ShortName>KOS TJ Tesla Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:01:00.000</StartTime>
+<ControlCard>8100026</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+</ClassStart>
+<ClassStart>
+<Class resultListMode="Default" sex="M" minAge="35">
+<Id>104576</Id>
+<Name>H35</Name>
+<ShortName>H35</ShortName>
+<Fee>
+<Name>Default</Name>
+<Amount>100.00</Amount>
+</Fee>
+<Fee>
+<Name>Startfee 2</Name>
+<Amount>150.00</Amount>
+</Fee>
+</Class>
+<Course>
+<Id>9021</Id>
+<Name>H35</Name>
+<Length>7870</Length>
+<Climb>390</Climb>
+<NumberOfControls>22</NumberOfControls>
+</Course>
+<StartName>1</StartName>
+<PersonStart>
+<EntryId>1486641</EntryId>
+<Person sex="M">
+<Id>TBM6747</Id>
+<Name>
+<Family>Horký</Family>
+<Given>Tomáš</Given>
+</Name>
+<BirthDate>1967-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>169</Id>
+<Name>KOS TJ Tesla Brno</Name>
+<ShortName>KOS TJ Tesla Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:30:00.000</StartTime>
+<ControlCard>49659</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538749</EntryId>
+<Person sex="M">
+<Id>SBK7541</Id>
+<Id type="IOF">8699</Id>
+<Name>
+<Family>Daněk</Family>
+<Given>Roman</Given>
+</Name>
+<BirthDate>1975-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>138</Id>
+<Name>KOB START Blansko</Name>
+<ShortName>KOB START Blansko</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:33:00.000</StartTime>
+<ControlCard>8008112</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1534181</EntryId>
+<Person sex="M">
+<Id>TBM7529</Id>
+<Name>
+<Family>Sedláček</Family>
+<Given>Břetislav</Given>
+</Name>
+<BirthDate>1975-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>169</Id>
+<Name>KOS TJ Tesla Brno</Name>
+<ShortName>KOS TJ Tesla Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:36:00.000</StartTime>
+<ControlCard>2127883</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1540431</EntryId>
+<Person sex="M">
+<Id>0290001</Id>
+<Name>
+<Family>Vaculín</Family>
+<Given>Petr</Given>
+</Name>
+</Person>
+<Organisation>
+<Id>6093</Id>
+<Name>Rychlá bota</Name>
+<ShortName>Rychlá bota</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:39:00.000</StartTime>
+<ControlCard>416206</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>150.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539309</EntryId>
+<Person sex="M">
+<Id>RBK7111</Id>
+<Name>
+<Family>Brosch</Family>
+<Given>Petr</Given>
+</Name>
+<BirthDate>1971-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>133</Id>
+<Name>SK Radioklub Blansko</Name>
+<ShortName>SK Radioklub Blansko</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:42:00.000</StartTime>
+<ControlCard>2061849</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538973</EntryId>
+<Person sex="M">
+<Id>TBM7911</Id>
+<Name>
+<Family>Doušek</Family>
+<Given>Robert</Given>
+</Name>
+<BirthDate>1979-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>169</Id>
+<Name>KOS TJ Tesla Brno</Name>
+<ShortName>KOS TJ Tesla Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:45:00.000</StartTime>
+<ControlCard>2067213</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1537047</EntryId>
+<Person sex="M">
+<Id>UBM7903</Id>
+<Name>
+<Family>Račanský</Family>
+<Given>Jan</Given>
+</Name>
+<BirthDate>1979-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>184</Id>
+<Name>MENISKOS Brno</Name>
+<ShortName>MENISKOS Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:48:00.000</StartTime>
+<ControlCard>8100030</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1535269</EntryId>
+<Person sex="M">
+<Id>TZL6502</Id>
+<Name>
+<Family>Kusák</Family>
+<Given>Ivan</Given>
+</Name>
+<BirthDate>1965-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>183</Id>
+<Name>SKOB Zlín</Name>
+<ShortName>SKOB Zlín</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:51:00.000</StartTime>
+<ControlCard>53896</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539012</EntryId>
+<Person sex="M">
+<Id>TBM7401</Id>
+<Id type="IOF">16028</Id>
+<Name>
+<Family>Schwab</Family>
+<Given>David</Given>
+</Name>
+<BirthDate>1974-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>169</Id>
+<Name>KOS TJ Tesla Brno</Name>
+<ShortName>KOS TJ Tesla Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:54:00.000</StartTime>
+<ControlCard>8007401</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1475757</EntryId>
+<Person sex="M">
+<Id>BBM7901</Id>
+<Name>
+<Family>Denemarek</Family>
+<Given>Ivo</Given>
+</Name>
+<BirthDate>1979-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>11</Id>
+<Name>BETA URSUS Orienteering</Name>
+<ShortName>BETA URSUS Orienteering</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:56:00.000</StartTime>
+<ControlCard>7790320</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1534354</EntryId>
+<Person sex="M">
+<Id>TZL6304</Id>
+<Name>
+<Family>Schäfer</Family>
+<Given>Michal</Given>
+</Name>
+<BirthDate>1963-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>183</Id>
+<Name>SKOB Zlín</Name>
+<ShortName>SKOB Zlín</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T10:57:00.000</StartTime>
+<ControlCard>7209288</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539286</EntryId>
+<Person sex="M">
+<Id>ZBM7704</Id>
+<Name>
+<Family>Rotek</Family>
+<Given>Pavel</Given>
+</Name>
+<BirthDate>1977-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:00:00.000</StartTime>
+<ControlCard>2103682</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538121</EntryId>
+<Person sex="M">
+<Id>UBM7104</Id>
+<Name>
+<Family>Rajnoha</Family>
+<Given>Miroslav</Given>
+</Name>
+<BirthDate>1971-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>184</Id>
+<Name>MENISKOS Brno</Name>
+<ShortName>MENISKOS Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:03:00.000</StartTime>
+<ControlCard>515472</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539280</EntryId>
+<Person sex="M">
+<Id>ZBM7402</Id>
+<Name>
+<Family>Baše</Family>
+<Given>Tomáš</Given>
+</Name>
+<BirthDate>1974-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:06:00.000</StartTime>
+<ControlCard>2103686</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539298</EntryId>
+<Person sex="M">
+<Id>RBK7401</Id>
+<Name>
+<Family>Hanousek</Family>
+<Given>Kamil</Given>
+</Name>
+<BirthDate>1974-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>133</Id>
+<Name>SK Radioklub Blansko</Name>
+<ShortName>SK Radioklub Blansko</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:09:00.000</StartTime>
+<ControlCard>2115695</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539287</EntryId>
+<Person sex="M">
+<Id>ZBM7705</Id>
+<Name>
+<Family>Beránek</Family>
+<Given>Miroslav</Given>
+</Name>
+<BirthDate>1977-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:12:00.000</StartTime>
+<ControlCard>2111737</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539292</EntryId>
+<Person sex="M">
+<Id>ZBM8411</Id>
+<Name>
+<Family>Liščinský</Family>
+<Given>Tomáš</Given>
+</Name>
+<BirthDate>1984-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:18:00.000</StartTime>
+<ControlCard>2103680</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1537054</EntryId>
+<Person sex="M">
+<Id>SKM7301</Id>
+<Name>
+<Family>Pěček</Family>
+<Given>Martin</Given>
+</Name>
+<BirthDate>1973-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>150</Id>
+<Name>KOB Směr Kroměříž</Name>
+<ShortName>KOB Směr Kroměříž</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:21:00.000</StartTime>
+<ControlCard>253369</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539288</EntryId>
+<Person sex="M">
+<Id>ZBM7706</Id>
+<Name>
+<Family>Skoba</Family>
+<Given>Ondřej</Given>
+</Name>
+<BirthDate>1977-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:24:00.000</StartTime>
+<ControlCard>416055</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538628</EntryId>
+<Person sex="M">
+<Id>XBM7801</Id>
+<Name>
+<Family>Linhart</Family>
+<Given>Michal</Given>
+</Name>
+<BirthDate>1978-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>200</Id>
+<Name>PELLS ABND RACING TEAM</Name>
+<ShortName>PELLS ABND RACING TEAM</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:27:00.000</StartTime>
+<ControlCard>8660912</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538803</EntryId>
+<Person sex="M">
+<Id>SKM7800</Id>
+<Name>
+<Family>Ošmera</Family>
+<Given>Jakub</Given>
+</Name>
+<BirthDate>1978-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>150</Id>
+<Name>KOB Směr Kroměříž</Name>
+<ShortName>KOB Směr Kroměříž</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:30:00.000</StartTime>
+<ControlCard>8670759</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539274</EntryId>
+<Person sex="M">
+<Id>ZBM6700</Id>
+<Name>
+<Family>Coufal</Family>
+<Given>Svatoš</Given>
+</Name>
+<BirthDate>1967-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>205</Id>
+<Name>SK Žabovřesky Brno</Name>
+<ShortName>SK Žabovřesky Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:33:00.000</StartTime>
+<ControlCard>1396843</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539022</EntryId>
+<Person sex="M">
+<Id>TZL7007</Id>
+<Id type="IOF">14779</Id>
+<Name>
+<Family>Pekárek</Family>
+<Given>Evžen</Given>
+</Name>
+<BirthDate>1970-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>183</Id>
+<Name>SKOB Zlín</Name>
+<ShortName>SKOB Zlín</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:36:00.000</StartTime>
+<ControlCard>8660398</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1535959</EntryId>
+<Person sex="M">
+<Id>VIC7700</Id>
+<Name>
+<Family>Vlček</Family>
+<Given>Jiří</Given>
+</Name>
+<BirthDate>1977-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>191</Id>
+<Name>OB Vizovice</Name>
+<ShortName>OB Vizovice</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:39:00.000</StartTime>
+<ControlCard>2073733</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539112</EntryId>
+<Person sex="M">
+<Id>0190001</Id>
+<Name>
+<Family>Račanský</Family>
+<Given>Martin</Given>
+</Name>
+</Person>
+<Organisation>
+<Id>6067</Id>
+<Name>Neregistrovaný</Name>
+<ShortName>Neregistrovaný</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:42:00.000</StartTime>
+<ControlCard>2116189</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1539105</EntryId>
+<Person sex="M">
+<Id>0180002</Id>
+<Name>
+<Family>Baláč</Family>
+<Given>Radek</Given>
+</Name>
+</Person>
+<Organisation>
+<Id>6065</Id>
+<Name>Baláčovi</Name>
+<ShortName>Baláčovi</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:45:00.000</StartTime>
+<ControlCard>53264</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1536363</EntryId>
+<Person sex="M">
+<Id>SKM7104</Id>
+<Name>
+<Family>Pěček</Family>
+<Given>Vítězslav</Given>
+</Name>
+<BirthDate>1971-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>150</Id>
+<Name>KOB Směr Kroměříž</Name>
+<ShortName>KOB Směr Kroměříž</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:48:00.000</StartTime>
+<ControlCard>52199</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1438195</EntryId>
+<Person sex="M">
+<Id>0020001</Id>
+<Name>
+<Family>Musil</Family>
+<Given>Radek</Given>
+</Name>
+</Person>
+<Organisation>
+<Id>4959</Id>
+<Name>Musil</Name>
+<ShortName>Musil</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:51:00.000</StartTime>
+<ControlCard>7300475</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538742</EntryId>
+<Person sex="M">
+<Id>SKM8014</Id>
+<Id type="IOF">16630</Id>
+<Name>
+<Family>Stachoň</Family>
+<Given>Zdeněk</Given>
+</Name>
+<BirthDate>1980-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>150</Id>
+<Name>KOB Směr Kroměříž</Name>
+<ShortName>KOB Směr Kroměříž</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:54:00.000</StartTime>
+<ControlCard>8670825</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1537815</EntryId>
+<Person sex="M">
+<Id>VIC7801</Id>
+<Name>
+<Family>Kubíček</Family>
+<Given>Petr</Given>
+</Name>
+<BirthDate>1978-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>191</Id>
+<Name>OB Vizovice</Name>
+<ShortName>OB Vizovice</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T11:57:00.000</StartTime>
+<ControlCard>2126305</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1535651</EntryId>
+<Person sex="M">
+<Id>SKM7000</Id>
+<Name>
+<Family>Vlček</Family>
+<Given>Roman</Given>
+</Name>
+<BirthDate>1970-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>150</Id>
+<Name>KOB Směr Kroměříž</Name>
+<ShortName>KOB Směr Kroměříž</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:00:00.000</StartTime>
+<ControlCard>8670823</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538600</EntryId>
+<Person sex="M">
+<Id>VIC6901</Id>
+<Id type="IOF">15769</Id>
+<Name>
+<Family>Sadílek</Family>
+<Given>Martin</Given>
+</Name>
+<BirthDate>1969-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>191</Id>
+<Name>OB Vizovice</Name>
+<ShortName>OB Vizovice</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:03:00.000</StartTime>
+<ControlCard>8123400</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538983</EntryId>
+<Person sex="M">
+<Id>TZL7336</Id>
+<Name>
+<Family>Pernička</Family>
+<Given>Petr</Given>
+</Name>
+<BirthDate>1973-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>183</Id>
+<Name>SKOB Zlín</Name>
+<ShortName>SKOB Zlín</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:06:00.000</StartTime>
+<ControlCard>8104170</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1540672</EntryId>
+<Person sex="M">
+<Id>TBM7044</Id>
+<Id type="IOF">15701</Id>
+<Name>
+<Family>Rygl</Family>
+<Given>Jaroslav</Given>
+</Name>
+<BirthDate>1970-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>169</Id>
+<Name>KOS TJ Tesla Brno</Name>
+<ShortName>KOS TJ Tesla Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:15:00.000</StartTime>
+<ControlCard>8667970</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>150.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538583</EntryId>
+<Person sex="M">
+<Id>TZL7301</Id>
+<Name>
+<Family>Novotný</Family>
+<Given>Marek</Given>
+</Name>
+<BirthDate>1973-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>183</Id>
+<Name>SKOB Zlín</Name>
+<ShortName>SKOB Zlín</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:18:00.000</StartTime>
+<ControlCard>1417261</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538952</EntryId>
+<Person sex="M">
+<Id>TBM7319</Id>
+<Name>
+<Family>Sedlář</Family>
+<Given>Petr</Given>
+</Name>
+<BirthDate>1973-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>169</Id>
+<Name>KOS TJ Tesla Brno</Name>
+<ShortName>KOS TJ Tesla Brno</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:21:00.000</StartTime>
+<ControlCard>7201210</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1537060</EntryId>
+<Person sex="M">
+<Id>SKM7501</Id>
+<Name>
+<Family>Dittrich</Family>
+<Given>Pavel</Given>
+</Name>
+<BirthDate>1975-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>150</Id>
+<Name>KOB Směr Kroměříž</Name>
+<ShortName>KOB Směr Kroměříž</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:24:00.000</StartTime>
+<ControlCard>52207</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1535927</EntryId>
+<Person sex="M">
+<Id>KVS7301</Id>
+<Name>
+<Family>Švestka</Family>
+<Given>Vítězslav</Given>
+</Name>
+<BirthDate>1973-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>77</Id>
+<Name>SKOB Kobra Vsetín</Name>
+<ShortName>SKOB Kobra Vsetín</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:27:00.000</StartTime>
+<ControlCard>8670745</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<Person sex="M">
+<Name>
+<Family>Vakant</Family>
+<Given></Given>
+</Name>
+</Person>
+<Organisation>
+<Id>0</Id>
+<Name>Vakant</Name>
+<ShortName>Vakant</ShortName>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:31:00.000</StartTime>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538880</EntryId>
+<Person sex="M">
+<Id>LCE8103</Id>
+<Name>
+<Family>Sláma</Family>
+<Given>Lumír</Given>
+</Name>
+<BirthDate>1981-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>81</Id>
+<Name>OOB TJ Slovan Luhačovice</Name>
+<ShortName>OOB TJ Slovan Luhačovice</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:33:00.000</StartTime>
+<ControlCard>2091534</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1538807</EntryId>
+<Person sex="M">
+<Id>SKM7325</Id>
+<Name>
+<Family>Rytíř</Family>
+<Given>Michal</Given>
+</Name>
+<BirthDate>1973-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>150</Id>
+<Name>KOB Směr Kroměříž</Name>
+<ShortName>KOB Směr Kroměříž</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:36:00.000</StartTime>
+<ControlCard>7210886</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<EntryId>1536822</EntryId>
+<Person sex="M">
+<Id>VIC7624</Id>
+<Name>
+<Family>Marek</Family>
+<Given>Martin</Given>
+</Name>
+<BirthDate>1976-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>191</Id>
+<Name>OB Vizovice</Name>
+<ShortName>OB Vizovice</ShortName>
+<Country code="CZE">CZE</Country>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:39:00.000</StartTime>
+<ControlCard>8660360</ControlCard>
+<AssignedFee>
+<Fee>
+<Name>Actual</Name>
+<Amount>100.00</Amount>
+</Fee>
+</AssignedFee>
+</Start>
+</PersonStart>
+<PersonStart>
+<Person sex="M">
+<Name>
+<Family>Vakant</Family>
+<Given></Given>
+</Name>
+</Person>
+<Organisation>
+<Id>0</Id>
+<Name>Vakant</Name>
+<ShortName>Vakant</ShortName>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:45:00.000</StartTime>
+</Start>
+</PersonStart>
+<PersonStart>
+<Person sex="M">
+<Name>
+<Family>Vakant</Family>
+<Given></Given>
+</Name>
+</Person>
+<Organisation>
+<Id>0</Id>
+<Name>Vakant</Name>
+<ShortName>Vakant</ShortName>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:48:00.000</StartTime>
+</Start>
+</PersonStart>
+<PersonStart>
+<Person sex="M">
+<Name>
+<Family>Vakant</Family>
+<Given></Given>
+</Name>
+</Person>
+<Organisation>
+<Id>0</Id>
+<Name>Vakant</Name>
+<ShortName>Vakant</ShortName>
+</Organisation>
+<Start raceNumber="1">
+<StartTime>2019-10-19T12:51:00.000</StartTime>
+</Start>
+</PersonStart>
+</ClassStart>
+</StartList>

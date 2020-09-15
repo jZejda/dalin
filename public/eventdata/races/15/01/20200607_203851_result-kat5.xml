@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="windows-1250"?>
+ <ResultList xmlns="http://www.orienteering.org/datastandard/3.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ iofVersion="3.0"
+ createTime="2020-09-06T13:35:01.154"
+ creator="SportSoftware OE2010 (M) V.11.0">
+<Event>
+<Name>Test závod</Name>
+</Event>
+<ClassResult>
+<Class resultListMode="Default" sex="M">
+<Id>1</Id>
+<Name>VM</Name>
+<ShortName>VM</ShortName>
+<Fee>
+<Name>Default</Name>
+<Amount>0.00</Amount>
+</Fee>
+</Class>
+<Course>
+<Id>1</Id>
+<Name>VM</Name>
+<Length>710</Length>
+<NumberOfControls>6</NumberOfControls>
+</Course>
+<PersonResult>
+<Person sex="M">
+<Name>
+<Family>preslimit</Family>
+<Given>Lindi2</Given>
+</Name>
+</Person>
+<Organisation>
+<Id>2</Id>
+<Name>KOB ALFA Brno</Name>
+<ShortName>KOB ALFA Brno</ShortName>
+</Organisation>
+<Result raceNumber="1">
+<StartTime>2019-10-16T17:56:16.000</StartTime>
+<FinishTime>2019-10-16T17:57:03.000</FinishTime>
+<Time>47</Time>
+<TimeBehind>0</TimeBehind>
+<Status>OverTime</Status>
+<ControlCard>2067943</ControlCard>
+<AssignedFee>
+<Fee type="Normal">
+<Name>Actual</Name>
+<Amount>0.00</Amount>
+</Fee>
+</AssignedFee>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person sex="M">
+<Id>ABM7805</Id>
+<Name>
+<Family>Disk</Family>
+<Given>Jiří</Given>
+</Name>
+<BirthDate>1978-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>2</Id>
+<Name>KOB ALFA Brno</Name>
+<ShortName>KOB ALFA Brno</ShortName>
+</Organisation>
+<Result raceNumber="1">
+<StartTime>2019-10-16T17:35:26.000</StartTime>
+<FinishTime>2019-10-16T17:37:22.000</FinishTime>
+<Time>116</Time>
+<TimeBehind>69</TimeBehind>
+<Status>MissingPunch</Status>
+<ControlCard>897375</ControlCard>
+<AssignedFee>
+<Fee type="Normal">
+<Name>Actual</Name>
+<Amount>0.00</Amount>
+</Fee>
+</AssignedFee>
+</Result>
+</PersonResult>
+<PersonResult>
+<Person sex="M">
+<Id>ABM1601</Id>
+<Name>
+<Family>vzdal</Family>
+<Given>David</Given>
+</Name>
+<BirthDate>2016-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>2</Id>
+<Name>KOB ALFA Brno</Name>
+<ShortName>KOB ALFA Brno</ShortName>
+</Organisation>
+<Result raceNumber="1">
+<StartTime>2019-10-16T17:56:17.000</StartTime>
+<FinishTime>2019-10-16T17:57:06.000</FinishTime>
+<Time>49</Time>
+<TimeBehind>2</TimeBehind>
+<Status>DidNotFinish</Status>
+<ControlCard>2067947</ControlCard>
+<AssignedFee>
+<Fee type="Normal">
+<Name>Actual</Name>
+<Amount>0.00</Amount>
+</Fee>
+</AssignedFee>
+</Result>
+</PersonResult>
+</ClassResult>
+<ClassResult>
+<Class resultListMode="Default" sex="M">
+<Id>2</Id>
+<Name>MM</Name>
+<ShortName>MM</ShortName>
+<Fee>
+<Name>Default</Name>
+<Amount>0.00</Amount>
+</Fee>
+</Class>
+<Course>
+<Id>2</Id>
+<Name>MM</Name>
+<Length>1000</Length>
+<NumberOfControls>5</NumberOfControls>
+</Course>
+<PersonResult>
+<Person sex="M">
+<Id>ABM1351</Id>
+<Name>
+<Family>mimosoutez</Family>
+<Given>Linda</Given>
+</Name>
+<BirthDate>2013-01-01</BirthDate>
+</Person>
+<Organisation>
+<Id>2</Id>
+<Name>KOB ALFA Brno</Name>
+<ShortName>KOB ALFA Brno</ShortName>
+</Organisation>
+<Result raceNumber="1">
+<StartTime>2019-10-16T17:35:24.000</StartTime>
+<FinishTime>2019-10-16T17:36:39.000</FinishTime>
+<Time>75</Time>
+<TimeBehind>0</TimeBehind>
+<Status>NotCompeting</Status>
+<ControlCard>7260001</ControlCard>
+<AssignedFee>
+<Fee type="Normal">
+<Name>Actual</Name>
+<Amount>0.00</Amount>
+</Fee>
+</AssignedFee>
+</Result>
+</PersonResult>
+</ClassResult>
+</ResultList>

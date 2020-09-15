@@ -11,7 +11,17 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js').postCss('resources/css/app.css', 'public/css', [
+mix.js('resources/js/app.js', 'public/js')
+   .js('resources/js/app-backend.js', 'public/js')
+   .postCss('resources/css/app.css', 'public/css', [
     require('postcss-import'),
     require('tailwindcss'),
 ]);
+
+/*
+ | -------------------------------------------------------------------------
+ | Copy from node_modules
+ | -------------------------------------------------------------------------
+ */
+mix.copyDirectory('node_modules/tinymce', 'public/vendor/tinymce');
+mix.copyDirectory('node_modules/tinymce-i18n/langs', 'public/vendor/tinymce/langs');

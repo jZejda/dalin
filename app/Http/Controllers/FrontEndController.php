@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use DB;
 use Storage;
 
-use App\Page;
-use App\Post;
-use App\Oevent;
-use App\Region;
-use App\Discipline;
-use App\Oevent_results;
+use App\Models\Page;
+use App\Models\Post;
+use App\Models\Oevent;
+use App\Models\Region;
+use App\Models\Discipline;
+use App\Models\Oevent_results;
 
-use App\Content_category;
+use App\Models\Content_category;
 
 use App\Http\Controllers\Tool\EventResultController;
 use Illuminate\Support\Facades\App;
@@ -121,7 +121,7 @@ class FrontEndController extends Controller
         } else {
             $oevent_url  = null;
         }
-        
+
 
         if(config('app-config.result_type')!== null) {
             $result_type = config('app-config.result_type');
