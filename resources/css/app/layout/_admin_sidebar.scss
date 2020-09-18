@@ -1,0 +1,11 @@
+.sidebar-admin-item {
+  @apply flex-1 flex items-center no-underline block h-full w-full px-3 py-3 border-l-4;
+}
+
+.sidebar-admin-item:hover {
+  @apply bg-blue-800 border-red-500 text-white;
+}
+
+.sidebar-admin-item .active {
+  @apply text-white bg-blue-800 border-red-500;
+}

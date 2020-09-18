@@ -1,0 +1,21 @@
+/* Main menu in backend admin */
+.adm-main-header {
+  @apply px-6 py-1 items-center h-12 bg-gray-200 border-b;
+}
+
+/* Header in admin menu */
+.adm-h1 {
+  @apply text-2xl tracking-tight text-gray-800;
+}
+
+/* Admin action svg butons */
+.adm-act-btn {
+  @apply pr-2 text-gray-700;
+}
+.adm-act-btn:hover {
+  @apply text-black;
+}
+
+.adm-role-default {
+  @apply inline-block bg-gray-300 rounded-full px-3 py-1 text-sm font-semibold text-gray-700;
+}

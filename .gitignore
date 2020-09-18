@@ -1,10 +1,14 @@
 /node_modules
 /public/hot
 /public/storage
+/public/eventdata
+/public/media
+/public/orisdata
 /storage/*.key
 /vendor
 .env
 .env.backup
+.editorconfig
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
