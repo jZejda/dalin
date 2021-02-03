@@ -22,3 +22,5 @@ _ide_helper_models.php
 .phpstorm.meta.php
 .editorconfig
 package-lock.json
+
+/bootstrap/cache
