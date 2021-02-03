@@ -16,9 +16,10 @@ class CreatePostsTable extends Migration
         // TODO - set correct URL to default image
 
         Schema::create('posts', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->unsigned()->index()->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->bigIncrements('id');
+            $table->foreignId('user_id')->constrained();
+            //$table->integer('user_id')->unsigned()->index()->nullable();
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('title', 255);
             $table->string('editorial', 255);
             $table->string('img_url', 255)->nullable();

@@ -14,7 +14,7 @@ class CreateOeventLinkTypesTable extends Migration
     public function up()
     {
         Schema::create('oevent_link_types', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('title', 80);
             $table->string('description', 255);
             $table->string('source', 60);

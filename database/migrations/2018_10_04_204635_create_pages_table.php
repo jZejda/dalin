@@ -14,11 +14,10 @@ class CreatePagesTable extends Migration
     public function up()
     {
         Schema::create('pages', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->unsigned()->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('content_category_id')->unsigned()->nullable();
-            $table->foreign('content_category_id')->references('id')->on('content_categories')->onDelete('cascade');
+            $table->bigIncrements('id');
+            $table->foreignId('user_id')->constrained();
+            $table->unsignedBigInteger('content_category_id');
+            $table->foreign('content_category_id')->references('id')->on('content_categories');
             $table->string('title', 255);
             $table->longText('content');
             $table->string('status', 10)->default('close');

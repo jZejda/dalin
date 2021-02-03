@@ -14,17 +14,13 @@ class CreateOeventResultsTable extends Migration
     public function up()
     {
         Schema::create('oevent_results', function (Blueprint $table) {
-            $table->increments('id');
-
-            $table->integer('oevent_id')->unsigned()->nullable();
-            $table->foreign('oevent_id')->references('id')->on('oevents')->onUpdate('cascade')->onDelete('cascade');
-
-            $table->integer('oevent_leg_id')->unsigned()->nullable();
-            $table->foreign('oevent_leg_id')->references('id')->on('oevent_legs')->onUpdate('cascade')->onDelete('cascade');
-
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('oevent_id');
+            $table->foreign('oevent_id')->references('id')->on('oevents');
+            $table->unsignedBigInteger('oevent_leg_id');
+            $table->foreign('oevent_leg_id')->references('id')->on('oevent_legs');
             $table->string('result_type', 50);
             $table->string('result_path', 255);
-
             $table->timestamps();
         });
     }

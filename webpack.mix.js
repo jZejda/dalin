@@ -1,7 +1,5 @@
 const mix = require('laravel-mix');
-
-require('laravel-mix-tailwind');
-require('laravel-mix-purgecss');
+const tailwindcss = require('tailwindcss');
 
 /*
  |--------------------------------------------------------------------------
@@ -9,28 +7,20 @@ require('laravel-mix-purgecss');
  |--------------------------------------------------------------------------
  |
  | Mix provides a clean, fluent API for defining some Webpack build steps
- | for your Laravel application. By default, we are compiling the Sass
+ | for your Laravel applications. By default, we are compiling the CSS
  | file for the application as well as bundling up all the JS files.
  |
  */
 
 mix.js('resources/js/app.js', 'public/js')
-   .js('resources/js/app-backend.js', 'public/js')
-   .postCss('resources/css/app.css', 'public/css')
-   .tailwind('./tailwind.config.js')
-   .purgeCss();
+    .postCss('resources/css/app.css', 'public/css', [
+        require('postcss-import'),
 
-/*
- | -------------------------------------------------------------------------
- | Copy from node_modules
- | -------------------------------------------------------------------------
- */
-mix.copyDirectory('node_modules/tinymce', 'public/vendor/tinymce');
-mix.copyDirectory('node_modules/tinymce-i18n/langs', 'public/vendor/tinymce/langs');
+    ])
+    .sass('resources/sass/app.scss', 'public/css')
+    .options({
+        processCssUrls: false,
+        postCss: [ tailwindcss('./tailwind.config.js') ],
+    });
 
 
-if (mix.inProduction()) {
-  mix
-   .version()
-   .purgeCss();
-}

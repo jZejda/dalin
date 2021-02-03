@@ -14,13 +14,19 @@ class CreateLegLinksTable extends Migration
     public function up()
     {
         Schema::create('leg_links', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('oevent_leg_id')->unsigned()->nullable();
-            $table->foreign('oevent_leg_id')->references('id')->on('oevent_legs')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('oevent_leg_id');
+            $table->foreign('oevent_leg_id')->references('id')->on('oevent_legs');
 
-            $table->integer('oevent_link_type_id')->unsigned()->nullable();
-            $table->foreign('oevent_link_type_id')->references('id')->on('oevent_link_types')->onUpdate('cascade')->onDelete('cascade');
+            //$table->integer('oevent_leg_id')->unsigned()->nullable();
+            //$table->foreign('oevent_leg_id')->references('id')->on('oevent_legs')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->unsignedBigInteger('oevent_link_type_id');
+            $table->foreign('oevent_link_type_id')->references('id')->on('oevent_link_types');
+
+            //$table->integer('oevent_link_type_id')->unsigned()->nullable();
+            //$table->foreign('oevent_link_type_id')->references('id')->on('oevent_link_types')->onUpdate('cascade')->onDelete('cascade');
 
             $table->json('link_setting')->nullable();
             $table->timestamps();

@@ -14,7 +14,7 @@ class CreateContentCategoriesTable extends Migration
     public function up()
     {
         Schema::create('content_categories', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('title', 255);
             $table->string('description', 255);
             $table->string('slug')->nullable();

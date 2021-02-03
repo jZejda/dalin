@@ -14,10 +14,10 @@ class CreateOeventsTable extends Migration
     public function up()
     {
         Schema::create('oevents', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('sport_id')->unsigned()->nullable();
+            $table->bigIncrements('id');
             $table->integer('oris_id')->unsigned()->nullable();
-            $table->foreign('sport_id')->references('id')->on('sports')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('sport_id');
+            $table->foreign('sport_id')->references('id')->on('sports');
             $table->string('title', 255);
             $table->string('place', 255);
             $table->string('url', 255)->nullable();

@@ -14,13 +14,13 @@ class CreateOeventLegsTable extends Migration
     public function up()
     {
         Schema::create('oevent_legs', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->integer('oevent_id')->unsigned()->nullable();
-            $table->integer('oris_id')->unsigned()->nullable();
-            $table->foreign('oevent_id')->references('id')->on('oevents')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('oris_id');
+            $table->foreign('oris_id')->references('id')->on('oevents');
             $table->string('title', 255);
-            $table->integer('discipline_id')->unsigned()->nullable();
-            $table->foreign('discipline_id')->references('id')->on('disciplines')->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedBigInteger('discipline_id');
+            $table->foreign('discipline_id')->references('id')->on('disciplines');
             $table->dateTime('leg_datetime')->nullable();
             $table->decimal('lat', 10, 8);
             $table->decimal('lon', 11, 8);
