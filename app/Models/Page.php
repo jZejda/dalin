@@ -54,6 +54,7 @@ class Page extends Model
         'user_id',
         'page_menu',
         'content_format',
+        'picture_attachment',
         'weight',
     ];
 

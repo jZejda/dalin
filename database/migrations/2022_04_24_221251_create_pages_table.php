@@ -19,12 +19,13 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedBigInteger('content_category_id');
+            $table->unsignedBigInteger('content_category_id')->nullable();
             $table->foreign('content_category_id')->references('id')->on('users');
             $table->string('title', 255);
             $table->string('slug')->nullable();
             $table->longText('content');
             $table->tinyInteger('content_format')->default(1);
+            $table->string('picture_attachment')->default(255);
             $table->string('status', 10)->default('close');
             $table->tinyInteger('weight')->default(50);
             $table->tinyInteger('page_menu')->default(0)->unsigned();

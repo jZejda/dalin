@@ -52,8 +52,9 @@ class ContentCategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\PageRelationManager::class,
         ];
+
     }
 
     public static function getPages(): array

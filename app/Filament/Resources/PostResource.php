@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\User;
 use Closure;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
@@ -58,7 +59,7 @@ class PostResource extends Resource
                             // Markdown editor
                             Grid::make()->schema([
                                 MarkdownEditor::make('content')
-                            ])->columns(1)
+                            ])->columns(1),
 
 
                         ])

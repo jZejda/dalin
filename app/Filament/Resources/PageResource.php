@@ -10,6 +10,7 @@ use App\Models\User;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
@@ -26,6 +27,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\MultiSelectFilter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class PageResource extends Resource
@@ -61,6 +63,12 @@ class PageResource extends Resource
                             Grid::make()->schema([
                                 MarkdownEditor::make('content')
 
+                            ])->columns(1),
+
+                            // File Upload
+                            Grid::make()->schema([
+                                FileUpload::make('picture_attachment')
+                                    ->directory('pages')
                             ])->columns(1)
 
 
@@ -78,6 +86,7 @@ class PageResource extends Resource
                             Select::make('user_id')
                                 ->label('Author')
                                 ->options(User::all()->pluck('name', 'id'))
+                                ->default(Auth::id())
                                 ->searchable(),
 
                             Select::make('status')
@@ -90,10 +99,28 @@ class PageResource extends Resource
                                 ->default(Page::STATUS_CLOSED)
                                 ->disablePlaceholderSelection(),
 
+                            Select::make('content_format')
+                                ->label('Formát')
+                                ->options([
+                                        1 => 'Markdown',
+                                        2 => 'HTML',
+                                    ]
+                                )->default(1),
+
                             Select::make('content_category_id')
                                 ->label('Kategorie')
                                 ->options(ContentCategory::all()->pluck('title', 'id'))
                                 ->searchable(),
+
+                            Select::make('status')
+                                ->options([
+                                    Page::STATUS_OPEN => 'Zveřejněno',
+                                    Page::STATUS_CLOSED => 'Neaktivní',
+                                    Page::STATUS_DRAFT => 'Rozpracováno',
+                                    Page::STATUS_ARCHIVE => 'Archiv'
+                                ])
+                                ->default(Page::STATUS_CLOSED)
+                                ->disablePlaceholderSelection(),
 
                             Toggle::make('page_menu')->inline()
                                 ->label('Zobrazit menu kategorie?')
