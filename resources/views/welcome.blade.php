@@ -101,6 +101,22 @@
                     </div>
                 </div>
 
+                    <x-markdown theme="github-dark">
+
+                        This is a [link to our website](https://spatie.be)
+
+                        This is a [link to our website](https://spatie.be)
+
+                        This is a [link to our website](https://spatie.be)
+                        This is a [link to our website](https://spatie.be)
+                        This is a [link to our website](https://spatie.be)
+                    </x-markdown>
+
+                <div>
+                    <button class="btn w-64 rounded-full">Button</button>
+                </div>
+
+
                 <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
                     <div class="text-center text-sm text-gray-500 sm:text-left">
                         <div class="flex items-center">
