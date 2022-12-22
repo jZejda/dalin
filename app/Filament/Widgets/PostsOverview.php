@@ -22,8 +22,9 @@ class PostsOverview extends Widget
         $lastPost = DB::table('posts')->where('private', '=', 1)->limit(1)->first();
 
         return view(static::$view, [
-            'title' => $lastPost->title,
-            'content' => (new MarkdownRenderer())->toHtml($lastPost->content),
+            'title' => $lastPost->title ?? '',
+            //'content' => (new MarkdownRenderer())->toHtml($lastPost->content) ?? 'fsfsdf',
+            'content' => 'gdgdfg',
         ]);
     }
 

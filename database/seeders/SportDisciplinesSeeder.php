@@ -18,37 +18,37 @@ class SportDisciplinesSeeder extends Seeder
     public function run(): void
     {
         SportDiscipline::create([
-            'short_name'  => 'KLA',
+            'short_name'  => 'KL',
             'long_name'  => 'Klasická trať',
         ]);
 
         SportDiscipline::create([
-            'short_name'  => 'KTR',
+            'short_name'  => 'KT',
             'long_name'  => 'Krátká trať',
         ]);
 
         SportDiscipline::create([
-            'short_name'  => 'SPR',
+            'short_name'  => 'SP',
             'long_name'  => 'Sprint',
         ]);
 
         SportDiscipline::create([
-            'short_name'  => 'DLT',
+            'short_name'  => 'DT',
             'long_name'  => 'Dlouhá trať',
         ]);
 
         SportDiscipline::create([
-            'short_name'  => 'STA',
+            'short_name'  => 'ST',
             'long_name'  => 'Štafety',
         ]);
 
         SportDiscipline::create([
-            'short_name'  => 'DRU',
+            'short_name'  => 'DR',
             'long_name'  => 'Družstva',
         ]);
 
         SportDiscipline::create([
-            'short_name'  => 'SCO',
+            'short_name'  => 'SC',
             'long_name'  => 'Volné pořadí kontrol - scorelauf',
         ]);
 
@@ -58,7 +58,7 @@ class SportDisciplinesSeeder extends Seeder
         ]);
 
         SportDiscipline::create([
-            'short_name'  => 'DLZ',
+            'short_name'  => 'Z',
             'long_name'  => 'Dlouhoběhé závody',
         ]);
 
@@ -67,8 +67,14 @@ class SportDisciplinesSeeder extends Seeder
             'long_name'  => 'TempO',
         ]);
 
+
         SportDiscipline::create([
-            'short_name'  => 'ETP',
+            'short_name'  => 'S',
+            'long_name'  => 'Školení, Schůze, semináře',
+        ]);
+
+        SportDiscipline::create([
+            'short_name'  => 'ET',
             'long_name'  => 'Etapový',
         ]);
 
@@ -78,8 +84,13 @@ class SportDisciplinesSeeder extends Seeder
         ]);
 
         SportDiscipline::create([
-            'short_name'  => 'OST',
-            'long_name'  => 'Ostatní',
+            'short_name'  => 'SS',
+            'long_name'  => 'Sprintové štafety',
+        ]);
+
+        SportDiscipline::create([
+            'short_name'  => 'KO',
+            'long_name'  => 'Knock-out sprint',
         ]);
 
     }

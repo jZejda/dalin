@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sport_event_exports', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('title', 255);
             $table->string('slug', 255);
             $table->string('export_type', 60);

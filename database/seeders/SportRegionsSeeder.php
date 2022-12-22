@@ -16,23 +16,13 @@ class SportRegionsSeeder extends Seeder
     public function run(): void
     {
         SportRegion::create([
-            'short_name'  => 'ČR',
-            'long_name'  => 'ČR',
-        ]);
-
-        SportRegion::create([
-            'short_name'  => 'ČE',
+            'short_name'  => 'Č',
             'long_name'  => 'Čechy',
         ]);
 
         SportRegion::create([
-            'short_name'  => 'MO',
-            'long_name'  => 'Morava',
-        ]);
-
-        SportRegion::create([
-            'short_name'  => 'JM',
-            'long_name'  => 'Jihomoravská',
+            'short_name'  => 'ČR',
+            'long_name'  => 'ČR',
         ]);
 
         SportRegion::create([
@@ -51,12 +41,27 @@ class SportRegionsSeeder extends Seeder
         ]);
 
         SportRegion::create([
-            'short_name'  => 'PR',
+            'short_name'  => 'JM',
+            'long_name'  => 'Jihomoravská',
+        ]);
+
+        SportRegion::create([
+            'short_name'  => 'M',
+            'long_name'  => 'Morava',
+        ]);
+
+        SportRegion::create([
+            'short_name'  => 'MSK',
+            'long_name'  => 'MS kraj',
+        ]);
+
+        SportRegion::create([
+            'short_name'  => 'P',
             'long_name'  => 'Pražská',
         ]);
 
         SportRegion::create([
-            'short_name'  => 'ST',
+            'short_name'  => 'StČ',
             'long_name'  => 'Středočeská',
         ]);
 

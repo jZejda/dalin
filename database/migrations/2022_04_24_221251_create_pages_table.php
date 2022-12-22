@@ -16,11 +16,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pages', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('content_category_id')->nullable();
-            $table->foreign('content_category_id')->references('id')->on('users');
+            $table->foreign('content_category_id')->references('id')->on('content_categories');
             $table->string('title', 255);
             $table->string('slug')->nullable();
             $table->longText('content');
