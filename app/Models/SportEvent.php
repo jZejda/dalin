@@ -32,6 +32,7 @@ class SportEvent extends Model
         'date' => 'date',
         'use_oris_for_entries' => 'bool',
         'ranking' => 'bool',
+        'region' => 'array',
         'entry_date_1' => 'datetime:Y-m-d H:i:s',
         'entry_date_2' => 'datetime:Y-m-d H:i:s',
         'entry_date_3' => 'datetime:Y-m-d H:i:s',

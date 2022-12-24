@@ -8,6 +8,8 @@ use App\Models\Page;
 use App\Models\SportDiscipline;
 use App\Models\SportEvent;
 use App\Models\SportEventExport;
+use App\Models\SportLevel;
+use App\Models\SportList;
 use App\Models\SportRegion;
 use Closure;
 use Filament\Facades\Filament;
@@ -23,7 +25,13 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\Layout\Panel;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
 class SportEventResource extends Resource
@@ -79,12 +87,21 @@ class SportEventResource extends Resource
                                     $set('entry_date_2', $orisResponse['EntryDate2'] ?? null);
                                     $set('entry_date_3', $orisResponse['EntryDate3'] ?? null);
 
-                                    $set('sport_id', $orisResponse['Sport']['Id'] ?? null);
-                                    $set('region', $orisResponse['Region'] ?? null);
+                                    $region = [];
+                                    if (isset($orisResponse['Regions'])) {
+                                        foreach ($orisResponse['Regions'] as $item) {
+                                            $region[] = $item['ID'];
+
+                                        }
+                                    }
+                                    $set('region', $region ?? null);
 
                                     $set('discipline_id', $orisResponse['Discipline']['ID'] ?? null);
+                                    $set('sport_id', $orisResponse['Sport']['ID'] ?? null);
+                                    $set('level_id', $orisResponse['Level']['ID'] ?? null);
 
                                     $set('use_oris_for_entries', $orisResponse['UseORISForEntries'] ?? null);
+
                                     })
                                 ),
                             TextInput::make('name')->required(),
@@ -100,8 +117,23 @@ class SportEventResource extends Resource
                                     ->options(SportDiscipline::all()->pluck('long_name', 'id'))
                                     ->searchable(),
                                 Select::make('region')
+                                    ->multiple()
                                     ->options(SportRegion::all()->pluck('long_name', 'short_name'))
                                     ->searchable(),
+                                Select::make('sport_id')
+                                    ->options(SportList::all()->pluck('short_name', 'id'))
+                                    ->searchable(),
+
+                                Select::make('level_id')
+                                    ->options(SportLevel::all()->pluck('long_name', 'oris_id'))
+                                    ->searchable(),
+
+
+
+
+//                                Select::make('region')
+//                                    ->options(SportRegion::all()->pluck('long_name', 'short_name'))
+//                                    ->searchable(),
 
                                 Toggle::make('use_oris_for_entries')->inline()
                                     ->label('Použít ORIS k přihláškám?')
@@ -124,8 +156,33 @@ class SportEventResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+
             ->columns([
-                //
+
+                TextColumn::make('name')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('medium')
+                    ->alignLeft()
+                    ->limit(50),
+
+                TextColumn::make('place')
+                    ->searchable()
+                    ->sortable()
+                    ->color('secondary')
+                    ->alignLeft(),
+
+
+                TextColumn::make('entry_date_1')
+                    ->icon('heroicon-o-calendar')
+                    ->label('První termín')
+                    ->dateTime('d.m.Y H:i:s')
+                    ->size('sm'),
+
+                TextColumn::make('region')->label('Region'),
+
+                ViewColumn::make('name')->view('filament.tables.columns.name-sport')
+
             ])
             ->filters([
                 //

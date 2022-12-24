@@ -14,7 +14,7 @@ class TestController extends Controller
             [
                 'format' => 'json',
                 'method' => 'getEvent',
-                'id' => '2252',
+                'id' => '7012',
                 //'id' => '2024',
             ])
             ->throw()

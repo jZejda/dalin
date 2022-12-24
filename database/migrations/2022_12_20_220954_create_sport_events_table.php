@@ -20,7 +20,8 @@ return new class extends Migration
             $table->date('date');
             $table->string('place')->nullable();
             $table->string('region')->nullable();
-            $table->integer('sport_id')->default(1);
+            $table->unsignedBigInteger('sport_id')->default(1);
+            $table->foreign('sport_id')->references('id')->on('sport_lists');
             $table->unsignedBigInteger('discipline_id');
             $table->foreign('discipline_id')->references('id')->on('sport_disciplines');
             $table->boolean('use_oris_for_entries');
