@@ -126,7 +126,7 @@ class PostPolicy
     }
 
     /**
-     * Determine whether the user can replicate.
+     * Determine whether the user can bulk restore.
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Post  $post

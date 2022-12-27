@@ -18,6 +18,7 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -44,6 +45,15 @@ class SportEventResource extends Resource
     {
         return $form
             ->schema([
+
+
+                Section::make('Heading')
+                    ->description('fsfsfs')
+                    ->schema([
+
+                    ])
+                    ->columns(2),
+
                 Grid::make([
                     'sm' => 1,
                     'md' => 12,
@@ -150,7 +160,8 @@ class SportEventResource extends Resource
                         ]),
 
                 ])
-            ]);
+            ])
+            ;
     }
 
     public static function table(Table $table): Table
@@ -181,7 +192,9 @@ class SportEventResource extends Resource
 
                 TextColumn::make('region')->label('Region'),
 
-                ViewColumn::make('name')->view('filament.tables.columns.name-sport')
+                ViewColumn::make('entries')
+                    ->label('Terminy')
+                    ->view('filament.tables.columns.entryDates')
 
             ])
             ->filters([
