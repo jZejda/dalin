@@ -160,8 +160,7 @@ class SportEventResource extends Resource
                         ]),
 
                 ])
-            ])
-            ;
+            ]);
     }
 
     public static function table(Table $table): Table
@@ -172,6 +171,7 @@ class SportEventResource extends Resource
 
                 TextColumn::make('name')
                     ->searchable()
+                    ->label('Název')
                     ->sortable()
                     ->weight('medium')
                     ->alignLeft()
@@ -181,14 +181,14 @@ class SportEventResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->color('secondary')
+                    ->label('Místo')
                     ->alignLeft(),
 
 
-                TextColumn::make('entry_date_1')
+                TextColumn::make('date')
                     ->icon('heroicon-o-calendar')
-                    ->label('První termín')
-                    ->dateTime('d.m.Y H:i:s')
-                    ->size('sm'),
+                    ->label('Datum')
+                    ->dateTime('d.m.Y'),
 
                 TextColumn::make('region')->label('Region'),
 

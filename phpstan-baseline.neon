@@ -1,0 +1,116 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$title\\.$#"
+			count: 1
+			path: app/Filament/Resources/ContentCategoryResource.php
+
+		-
+			message: "#^Called 'pluck' on Laravel collection, but could have been retrieved as a query\\.$#"
+			count: 1
+			path: app/Filament/Resources/PageResource.php
+
+		-
+			message: "#^Cannot call method format\\(\\) on string\\.$#"
+			count: 1
+			path: app/Filament/Resources/PageResource.php
+
+		-
+			message: "#^Called 'pluck' on Laravel collection, but could have been retrieved as a query\\.$#"
+			count: 1
+			path: app/Filament/Resources/PostResource.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$title\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventExportResource.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$updated_at\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventExportResource.php
+
+		-
+			message: "#^Called 'pluck' on Laravel collection, but could have been retrieved as a query\\.$#"
+			count: 4
+			path: app/Filament/Resources/SportEventResource.php
+
+		-
+			message: "#^Variable \\$region on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with App\\\\Models\\\\Post will always evaluate to false\\.$#"
+			count: 1
+			path: app/Filament/Widgets/StatsOverview.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\AuthenticatedSessionController\\:\\:create\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/AuthenticatedSessionController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\ConfirmablePasswordController\\:\\:show\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/ConfirmablePasswordController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\NewPasswordController\\:\\:create\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/NewPasswordController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\PasswordResetLinkController\\:\\:create\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/PasswordResetLinkController.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisteredUserController\\:\\:create\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/RegisteredUserController.php
+
+		-
+			message: "#^Parameter \\#1 \\$user of class Illuminate\\\\Auth\\\\Events\\\\Verified constructor expects Illuminate\\\\Contracts\\\\Auth\\\\MustVerifyEmail, App\\\\Models\\\\User\\|null given\\.$#"
+			count: 1
+			path: app/Http/Controllers/Auth/VerifyEmailController.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: app/Http/Controllers/TestController.php
+
+		-
+			message: "#^Parameter \\#1 \\$view of function view expects view\\-string\\|null, string given\\.$#"
+			count: 1
+			path: app/Http/Livewire/Auth/Register.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Livewire\\\\Frontend\\\\NewPost\\:\\:render\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/Http/Livewire/Frontend/NewPost.php
+
+		-
+			message: "#^Parameter \\#1 \\$view of function view expects view\\-string\\|null, string given\\.$#"
+			count: 1
+			path: app/Http/Livewire/HelloWorld.php
+
+		-
+			message: "#^PHPDoc type array of property App\\\\Models\\\\Page\\:\\:\\$casts is not covariant with PHPDoc type array\\<string, string\\> of overridden property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$casts\\.$#"
+			count: 1
+			path: app/Models/Page.php
+
+		-
+			message: "#^PHPDoc type array of property App\\\\Models\\\\Post\\:\\:\\$casts is not covariant with PHPDoc type array\\<string, string\\> of overridden property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$casts\\.$#"
+			count: 1
+			path: app/Models/Post.php
+
+		-
+			message: "#^Method App\\\\View\\\\Components\\\\AppLayout\\:\\:render\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/View/Components/AppLayout.php
+
+		-
+			message: "#^Method App\\\\View\\\\Components\\\\GuestLayout\\:\\:render\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			count: 1
+			path: app/View/Components/GuestLayout.php

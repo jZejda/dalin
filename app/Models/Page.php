@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
@@ -20,6 +21,8 @@ use BezhanSalleh\FilamentShield\Traits\HasPageShield;
  * @property int $page_menu
  * @property int $content_format
  * @property int $weight
+ * @property string $created_at
+ * @property string $updated_at
  *
  * @property User $user
  */

@@ -3,10 +3,10 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\SportEvent;
+use App\Models\UserRaceProfile;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SportEventPolicy
+class UserRaceProfilePolicy
 {
     use HandlesAuthorization;
 
@@ -18,19 +18,19 @@ class SportEventPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->can('view_any_sport::event');
+        return $user->can('view_any_user::race::profile');
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\SportEvent  $sportEvent
+     * @param  \App\Models\UserRaceProfile  $userRaceProfile
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, SportEvent $sportEvent)
+    public function view(User $user, UserRaceProfile $userRaceProfile)
     {
-        return $user->can('view_sport::event');
+        return $user->can('view_user::race::profile');
     }
 
     /**
@@ -41,31 +41,31 @@ class SportEventPolicy
      */
     public function create(User $user)
     {
-        return $user->can('create_sport::event');
+        return $user->can('create_user::race::profile');
     }
 
     /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\SportEvent  $sportEvent
+     * @param  \App\Models\UserRaceProfile  $userRaceProfile
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, SportEvent $sportEvent)
+    public function update(User $user, UserRaceProfile $userRaceProfile)
     {
-        return $user->can('update_sport::event');
+        return $user->can('update_user::race::profile');
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\SportEvent  $sportEvent
+     * @param  \App\Models\UserRaceProfile  $userRaceProfile
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, SportEvent $sportEvent)
+    public function delete(User $user, UserRaceProfile $userRaceProfile)
     {
-        return $user->can('delete_sport::event');
+        return $user->can('delete_user::race::profile');
     }
 
     /**
@@ -76,19 +76,19 @@ class SportEventPolicy
      */
     public function deleteAny(User $user)
     {
-        return $user->can('delete_any_sport::event');
+        return $user->can('delete_any_user::race::profile');
     }
 
     /**
      * Determine whether the user can permanently delete.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\SportEvent  $sportEvent
+     * @param  \App\Models\UserRaceProfile  $userRaceProfile
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, SportEvent $sportEvent)
+    public function forceDelete(User $user, UserRaceProfile $userRaceProfile)
     {
-        return $user->can('force_delete_sport::event');
+        return $user->can('force_delete_user::race::profile');
     }
 
     /**
@@ -99,19 +99,19 @@ class SportEventPolicy
      */
     public function forceDeleteAny(User $user)
     {
-        return $user->can('force_delete_any_sport::event');
+        return $user->can('force_delete_any_user::race::profile');
     }
 
     /**
      * Determine whether the user can restore.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\SportEvent  $sportEvent
+     * @param  \App\Models\UserRaceProfile  $userRaceProfile
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, SportEvent $sportEvent)
+    public function restore(User $user, UserRaceProfile $userRaceProfile)
     {
-        return $user->can('restore_sport::event');
+        return $user->can('restore_user::race::profile');
     }
 
     /**
@@ -122,19 +122,19 @@ class SportEventPolicy
      */
     public function restoreAny(User $user)
     {
-        return $user->can('restore_any_sport::event');
+        return $user->can('restore_any_user::race::profile');
     }
 
     /**
      * Determine whether the user can replicate.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\SportEvent  $sportEvent
+     * @param  \App\Models\UserRaceProfile  $userRaceProfile
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function replicate(User $user, SportEvent $sportEvent)
+    public function replicate(User $user, UserRaceProfile $userRaceProfile)
     {
-        return $user->can('replicate_sport::event');
+        return $user->can('replicate_user::race::profile');
     }
 
     /**
@@ -145,7 +145,7 @@ class SportEventPolicy
      */
     public function reorder(User $user)
     {
-        return $user->can('reorder_sport::event');
+        return $user->can('reorder_user::race::profile');
     }
 
 }

@@ -15,8 +15,21 @@ class User extends Authenticatable
     use HasRoles;
 
     /**
-     * The attributes that are mass assignable.
+     * App\Models\User
      *
+     * @property int $id
+     * @property string $name
+     * @property string $email
+     * @property int $password
+     * @property ?string $remember_token
+     * @property ?string $email_verified_at
+     * @property string $created_at
+     * @property string $updated_at
+     *
+     * @property string $user_identification
+     */
+
+    /**
      * @var array<int, string>
      */
     protected $fillable = [
@@ -26,8 +39,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
      * @var array<int, string>
      */
     protected $hidden = [
@@ -36,11 +47,14 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
-     *
      * @var array<string, string>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getUserIdentificationAttribute(): string
+    {
+        return "{$this->name}  ({$this->email})";
+    }
 }

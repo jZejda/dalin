@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PageResource\Pages;
@@ -8,13 +10,10 @@ use App\Models\ContentCategory;
 use App\Models\Page;
 use App\Models\User;
 use Closure;
-use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -23,7 +22,6 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\MultiSelectFilter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Model;
@@ -113,12 +111,7 @@ class PageResource extends Resource
                                 ->searchable(),
 
                             Select::make('status')
-                                ->options([
-                                    Page::STATUS_OPEN => 'Zveřejněno',
-                                    Page::STATUS_CLOSED => 'Neaktivní',
-                                    Page::STATUS_DRAFT => 'Rozpracováno',
-                                    Page::STATUS_ARCHIVE => 'Archiv'
-                                ])
+                                ->options(self::getPageStatuses())
                                 ->default(Page::STATUS_CLOSED)
                                 ->disablePlaceholderSelection(),
 
@@ -155,13 +148,8 @@ class PageResource extends Resource
             ->filters([
 //                SelectFilter::make('user_id')->relationship('user_id', 'name'),
                 SelectFilter::make('status')
-                    ->options([
-                        Page::STATUS_OPEN => 'Zveřejněno',
-                        Page::STATUS_CLOSED => 'Neaktivní',
-                        Page::STATUS_DRAFT => 'Rozpracováno',
-                        Page::STATUS_ARCHIVE => 'Archiv'
-                    ])->multiple(),
-            ]);
+                    ->options(self::getPageStatuses()),
+                    ]);
     }
 
     public static function getRelations(): array
@@ -188,6 +176,17 @@ class PageResource extends Resource
 
     public static function getGlobalSearchResultTitle(Model $record): string
     {
+        /** @var Page $record */
         return $record->title . ' | ' . $record->updated_at->format('m. Y');
+    }
+
+    private static function getPageStatuses(): array
+    {
+        return [
+            Page::STATUS_OPEN => 'Zveřejněno',
+            Page::STATUS_CLOSED => 'Neaktivní',
+            Page::STATUS_DRAFT => 'Rozpracováno',
+            Page::STATUS_ARCHIVE => 'Archiv'
+        ];
     }
 }
