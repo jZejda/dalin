@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,12 +17,13 @@ class UserCredit extends Model
      *
      * @property integer $id
      * @property integer $user_id
-     * @property int $user_race_profile_id
+     * @property ?int $user_race_profile_id
      * @property ?int $sport_event_id
-     * @property float $amouth
+     * @property float $amount
      * @property string $currency
      * @property string $source
      * @property ?int $source_user_id
+     * @property string $credit_type
      * @property string $created_at
      * @property string $updated_at
      *

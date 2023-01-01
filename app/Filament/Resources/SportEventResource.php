@@ -39,7 +39,9 @@ class SportEventResource extends Resource
 {
     protected static ?string $model = SportEvent::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+
+    protected static ?string $navigationGroup = 'User';
 
     public static function form(Form $form): Form
     {
@@ -182,6 +184,7 @@ class SportEventResource extends Resource
                     ->sortable()
                     ->color('secondary')
                     ->label('Místo')
+                    ->limit(25, '...')
                     ->alignLeft(),
 
 
