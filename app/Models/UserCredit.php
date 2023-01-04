@@ -43,6 +43,19 @@ class UserCredit extends Model
     public const CREDIT_TYPE_CACHE_OUT = 'out';
 
 
+    /** @var array<int, string> */
+    protected $fillable = [
+        'user_id',
+        'user_race_profile_id',
+        'sport_event_id',
+        'amount',
+        'currency',
+        'source',
+        'source_user_id',
+        'credit_type',
+    ];
+
+
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
@@ -56,5 +69,10 @@ class UserCredit extends Model
     public function sourceUser(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'source_user_id');
+    }
+
+    public function sportEvent(): HasOne
+    {
+        return $this->hasOne(SportEvent::class, 'id', 'sport_event_id');
     }
 }

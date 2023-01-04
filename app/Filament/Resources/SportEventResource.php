@@ -3,11 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SportEventResource\Pages;
-use App\Models\ContentCategory;
-use App\Models\Page;
 use App\Models\SportDiscipline;
 use App\Models\SportEvent;
-use App\Models\SportEventExport;
 use App\Models\SportLevel;
 use App\Models\SportList;
 use App\Models\SportRegion;
@@ -26,13 +23,9 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Filament\Tables\Columns\Layout\Panel;
-use Filament\Tables\Columns\Layout\Split;
-use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
 class SportEventResource extends Resource

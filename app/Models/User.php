@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -29,26 +31,20 @@ class User extends Authenticatable
      * @property string $user_identification
      */
 
-    /**
-     * @var array<int, string>
-     */
+    /** @var array<int, string> */
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
 
-    /**
-     * @var array<int, string>
-     */
+    /** @var array<int, string> */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * @var array<string, string>
-     */
+    /** @var array<string, string> */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];

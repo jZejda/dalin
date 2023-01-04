@@ -48,12 +48,6 @@ class UserRaceProfileResource extends Resource
                     // Main column
                     Card::make()
                         ->schema([
-                            TextInput::make('first_name')
-                                ->label('Jméno')
-                                ->required(),
-                            TextInput::make('last_name')
-                                ->label('Příjmení')
-                                ->required(), // TODO validation on regex ABM...
                             TextInput::make('reg_number')
                                 ->label('Registrace')
                                 ->unique(ignoreRecord: true)
@@ -88,6 +82,8 @@ class UserRaceProfileResource extends Resource
                                         Filament::notify('success', 'ORIS v pořádku vrátil požadovaná data.');
 
                                         $set('oris_id', $orisResponse['ID'] ?? null);
+                                        $set('first_name', $orisResponse['FirstName'] ?? null);
+                                        $set('last_name', $orisResponse['LastName'] ?? null);
 
                                     })
                                 ),
@@ -98,6 +94,14 @@ class UserRaceProfileResource extends Resource
                                     'D' => 'Ženy'
                                 ])
                                 ->required(),
+
+                            TextInput::make('first_name')
+                                ->label('Jméno')
+                                ->required(),
+                            TextInput::make('last_name')
+                                ->label('Příjmení')
+                                ->required(), // TODO validation on regex ABM...
+
                             TextInput::make('email')
                                 ->label('E-mail'),
                             TextInput::make('phone')
