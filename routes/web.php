@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DiscordRaceEventNotification;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,5 +25,7 @@ Route::get('/dashboard', function () {
 
 
 Route::get('/admin/test', [TestController::class, 'test']);
+Route::get('/admin/webhook', [DiscordRaceEventNotification::class, 'notification']);
+
 
 require __DIR__.'/auth.php';

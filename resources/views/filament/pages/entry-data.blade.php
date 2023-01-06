@@ -14,16 +14,16 @@
     </form>
 
     <div>
-        <p>fsfsdf</p>
+        <p>Přihlášky členů</p>
     </div>
 
     <div>
         {{ $this->table }}
     </div>
 
-    @foreach($last_files as $file)
-        {{ $file }}
-    @endforeach
+{{--    @foreach($last_files as $file)--}}
+{{--        {{ $file }}--}}
+{{--    @endforeach--}}
 
 
 

@@ -46,5 +46,10 @@ class UserRaceProfile extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    public function getUserRaceFullNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
 }
 

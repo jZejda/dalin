@@ -124,8 +124,10 @@ class UserCreditResource extends Resource
                     ->dateTime('d.m.Y'),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
-                    ->description(fn (UserCredit $record): string => 'fsfsfsdf'),
-                    //->description(fn (UserCredit $record): string => $record->description),
+                    ->description(fn (UserCredit $record): string => 'popis transakce'),
+                TextColumn::make('userRaceProfile.reg_number')
+                    ->label('RegNumber')
+                    ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? ''),
                 TextColumn::make('amount')
                     ->label(__('user-credit.table.amount_title')),
                 TextColumn::make('amount')

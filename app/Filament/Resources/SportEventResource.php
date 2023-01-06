@@ -34,7 +34,7 @@ class SportEventResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
 
-    protected static ?string $navigationGroup = 'User';
+    protected static ?string $navigationGroup = 'Správa';
 
     public static function form(Form $form): Form
     {

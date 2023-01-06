@@ -28,6 +28,7 @@ class UserRaceProfileResource extends Resource
 {
     protected static ?string $model = UserRaceProfile::class;
 
+    protected static ?string $navigationGroup = 'User';
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
     public static function getEloquentQuery(): Builder

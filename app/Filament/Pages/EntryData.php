@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
+use App\Http\Controllers\DiscordRaceEventNotification;
+use App\Mail\SendSportEventNearesMail;
+use App\Mail\SendSportEventNearestMail;
 use App\Models\SportEvent;
 use App\Models\UserCredit;
 use App\Models\UserRaceProfile;
@@ -20,6 +23,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -31,6 +35,7 @@ class EntryData extends Page implements HasForms,HasTable
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.entry-data';
     protected static ?string $slug = 'custom-url-slug';
+    protected static ?string $navigationGroup = 'Správa';
 
     public string $sportEventId = '';
 
@@ -104,7 +109,19 @@ class EntryData extends Page implements HasForms,HasTable
             }
         }
 
+//        $content = 'pokus';
+//        $discordNotify = new DiscordRaceEventNotification($content);
+//        $discordNotify->notification();
 
+
+
+        $detail = [
+            'url' => 'Mail from ItSolutionStuff.com',
+        ];
+
+
+
+        Mail::to('zejda@example.com')->send(new SendSportEventNearestMail($detail));
 
         // auth()->user()->update($state);
 
@@ -126,11 +143,21 @@ class EntryData extends Page implements HasForms,HasTable
     protected function getTableColumns(): array
     {
         return [
-
-                TextColumn::make('name')
-                    ->label('Jm0no')
-                    ->searchable()
-                    ->sortable(),
+            TextColumn::make('created_at')
+                ->label(__('user-credit.table.created_at_title'))
+                ->dateTime('d.m.Y'),
+            TextColumn::make('sportEvent.name')
+                ->label(__('user-credit.table.sport_event_title'))
+                ->description(fn (UserCredit $record): string => 'popis transakce'),
+            TextColumn::make('userRaceProfile.reg_number')
+                ->label('RegNumber')
+                ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? ''),
+            TextColumn::make('amount')
+                ->label(__('user-credit.table.amount_title')),
+            TextColumn::make('amount')
+                ->label(__('user-credit.table.amount_title')),
+            TextColumn::make('sourceUser.name')
+                ->label(__('user-credit.table.source_user_title')),
         ];
     }
 
@@ -175,19 +202,19 @@ class EntryData extends Page implements HasForms,HasTable
 
     protected function getTableEmptyStateHeading(): ?string
     {
-        return 'No posts yet';
+        return 'Zatím zde není žádný záznam';
     }
 
     protected function getTableEmptyStateDescription(): ?string
     {
-        return 'You may create a post using the button below.';
+        return 'Záznam můžeš vložit ručně tlačítkem dole.';
     }
 
     protected function getTableEmptyStateActions(): array
     {
         return [
             Action::make('create')
-                ->label('Create post')
+                ->label('Vložit záznam')
                 ->url(route('login'))
                 ->icon('heroicon-o-plus')
                 ->button(),
