@@ -11,25 +11,25 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * App\Models\User
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property int $password
+ * @property ?string $remember_token
+ * @property ?string $email_verified_at
+ * @property string $created_at
+ * @property string $updated_at
+ *
+ * @property string $user_identification
+ */
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
     use HasRoles;
-
-    /**
-     * App\Models\User
-     *
-     * @property int $id
-     * @property string $name
-     * @property string $email
-     * @property int $password
-     * @property ?string $remember_token
-     * @property ?string $email_verified_at
-     * @property string $created_at
-     * @property string $updated_at
-     *
-     * @property string $user_identification
-     */
 
     /** @var array<int, string> */
     protected $fillable = [

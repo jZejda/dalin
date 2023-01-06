@@ -115,13 +115,18 @@ class EntryData extends Page implements HasForms,HasTable
 
 
 
-        $detail = [
-            'url' => 'Mail from ItSolutionStuff.com',
-        ];
+//        $detail = [
+//            'url' => 'Mail from ItSolutionStuff.com',
+//        ];
+//
+//
+//
 
+        $eventEntry = SportEvent::select('oris_id', 'id')
+                ->where('id', '=', $formData['sportEventId'] )
+                ->first();
 
-
-        Mail::to('zejda@example.com')->send(new SendSportEventNearestMail($detail));
+        Mail::to('zejda@example.com')->send(new SendSportEventNearestMail($eventEntry));
 
         // auth()->user()->update($state);
 

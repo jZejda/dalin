@@ -7,6 +7,7 @@ namespace App\Models;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\ContentCategory
@@ -15,7 +16,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $title
  * @property string $description
  * @property string $slug
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
+
 class ContentCategory extends Model
 {
     /**

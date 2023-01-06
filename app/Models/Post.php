@@ -21,7 +21,7 @@ use BezhanSalleh\FilamentShield\Traits\HasPageShield;
  * @property int $content_mode
  * @property string $created_at
  * @property string $updated_at
- *
+
  * @property User $user
  */
 class Post extends Model

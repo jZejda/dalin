@@ -23,9 +23,13 @@ use BezhanSalleh\FilamentShield\Traits\HasPageShield;
  * @property int $weight
  * @property string $created_at
  * @property string $updated_at
- *
  * @property User $user
+ * @property int|null $content_category_id
+ * @property string $picture_attachment
+ *
+ * @property-read ContentCategory|null $content_category
  */
+
 class Page extends Model
 {
 
