@@ -20,7 +20,6 @@ class SendSportEventNearestMail extends Mailable
     {
     }
 
-
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -30,7 +29,6 @@ class SendSportEventNearestMail extends Mailable
 
     public function content(): Content
     {
-
         // Note 2 days before entry ending
         $sportEventsFirst = DB::table('sport_events')
             ->whereBetween('entry_date_1', [Carbon::now()->addDay(), Carbon::now()->addDays(2)])

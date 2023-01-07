@@ -22,7 +22,7 @@ class DiscordRaceEventNotification extends Controller
 
     public function notification(): PromiseInterface|Response
     {
-        return Http::post(env('DISCORD_MAIN_NOTIFICATION_WEBFOOK', 'empty'), [
+        return Http::post(env('DISCORD_MAIN_NOTIFICATION_WEBHOOK', 'empty'), [
             'content' => $this->content,
             'embeds' => [
                 [

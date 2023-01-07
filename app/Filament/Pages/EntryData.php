@@ -111,24 +111,13 @@ class EntryData extends Page implements HasForms,HasTable
             }
         }
 
-//        $content = 'pokus';
-//        $discordNotify = new DiscordRaceEventNotification($content);
-//        $discordNotify->notification();
-
-
-
 //        $detail = [
 //            'url' => 'Mail from ItSolutionStuff.com',
 //        ];
 //
 //
 //
-
-        $eventEntry = SportEvent::select('oris_id', 'id')
-                ->where('id', '=', $formData['sportEventId'] )
-                ->first();
-
-        Mail::to('zejda.jiri@gmail.com')->send(new SendSportEventNearestMail($eventEntry));
+        Mail::to('zejda.jiri@gmail.com')->send(new SendSportEventNearestMail());
 
         // auth()->user()->update($state);
 
