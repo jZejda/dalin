@@ -17,6 +17,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Actions\ButtonAction;
 use Filament\Pages\Page;
+use Filament\Resources\Form;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -40,17 +41,18 @@ class EntryData extends Page implements HasForms,HasTable
     public string $sportEventId = '';
 
     public array $last_files = [];
-    /**
-     * @var \Filament\Forms\ComponentContainer|\Illuminate\Contracts\View\View|mixed|null
-     */
 
-    public function mount()
+
+
+    public function mount(): void
     {
         $this->last_files = Storage::disk('local')->allFiles();
     }
 
     public function submit(): void
     {
+
+        /** @var Form $pokus */
         $this->form->getState();
 
         $formData = array_filter([
@@ -126,7 +128,7 @@ class EntryData extends Page implements HasForms,HasTable
                 ->where('id', '=', $formData['sportEventId'] )
                 ->first();
 
-        Mail::to('zejda@example.com')->send(new SendSportEventNearestMail($eventEntry));
+        Mail::to('zejda.jiri@gmail.com')->send(new SendSportEventNearestMail($eventEntry));
 
         // auth()->user()->update($state);
 
@@ -183,7 +185,7 @@ class EntryData extends Page implements HasForms,HasTable
         return [];
     }
 
-    public function getCancelButtonUrlProperty()
+    public function getCancelButtonUrlProperty(): string
     {
         return static::getUrl();
     }

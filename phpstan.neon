@@ -1,19 +1,26 @@
 includes:
-    - phpstan-baseline.neon
     - ./vendor/nunomaduro/larastan/extension.neon
+    - phpstan-baseline.neon
 
 parameters:
 
     paths:
-        - app/
+        - app
+        - config
+        - routes
+    fileExtensions:
+        - php
 
-    # Level 9 is the highest level
-    level: 5
+    # The level 9 is the highest level
+    level: 6
+    reportUnmatchedIgnoredErrors: false
 
-#    ignoreErrors:
-#        - '#PHPDoc tag @var#'
-#
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
-#
-#    checkMissingIterableValueType: false
+    ignoreErrors:
+        - '#Unsafe usage of new static#'
+
+    excludePaths:
+        - ./*/*/FileToBeExcluded.php
+
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false
+

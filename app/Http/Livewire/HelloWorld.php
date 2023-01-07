@@ -11,12 +11,12 @@ class HelloWorld extends Component
     public bool $loud = false;
     public array $greeting = ['ahoj'];
 
-    public function resetName()
+    public function resetName(): void
     {
         $this->name = 'Pepa';
     }
 
-    public function render(): View
+    public function render(): ?View
     {
         return view('livewire.hello-world');
     }
