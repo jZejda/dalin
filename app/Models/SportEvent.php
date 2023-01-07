@@ -28,9 +28,9 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $entry_date_3
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ *
  * @property-read string $sport_event_oris_title
  * @property-read SportDiscipline|null $sportDiscipline
- * @mixin \Eloquent
  */
 
 class SportEvent extends Model
