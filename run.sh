@@ -46,6 +46,10 @@ case "$1" in
         echo "${BOLD}Run IDE helper generate file...${NORMAL}"
         php artisan ide-helper:generate
     ;;
+    deploy)
+        echo "${BOLD}Run Deploy to product server...${NORMAL}"
+        php artisan config:cache
+    ;;
     help)
         help
         ;;

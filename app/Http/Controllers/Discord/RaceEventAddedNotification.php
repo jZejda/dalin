@@ -36,6 +36,7 @@ final class RaceEventAddedNotification extends Controller
         ];
 
 
+        $url = config('site-config.discord.sport_event.webhook_url');
         return Http::post(env('DISCORD_MAIN_NOTIFICATION_WEBHOOK', 'empty'), [
             'content' => 'Nově přidaný závod akce **tak na ní koukni**.',
             'embeds' => $embeds,
