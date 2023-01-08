@@ -111,7 +111,9 @@ class SportEventResource extends Resource
                                 ),
                             TextInput::make('name')->required(),
                             TextInput::make('place'),
-                            DatePicker::make('date')->displayFormat('d.m.Y'),
+                            DatePicker::make('date')
+                                ->displayFormat('d.m.Y')
+                                ->required(),
 
                             Grid::make()->schema([
                                 DateTimePicker::make('entry_date_1')->displayFormat('d.m.Y H:i:s')->required()->label('První termín'),
@@ -120,14 +122,16 @@ class SportEventResource extends Resource
 
                                 Select::make('discipline_id')
                                     ->options(SportDiscipline::all()->pluck('long_name', 'id'))
-                                    ->searchable(),
+                                    ->searchable()
+                                    ->required(),
                                 Select::make('region')
                                     ->multiple()
                                     ->options(SportRegion::all()->pluck('long_name', 'short_name'))
                                     ->searchable(),
                                 Select::make('sport_id')
                                     ->options(SportList::all()->pluck('short_name', 'id'))
-                                    ->searchable(),
+                                    ->searchable()
+                                    ->required(),
 
                                 Select::make('level_id')
                                     ->options(SportLevel::all()->pluck('long_name', 'oris_id'))
@@ -198,6 +202,7 @@ class SportEventResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -217,6 +222,7 @@ class SportEventResource extends Resource
             'index' => Pages\ListSportEvents::route('/'),
             'create' => Pages\CreateSportEvent::route('/create'),
             'edit' => Pages\EditSportEvent::route('/{record}/edit'),
+            'view' => Pages\ViewSportEvent::route('/{record}'),
         ];
     }
 

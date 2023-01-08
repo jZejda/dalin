@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\SportEventResource\Pages;
 
 use App\Filament\Resources\SportEventResource;
-use Filament\Pages\Actions;
+use App\Http\Controllers\Discord\RaceEventAddedNotification;
+use Filament\Facades\Filament;
 use Filament\Pages\Actions\Action;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Pages\Actions;
+use Filament\Resources\Pages\ViewRecord;
 
-class ListSportEvents extends ListRecords
+class ViewSportEvent extends ViewRecord
 {
     protected static string $resource = SportEventResource::class;
 
@@ -19,18 +23,14 @@ class ListSportEvents extends ListRecords
                 ->label('pocli discord')
                 ->color('secondary')
                 ->icon('heroicon-s-cog')
-                ->action('openSettingsModal'),
+                ->action('sendDiscordNotification'),
         ];
     }
 
-    public function openSettingsModal(): void
+    public function sendDiscordNotification(): void
     {
-        dd('fsfsfs');
 
-
-
-
-
-       // $this->dispatchBrowserEvent('open-settings-modal');
+        (new RaceEventAddedNotification($this->getRecord()))->notification();
+        Filament::notify('danger', 'Nepodařilo se načíst data.');
     }
 }
