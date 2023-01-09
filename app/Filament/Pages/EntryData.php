@@ -11,6 +11,7 @@ use App\Models\SportEvent;
 use App\Models\UserCredit;
 use App\Models\UserRaceProfile;
 use App\Services\OrisApiService;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -30,6 +31,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EntryData extends Page implements HasForms,HasTable
 {
+
+    use HasPageShield;
+
     use InteractsWithForms;
     use InteractsWithTable;
 

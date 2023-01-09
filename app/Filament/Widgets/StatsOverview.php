@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Filament\Widgets;
 
 use App\Models\Post;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
 use Illuminate\Support\Facades\DB;
 
 class StatsOverview extends BaseWidget
 {
+    use HasWidgetShield;
+
     protected function getCards(): array
     {
         return [

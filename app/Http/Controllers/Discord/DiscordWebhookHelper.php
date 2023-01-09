@@ -11,7 +11,11 @@ final class DiscordWebhookHelper extends Controller
 
     public static function getWebhookUrl(string $chanelName): string
     {
-        return 'jedeme';
-    }
 
+        return match ($chanelName) {
+            self::DISCORD_SPORT_EVENT_WEBHOOK_URL => config('site-config.discord.sport_event.webhook_url'),
+            self::DISCORD_CONTENT_WEBHOOK_URL => config('site-config.discord.content.webhook_url'),
+            default => '',
+        };
+    }
 }

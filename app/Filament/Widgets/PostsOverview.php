@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Post;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\Widget;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
@@ -11,6 +12,8 @@ use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class PostsOverview extends Widget
 {
+    use HasWidgetShield;
+
     protected static string $view = 'filament.widgets.posts-overview';
 
     public function render(): View

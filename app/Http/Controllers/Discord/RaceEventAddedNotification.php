@@ -7,9 +7,7 @@ use App\Models\SportEvent;
 use Carbon\Carbon;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Collection;
 
 final class RaceEventAddedNotification extends Controller
 {
@@ -36,8 +34,7 @@ final class RaceEventAddedNotification extends Controller
         ];
 
 
-        $url = config('site-config.discord.sport_event.webhook_url');
-        return Http::post(env('DISCORD_MAIN_NOTIFICATION_WEBHOOK', 'empty'), [
+        return Http::post(DiscordWebhookHelper::getWebhookUrl(DiscordWebhookHelper::DISCORD_SPORT_EVENT_WEBHOOK_URL), [
             'content' => 'Nově přidaný závod akce **tak na ní koukni**.',
             'embeds' => $embeds,
         ]);
