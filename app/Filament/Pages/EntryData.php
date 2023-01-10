@@ -28,6 +28,11 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\ComponentContainer;
+
+/**
+ * @property ComponentContainer $form
+ */
 
 class EntryData extends Page implements HasForms,HasTable
 {
@@ -56,7 +61,6 @@ class EntryData extends Page implements HasForms,HasTable
     public function submit(): void
     {
 
-        /** @var Form $pokus */
         $this->form->getState();
 
         $formData = array_filter([
@@ -79,8 +83,8 @@ class EntryData extends Page implements HasForms,HasTable
             ->throw()
             ->object();
 
-        /** @var UserRaceProfile $userRaceProfiles */
-        $userRaceProfiles = DB::table('user_race_profiles')->get();
+//        /** @var UserRaceProfile $userRaceProfiles */
+//        $userRaceProfiles = DB::table('user_race_profiles')->get();
 
 
         if ($orisResponse->Status === 'OK') {

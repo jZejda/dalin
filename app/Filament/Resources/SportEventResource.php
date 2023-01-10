@@ -58,6 +58,9 @@ class SportEventResource extends Resource
                         ->schema([
 
                             TextInput::make('oris_id')
+                                ->label('ORIS ID')
+                                ->hint('unikátní ID závodu na ORIS stránkách')
+                                ->hintIcon('heroicon-s-exclamation')
                                 ->suffixAction(fn ($state, Closure $set) =>
                                 Action::make('hledej-podle-oris-id')
                                     ->icon('heroicon-o-search')
@@ -109,9 +112,13 @@ class SportEventResource extends Resource
 
                                     })
                                 ),
-                            TextInput::make('name')->required(),
-                            TextInput::make('place'),
+                            TextInput::make('name')
+                                ->label('Název závodu/akce')
+                                ->required(),
+                            TextInput::make('place')
+                                ->label('Místo'),
                             DatePicker::make('date')
+                                ->label('Datum od')
                                 ->displayFormat('d.m.Y')
                                 ->required(),
 
@@ -121,6 +128,7 @@ class SportEventResource extends Resource
                                 DateTimePicker::make('entry_date_3')->displayFormat('d.m.Y H:i:s')->label('Třetí termín'),
 
                                 Select::make('discipline_id')
+                                    ->label('Disciplína')
                                     ->options(SportDiscipline::all()->pluck('long_name', 'id'))
                                     ->searchable()
                                     ->required(),
@@ -129,11 +137,13 @@ class SportEventResource extends Resource
                                     ->options(SportRegion::all()->pluck('long_name', 'short_name'))
                                     ->searchable(),
                                 Select::make('sport_id')
+                                    ->label('Sport')
                                     ->options(SportList::all()->pluck('short_name', 'id'))
                                     ->searchable()
                                     ->required(),
 
                                 Select::make('level_id')
+                                    ->label('Level')
                                     ->options(SportLevel::all()->pluck('long_name', 'oris_id'))
                                     ->searchable(),
 
@@ -144,7 +154,8 @@ class SportEventResource extends Resource
 //                                    ->options(SportRegion::all()->pluck('long_name', 'short_name'))
 //                                    ->searchable(),
 
-                                Toggle::make('use_oris_for_entries')->inline()
+                                Toggle::make('use_oris_for_entries')
+                                    ->extraAttributes(['class' => 'mt-4'])
                                     ->label('Použít ORIS k přihláškám?')
                                     ->onIcon('heroicon-s-check')
                                     ->offIcon('heroicon-s-x'),
