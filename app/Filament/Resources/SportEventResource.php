@@ -8,6 +8,7 @@ use App\Models\SportEvent;
 use App\Models\SportLevel;
 use App\Models\SportList;
 use App\Models\SportRegion;
+use App\Models\UserCredit;
 use Closure;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
@@ -25,8 +26,10 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Database\Eloquent\Model;
 
 class SportEventResource extends Resource
 {
@@ -36,19 +39,17 @@ class SportEventResource extends Resource
 
     protected static ?string $navigationGroup = 'Správa';
 
+    protected static ?string $label = 'Závod / událost';
+    protected static ?string $pluralLabel = 'Závody / události';
+
+    protected static ?string $navigationLabel = 'Závod / událost';
+
+    protected static ?string $recordTitleAttribute = 'name';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-
-
-                Section::make('Heading')
-                    ->description('fsfsfs')
-                    ->schema([
-
-                    ])
-                    ->columns(2),
-
                 Grid::make([
                     'sm' => 1,
                     'md' => 12,
@@ -102,7 +103,7 @@ class SportEventResource extends Resource
 
                                         }
                                     }
-                                    $set('region', $region ?? null);
+                                    $set('region', $region);
 
                                     $set('discipline_id', $orisResponse['Discipline']['ID'] ?? null);
                                     $set('sport_id', $orisResponse['Sport']['ID'] ?? null);
@@ -147,13 +148,6 @@ class SportEventResource extends Resource
                                     ->options(SportLevel::all()->pluck('long_name', 'oris_id'))
                                     ->searchable(),
 
-
-
-
-//                                Select::make('region')
-//                                    ->options(SportRegion::all()->pluck('long_name', 'short_name'))
-//                                    ->searchable(),
-
                                 Toggle::make('use_oris_for_entries')
                                     ->extraAttributes(['class' => 'mt-4'])
                                     ->label('Použít ORIS k přihláškám?')
@@ -185,7 +179,8 @@ class SportEventResource extends Resource
                     ->sortable()
                     ->weight('medium')
                     ->alignLeft()
-                    ->limit(50),
+                    ->limit(50)
+                    ->description(fn (SportEvent $record): string => $record->oris_id ? 'ORIS ID: ' . $record->oris_id : ''),
 
                 TextColumn::make('place')
                     ->searchable()
@@ -195,11 +190,12 @@ class SportEventResource extends Resource
                     ->limit(25, '...')
                     ->alignLeft(),
 
-
                 TextColumn::make('date')
                     ->icon('heroicon-o-calendar')
                     ->label('Datum')
-                    ->dateTime('d.m.Y'),
+                    ->dateTime('d.m.Y')
+                    ->sortable()
+                    ->searchable(),
 
                 TextColumn::make('region')->label('Region'),
 
@@ -209,7 +205,16 @@ class SportEventResource extends Resource
 
             ])
             ->filters([
-                //
+                SelectFilter::make('sport_id')
+                    ->label('Sport')
+                    ->options(SportList::all()->pluck('short_name', 'id')),
+                SelectFilter::make('discipline_id')
+                    ->label('Disciplína')
+                    ->multiple()
+                    ->options(SportDiscipline::all()->pluck('long_name', 'id')),
+                SelectFilter::make('level_id')
+                    ->label('level')
+                    ->options(SportLevel::all()->pluck('long_name', 'oris_id')),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -234,6 +239,26 @@ class SportEventResource extends Resource
             'create' => Pages\CreateSportEvent::route('/create'),
             'edit' => Pages\EditSportEvent::route('/{record}/edit'),
             'view' => Pages\ViewSportEvent::route('/{record}'),
+        ];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        /** @var SportEvent $record */
+        return $record->name;
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'oris_id', 'place'];
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var SportEvent $record */
+        return [
+            'Název' => $record->name,
+            'Místo' => $record->place,
         ];
     }
 

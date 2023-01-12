@@ -76,7 +76,7 @@ class SportEvent extends Model
 
     public function getSportEventOrisTitleAttribute(): string
     {
-        return "{$this->name}  (Oris ID: {$this->oris_id})";
+        return $this->name . ' ' . ($this->oris_id !== null ? '(ORIS ID: ' . $this->oris_id . ')' : '');
     }
 
 }
