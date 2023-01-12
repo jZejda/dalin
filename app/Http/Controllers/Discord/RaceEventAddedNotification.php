@@ -13,13 +13,15 @@ final class RaceEventAddedNotification extends Controller
 {
 
     public SportEvent $sportEvent;
+    public string $status;
 
-    public function __construct(SportEvent $sportEvent)
+    public function __construct(SportEvent $sportEvent, string $status = DiscordWebhookHelper::CONTENT_STATUS_NEW)
     {
         $this->sportEvent = $sportEvent;
+        $this->status = $status;
     }
 
-    public function notification(): PromiseInterface|Response
+    public function sendNotification(): PromiseInterface|Response
     {
 
         $raceEventOrisLink = '';
@@ -33,9 +35,14 @@ final class RaceEventAddedNotification extends Controller
             'color' => '5763719',
         ];
 
+        $content = match ($this->status) {
+            DiscordWebhookHelper::CONTENT_STATUS_NEW => 'Do systému jsme přidali **nový závod nebo akci**, to to prosím zkontroluj.',
+            DiscordWebhookHelper::CONTENT_STATUS_UPDATE => 'Aktualizovali jsme údaje o **závodě / akci**. Pokud jí sleduješ, tak to prosím zkontroluj.',
+            default => '',
+        };
 
         return Http::post(DiscordWebhookHelper::getWebhookUrl(DiscordWebhookHelper::DISCORD_SPORT_EVENT_WEBHOOK_URL), [
-            'content' => 'Nově přidaný závod akce **tak na ní koukni**.',
+            'content' => $content,
             'embeds' => $embeds,
         ]);
     }

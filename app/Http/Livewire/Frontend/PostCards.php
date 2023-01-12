@@ -11,13 +11,16 @@ class PostCards extends Component
 {
     public function render(): View
     {
+        //dd($this->getLastPosts());
+
+
         return view('livewire.frontend.post-cards', ['posts' => $this->getLastPosts()]);
     }
 
     private function getLastPosts(): Collection
     {
         return DB::table('posts')
-            ->whereNull('private')
+            ->where('private', '=', 0)
             ->limit(6)
             ->orderBy('created_at', 'desc')
             ->get();

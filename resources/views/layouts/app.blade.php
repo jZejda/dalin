@@ -17,15 +17,20 @@
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
 
-    <body class="antialiased">
+    <body class="antialiased bg-white dark:bg-gray-900">
+        <div class="container mx-auto">
+            <div class="flex flex-col">
 
-    @section('sidebar')
-        This is the master sidebar.
-    @show
-        <div class="container">
-            @yield('content')
+                <livewire:frontend.navbar />
+
+                @yield('content')
+
+                <livewire:frontend.footer />
+
+
+            </div>
         </div>
-
         @livewire('notifications')
     </body>
+    <script src="https://unpkg.com/flowbite@1.6.1/dist/flowbite.min.js"></script>
 </html>
