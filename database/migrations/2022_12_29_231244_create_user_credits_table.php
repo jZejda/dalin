@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreign('user_race_profile_id')->references('id')->on('user_race_profiles');
             $table->unsignedBigInteger('sport_event_id')->nullable();
             $table->foreign('sport_event_id')->references('id')->on('sport_events');
+            $table->unsignedBigInteger('sport_service_id')->nullable();
+            $table->foreign('sport_service_id')->references('id')->on('sport_services');
             $table->float('amount');
             $table->enum('currency', [UserCredit::CURRENCY_CZK, UserCredit::CURRENCY_EUR]);
             $table->enum('source', [UserCredit::SOURCE_CRON, UserCredit::SOURCE_USER]);

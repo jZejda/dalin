@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property integer $user_id
  * @property ?int $user_race_profile_id
  * @property ?int $sport_event_id
+ * @property ?int $sport_service_id
  * @property float $amount
  * @property string $currency
  * @property string $source
@@ -26,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property User $user
  * @property User $sourceUser
  * @property-read UserRaceProfile $userRaceProfile
+ * @property-read SportService $sportService
  */
 
 class UserCredit extends Model
@@ -48,6 +50,7 @@ class UserCredit extends Model
         'user_id',
         'user_race_profile_id',
         'sport_event_id',
+        'sport_service_id',
         'amount',
         'currency',
         'source',
@@ -74,5 +77,10 @@ class UserCredit extends Model
     public function sportEvent(): HasOne
     {
         return $this->hasOne(SportEvent::class, 'id', 'sport_event_id');
+    }
+
+    public function sportService(): HasOne
+    {
+        return $this->hasOne(SportService::class, 'id', 'sport_service_id');
     }
 }

@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\UserRaceProfile
@@ -20,25 +21,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $email
  * @property string|null $phone
  * @property string $gender
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ *
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read string $user_race_full_name
- * @property-read \App\Models\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile query()
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereFirstName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereGender($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereLastName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereOrisId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereRegNumber($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereUserId($value)
- * @mixin \Eloquent
+ * @property-read User|null $user
  */
 class UserRaceProfile extends Model
 {

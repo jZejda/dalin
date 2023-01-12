@@ -125,7 +125,7 @@ class EntryData extends Page implements HasForms,HasTable
 //
 //
 //
-        Mail::to('zejda.jiri@gmail.com')->send(new SendSportEventNearestMail());
+        // Mail::to('zejda.jiri@gmail.com')->send(new SendSportEventNearestMail());
 
         // auth()->user()->update($state);
 
