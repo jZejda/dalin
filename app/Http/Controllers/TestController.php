@@ -2,52 +2,81 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Components\Oris\Response\OrisUserEntity;
+use App\Http\Components\Oris\GetEvent;
 use App\Http\Components\Oris\GetUser;
-use App\Mail\SendSportEventNearestMail;
 use App\Models\SportEvent;
-use Carbon\Carbon;
-use GuzzleHttp\Promise\PromiseInterface;
+use App\Models\SportService;
 use Illuminate\Http\Client\RequestException;
-use Illuminate\Http\Client\Response;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\View\View;
 
 class TestController extends Controller
 {
     /**
      * @throws RequestException
+     * @noinspection PhpMultipleClassDeclarationsInspection
      */
     public function test(): void
     {
 
-        $orisResponse = Http::get('https://oris.orientacnisporty.cz/API',
-            [
-                'format' => 'json',
-                'method' => 'getUser',
-                'rgnum' => 'ABM7805',
-            ])
-            ->throw();
+        $sportEvent = SportEvent::findOrFail(1);
+
+        //dd($sportEvent);
 
 
-        $user = new GetUser();
-        $data = null;
-        if ($user->checkOrisResponse($orisResponse)) {
-            $data = $user->data($orisResponse);
+        $sportEventServices = $sportEvent->sportServices;
 
-            // some stuff
-
+        foreach ($sportEventServices as $sportEventService) {
+            /** @var SportService  $sportEventService*/
+            dd($sportEventService->service_name_cz);
         }
 
-        var_dump($data->getID());
-        die;
+        //dd($sportEventServices);
 
+//        /**
+//         * @var SportEvent $pokus
+//         */
+//        dd($pokus = SportEvent::find(1)->get());
+//
+//
+//        $orisResponse = Http::get('https://oris.orientacnisporty.cz/API',
+//            [
+//                'format' => 'json',
+//                'method' => 'getEvent',
+//                'id' => 2252,
+//            ])
+//            ->throw();
+//
+//        //dd($orisResponse->body());
+//
+//
+//        $event = new GetEvent();
+//        $data = null;
+//        if ($event->checkOrisResponse($orisResponse)) {
+//
+//            //dd('sem tu');
+//            $data = $event->data($orisResponse);
+//
+//            // some stuff
+//
+//        }
+//
+//        foreach ($data->getServices() as $service) {
+//
+//            dd($service->getNameCZ());
+//
+//        }
+//
+//        dd($data->getServices());
+//        die;
+//
+//
+//        // dd($response->json());
+//        // $this->notification();
 
-        // dd($response->json());
-        // $this->notification();
+    }
+
+    public function test2()
+    {
 
     }
 }

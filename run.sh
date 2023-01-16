@@ -45,6 +45,7 @@ case "$1" in
     idehelper)
         echo "${BOLD}Run IDE helper generate file...${NORMAL}"
         php artisan ide-helper:generate
+        php artisan ide-helper:model
     ;;
     deploy)
         echo "${BOLD}Run Deploy to product server...${NORMAL}"

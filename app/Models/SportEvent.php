@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
@@ -31,6 +32,7 @@ use Illuminate\Support\Carbon;
  *
  * @property-read string $sport_event_oris_title
  * @property-read SportDiscipline|null $sportDiscipline
+ * @property-read SportService|null $sportServices
  */
 
 class SportEvent extends Model
@@ -64,15 +66,16 @@ class SportEvent extends Model
     ];
 
 
-    /**
-     * Returns User object for single Post
-     *
-     * @return HasOne
-     */
     public function sportDiscipline(): HasOne
     {
         return $this->hasOne(SportDiscipline::class, 'id', 'discipline_id');
     }
+
+    public function sportServices(): HasMany
+    {
+        return $this->hasMany(SportService::class, 'sport_event_id', 'id');
+    }
+
 
     public function getSportEventOrisTitleAttribute(): string
     {
