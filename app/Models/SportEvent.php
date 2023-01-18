@@ -76,7 +76,6 @@ class SportEvent extends Model
         return $this->hasMany(SportService::class, 'sport_event_id', 'id');
     }
 
-
     public function getSportEventOrisTitleAttribute(): string
     {
         return $this->name . ' ' . ($this->oris_id !== null ? '(ORIS ID: ' . $this->oris_id . ')' : '');

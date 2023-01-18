@@ -18,4 +18,26 @@ final class GetEvent extends OrisResponse
             'json'
         );
     }
+
+    public function services(Response $response): array
+    {
+        $data = $this->getResponseArrayPart($response, 'Data.Services');
+        return $this->getSerializerArray()->deserialize(
+            $data,
+            'App\Http\Components\Oris\Response\Entity\Services[]',
+            'json'
+        );
+    }
+
+    public function classes(Response $response): array
+    {
+        $data = $this->getResponseArrayPart($response, 'Data.Classes');
+        return $this->getSerializerArray()->deserialize(
+            $data,
+            'App\Http\Components\Oris\Response\Entity\Classes[]',
+            'json'
+        );
+    }
+
+
 }

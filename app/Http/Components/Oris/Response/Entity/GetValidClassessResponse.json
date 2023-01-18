@@ -1,0 +1,36 @@
+{
+    "Method": "getValidClasses",
+    "Format": "json",
+    "Status": "OK",
+    "ExportCreated": "2023-01-18 00:50:23",
+    "Data": {
+        "Class_167282": {
+            "ID": "167282",
+            "ClassDesc": "H21C",
+            "Fee": "150",
+            "NoExtraFee": "0",
+            "ManualFee": "0",
+            "Fee2": "0",
+            "Fee3": "0",
+            "NoRegManualFee": "0",
+            "NoRegFee1": "0",
+            "NoRegFee2": "0",
+            "NoRegFee3": "0",
+            "PreSelected": "0"
+        },
+        "Class_167283": {
+            "ID": "167283",
+            "ClassDesc": "H35",
+            "Fee": "150",
+            "NoExtraFee": "0",
+            "ManualFee": "0",
+            "Fee2": "0",
+            "Fee3": "0",
+            "NoRegManualFee": "0",
+            "NoRegFee1": "0",
+            "NoRegFee2": "0",
+            "NoRegFee3": "0",
+            "PreSelected": "1"
+        }
+    }
+}
