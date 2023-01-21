@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('gender', 3);
+            $table->integer('si')->unsigned()->nullable();
             $table->timestamps();
         });
     }

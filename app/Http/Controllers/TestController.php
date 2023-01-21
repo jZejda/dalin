@@ -2,43 +2,123 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\Oris\CreateEntry;
 use App\Http\Components\Oris\GetEvent;
-use App\Http\Components\Oris\GetUser;
+use App\Http\Components\Oris\GuzzleClient;
 use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
-use App\Models\SportEvent;
-use App\Models\SportService;
-use Illuminate\Http\Client\RequestException;
+use App\Models\UserRaceProfile;
 use Illuminate\Support\Facades\Http;
 
 class TestController extends Controller
 {
+    private GuzzleClient $client;
+
+    public function __construct(GuzzleClient $client)
+    {
+        $this->client = $client;
+    }
+
     public function test(): void
     {
 
-        $orisResponse = Http::withHeaders([
-            'X-First' => 'foo',
-            'X-Second' => 'bar'
-        ])->post('https://oris.orientacnisporty.cz/API',
-            [
-                'format' => 'json',
-                'method' => 'createEntry',
-                'username' => 'zejda.jiri',
-                'password' => '54455464',
-                'clubuser' => '54',
-                'comp' => '7721',
-            ])->body();
+        dd(UserRaceProfile::all()->pluck('user_race_full_name', 'oris_id'));
 
-        var_dump($orisResponse);
+    }
+
+    public function testsss(): void
+    {
+        $params = [
+            'entryid' => '2249267',
+        ];
+
+        $client = $this->client->create();
+        $clientResponse = $client->request('POST', 'API', $this->client->generateMultipartForm(GuzzleClient::METHOD_DELETE_ENTRY, $params));
 
 
-//        id kategorie 167282
-//
-//    id clena klubu: 54
+        //dd($clientResponse->getBody()->getContents());
 
+        $response = new CreateEntry();
+        $orisResponse = $response->data($clientResponse->getBody()->getContents());
+
+        //dd($orisResponse->getData()->getEntry()->getID()); //teroreticky ID prihlasky
+        dd($orisResponse->getStatus()); //status ORISU melo by byt OK
+        dd($orisResponse->getExportCreated()); //cas prihlasky
+    }
+
+    public function entryDelete(): void
+    {
+        $params = [
+            'entryid' => '2249267',
+        ];
+
+        $client = $this->client->create();
+        $clientResponse = $client->request('POST', 'API', $this->client->generateMultipartForm(GuzzleClient::METHOD_DELETE_ENTRY, $params));
+
+
+        //dd($clientResponse->getBody()->getContents());
+
+        $response = new CreateEntry();
+        $orisResponse = $response->data($clientResponse->getBody()->getContents());
+
+        //dd($orisResponse->getData()->getEntry()->getID()); //teroreticky ID prihlasky
+        dd($orisResponse->getStatus()); //status ORISU melo by byt OK
+        dd($orisResponse->getExportCreated()); //cas prihlasky
+
+    }
+
+
+
+
+    public function testPok(): void
+    {
+        $params = [
+            'clubuser' => '54',
+            'class' => '167282',
+        ];
+
+        $client = $this->client->create();
+        $clientResponse = $client->request('POST', 'API', $this->client->getMultipartParams($params));
+
+//        var_dump($clientResponse->getBody()->getContents());
+//        die;
+
+        //{"Method":"createEntry","Format":"json","Status":"OK","ExportCreated":"2023-01-20 01:07:57","Data":{"Entry":{"ID":2248669}}}
+
+        $response = new CreateEntry();
+        $orisResponse = $response->data($clientResponse->getBody()->getContents());
+
+        dd($orisResponse->getData()->getEntry()->getID()); //teroreticky ID prihlasky
+        dd($orisResponse->getStatus()); //status ORISU melo by byt OK
+        dd($orisResponse->getExportCreated()); //cas prihlasky
 
 
     }
+
+
+    public function createEntry()
+    {
+
+        $params = [
+            'clubuser' => '54',
+            'class' => '167282',
+        ];
+
+        $client = $this->client->create();
+        $clientResponse = $client->request('POST', 'API', $this->client->generateMultipartForm(GuzzleClient::METHOD_CREATE_ENTRY, $params));
+
+        //dd($clientResponse->getBody()->getContents());
+
+
+        $response = new CreateEntry();
+        $orisResponse = $response->data($clientResponse->getBody()->getContents());
+
+        dd($orisResponse->getStatus());
+        dd($orisResponse->getData()?->getEntry()->getID()); //teroreticky ID prihlasky
+        dd($orisResponse->getExportCreated()); //cas prihlasky
+
+    }
+
 
     public function test2()
     {

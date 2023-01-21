@@ -1,4 +1,5 @@
 <x-filament::page>
+
     <form wire:submit.prevent="submit" class="space-y-6">
         {{ $this->form }}
 
@@ -12,17 +13,5 @@
             </x-filament::button>
         </div>
     </form>
-
-    <div>
-        <p>Přihlášky členů</p>
-    </div>
-
-    <div>
-        {{ $this->table }}
-    </div>
-
-{{--    @foreach($last_files as $file)--}}
-{{--        {{ $file }}--}}
-{{--    @endforeach--}}
 
 </x-filament::page>

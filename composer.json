@@ -11,7 +11,7 @@
         "filament/filament": "^2.0",
         "filament/forms": "^2.0",
         "filament/tables": "^2.0",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.0",
         "laravel/breeze": "^1.14",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",

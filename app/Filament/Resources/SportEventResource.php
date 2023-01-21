@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SportEventResource\Pages;
+use App\Http\Components\Oris\GuzzleClient;
 use App\Models\SportDiscipline;
 use App\Models\SportEvent;
 use App\Models\SportLevel;
@@ -73,6 +74,7 @@ class SportEventResource extends Resource
                                         }
 
                                         try {
+                                            //$client = (new GuzzleClient())->create();
                                             $orisResponse = Http::get('https://oris.orientacnisporty.cz/API',
                                                 [
                                                     'format' => 'json',

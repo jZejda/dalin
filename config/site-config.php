@@ -16,6 +16,22 @@ return [
         'full_name' => 'Klub orientačního běhu ABM Brno'
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | ORIS credentials
+    |--------------------------------------------------------------------------
+    |
+    | Basic Club info
+    |
+    */
+
+    'oris_credentials' => [
+        'general' => [
+            'username' => env('ORIS_GENERAL_USERNAME', null),
+            'password' => env('ORIS_GENERAL_PASSWORD', null),
+        ]
+    ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -28,11 +44,11 @@ return [
 
     'discord' => [
         'sport_event' => [
-            'webhook_url' => env('DISCORD_SPORT_EVENT_NOTIFICATION_WEBHOOK'),
+            'webhook_url' => env('DISCORD_SPORT_EVENT_NOTIFICATION_WEBHOOK', ''),
             'code' => 'sport_event_notification',
         ],
         'content' => [
-            'webhook_url' => env('DISCORD_CONTENT_NOTIFICATION_WEBHOOK'),
+            'webhook_url' => env('DISCORD_CONTENT_NOTIFICATION_WEBHOOK', ''),
             'code' => 'content_notification',
         ]
     ]
