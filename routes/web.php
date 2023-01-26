@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DiscordRaceEventNotification;
 use App\Http\Controllers\TestController;
+use App\Http\Livewire\Frontend\ShowPost;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/novinka/{id}', ShowPost::class);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -9,28 +9,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * App\Models\User
+ *
+ * @property int $id
+ * @property int $sport_event_id
+ * @property ?int $oris_service_id
+ * @property string $service_name_cz
+ * @property string $last_booking_date_time
+ * @property float $unit_price
+ * @property int $qty_available
+ * @property int $qty_already_ordered
+ * @property int $qty_remaining
+ * @property string $created_at
+ * @property string $updated_at
+ *
+ */
+
 class SportService extends Model
 {
     use HasFactory;
-
-    /**
-     * App\Models\User
-     *
-     * @property int $id
-     * @property int $sport_event_id
-     * @property ?int $oris_service_id
-     * @property string $service_name_cz
-     * @property string $last_booking_date_time
-     * @property float $unit_price
-     * @property int $qty_available
-     * @property int $qty_already_ordered
-     * @property int $qty_remaining
-     * @property string $created_at
-     * @property string $updated_at
-     *
-     * @property Carbon|null $created_at
-     * @property Carbon|null $updated_at
-     */
 
     protected $fillable = [
         'sport_event_id',

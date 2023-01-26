@@ -2,9 +2,9 @@
 
 namespace App\Http\Livewire\Frontend;
 
+use App\Models\Post;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class PostCards extends Component
@@ -13,15 +13,13 @@ class PostCards extends Component
     {
         //dd($this->getLastPosts());
 
-
         return view('livewire.frontend.post-cards', ['posts' => $this->getLastPosts()]);
     }
 
     private function getLastPosts(): Collection
     {
-        return DB::table('posts')
-            ->where('private', '=', 0)
-            ->limit(6)
+        return Post::where('content_mode', '=', 1)
+            ->limit(5)
             ->orderBy('created_at', 'desc')
             ->get();
     }

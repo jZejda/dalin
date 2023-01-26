@@ -7,11 +7,17 @@ use App\Http\Components\Oris\GetEvent;
 use App\Http\Components\Oris\GuzzleClient;
 use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
+use App\Http\Controllers\Cron\CronTabManager;
+use App\Http\Controllers\Cron\OrisUpdateEntry;
+use App\Models\SportService;
 use App\Models\UserRaceProfile;
+use Illuminate\Console\Scheduling\ManagesFrequencies;
 use Illuminate\Support\Facades\Http;
 
 class TestController extends Controller
 {
+    use ManagesFrequencies;
+
     private GuzzleClient $client;
 
     public function __construct(GuzzleClient $client)
@@ -22,7 +28,8 @@ class TestController extends Controller
     public function test(): void
     {
 
-        dd(UserRaceProfile::all()->pluck('user_race_full_name', 'oris_id'));
+        (new OrisUpdateEntry())->update(7721);
+        dd('jede');
 
     }
 

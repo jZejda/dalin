@@ -2,6 +2,8 @@
 /public/build
 /public/hot
 /public/storage
+/public/orisdata
+/public/media
 /storage/*.key
 /vendor
 .env

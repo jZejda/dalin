@@ -14,6 +14,7 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -59,7 +60,7 @@ class PageResource extends Resource
 
                             // Markdown editor
                             Grid::make()->schema([
-                                MarkdownEditor::make('content')
+                                RichEditor::make('content')
 
                             ])->columns(1),
 

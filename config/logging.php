@@ -57,6 +57,12 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'app' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/app.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

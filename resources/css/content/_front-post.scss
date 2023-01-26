@@ -1,0 +1,64 @@
+.app-front-content p {
+    @apply pb-4 dark:text-white;
+}
+
+.app-front-content h1 {
+    @apply mt-4 mb-8 text-5xl font-extrabold dark:text-white;
+}
+
+.app-front-content h2 {
+    @apply mt-6 mb-3 text-4xl font-extrabold dark:text-white font-extrabold leading-none tracking-tight;
+}
+
+.app-front-content h3 {
+    @apply mt-5 mb-2 text-3xl font-bold dark:text-white;
+}
+
+.app-front-content h4 {
+    @apply mt-4 mb-1 text-2xl font-bold dark:text-white;
+}
+
+.app-front-content h5 {
+    @apply mt-3 mb-1 text-xl font-bold dark:text-white;
+}
+
+.app-front-content strong {
+    @apply dark:text-white;
+}
+
+.app-front-content ul {
+    @apply dark:text-white list-disc p-3;
+}
+
+.app-front-content ol {
+    @apply dark:text-white list-decimal;
+}
+
+.app-front-content li {
+    @apply dark:text-white ml-2;
+}
+
+
+.app-front-content p {
+    @apply dark:text-white m-0;
+}
+
+.app-front-content a {
+    @apply font-semibold text-gray-900 underline dark:text-white decoration-green-500;
+
+    .link {
+        @apply font-semibold;
+    }
+}
+
+.app-front-content figcaption {
+    @apply mt-0;
+}
+
+
+
+
+.app-front-content img {
+    max-width: 600px;
+    height: auto;
+}
