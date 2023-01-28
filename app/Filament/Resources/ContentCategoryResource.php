@@ -68,7 +68,7 @@ class ContentCategoryResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['title', 'description', 'slug'];
+        return ['title'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string

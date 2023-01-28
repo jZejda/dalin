@@ -45,6 +45,16 @@ class UserResource extends Resource
                     ->label(static fn(Page $livewire): string =>
                         ($livewire instanceof Pages\EditUser) ? 'Nové heslo' : 'Heslo',
                     ),
+                Forms\Components\Select::make('roles')
+                    ->multiple()
+                    ->searchable()
+                    ->relationship('roles', 'name')
+                    ->preload(),
+                Forms\Components\Select::make('permissions')
+                    ->multiple()
+                    ->searchable()
+                    ->relationship('permissions', 'name')
+                    ->preload(),
             ]);
     }
 
@@ -53,7 +63,7 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('email'),
+                Tables\Columns\TextColumn::make('roles.name'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime(),
                 Tables\Columns\TextColumn::make('updated_at')

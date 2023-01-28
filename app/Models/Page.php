@@ -34,7 +34,7 @@ class Page extends Model
 {
 
     public const STATUS_OPEN = 'open';
-    public const STATUS_CLOSED = 'closed';
+    public const STATUS_CLOSED = 'close';
     public const STATUS_DRAFT = 'draft';
     public const STATUS_ARCHIVE = 'archive';
 

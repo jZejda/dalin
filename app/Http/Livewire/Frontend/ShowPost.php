@@ -10,9 +10,9 @@ use Livewire\Component;
 
 class ShowPost extends Component
 {
-    public $post;
+    public Post $post;
 
-    public function mount($id)
+    public function mount(int $id): void
     {
         $this->post = Post::where('id', '=', $id)->where('private', '=', 0)->first();
     }
@@ -22,7 +22,7 @@ class ShowPost extends Component
         if ($this->post !== null) {
             return view('livewire.frontend.show-post', ['posts' => $this->post]);
         } else {
-            return view('livewire.frontend.show-post', ['posts' => $this->post]);
+            abort(404);
         }
     }
 }

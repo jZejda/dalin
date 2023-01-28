@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DiscordRaceEventNotification;
 use App\Http\Controllers\TestController;
+use App\Http\Livewire\Frontend\ShowPage;
 use App\Http\Livewire\Frontend\ShowPost;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,7 @@ Route::get('/', function () {
 });
 
 Route::get('/novinka/{id}', ShowPost::class);
+Route::get('/stranka/{slug}', ShowPage::class);
 
 
 Route::get('/dashboard', function () {
@@ -29,7 +31,7 @@ Route::get('/dashboard', function () {
 
 
 Route::get('/admin/test', [TestController::class, 'test']);
-Route::get('/admin/webhook', [DiscordRaceEventNotification::class, 'notification']);
+//Route::get('/admin/webhook', [DiscordRaceEventNotification::class, 'notification']);
 
 
 require __DIR__.'/auth.php';

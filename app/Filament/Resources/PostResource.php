@@ -24,6 +24,7 @@ use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use function PHPUnit\Framework\stringContains;
@@ -31,10 +32,10 @@ use function PHPUnit\Framework\stringContains;
 class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
-
     protected static ?string $navigationGroup = 'Obsah';
+    protected static ?string $label = 'Novinka';
+    protected static ?string $pluralLabel = 'Novinky';
 
     public static function form(Form $form): Form
     {
@@ -56,13 +57,15 @@ class PostResource extends Resource
                                     $set('slug', Str::slug($state));
                                 }),
                             Grid::make()->schema([
-                                RichEditor::make('editorial')
-                                    ->required(),
+                                MarkdownEditor::make('editorial')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->lazy(),
                             ])->columns(1),
 
                             // Markdown editor
                             Grid::make()->schema([
-                                RichEditor::make('content')
+                                MarkdownEditor::make('content')
                             ])->columns(1),
 
 
@@ -100,6 +103,21 @@ class PostResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('title'),
+                TextColumn::make('user.name')
+                    ->label('Autor')
+                    ->searchable()
+                    ->sortable(),
+                BadgeColumn::make('content_mode')
+                    ->label('Formát obsahu')
+                    ->enum([
+                        1 => 'HTML',
+                        2 => 'Markdown',
+                    ])
+                    ->colors([
+                        'secondary' => 1,
+                        'success' => 2,
+                    ])
+                    ->sortable(),
                 IconColumn::make('private')
                     ->boolean()
                     ->trueIcon('heroicon-o-badge-check')
@@ -123,6 +141,26 @@ class PostResource extends Resource
             ->filters([
                 //
             ]);
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title'];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        /** @var Post $record */
+        return $record->title . ' | ' . $record->updated_at->format('m. Y');
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var Post $record */
+        return [
+            'Autor' => $record->user->user_identification,
+            'Stav' => ($record->private === true) ? 'Neveřejná' : 'Veřejná',
+        ];
     }
 
     public static function getRelations(): array

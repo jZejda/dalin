@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\UserCredit;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,15 +21,11 @@ return new class extends Migration
             $table->unsignedBigInteger('sport_service_id')->nullable();
             $table->foreign('sport_service_id')->references('id')->on('sport_services');
             $table->float('amount');
-            $table->enum('currency', [UserCredit::CURRENCY_CZK, UserCredit::CURRENCY_EUR]);
-            $table->enum('source', [UserCredit::SOURCE_CRON, UserCredit::SOURCE_USER]);
+            $table->string('currency', 5)->default('CZK');
+            $table->string('source', 60);
             $table->unsignedBigInteger('source_user_id')->nullable();
             $table->foreign('source_user_id')->references('id')->on('users');
-            $table->enum('credit_type', [
-                UserCredit::CREDIT_TYPE_CACHE_IN,
-                UserCredit::CREDIT_TYPE_CACHE_OUT,
-                UserCredit::CREDIT_TYPE_DONATION,
-            ]);
+            $table->string('credit_type', 60);
             $table->timestamps();
         });
     }

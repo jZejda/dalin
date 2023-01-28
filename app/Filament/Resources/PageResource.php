@@ -11,10 +11,8 @@ use App\Models\Page;
 use App\Models\User;
 use Closure;
 use Filament\Forms\Components\Card;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -22,8 +20,8 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\MultiSelectFilter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -60,17 +58,8 @@ class PageResource extends Resource
 
                             // Markdown editor
                             Grid::make()->schema([
-                                RichEditor::make('content')
-
+                                MarkdownEditor::make('content')
                             ])->columns(1),
-
-                            // File Upload
-                            Grid::make()->schema([
-                                FileUpload::make('picture_attachment')
-                                    ->directory('pages')
-                            ])->columns(1)
-
-
                         ])
                         ->columns(2)
                         ->columnSpan([
@@ -89,32 +78,22 @@ class PageResource extends Resource
                                 ->searchable(),
 
                             Select::make('status')
-                                ->options([
-                                    Page::STATUS_OPEN => 'Zveřejněno',
-                                    Page::STATUS_CLOSED => 'Neaktivní',
-                                    Page::STATUS_DRAFT => 'Rozpracováno',
-                                    Page::STATUS_ARCHIVE => 'Archiv'
-                                ])
+                                ->options(self::getPageStatuses())
                                 ->default(Page::STATUS_CLOSED)
                                 ->disablePlaceholderSelection(),
 
                             Select::make('content_format')
                                 ->label('Formát')
                                 ->options([
-                                        1 => 'Markdown',
-                                        2 => 'HTML',
-                                    ]
+                                        1 => 'HTML',
+                                        2 => 'Markdown',
+                            ]
                                 )->default(1),
 
                             Select::make('content_category_id')
                                 ->label('Kategorie')
                                 ->options(ContentCategory::all()->pluck('title', 'id'))
                                 ->searchable(),
-
-                            Select::make('status')
-                                ->options(self::getPageStatuses())
-                                ->default(Page::STATUS_CLOSED)
-                                ->disablePlaceholderSelection(),
 
                             Toggle::make('page_menu')->inline()
                                 ->label('Zobrazit menu kategorie?')
@@ -141,10 +120,35 @@ class PageResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('title')->searchable(),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('title')
+                    ->label('Název')
+                    ->description(fn (Page $record): string => $record->slug ?? '')
+                    ->sortable()
+                    ->searchable()
+                    ->copyable(),
+                BadgeColumn::make('status')
+                    ->enum(self::getPageStatuses())
+                    ->colors([
+                        'success' => Page::STATUS_OPEN,
+                        'secondary' => Page::STATUS_DRAFT,
+                        'warning' => Page::STATUS_CLOSED,
+                        'primary' => Page::STATUS_ARCHIVE,
+                    ]),
+                BadgeColumn::make('content_format')
+                    ->label('Formát obsahu')
+                    ->enum([
+                        1 => 'HTML',
+                        2 => 'Markdown',
+                    ])
+                    ->colors([
+                        'secondary' => 1,
+                        'success' => 2,
+                    ])
+                    ->sortable(),
+               TextColumn::make('updated_at')
                     ->label(__('filament-shield::filament-shield.column.updated_at'))
-                    ->dateTime('d. m. Y - H:i'),
+                    ->dateTime('d. m. Y - H:i')
+                    ->sortable(),
             ])
             ->filters([
 //                SelectFilter::make('user_id')->relationship('user_id', 'name'),
@@ -172,13 +176,22 @@ class PageResource extends Resource
 
     public static function getGloballySearchableAttributes(): array
     {
-        return ['title', 'content'];
+        return ['title'];
     }
 
     public static function getGlobalSearchResultTitle(Model $record): string
     {
         /** @var Page $record */
         return $record->title . ' | ' . $record->updated_at->format('m. Y');
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        /** @var Page $record */
+        return [
+            'Autor' => $record->user->user_identification,
+            'Zařazeno' => $record->content_category->title,
+        ];
     }
 
     private static function getPageStatuses(): array
@@ -190,4 +203,5 @@ class PageResource extends Resource
             Page::STATUS_ARCHIVE => 'Archiv'
         ];
     }
+
 }
