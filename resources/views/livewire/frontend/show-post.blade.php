@@ -11,13 +11,13 @@
 
 @section('content')
 
-    <div class="pt-4 bg-white dark:bg-gray-900">
+    <div class="p-4 bg-white dark:bg-gray-900">
         <div class="container mx-auto app-front-content mb-10">
+            <h2>{!! $post->title !!}</h2>
             @if($post->content_mode === 1)
-                <h2>{!! $post->title !!}</h2>
                 <div>{!! $post->content !!}</div>
             @elseif($post->content_mode === 2)
-                <p>{{ Markdown::parse($post->title) }}</p>
+                <div>{{ Markdown::parse($post->title) }}</div>
             @endif
 
             <div class="mt-10">

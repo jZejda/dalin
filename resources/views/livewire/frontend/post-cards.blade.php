@@ -14,9 +14,9 @@
                     <a href="{{ url('/novinka', $post->id) }}">{{$post->title}}</a>
                 </h4>
                 @if($post->content_mode === 1)
-                    <p>{!! $post->editorial !!}</p>
+                    <div>{!! $post->editorial !!}</div>
                 @elseif($post->content_mode === 2)
-                    <p>{{ Markdown::parse($post->editorial) }}</p>
+                    <div>{{ Markdown::parse($post->editorial) }}</div>
                 @endif
 
 {{--                <p>{!! app(Spatie\LaravelMarkdown\MarkdownRenderer::class)->toHtml($post->content) !!}</p>--}}

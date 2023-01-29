@@ -18,7 +18,7 @@ class PostCards extends Component
 
     private function getLastPosts(): Collection
     {
-        return Post::where('content_mode', '=', 1)
+        return Post::where('private', '=', false)
             ->limit(6)
             ->orderBy('created_at', 'desc')
             ->get();
