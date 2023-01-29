@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PostResource\Pages;
-use App\Filament\Resources\PostResource\RelationManagers;
 use App\Models\Post;
 use App\Models\User;
+use Awcodes\Curator\Components\Forms\CuratorPicker;
+use Awcodes\Curator\Facades\Curator;
+use Awcodes\Curator\Generators\DatePathGenerator;
 use Closure;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -27,7 +28,6 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use function PHPUnit\Framework\stringContains;
 
 class PostResource extends Resource
 {
@@ -67,6 +67,10 @@ class PostResource extends Resource
                             Grid::make()->schema([
                                 MarkdownEditor::make('content')
                             ])->columns(1),
+                            CuratorPicker::make('pokus')
+                                ->label('pokus')
+                                ->pathGenerator(DatePathGenerator::class)
+                                ->buttonLabel('button'),
 
 
                         ])
@@ -187,6 +191,11 @@ class PostResource extends Resource
             'edit' => Pages\EditPost::route('/{record}/edit'),
             'view' => Pages\ViewPost::route('/{record}'),
         ];
+    }
+
+    public function register()
+    {
+        Curator::pathGenerator(DatePathGenerator::class);
     }
 
 }
