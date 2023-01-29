@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Http\Components\Oris\GetEvent;
+use App\Models\SportClassDefinition;
+use App\Http\Components\Oris\GetClassDefinitions;
+use App\Http\Components\Oris\GetOris;
+use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
 use App\Models\SportEvent;
@@ -25,7 +28,7 @@ class OrisApiService
         ];
         $orisResponse = $this->orisGetResponse($getParams);
 
-        $event = new GetEvent();
+        $event = new GetOris();
         if ($event->checkOrisResponse($orisResponse)) {
             $orisData = $event->data($orisResponse);
 
@@ -71,6 +74,41 @@ class OrisApiService
 
         return true;
     }
+
+    public function updateClassDefinitions(int $sportId): bool
+    {
+        $getParams = [
+            'method' => 'getClassDefinitions',
+            'sport' => $sportId,
+        ];
+        $orisResponse = $this->orisGetResponse($getParams);
+
+        $classDefinitions = new GetClassDefinitions();
+        if ($classDefinitions->checkOrisResponse($orisResponse)) {
+
+            /** @var ClassDefinition[] $orisData */
+            $orisData = $classDefinitions->data($orisResponse);
+
+            foreach ($orisData as $data) {
+                // Create|Update Event
+                /** @var ClassDefinition $model */
+                $model = SportClassDefinition::where('oris_id', $data->getId())->first();
+                if (is_null($model)) {
+                    $model = new SportClassDefinition();
+                }
+
+                $model->oris_id = $data->getID();
+                $model->sport_id = $sportId;
+                $model->age_from = $data->getAgeFrom();
+                $model->age_to = $data->getAgeTo();
+                $model->gender = $data->getGender();
+                $model->name = $data->getName();
+                $model->save();
+            }
+        }
+        return true;
+    }
+
 
     private function orisGetResponse(array $getParams): Response
     {

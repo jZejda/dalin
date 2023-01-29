@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Components\Oris\CreateEntry;
+use App\Http\Components\Oris\GetClassDefinitions;
 use App\Http\Components\Oris\GetEvent;
 use App\Http\Components\Oris\GuzzleClient;
+use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
 use App\Http\Controllers\Cron\CronTabManager;
 use App\Http\Controllers\Cron\OrisUpdateEntry;
+use App\Models\SportClassDefinition;
 use App\Models\SportService;
 use App\Models\UserRaceProfile;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 class TestController extends Controller
@@ -20,12 +24,57 @@ class TestController extends Controller
 
     private GuzzleClient $client;
 
+    public const ORIS_API_URL = 'https://oris.orientacnisporty.cz/API';
+    public const ORIS_API_DEFAULT_FORMAT = 'json';
+
     public function __construct(GuzzleClient $client)
     {
         $this->client = $client;
     }
 
-    public function test(): void
+
+
+    public function test(): bool
+    {
+
+        $sportId = 2;
+
+        $getParams = [
+            'method' => 'getClassDefinitions',
+            'sport' => $sportId,
+        ];
+        $orisResponse = $this->orisGetResponse($getParams);
+
+        $classDefinitions = new GetClassDefinitions();
+        if ($classDefinitions->checkOrisResponse($orisResponse)) {
+
+            /** @var ClassDefinition[] $orisData */
+            $orisData = $classDefinitions->data($orisResponse);
+
+            foreach ($orisData as $data) {
+                // Create|Update Event
+                /** @var ClassDefinition $model */
+                $model = SportClassDefinition::where('oris_id', $data->getId())->first();
+                if (is_null($model)) {
+                    $model = new SportClassDefinition();
+                }
+                $model->oris_id = $data->getID();
+                $model->sport_id = $sportId;
+                $model->age_from = $data->getAgeFrom();
+                $model->age_to = $data->getAgeTo();
+                $model->gender = $data->getGender();
+                $model->name = $data->getName();
+                $model->save();
+            }
+        }
+
+        return true;
+    }
+
+
+
+
+    public function testOLD(): void
     {
 
         (new OrisUpdateEntry())->update(7721);
@@ -174,5 +223,12 @@ class TestController extends Controller
         var_dump($orisResponse);
 
         die;
+    }
+
+    private function orisGetResponse(array $getParams): Response
+    {
+        $params = array_merge_recursive(['format' => self::ORIS_API_DEFAULT_FORMAT], $getParams);
+
+        return Http::get(self::ORIS_API_URL, $params)->throw();
     }
 }

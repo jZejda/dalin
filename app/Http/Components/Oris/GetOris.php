@@ -7,7 +7,7 @@ namespace App\Http\Components\Oris;
 use App\Http\Components\Oris\Response\OrisEvent;
 use Illuminate\Http\Client\Response;
 
-final class GetEvent extends OrisResponse
+final class GetOris extends OrisResponse
 {
     public function data(Response $response): OrisEvent
     {

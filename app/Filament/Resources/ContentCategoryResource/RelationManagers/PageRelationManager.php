@@ -15,9 +15,12 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class PageRelationManager extends RelationManager
 {
     protected static string $relationship = 'page';
+
     protected static ?string $label = 'Stránka(y)';
 
-    protected static ?string $recordTitleAttribute = 'content_category_id';
+    protected static ?string $title = 'Stránka(y)';
+
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form
     {
@@ -34,24 +37,28 @@ class PageRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('content_category_id')->label('ID'),
-                Tables\Columns\TextColumn::make('title'),
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('user.name')->label('Autor')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
             //    Tables\Actions\CreateAction::make(),
-                Tables\Actions\AssociateAction::make(),
+//                Tables\Actions\AssociateAction::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DissociateAction::make(),
-                Tables\Actions\DeleteAction::make(),
+//                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DissociateBulkAction::make(),
-                Tables\Actions\DeleteBulkAction::make(),
+//                Tables\Actions\DissociateBulkAction::make(),
+//                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 }

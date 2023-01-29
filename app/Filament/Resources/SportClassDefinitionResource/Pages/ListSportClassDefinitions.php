@@ -1,25 +1,20 @@
 <?php
 
-declare(strict_types=1);
+namespace App\Filament\Resources\SportClassDefinitionResource\Pages;
 
-namespace App\Filament\Resources\SportEventResource\Pages;
-
-use DB;
-use App\Filament\Resources\SportEventResource;
+use App\Filament\Resources\SportClassDefinitionResource;
 use App\Http\Controllers\Discord\DiscordWebhookHelper;
 use App\Http\Controllers\Discord\RaceEventAddedNotification;
 use App\Models\SportEvent;
-use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions;
 use Filament\Pages\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
-use App\Models\User;
 use Filament\Forms;
 
-class ListSportEvents extends ListRecords
+class ListSportClassDefinitions extends ListRecords
 {
-    protected static string $resource = SportEventResource::class;
+    protected static string $resource = SportClassDefinitionResource::class;
 
     protected function getActions(): array
     {
@@ -32,18 +27,18 @@ class ListSportEvents extends ListRecords
                     $sportEvent = SportEvent::query()->where('id','=', $data['sportEventId'])->first();
                     (new RaceEventAddedNotification($sportEvent, $data['notificationType']))->sendNotification();
                     Notification::make()
-                        ->title('Notifikace odeslána')
-                        ->body('Na zvolený kanál jsi zaslal notifikaci ke konkrétnímu závodu')
+                        ->title('Aktualizace definic kategorií')
+                        ->body('AKtualizace definic kategorií z ORISu proběhla v pořádku.')
                         ->success()
                         ->seconds(8)
                         ->send();
                 })
                 ->color('secondary')
                 ->label('Pošli notifikaci')
-                ->icon('heroicon-s-cog')
-                ->modalHeading('Pošli notifikaci k závodu/akci')
-                ->modalSubheading('Notifikace je možná poslat do různých kanálů na objekty, jakékoliv objekty v listu')
-                ->modalButton('Ano poslat notifikaci')
+                ->icon('heroicon-s-refresh')
+                ->modalHeading('Zaktualizuj definici kategorií z ORISu')
+                ->modalSubheading('fdsfsfsdfsdfsdfsdfsfsfsdfs')
+                ->modalButton('Aktualizovat')
                 ->form([
                     Forms\Components\Grid::make(2)
                         ->schema([
@@ -73,10 +68,5 @@ class ListSportEvents extends ListRecords
 
                 ])
         ];
-    }
-
-    public function openSettingsModal(): void
-    {
-        $this->dispatchBrowserEvent('open-settings-modal');
     }
 }
