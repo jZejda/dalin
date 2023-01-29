@@ -87,7 +87,16 @@ class PostResource extends Resource
                                 ->label('Author')
                                 ->options(User::all()->pluck('name', 'id'))
                                 ->searchable()
-                                ->default(Auth::id()),
+                                ->default(Auth::id())
+                                ->required(),
+                            Select::make('content_mode')
+                                ->label('Formát')
+                                ->options([
+                                        1 => 'HTML',
+                                        2 => 'Markdown',
+                                    ]
+                                )->default(2)
+                                ->required(),
                         ])->columnSpan([
                             'sm' => 1,
                             'md' => 4

@@ -25,7 +25,7 @@ class PostsOverview extends Widget
         $lastPost = DB::table('posts')->where('private', '=', 1)->limit(1)->first();
 
         return view(static::$view, [
-            'content_mode' => $lastPost->content_mode,
+            'content_mode' => $lastPost->content_mode ?? 1,
             'title' => $lastPost->title ?? '',
             'content' => $lastPost->content ?? 'nic',
         ]);

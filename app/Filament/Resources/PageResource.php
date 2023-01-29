@@ -75,7 +75,8 @@ class PageResource extends Resource
                                 ->label('Author')
                                 ->options(User::all()->pluck('name', 'id'))
                                 ->default(Auth::id())
-                                ->searchable(),
+                                ->searchable()
+                                ->required(),
 
                             Select::make('status')
                                 ->options(self::getPageStatuses())
@@ -88,7 +89,8 @@ class PageResource extends Resource
                                         1 => 'HTML',
                                         2 => 'Markdown',
                             ]
-                                )->default(1),
+                                )->default(2)
+                            ->required(),
 
                             Select::make('content_category_id')
                                 ->label('Kategorie')
