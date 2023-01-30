@@ -5,13 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SportClassDefinitionResource\Pages;
 use App\Filament\Resources\SportClassDefinitionResource\RelationManagers;
 use App\Models\SportClassDefinition;
-use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SportClassDefinitionResource extends Resource
 {
@@ -31,7 +28,27 @@ class SportClassDefinitionResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->sortable()
+                    ->searchable()
+                    ->description(fn (SportClassDefinition $record): string => $record->class_definition_fullLabel ?? ''),
+                Tables\Columns\TextColumn::make('age_from')
+                    ->label('Věk od')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('age_to')
+                    ->label('Věk do')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('gender')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('sport.short_name')
+                    ->label('Sport')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('oris_id')
+                    ->label('ORIS ID'),
             ])
             ->filters([
                 //
@@ -43,14 +60,14 @@ class SportClassDefinitionResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -58,5 +75,5 @@ class SportClassDefinitionResource extends Resource
             'create' => Pages\CreateSportClassDefinition::route('/create'),
             'edit' => Pages\EditSportClassDefinition::route('/{record}/edit'),
         ];
-    }    
+    }
 }

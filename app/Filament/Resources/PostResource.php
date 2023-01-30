@@ -67,12 +67,6 @@ class PostResource extends Resource
                             Grid::make()->schema([
                                 MarkdownEditor::make('content')
                             ])->columns(1),
-                            CuratorPicker::make('pokus')
-                                ->label('pokus')
-                                ->pathGenerator(DatePathGenerator::class)
-                                ->buttonLabel('button'),
-
-
                         ])
                         ->columns(1)
                         ->columnSpan([

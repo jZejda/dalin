@@ -15,10 +15,10 @@
         <div class="container mx-auto app-front-content mb-10">
             @if($page->content_format === 1)
                 <h1>{!! $page->title !!}</h1>
-                <div>{!! $page->content !!}</div>
+                <p>{!! $page->content !!}</p>
             @elseif($page->content_format === 2)
                 <h1>{{ Markdown::parse($page->title) }}</h1>
-                <div>{{ Markdown::parse($page->content) }}</div>
+                <p>{{ Markdown::parse($page->content) }}</p>
             @endif
 
             <div class="mt-10">

@@ -6,7 +6,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
@@ -20,6 +19,8 @@ use Illuminate\Support\Carbon;
  * @property int $age_to
  * @property string|null $gender
  * @property string $name
+ *
+ * @property-read SportList $sport
  */
 
 class SportClassDefinition extends Model
@@ -27,11 +28,30 @@ class SportClassDefinition extends Model
     use HasFactory;
 
     protected $fillable = [
-
+        'oris_id',
+        'sport_id',
+        'age_from',
+        'age_to',
+        'gender',
+        'name'
     ];
 
-    protected $casts = [
+    public function sport(): HasOne
+    {
+        return $this->hasOne(SportList::class, 'id', 'sport_id');
+    }
 
-    ];
+
+    public function getClassDefinitionFullLabelAttribute(): string
+    {
+        $genderName = 'Vše';
+        if ($this->gender === 'M') {
+            $genderName = 'Muž';
+        } elseif ($this->gender === 'F') {
+            $genderName = 'Žena';
+        }
+
+        return "{$this->name}  ({$this->age_from}-{$this->age_to}) ($genderName)";
+    }
 
 }

@@ -15,9 +15,9 @@
         <div class="container mx-auto app-front-content mb-10">
             <h2>{!! $post->title !!}</h2>
             @if($post->content_mode === 1)
-                <div>{!! $post->content !!}</div>
+                <p>{!! $post->content !!}</p>
             @elseif($post->content_mode === 2)
-                <div>{{ Markdown::parse($post->title) }}</div>
+                <p>{{ Markdown::parse($post->content) }}</p>
             @endif
 
             <div class="mt-10">

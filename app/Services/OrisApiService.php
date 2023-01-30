@@ -103,7 +103,9 @@ class OrisApiService
                 $model->age_to = $data->getAgeTo();
                 $model->gender = $data->getGender();
                 $model->name = $data->getName();
-                $model->save();
+                if($model->save() === false) {
+                    return false;
+                }
             }
         }
         return true;
