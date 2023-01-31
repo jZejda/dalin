@@ -6,7 +6,7 @@ BOLD=$(tput -T ansi bold)
 NORMAL=$(tput -T ansi sgr0)
 
 help () {
-    echo "Helper script to cimplyfy command
+    echo "Helper script to simplify command
 
 Usage: run.sh COMMAND
 
@@ -14,9 +14,9 @@ Commands:
     phpstan                 Run PHPStan - LaraStan
     phpstan-baseline        Update PHPStan baseline
     phpstan-clear           Clear PHPStan baseline
-    lint                    Run PHPCodeSniffer linter
-    lint-fix                Run PHPCodeSniffer autofixer
-    idehelper               Run IDE helper generate file"
+    lint                    Run PINT linter - autoFixer
+    idehelper               Run IDE helper generate file
+    deploy                  Prepare to deploy"
 
 }
 
@@ -35,12 +35,8 @@ case "$1" in
         vendor/bin/phpstan analyse . tests clear-result-cache --ansi --memory-limit=2G --generate-baseline "${@:2}"
         ;;
     lint)
-        echo "${BOLD}Run Linter${NORMAL}"
-         ./vendor/bin/phpcs
-        ;;
-    lint-auto)
-        echo "${BOLD}Run Linter autofixer${NORMAL}"
-        ./vendor/bin/phpcbf
+        echo "${BOLD}Run Linter PINT${NORMAL}"
+        ./vendor/bin/pint
         ;;
     idehelper)
         echo "${BOLD}Run IDE helper generate file...${NORMAL}"
