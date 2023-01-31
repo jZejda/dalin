@@ -4,7 +4,6 @@ namespace App\Http\Components\Oris\Response\Entity;
 
 class Classes
 {
-
     public int $ID;
     public string $Name;
     public string $Distance;

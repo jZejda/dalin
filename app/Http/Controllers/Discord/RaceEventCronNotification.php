@@ -41,7 +41,7 @@ final class RaceEventCronNotification extends Controller
             }
         }
 
-        return Http::post(DiscordWebhookHelper::getWebhookUrl(DiscordWebhookHelper::DISCORD_CONTENT_WEBHOOK_URL) , [
+        return Http::post(DiscordWebhookHelper::getWebhookUrl(DiscordWebhookHelper::DISCORD_CONTENT_WEBHOOK_URL), [
             'content' => 'Závody u kterých se blíží termín přihlášek na **první termín**.',
             'embeds' => $embeds,
         ]);

@@ -3,9 +3,6 @@
 namespace App\Filament\Resources\SportClassDefinitionResource\Pages;
 
 use App\Filament\Resources\SportClassDefinitionResource;
-use App\Http\Controllers\Discord\DiscordWebhookHelper;
-use App\Http\Controllers\Discord\RaceEventAddedNotification;
-use App\Models\SportEvent;
 use App\Models\SportList;
 use App\Services\OrisApiService;
 use Filament\Notifications\Notification;
@@ -13,7 +10,6 @@ use Filament\Pages\Actions;
 use Filament\Pages\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Forms;
-use Illuminate\Contracts\Support\Htmlable;
 
 class ListSportClassDefinitions extends ListRecords
 {

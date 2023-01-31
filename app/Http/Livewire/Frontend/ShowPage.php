@@ -8,7 +8,6 @@ use Illuminate\View\View;
 
 class ShowPage extends Component
 {
-
     public Page $page;
 
     public function mount(string $slug): void

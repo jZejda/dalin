@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
-use App\Http\Controllers\DiscordRaceEventNotification;
-use App\Mail\SendSportEventNearesMail;
 use App\Mail\SendSportEventNearestMail;
 use App\Models\SportEvent;
 use App\Models\UserCredit;
@@ -18,7 +16,6 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Actions\ButtonAction;
 use Filament\Pages\Page;
-use Filament\Resources\Form;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -34,9 +31,8 @@ use Filament\Forms\ComponentContainer;
  * @property ComponentContainer $form
  */
 
-class EntryData extends Page implements HasForms,HasTable
+class EntryData extends Page implements HasForms, HasTable
 {
-
     use HasPageShield;
 
     use InteractsWithForms;
@@ -70,16 +66,18 @@ class EntryData extends Page implements HasForms,HasTable
         /** @var SportEvent $eventEntry */
         $eventEntry = DB::table('sport_events')
             ->select('oris_id', 'id')
-            ->where('id', '=', $formData['sportEventId'] )
+            ->where('id', '=', $formData['sportEventId'])
             ->first();
 
-        $orisResponse = Http::get(OrisApiService::ORIS_API_URL,
+        $orisResponse = Http::get(
+            OrisApiService::ORIS_API_URL,
             [
                 'format' => 'json',
                 'method' => 'getEventEntries',
                 'clubid' => 1,
                 'eventid' => $eventEntry->oris_id,
-            ])
+            ]
+        )
             ->throw()
             ->object();
 

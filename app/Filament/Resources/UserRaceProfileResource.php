@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserRaceProfileResource\Pages;
-use App\Filament\Resources\UserRaceProfileResource\RelationManagers;
 use App\Models\User;
 use App\Models\UserRaceProfile;
 use Closure;
@@ -34,7 +33,7 @@ class UserRaceProfileResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         // TODO podle role selektuj vysupt adminum vse ostatnim jeno jejich
-        return UserRaceProfile::where('user_id',1);
+        return UserRaceProfile::where('user_id', 1);
     }
 
     public static function form(Form $form): Form
@@ -53,7 +52,8 @@ class UserRaceProfileResource extends Resource
                                 ->label('Registrace')
                                 ->unique(ignoreRecord: true)
                                 ->required()
-                                ->suffixAction( fn ($state, Closure $set) =>
+                                ->suffixAction(
+                                    fn ($state, Closure $set) =>
                                 Forms\Components\Actions\Action::make('search_oris_id_by_reg_num')
                                     ->icon('heroicon-o-search')
                                     ->action(function () use ($state, $set) {
@@ -64,12 +64,14 @@ class UserRaceProfileResource extends Resource
                                         }
 
                                         try {
-                                            $orisResponse = Http::get('https://oris.orientacnisporty.cz/API',
+                                            $orisResponse = Http::get(
+                                                'https://oris.orientacnisporty.cz/API',
                                                 [
                                                     'format' => 'json',
                                                     'method' => 'getUser',
                                                     'rgnum' => $state,
-                                                ])
+                                                ]
+                                            )
                                                 ->throw()
                                                 ->json('Data');
 

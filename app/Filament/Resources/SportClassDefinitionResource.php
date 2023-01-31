@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SportClassDefinitionResource\Pages;
-use App\Filament\Resources\SportClassDefinitionResource\RelationManagers;
 use App\Models\SportClassDefinition;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;

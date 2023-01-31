@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Http;
 
 class DiscordRaceEventNotification extends Controller
 {
-
     public string $content;
 
     /**

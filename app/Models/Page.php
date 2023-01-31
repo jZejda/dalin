@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 
 /**
  * App\Models\Page
@@ -32,7 +30,6 @@ use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 
 class Page extends Model
 {
-
     public const STATUS_OPEN = 'open';
     public const STATUS_CLOSED = 'close';
     public const STATUS_DRAFT = 'draft';

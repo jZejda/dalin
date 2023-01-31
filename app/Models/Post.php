@@ -6,7 +6,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 
 /**
  * App\Models\Post
@@ -26,7 +25,6 @@ use BezhanSalleh\FilamentShield\Traits\HasPageShield;
  */
 class Post extends Model
 {
-
     /**
      * The attributes that should be cast.
      *

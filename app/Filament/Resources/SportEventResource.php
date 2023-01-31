@@ -9,7 +9,6 @@ use App\Models\SportEvent;
 use App\Models\SportLevel;
 use App\Models\SportList;
 use App\Models\SportRegion;
-use App\Models\UserCredit;
 use Closure;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
@@ -17,7 +16,6 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -63,7 +61,8 @@ class SportEventResource extends Resource
                                 ->label('ORIS ID')
                                 ->hint('unikátní ID závodu na ORIS stránkách')
                                 ->hintIcon('heroicon-s-exclamation')
-                                ->suffixAction(fn ($state, Closure $set) =>
+                                ->suffixAction(
+                                    fn ($state, Closure $set) =>
                                 Action::make('hledej-podle-oris-id')
                                     ->icon('heroicon-o-search')
                                     ->action(function () use ($state, $set) {
@@ -75,12 +74,14 @@ class SportEventResource extends Resource
 
                                         try {
                                             //$client = (new GuzzleClient())->create();
-                                            $orisResponse = Http::get('https://oris.orientacnisporty.cz/API',
+                                            $orisResponse = Http::get(
+                                                'https://oris.orientacnisporty.cz/API',
                                                 [
                                                     'format' => 'json',
                                                     'method' => 'getEvent',
                                                     'id' => $state,
-                                                ])
+                                                ]
+                                            )
                                                 ->throw()
                                                 ->json('Data');
 

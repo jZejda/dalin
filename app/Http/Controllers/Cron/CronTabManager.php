@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Cron;
 
-use Carbon\Carbon;
-
 class CronTabManager
 {
     public ?int $minutes;

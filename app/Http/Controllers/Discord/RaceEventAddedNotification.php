@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Http;
 
 final class RaceEventAddedNotification extends Controller
 {
-
     public SportEvent $sportEvent;
     public string $status;
 

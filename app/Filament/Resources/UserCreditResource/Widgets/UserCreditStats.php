@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class UserCreditStats extends BaseWidget
 {
-
     protected function getCards(): array
     {
         return [

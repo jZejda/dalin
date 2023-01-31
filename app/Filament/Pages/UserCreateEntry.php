@@ -4,14 +4,12 @@ namespace App\Filament\Pages;
 
 use App\Services\OrisApiService;
 use Closure;
-use App\Models\SportEvent;
 use App\Models\UserRaceProfile;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
@@ -21,7 +19,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
-class UserCreateEntry extends Page implements HasForms,HasTable
+class UserCreateEntry extends Page implements HasForms, HasTable
 {
     use HasPageShield;
 
@@ -95,7 +93,8 @@ class UserCreateEntry extends Page implements HasForms,HasTable
                         ->searchable()
                         ->required()
                         ->reactive()
-                        ->suffixAction( fn ($state, Closure $set) =>
+                        ->suffixAction(
+                            fn ($state, Closure $set) =>
                         Action::make('search_oris_category_by_oris_id')
                             ->icon('heroicon-o-search')
                             ->action(function () use ($state, $set) {
@@ -106,13 +105,15 @@ class UserCreateEntry extends Page implements HasForms,HasTable
                                 }
 
                                 try {
-                                    $orisResponse = Http::get('https://oris.orientacnisporty.cz/API',
+                                    $orisResponse = Http::get(
+                                        'https://oris.orientacnisporty.cz/API',
                                         [
                                             'format' => 'json',
                                             'method' => 'getValidClasses',
                                             'clubuser' => $state,
                                             'comp' => '7721',
-                                        ])
+                                        ]
+                                    )
                                         ->throw()
                                         ->json('Data');
 

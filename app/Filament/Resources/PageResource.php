@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PageResource\Pages;
-use App\Filament\Resources\PageResource\RelationManagers;
 use App\Models\ContentCategory;
 use App\Models\Page;
 use App\Models\User;
@@ -19,7 +18,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
-use Filament\Tables;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -85,7 +83,8 @@ class PageResource extends Resource
 
                             Select::make('content_format')
                                 ->label('Formát')
-                                ->options([
+                                ->options(
+                                    [
                                         1 => 'HTML',
                                         2 => 'Markdown',
                             ]

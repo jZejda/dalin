@@ -2,7 +2,6 @@
 
 namespace App\Http\Components\Oris;
 
-use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use Illuminate\Http\Client\Response;
 
 class GetClassDefinitions extends OrisResponse

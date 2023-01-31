@@ -7,10 +7,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Carbon;
 
 /**
- * App\Models\SportEvent
+ * App\Models\SportClassDefinition
  *
  * @property int $id
  * @property int|null $oris_id
@@ -22,7 +21,6 @@ use Illuminate\Support\Carbon;
  *
  * @property-read SportList $sport
  */
-
 class SportClassDefinition extends Model
 {
     use HasFactory;
@@ -40,7 +38,6 @@ class SportClassDefinition extends Model
     {
         return $this->hasOne(SportList::class, 'id', 'sport_id');
     }
-
 
     public function getClassDefinitionFullLabelAttribute(): string
     {

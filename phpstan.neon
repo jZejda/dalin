@@ -20,7 +20,9 @@ parameters:
 
     excludePaths:
         - ./*/*/FileToBeExcluded.php
+        - ./app/Http/Controllers/TestController.php
 
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
+    treatPhpDocTypesAsCertain: false
 

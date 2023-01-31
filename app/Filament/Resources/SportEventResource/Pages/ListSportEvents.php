@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEventResource\Pages;
 
-use DB;
 use App\Filament\Resources\SportEventResource;
 use App\Http\Controllers\Discord\DiscordWebhookHelper;
 use App\Http\Controllers\Discord\RaceEventAddedNotification;
 use App\Models\SportEvent;
-use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions;
 use Filament\Pages\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
-use App\Models\User;
 use Filament\Forms;
 
 class ListSportEvents extends ListRecords
@@ -29,7 +26,7 @@ class ListSportEvents extends ListRecords
                 ->action(function (array $data): void {
                     // if notifikace na Discord
                     /** @var SportEvent $sportEvent */
-                    $sportEvent = SportEvent::query()->where('id','=', $data['sportEventId'])->first();
+                    $sportEvent = SportEvent::query()->where('id', '=', $data['sportEventId'])->first();
                     (new RaceEventAddedNotification($sportEvent, $data['notificationType']))->sendNotification();
                     Notification::make()
                         ->title('Notifikace odeslána')

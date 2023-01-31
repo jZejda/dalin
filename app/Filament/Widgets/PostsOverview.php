@@ -6,9 +6,7 @@ use App\Models\Post;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\Widget;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Spatie\LaravelMarkdown\MarkdownRenderer;
 
 class PostsOverview extends Widget
 {

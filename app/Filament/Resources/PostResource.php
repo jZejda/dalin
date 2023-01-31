@@ -7,7 +7,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PostResource\Pages;
 use App\Models\Post;
 use App\Models\User;
-use Awcodes\Curator\Components\Forms\CuratorPicker;
 use Awcodes\Curator\Facades\Curator;
 use Awcodes\Curator\Generators\DatePathGenerator;
 use Closure;
@@ -22,7 +21,6 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
@@ -89,7 +87,8 @@ class PostResource extends Resource
                                 ->required(),
                             Select::make('content_mode')
                                 ->label('Formát')
-                                ->options([
+                                ->options(
+                                    [
                                         1 => 'HTML',
                                         2 => 'Markdown',
                                     ]

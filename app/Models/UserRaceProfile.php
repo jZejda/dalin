@@ -71,4 +71,3 @@ class UserRaceProfile extends Model
     }
 
 }
-

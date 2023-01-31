@@ -7,8 +7,6 @@ use Log;
 
 class CommonCron extends Controller
 {
-
-
     public function run(): string
     {
 

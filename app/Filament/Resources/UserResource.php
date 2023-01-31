@@ -46,11 +46,12 @@ class UserResource extends Resource
                                 ->maxLength(255)
                                 ->dehydrateStateUsing(static fn (null|string $state): null|string =>
                                 filled($state) ? Hash::make($state) : null)
-                                ->required(static fn(Page $livewire): bool =>
+                                ->required(static fn (Page $livewire): bool =>
                                     $livewire instanceof Pages\CreateUser)
                                 ->dehydrated(static fn (null|string $state): bool =>
                                 filled($state))
-                                ->label(static fn(Page $livewire): string =>
+                                ->label(
+                                    static fn (Page $livewire): string =>
                                 ($livewire instanceof Pages\EditUser) ? 'Nové heslo' : 'Heslo',
                                 ),
                         ])

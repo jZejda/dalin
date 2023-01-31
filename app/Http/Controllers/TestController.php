@@ -9,11 +9,8 @@ use App\Http\Components\Oris\GuzzleClient;
 use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
-use App\Http\Controllers\Cron\CronTabManager;
 use App\Http\Controllers\Cron\OrisUpdateEntry;
 use App\Models\SportClassDefinition;
-use App\Models\SportService;
-use App\Models\UserRaceProfile;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -179,12 +176,14 @@ class TestController extends Controller
     public function test2()
     {
 
-        $orisResponse = Http::get('https://oris.orientacnisporty.cz/API',
+        $orisResponse = Http::get(
+            'https://oris.orientacnisporty.cz/API',
             [
                 'format' => 'json',
                 'method' => 'getEvent',
                 'id' => 7721,
-            ])
+            ]
+        )
             ->throw();
 
 
@@ -212,13 +211,15 @@ class TestController extends Controller
 
     public function test3()
     {
-        $orisResponse = Http::get('https://oris.orientacnisporty.cz/API',
+        $orisResponse = Http::get(
+            'https://oris.orientacnisporty.cz/API',
             [
                 'format' => 'json',
                 'method' => 'getValidClasses',
                 'clubuser' => '54',
                 'comp' => '7721',
-            ])->body();
+            ]
+        )->body();
 
         var_dump($orisResponse);
 

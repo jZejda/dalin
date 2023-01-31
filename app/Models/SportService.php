@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * App\Models\User
+ * App\Models\SportService
  *
  * @property int $id
  * @property int $sport_event_id
  * @property ?int $oris_service_id
  * @property string $service_name_cz
- * @property string $last_booking_date_time
+ * @property ?string $last_booking_date_time
  * @property float $unit_price
  * @property int $qty_available
  * @property int $qty_already_ordered
@@ -25,7 +24,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $updated_at
  *
  */
-
 class SportService extends Model
 {
     use HasFactory;

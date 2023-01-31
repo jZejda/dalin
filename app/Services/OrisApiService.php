@@ -65,9 +65,9 @@ class OrisApiService
                 $serviceModel->oris_service_id = $service->getID();
                 $serviceModel->service_name_cz = $service->getNameCZ();
                 $serviceModel->last_booking_date_time = $service->getLastBookingDateTime();
-                $serviceModel->unit_price = $service->getUnitPrice();
-                $serviceModel->qty_available = $service->getQtyAvailable();
-                $serviceModel->qty_remaining = $service->getQtyRemaining();
+                $serviceModel->unit_price = floatval($service->getUnitPrice());
+                $serviceModel->qty_available = intval($service->getQtyAvailable());
+                $serviceModel->qty_remaining = intval($service->getQtyRemaining());
                 $serviceModel->save();
             }
         }
@@ -91,7 +91,7 @@ class OrisApiService
 
             foreach ($orisData as $data) {
                 // Create|Update Event
-                /** @var ClassDefinition $model */
+                /** @var SportClassDefinition $model */
                 $model = SportClassDefinition::where('oris_id', $data->getId())->first();
                 if (is_null($model)) {
                     $model = new SportClassDefinition();
