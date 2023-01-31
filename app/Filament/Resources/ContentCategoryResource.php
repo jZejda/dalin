@@ -5,15 +5,14 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ContentCategoryResource\Pages;
 use App\Filament\Resources\ContentCategoryResource\RelationManagers;
 use App\Models\ContentCategory;
-use Filament\Forms;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class ContentCategoryResource extends Resource
 {
@@ -24,15 +23,39 @@ class ContentCategoryResource extends Resource
     protected static ?string $navigationGroup = 'Obsah';
 
     protected static ?string $label = 'Kategorie';
+
     protected static ?string $pluralLabel = 'Kategorie';
 
     public static function form(Form $form): Form
     {
+        Section::make('Vysvětlivka')
+            ->description('Pokud ')
+            ->schema([]);
+
         return $form
             ->schema([
-                TextInput::make('title')->required(),
-                TextInput::make('description'),
-                TextInput::make('slug'),
+                Grid::make([
+                    'sm' => 1,
+                    'md' => 12,
+                ])->schema([
+                    Section::make('Vysvětlivka')
+                        ->description('Pokud ')
+                        ->schema([
+                            TextInput::make('title')->required(),
+                            TextInput::make('slug'),
+                            Grid::make()
+                                ->schema([
+                                    TextInput::make('description'),
+                                ])
+                                ->columns(1),
+                        ])
+                        ->columns(2)
+                        ->columnSpan([
+                            'sm' => 1,
+                            'md' => 12,
+                        ]),
+
+                ]),
             ]);
     }
 
@@ -54,7 +77,6 @@ class ContentCategoryResource extends Resource
         return [
             RelationManagers\PageRelationManager::class,
         ];
-
     }
 
     public static function getPages(): array
