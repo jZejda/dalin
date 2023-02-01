@@ -24,7 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $created_at
  * @property string $updated_at
  *
- * @property string $user_identification
+ * @property-read string $user_identification
  */
 
 class User extends Authenticatable

@@ -17,11 +17,11 @@ Follow this instructions to install the project:
 4. `$ cp .env.example .env`
 5. `$ php artisan key:generate`
 6. Set **database config** on `.env` file
-7. `$ php artisan migrate`
-8. `$ npm install`
-8. `$ npm run prod`
-8. `$ php artisan serve`
-10. Open `https://localhost:8000` with browser.
+7. `$ php artisan migrate --seed` - run migrations and seeding data
+8. `$ npm install` - install frontend dependencies
+9. `$ npm run dev` - compile the assets
+10. `$ php artisan serve` - start development server
+11. Open `https://localhost:8000` with browser.
 
 ### Show Demo
 
@@ -29,6 +29,8 @@ This project is presented in [ABM Brno](https://abmbrno.cz/) orienteering club.
 
 ## Based on
 
+- PHP v8.1
+- MySql 5.6 and Up
 - [Laravel](https://laravel.com/) - PHP framework acctualy in version 9.x
 - [Filamentphp](https://filamentphp.com/) - in version 2.x
 - [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework

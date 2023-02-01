@@ -15,22 +15,22 @@ class ViewSportEvent extends ViewRecord
 {
     protected static string $resource = SportEventResource::class;
 
-    protected function getActions(): array
-    {
-        return [
-            Actions\CreateAction::make(),
-            Action::make('settings')
-                ->label('pocli discord')
-                ->color('secondary')
-                ->icon('heroicon-s-cog')
-                ->action('sendDiscordNotification'),
-        ];
-    }
-
-    public function sendDiscordNotification(): void
-    {
-
-        (new RaceEventAddedNotification($this->getRecord()))->notification();
-        Filament::notify('danger', 'Nepodařilo se načíst data.');
-    }
+//    protected function getActions(): array
+//    {
+//        return [
+//            //Actions\CreateAction::make(),
+//
+//            Action::make('settings')
+//                ->label('pocli discord')
+//                ->color('secondary')
+//                ->icon('heroicon-s-cog')
+//                ->action('sendDiscordNotification'),
+//        ];
+//    }
+//
+//    public function sendDiscordNotification(): void
+//    {
+//        (new RaceEventAddedNotification($this->getRecord()))->notification();
+//        Filament::notify('danger', 'Nepodařilo se načíst data.');
+//    }
 }

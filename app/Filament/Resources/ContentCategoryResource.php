@@ -38,8 +38,10 @@ class ContentCategoryResource extends Resource
                     'sm' => 1,
                     'md' => 12,
                 ])->schema([
-                    Section::make('Vysvětlivka')
-                        ->description('Pokud ')
+                    Section::make('Kategorie')
+                        ->description('Kategorie slouží ke strukturování obsahu stránek.
+                        Například umožní vytvářet stránky jednoho závodu které spolu souvísí.
+                        Stránky v jedné kategorii mohou zobrazovat menu osatatních stránek v kategorii.')
                         ->schema([
                             TextInput::make('title')->required(),
                             TextInput::make('slug'),

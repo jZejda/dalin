@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property string $name
+ * @property ?string $alt_name
  * @property int|null $oris_id
  * @property Carbon $date
  * @property string|null $place
@@ -27,6 +28,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon $entry_date_1
  * @property Carbon|null $entry_date_2
  * @property Carbon|null $entry_date_3
+ * @property bool $dont_update_excluded
+ * @property Carbon|null $last_update
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
@@ -41,6 +44,7 @@ class SportEvent extends Model
 
     protected $fillable = [
         'name',
+        'alt_name',
         'oris_id',
         'date',
         'place',
@@ -53,6 +57,8 @@ class SportEvent extends Model
         'entry_date_1',
         'entry_date_2',
         'entry_date_3',
+        'last_update',
+        'dont_update_excluded',
     ];
 
     protected $casts = [
@@ -63,6 +69,8 @@ class SportEvent extends Model
         'entry_date_1' => 'datetime:Y-m-d H:i:s',
         'entry_date_2' => 'datetime:Y-m-d H:i:s',
         'entry_date_3' => 'datetime:Y-m-d H:i:s',
+        'last_update' => 'datetime:Y-m-d H:i:s',
+        'dont_update_excluded' => 'bool',
     ];
 
 

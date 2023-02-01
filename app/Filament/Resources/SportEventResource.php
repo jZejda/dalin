@@ -35,14 +35,11 @@ class SportEventResource extends Resource
     protected static ?string $model = SportEvent::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
-
-    protected static ?string $navigationGroup = 'Správa';
-
+    protected static ?int $navigationSort = 1;
+    protected static ?string $navigationGroup = 'Závody / Akce';
+    protected static ?string $navigationLabel = 'Závod';
     protected static ?string $label = 'Závod / událost';
     protected static ?string $pluralLabel = 'Závody / události';
-
-    protected static ?string $navigationLabel = 'Závod / událost';
-
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form

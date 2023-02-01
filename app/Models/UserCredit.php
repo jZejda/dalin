@@ -24,8 +24,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $created_at
  * @property string $updated_at
  *
- * @property User $user
- * @property User $sourceUser
+ * @property-read User $user
+ * @property-read User $sourceUser
  * @property-read UserRaceProfile $userRaceProfile
  * @property-read SportService $sportService
  */

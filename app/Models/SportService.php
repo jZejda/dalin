@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $created_at
  * @property string $updated_at
  *
+ * @property-read  SportEvent $sportEvent;
+ *
  */
 class SportService extends Model
 {

@@ -83,13 +83,12 @@ class PageResource extends Resource
 
                             Select::make('content_format')
                                 ->label('Formát')
-                                ->options(
-                                    [
-                                        1 => 'HTML',
-                                        2 => 'Markdown',
-                            ]
-                                )->default(2)
-                            ->required(),
+                                ->options([
+                                            1 => 'HTML',
+                                            2 => 'Markdown',
+                                        ])->default(2)
+                                ->disabled(!Auth::user()->hasRole('super_admin'))
+                                ->required(),
 
                             Select::make('content_category_id')
                                 ->label('Kategorie')

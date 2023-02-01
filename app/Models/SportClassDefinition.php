@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $name
  *
  * @property-read SportList $sport
+ * @property-read string $class_definition_full_label
  */
 class SportClassDefinition extends Model
 {

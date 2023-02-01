@@ -10,6 +10,7 @@ return new class () extends Migration {
         Schema::create('sport_events', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
+            $table->string('alt_name', 255)->nullable();
             $table->integer('oris_id')->nullable();
             $table->date('date');
             $table->string('place')->nullable();
@@ -24,6 +25,8 @@ return new class () extends Migration {
             $table->dateTime('entry_date_1');
             $table->dateTime('entry_date_2')->nullable();
             $table->dateTime('entry_date_3')->nullable();
+            $table->dateTime('last_update')->nullable();
+            $table->boolean('dont_update_excluded')->default(true);
             $table->timestamps();
         });
     }

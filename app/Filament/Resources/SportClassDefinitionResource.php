@@ -14,6 +14,10 @@ class SportClassDefinitionResource extends Resource
     protected static ?string $model = SportClassDefinition::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?int $navigationSort = 10;
+    protected static ?string $navigationGroup = 'Závody / Akce';
+    protected static ?string $label = 'Definice kategorie';
+    protected static ?string $pluralLabel = 'Definice kategorií';
 
     public static function form(Form $form): Form
     {

@@ -93,6 +93,7 @@ class PostResource extends Resource
                                         2 => 'Markdown',
                                     ]
                                 )->default(2)
+                                ->disabled(!Auth::user()->hasRole('super_admin'))
                                 ->required(),
                         ])->columnSpan([
                             'sm' => 1,
