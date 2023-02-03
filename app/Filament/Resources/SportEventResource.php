@@ -3,7 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SportEventResource\Pages;
-use App\Http\Components\Oris\GuzzleClient;
+use App\Filament\Resources\SportEventResource\RelationManagers\SportClassesRelationManager;
+use App\Filament\Resources\SportEventResource\RelationManagers\SportServicesRelationManager;
 use App\Models\SportDiscipline;
 use App\Models\SportEvent;
 use App\Models\SportLevel;
@@ -16,6 +17,7 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -116,6 +118,13 @@ class SportEventResource extends Resource
                             TextInput::make('name')
                                 ->label('Název závodu/akce')
                                 ->required(),
+
+                            Grid::make()->schema([
+                                TextInput::make('alt_name')
+                                    ->label('Alternativní název závodu')
+                                    ->hint('Nebude automaticky aktualizován cronem.'),
+                            ])->columns(1),
+
                             TextInput::make('place')
                                 ->label('Místo'),
                             DatePicker::make('date')
@@ -124,9 +133,6 @@ class SportEventResource extends Resource
                                 ->required(),
 
                             Grid::make()->schema([
-                                DateTimePicker::make('entry_date_1')->displayFormat('d.m.Y H:i:s')->required()->label('První termín'),
-                                DateTimePicker::make('entry_date_2')->displayFormat('d.m.Y H:i:s')->label('Druhý termín'),
-                                DateTimePicker::make('entry_date_3')->displayFormat('d.m.Y H:i:s')->label('Třetí termín'),
 
                                 Select::make('discipline_id')
                                     ->label('Disciplína')
@@ -154,13 +160,32 @@ class SportEventResource extends Resource
                                     ->onIcon('heroicon-s-check')
                                     ->offIcon('heroicon-s-x'),
 
+                                Toggle::make('dont_update_excluded')
+                                    ->extraAttributes(['class' => 'mt-4'])
+                                    ->label('Neaktualizovat vybrané')
+                                    ->onIcon('heroicon-s-check')
+                                    ->offIcon('heroicon-s-x')
+                                    ->default(true),
+
 
                             ])->columns(3),
                         ])
                         ->columns(2)
                         ->columnSpan([
                             'sm' => 1,
-                            'md' => 12
+                            'md' => 8
+                        ]),
+
+                    // Right Column
+                    Section::make('Termíny')
+                        ->description('Možné vypnout automatickou aktualizaci na 2. a 3. termín.')
+                        ->schema([
+                            DateTimePicker::make('entry_date_1')->displayFormat('d.m.Y H:i:s')->label('První termín'),
+                            DateTimePicker::make('entry_date_2')->displayFormat('d.m.Y H:i:s')->label('Druhý termín'),
+                            DateTimePicker::make('entry_date_3')->displayFormat('d.m.Y H:i:s')->label('Třetí termín'),
+                        ])->columnSpan([
+                            'sm' => 1,
+                            'md' => 4
                         ]),
 
                 ])
@@ -228,7 +253,8 @@ class SportEventResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            SportServicesRelationManager::class,
+            SportClassesRelationManager::class
         ];
     }
 

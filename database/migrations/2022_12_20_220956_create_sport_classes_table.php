@@ -9,6 +9,8 @@ return new class () extends Migration {
     {
         Schema::create('sport_classes', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('sport_event_id');
+            $table->foreign('sport_event_id')->references('id')->on('sport_events');
             $table->integer('oris_id')->nullable();
             $table->unsignedBigInteger('class_definition_id');
             $table->foreign('class_definition_id')->references('id')->on('sport_class_definitions');

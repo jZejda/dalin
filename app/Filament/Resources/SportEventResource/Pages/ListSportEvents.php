@@ -10,6 +10,7 @@ use App\Http\Controllers\Discord\RaceEventAddedNotification;
 use App\Models\SportEvent;
 use App\Models\SportList;
 use App\Models\SportRegion;
+use Carbon\Carbon;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions;
 use Filament\Pages\Actions\Action;
@@ -24,8 +25,8 @@ class ListSportEvents extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
-            $this->getOrisEvent(),
-            $this->getNotifiAction(),
+            // $this->getOrisEvent(),
+            $this->getNotifiAction()->tooltip('Umožní poslat ručně notifikaci na vybraný kanál.'),
         ];
     }
 
@@ -78,14 +79,9 @@ class ListSportEvents extends ListRecords
                             ->options(SportRegion::all()->pluck('long_name', 'id'))
                             ->required()
                             ->searchable(),
-                        Forms\Components\Select::make('notificationType')
-                            ->label('Typ upozornění')
-                            ->options([
-                                DiscordWebhookHelper::CONTENT_STATUS_NEW => 'Nová událost',
-                                DiscordWebhookHelper::CONTENT_STATUS_UPDATE => 'Upravená událost'
-                            ])
-                            ->default(DiscordWebhookHelper::CONTENT_STATUS_NEW)
-                            ->required(),
+                        Forms\Components\DatePicker::make('datefrom')
+                            ->label('Datum od')
+                            ->default(date('Y-m-d', strtotime('first day of january this year'))),
                     ]),
 
             ]);

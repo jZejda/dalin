@@ -11,6 +11,7 @@ use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
 use App\Http\Controllers\Cron\OrisUpdateEntry;
 use App\Models\SportClassDefinition;
+use App\Services\OrisApiService;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -32,6 +33,15 @@ class TestController extends Controller
 
 
     public function test(): bool
+    {
+        $pokus = new OrisApiService();
+        $return = $pokus->updateEvent(7721);
+
+        return true;
+    }
+
+
+    public function testOldik(): bool
     {
 
         $sportId = 2;

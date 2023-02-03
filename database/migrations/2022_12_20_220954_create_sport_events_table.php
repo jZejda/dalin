@@ -22,12 +22,14 @@ return new class () extends Migration {
             $table->boolean('use_oris_for_entries');
             $table->boolean('ranking')->nullable();
             $table->float('ranking_coefficient')->nullable();
-            $table->dateTime('entry_date_1');
+            $table->dateTime('entry_date_1')->nullable();
             $table->dateTime('entry_date_2')->nullable();
             $table->dateTime('entry_date_3')->nullable();
             $table->dateTime('last_update')->nullable();
             $table->boolean('dont_update_excluded')->default(true);
             $table->timestamps();
+
+            $table->index(['name']);
         });
     }
 

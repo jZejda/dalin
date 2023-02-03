@@ -23,6 +23,8 @@ return new class () extends Migration {
             $table->tinyInteger('content_mode')->default(1);
             $table->tinyInteger('private')->nullable();
             $table->timestamps();
+
+            $table->index(['title']);
         });
     }
 

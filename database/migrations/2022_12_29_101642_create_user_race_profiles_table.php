@@ -20,7 +20,7 @@ return new class () extends Migration {
             $table->string('last_name');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('reg_number');
+            $table->string('reg_number')->unique();
             $table->string('oris_id')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();

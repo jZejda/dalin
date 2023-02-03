@@ -79,6 +79,11 @@ class SportEvent extends Model
         return $this->hasOne(SportDiscipline::class, 'id', 'discipline_id');
     }
 
+    public function sportClasses(): HasMany
+    {
+        return $this->hasMany(SportClass::class, 'sport_event_id', 'id');
+    }
+
     public function sportServices(): HasMany
     {
         return $this->hasMany(SportService::class, 'sport_event_id', 'id');

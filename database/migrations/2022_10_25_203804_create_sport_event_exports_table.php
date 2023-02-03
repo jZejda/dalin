@@ -22,6 +22,8 @@ return new class () extends Migration {
             $table->string('file_type', 50);
             $table->string('result_path', 255);
             $table->timestamps();
+
+            $table->index(['title']);
         });
     }
 

@@ -18,6 +18,8 @@ return new class () extends Migration {
             $table->string('description', 255);
             $table->string('slug')->nullable();
             $table->timestamps();
+
+            $table->index(['title']);
         });
     }
 

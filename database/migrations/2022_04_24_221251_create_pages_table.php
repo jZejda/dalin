@@ -29,6 +29,8 @@ return new class () extends Migration {
             $table->tinyInteger('weight')->default(50);
             $table->tinyInteger('page_menu')->default(0)->unsigned();
             $table->timestamps();
+
+            $table->index(['title']);
         });
     }
 

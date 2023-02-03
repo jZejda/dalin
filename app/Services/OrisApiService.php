@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Models\SportClass;
 use App\Models\SportClassDefinition;
 use App\Http\Components\Oris\GetClassDefinitions;
 use App\Http\Components\Oris\GetOris;
@@ -45,11 +46,29 @@ class OrisApiService
             $classes = $event->classes($orisResponse);
             foreach ($classes as $class) {
                 /** @var Classes $class */
-                echo $class->getFee() . PHP_EOL;
-                echo $class->getClassDefinition()->getGender() . PHP_EOL;
+                $classModel = SportClass::where(['sport_event_id' => $eventModel->id, 'oris_id' => $class->getID()])->first();
+                if (is_null($classModel)) {
+                    $classModel = new SportClass();
+                }
+
+                /** @var SportClassDefinition $classDefinitionExist */
+                $classDefinitionModel = SportClassDefinition::where('oris_id', '=', $class->getClassDefinition()->getID())->first();
+                if ($classDefinitionModel === null) {
+                    $classDefinitionModel = new SportClassDefinition();
+                    $classDefinitionModel = $this->saveClassDefinitionModel($classDefinitionModel, $class->getClassDefinition(), $eventModel->id);
+                }
+
+                //dd($class->getClassDefinition()->getID());
+
+
+                $classModel->sport_event_id = $eventModel->id;
+                $classModel->oris_id = $class->getID();
+                $classModel->class_definition_id = $classDefinitionModel->id;
+                $classModel->distance = $class->getDistance();
+                $classModel->controls = $class->getControls();
+                $classModel->fee = $class->getFee();
+                $classModel->save();
             }
-
-
 
             // Create|Update Services
             $services = $event->services($orisResponse);
@@ -97,18 +116,24 @@ class OrisApiService
                     $model = new SportClassDefinition();
                 }
 
-                $model->oris_id = $data->getID();
-                $model->sport_id = $sportId;
-                $model->age_from = $data->getAgeFrom();
-                $model->age_to = $data->getAgeTo();
-                $model->gender = $data->getGender();
-                $model->name = $data->getName();
-                if($model->save() === false) {
-                    return false;
-                }
+                $this->saveClassDefinitionModel($model, $data, $sportId);
             }
         }
         return true;
+    }
+
+
+    private function saveClassDefinitionModel(SportClassDefinition $model, ClassDefinition $data, int $sportId): SportClassDefinition
+    {
+        $model->oris_id = $data->getID();
+        $model->sport_id = $sportId;
+        $model->age_from = $data->getAgeFrom();
+        $model->age_to = $data->getAgeTo();
+        $model->gender = $data->getGender();
+        $model->name = $data->getName();
+        $model->save();
+
+        return $model;
     }
 
 
