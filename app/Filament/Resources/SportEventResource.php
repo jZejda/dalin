@@ -25,6 +25,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -202,10 +203,12 @@ class SportEventResource extends Resource
                     ->searchable()
                     ->label('Název')
                     ->sortable()
+                    ->tooltip(fn (SportEvent $record): string => $record->last_update ?  'Poslední hromadná aktualizace: ' . $record->last_update->format('m.d.Y - H:i') : '')
                     ->weight('medium')
                     ->alignLeft()
                     ->limit(50)
-                    ->description(fn (SportEvent $record): string => $record->oris_id ? 'ORIS ID: ' . $record->oris_id : ''),
+                    //->description(fn (SportEvent $record): string => $record->oris_id ? 'ORIS ID: ' . $record->oris_id : ''),
+                    ->description(fn (SportEvent $record): string => $record->alt_name ?  $record->alt_name : ''),
 
                 TextColumn::make('place')
                     ->searchable()
@@ -226,7 +229,18 @@ class SportEventResource extends Resource
 
                 ViewColumn::make('entries')
                     ->label('Terminy')
-                    ->view('filament.tables.columns.entryDates')
+                    ->view('filament.tables.columns.entryDates'),
+
+                BadgeColumn::make('oris_id')
+                    ->label('Použit orit')
+                    ->color(static function ($state): string {
+                        if ($state == true) {
+                            return 'success';
+                        }
+
+                        return 'secondary';
+                    })
+                    ->sortable(),
 
             ])
             ->filters([
@@ -253,8 +267,8 @@ class SportEventResource extends Resource
     public static function getRelations(): array
     {
         return [
+            SportClassesRelationManager::class,
             SportServicesRelationManager::class,
-            SportClassesRelationManager::class
         ];
     }
 

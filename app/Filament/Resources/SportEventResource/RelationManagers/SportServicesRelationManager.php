@@ -57,9 +57,7 @@ class SportServicesRelationManager extends RelationManager
             ->filters([
                 //
             ])
-            ->headerActions([
-                //Tables\Actions\CreateAction::make(),
-            ])
+            ->headerActions(self::buttonCreateActionVisibility())
             ->actions([
                 Tables\Actions\EditAction::make(),
               //  Tables\Actions\DeleteAction::make(),
@@ -67,5 +65,11 @@ class SportServicesRelationManager extends RelationManager
             ->bulkActions([
              //   Tables\Actions\DeleteBulkAction::make(),
             ]);
+    }
+
+    private static function buttonCreateActionVisibility(): array
+    {
+        // TODO z recordu nejak vytahnout jestli je oris nebo ne a pak to skryt
+        return [Tables\Actions\CreateAction::make(),];
     }
 }

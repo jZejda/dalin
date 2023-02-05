@@ -12,6 +12,7 @@ use App\Http\Components\Oris\Response\Entity\Services;
 use App\Http\Controllers\Cron\OrisUpdateEntry;
 use App\Models\SportClassDefinition;
 use App\Services\OrisApiService;
+use Filament\Notifications\Notification;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -34,8 +35,15 @@ class TestController extends Controller
 
     public function test(): bool
     {
-        $pokus = new OrisApiService();
-        $return = $pokus->updateEvent(7721);
+        $recipient = auth()->user();
+
+        Notification::make()
+            ->title('Saved successfully')
+            ->body('Toto je body message')
+            ->sendToDatabase($recipient);
+
+        //$pokus = new OrisApiService();
+        //$return = $pokus->updateEvent(7012);
 
         return true;
     }
