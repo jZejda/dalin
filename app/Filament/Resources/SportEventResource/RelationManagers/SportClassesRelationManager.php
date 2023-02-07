@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
 use App\Models\SportClass;
-use App\Models\SportClassDefinition;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;

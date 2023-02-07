@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Http\Components\Oris\GetClubs;
+use App\Http\Components\Oris\Response\Entity\Clubs;
+use App\Models\Club;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
 use App\Http\Components\Oris\GetClassDefinitions;
@@ -12,14 +15,22 @@ use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
 use App\Models\SportEvent;
+use App\Models\SportRegion;
 use App\Models\SportService;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 class OrisApiService
 {
+    private ?OrisResponse $orisResponse;
+
     public const ORIS_API_URL = 'https://oris.orientacnisporty.cz/API';
     public const ORIS_API_DEFAULT_FORMAT = 'json';
+
+    public function __construct(?OrisResponse $orisResponse = null)
+    {
+        $this->orisResponse = $orisResponse ?? new OrisResponse();
+    }
 
     public function updateEvent(int $eventId): bool
     {
@@ -109,7 +120,7 @@ class OrisApiService
             $orisData = $classDefinitions->data($orisResponse);
 
             foreach ($orisData as $data) {
-                // Create|Update Event
+                // Create|Update SportClassDefinition
                 /** @var SportClassDefinition $model */
                 $model = SportClassDefinition::where('oris_id', $data->getId())->first();
                 if (is_null($model)) {
@@ -120,6 +131,46 @@ class OrisApiService
             }
         }
         return true;
+    }
+
+    public function updateClubs(): SystemSyncDetail
+    {
+        $getParams = [
+            'method' => 'getCSOSClubList',
+        ];
+        $orisResponse = $this->orisGetResponse($getParams);
+
+        $clubs = new GetClubs();
+        if ($clubs->checkOrisResponse($orisResponse)) {
+
+            /** @var Clubs[] $orisData */
+            $orisData = $clubs->data($orisResponse);
+
+            foreach ($orisData as $data) {
+                // Create|Update Club
+                /** @var Club $model */
+                $model = Club::where('abbr', $data->getAbbr())->first();
+                if (is_null($model)) {
+                    $model = new Club();
+                    $this->orisResponse->newItem($data->getAbbr() . ' | ' . $data->getName());
+                } else {
+                    $this->orisResponse->updatedItem($data->getAbbr() . ' | ' . $data->getName());
+                }
+                $model->abbr = $data->getAbbr();
+                $model->name = $data->getName();
+                $regionId = SportRegion::where('long_name', '=', $data->getRegion())->first();
+                $model->region_id = !is_null($regionId) ? $regionId->id : 1;
+                $model->oris_id = $data->getID();
+                $model->oris_number = $data->getNumber();
+                $model->save();
+            }
+
+            $this->orisResponse->setStatus($clubs->response($orisResponse)->getStatus());
+            return $this->orisResponse->getItemsInfo();
+        }
+
+        $this->orisResponse->setStatus($clubs->response($orisResponse)->getStatus());
+        return $this->orisResponse->getItemsInfo();
     }
 
 

@@ -43,9 +43,9 @@ class ListSportClassDefinitions extends ListRecords
                 })
 
                 ->color('secondary')
-                ->label('Zaktualizovat')
+                ->label('Aktualizovat')
                 ->icon('heroicon-s-refresh')
-                ->modalHeading('Zaktualizuj definici kategorií z ORISu')
+                ->modalHeading('Aktualizuj definici kategorií z ORISu')
                 ->modalSubheading('Definice kategorii, podle ORISU. V dialogu zvol pro jaký sport chceš zaktualizovat definice kategorií.')
                 ->modalButton('Aktualizovat')
                 ->form([

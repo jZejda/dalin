@@ -4,14 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-
-/*
+/**
+ *
+ * App\Models\Club
+ *
  * @property string $abbr
  * @property ?string $name
- * @property ?string $region_name
+ * @property ?string $region_id
  * @property ?int $oris_id
  * @property ?int $oris_number
+ *
+ * @property-read SportRegion $region
  *
  */
 class Club extends Model
@@ -22,9 +27,14 @@ class Club extends Model
     protected $fillable = [
         'abbr',
         'name',
-        'region_name',
+        'region_id',
         'oris_id',
         'oris_number',
     ];
+
+    public function region(): HasOne
+    {
+        return $this->hasOne(SportRegion::class, 'id', 'region_id');
+    }
 
 }

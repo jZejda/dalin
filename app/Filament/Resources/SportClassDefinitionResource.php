@@ -4,6 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\SportClassDefinitionResource\Pages;
 use App\Models\SportClassDefinition;
+use App\Models\SportList;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -23,7 +28,42 @@ class SportClassDefinitionResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Card::make()
+                    ->schema([
+
+                        TextInput::make('name')
+                            ->label('Název')
+                            ->required(),
+                        Select::make('gender')
+                            ->label('Pohlaví')
+                            ->options([
+                                'F' => 'Žena',
+                                'M' => 'Muž',
+                                'A' => 'Vše',
+                            ])
+                            ->required(),
+
+                        TextInput::make('age_from')
+                            ->label('Věk od:')
+                            ->required(),
+                        TextInput::make('age_to')
+                            ->label('Věk do:')
+                            ->required(),
+
+                        Select::make('sport_id')
+                            ->label('Sport')
+                            ->options(SportList::all()->pluck('short_name', 'id'))
+                            ->searchable()
+                            ->required(),
+                        TextInput::make('oris_id')
+                            ->label('ORIS ID')
+                            ->disabled(true),
+                    ])
+                    ->columns(2)
+                    ->columnSpan([
+                        'sm' => 1,
+                        'md' => 12
+                    ]),
             ]);
     }
 

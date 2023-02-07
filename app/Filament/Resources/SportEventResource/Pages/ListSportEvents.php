@@ -10,7 +10,6 @@ use App\Http\Controllers\Discord\RaceEventAddedNotification;
 use App\Models\SportEvent;
 use App\Models\SportList;
 use App\Models\SportRegion;
-use Carbon\Carbon;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions;
 use Filament\Pages\Actions\Action;
