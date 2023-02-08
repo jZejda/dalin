@@ -6,7 +6,6 @@ use App\Filament\Resources\SportClassDefinitionResource\Pages;
 use App\Models\SportClassDefinition;
 use App\Models\SportList;
 use Filament\Forms\Components\Card;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;

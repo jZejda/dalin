@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $age_to
  * @property string|null $gender
  * @property string $name
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property-read SportList $sport
  * @property-read string $class_definition_full_label

@@ -10,11 +10,21 @@ use App\Http\Controllers\Discord\RaceEventAddedNotification;
 use App\Models\SportEvent;
 use App\Models\SportList;
 use App\Models\SportRegion;
+use App\Services\OrisApiService;
+use Closure;
+use Filament\Facades\Filament;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions;
 use Filament\Pages\Actions\Action;
+use Filament\Tables\Actions\EditAction;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Forms;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Http;
 
 class ListSportEvents extends ListRecords
 {
@@ -24,7 +34,7 @@ class ListSportEvents extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
-            // $this->getOrisEvent(),
+            $this->getOrisEvent(),
             $this->getNotifiAction()->tooltip('Umožní poslat ručně notifikaci na vybraný kanál.'),
         ];
     }
@@ -39,16 +49,19 @@ class ListSportEvents extends ListRecords
 
         return Action::make('orisEvent')
             ->action(function (array $data): void {
-                // if notifikace na Discord
-                /** @var SportEvent $sportEvent */
-                $sportEvent = SportEvent::query()->where('id', '=', $data['sportEventId'])->first();
-                (new RaceEventAddedNotification($sportEvent, $data['notificationType']))->sendNotification();
-                Notification::make()
-                    ->title('Notifikace odeslána')
-                    ->body('Na zvolený kanál jsi zaslal notifikaci ke konkrétnímu závodu')
-                    ->success()
-                    ->seconds(8)
-                    ->send();
+
+
+               // dd($data['oris_id']));
+
+                $event = (new OrisApiService())->updateEvent(intval($data['oris_id']));
+                if ($event) {
+                    Notification::make()
+                        ->title('Závod ID ' . intval($data['oris_id']) . ' byl vytvořen')
+                        ->body('V systému byl založen nový závod s kategoriemi a dostupnými službami. Data jsou aktuální oproti ORISu.')
+                        ->success()
+                        ->seconds(8)
+                        ->send();
+                }
             })
             ->color('secondary')
             ->label('Přidej závod z ORISU')
@@ -75,19 +88,80 @@ class ListSportEvents extends ListRecords
                             ->default(0),
                         Forms\Components\Select::make('region_id')
                             ->label('Region')
-                            ->options(SportRegion::all()->pluck('long_name', 'id'))
-                            ->required()
+                            ->options(SportRegion::all()->pluck('long_name', 'short_name'))
                             ->searchable(),
                         Forms\Components\DatePicker::make('datefrom')
                             ->label('Datum od')
                             ->default(date('Y-m-d', strtotime('first day of january this year'))),
+
+                        Grid::make()->schema([
+                            Select::make('oris_id')
+                                ->label('ORIS ID')
+                                ->hint('Hledej podle kritérí na ORISu')
+                                ->hintIcon('heroicon-s-exclamation')
+                                ->required()
+                                ->searchable()
+                                ->options(function (callable $get) {
+                                    return $get('oris_event_id');
+                                })
+                                ->suffixAction(
+                                    fn ($state, Closure $set, callable $get) =>
+                                    \Filament\Forms\Components\Actions\Action::make('get_event')
+                                        ->icon('heroicon-o-search')
+                                        ->action(function () use ($state, $set, $get) {
+//                                        if (blank($state))
+//                                        {
+//                                            Filament::notify('danger', 'Zvol konkrétní závod.');
+//                                            return;
+//                                        }
+
+                                            try {
+
+                                                $dateFrom = explode(' ', $get('datefrom'));
+
+                                                $baseUriParams = [
+                                                    'format' => 'json',
+                                                    'method' => 'getEventList',
+                                                    'datefrom' => $dateFrom[0],
+                                                ];
+
+                                                $params = [
+                                                    'all' => $get('oris_all'),
+                                                    'sport' => $get('sport_id'),
+                                                    'rg' => $get('region_id'),
+                                                ];
+
+                                                foreach ($params as $key => $value) {
+                                                    if (!is_null($value)) {
+                                                        $baseUriParams[$key] = $value;
+                                                    }
+                                                }
+
+                                                $orisResponse = Http::get('https://oris.orientacnisporty.cz/API', $baseUriParams)
+                                                    ->throw()
+                                                    ->json('Data');
+
+
+                                            } catch (RequestException $e) {
+                                                Filament::notify('danger', 'Nepodařilo se načíst data.');
+                                                return;
+                                            }
+
+                                            $orisEventData = [];
+                                            foreach ($orisResponse as $event) {
+                                                $orisEventData[$event['ID']] = $event['ID'] . ' - ' . $event['Date'] . ' - ' . $event['Org1']['Abbr'] . ' - ' . $event['Name'] . ' - ' . $event['Discipline']['NameCZ'];
+                                            }
+
+                                            //$orisEventData = Arr::pluck($orisResponse, 'Name', 'ID');
+
+                                            $set('oris_event_id', $orisEventData);
+
+                                        })
+                                ),
+                        ])->columns(1),
                     ]),
-
             ]);
-
-
     }
-
 
     private function getNotifiAction(): Action
     {

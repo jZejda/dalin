@@ -20,18 +20,25 @@ use Illuminate\Support\Carbon;
  * @property Carbon $date
  * @property string|null $place
  * @property array|null $region
+ * @property array|null $organization
+ * @property string|null $entry_desc
  * @property int $sport_id
  * @property int $discipline_id
  * @property bool $use_oris_for_entries
  * @property bool|null $ranking
  * @property float|null $ranking_coefficient
- * @property Carbon $entry_date_1
- * @property Carbon|null $entry_date_2
- * @property Carbon|null $entry_date_3
+ * @property string $entry_date_1
+ * @property string|null $entry_date_2
+ * @property string|null $entry_date_3
+ * @property string|null $start_time
+ * @property string|null $gps_lat
+ * @property string|null $gps_lon
+ * @property int|null $parent_id
  * @property bool $dont_update_excluded
- * @property Carbon|null $last_update
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property bool $cancelled
+ * @property string|null $last_update
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property-read string $sport_event_oris_title
  * @property-read SportDiscipline|null $sportDiscipline
@@ -49,6 +56,8 @@ class SportEvent extends Model
         'date',
         'place',
         'region',
+        'organization',
+        'entry_desc',
         'sport_id',
         'discipline_id',
         'use_oris_for_entries',
@@ -57,7 +66,12 @@ class SportEvent extends Model
         'entry_date_1',
         'entry_date_2',
         'entry_date_3',
+        'start_time',
+        'gps_lat',
+        'gps_lon',
+        'parent_id',
         'last_update',
+        'cancelled',
         'dont_update_excluded',
     ];
 
@@ -66,10 +80,12 @@ class SportEvent extends Model
         'use_oris_for_entries' => 'bool',
         'ranking' => 'bool',
         'region' => 'array',
+        'organization' => 'array',
         'entry_date_1' => 'datetime:Y-m-d H:i:s',
         'entry_date_2' => 'datetime:Y-m-d H:i:s',
         'entry_date_3' => 'datetime:Y-m-d H:i:s',
         'last_update' => 'datetime:Y-m-d H:i:s',
+        'cancelled' => 'bool',
         'dont_update_excluded' => 'bool',
     ];
 

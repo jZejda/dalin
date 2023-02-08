@@ -20,8 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $qty_available
  * @property int $qty_already_ordered
  * @property int $qty_remaining
- * @property string $created_at
- * @property string $updated_at
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property-read  SportEvent $sportEvent;
  *

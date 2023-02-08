@@ -14,7 +14,9 @@ return new class () extends Migration {
             $table->integer('oris_id')->nullable();
             $table->date('date');
             $table->string('place')->nullable();
+            $table->string('organization')->nullable();
             $table->string('region')->nullable();
+            $table->string('entry_desc')->nullable();
             $table->unsignedBigInteger('sport_id')->default(1);
             $table->foreign('sport_id')->references('id')->on('sport_lists');
             $table->unsignedBigInteger('discipline_id');
@@ -26,6 +28,11 @@ return new class () extends Migration {
             $table->dateTime('entry_date_2')->nullable();
             $table->dateTime('entry_date_3')->nullable();
             $table->dateTime('last_update')->nullable();
+            $table->time('start_time')->nullable();
+            $table->string('gps_lat')->nullable();
+            $table->string('gps_lon')->nullable();
+            $table->integer('parent_id')->nullable();
+            $table->boolean('cancelled')->default(false);
             $table->boolean('dont_update_excluded')->default(true);
             $table->timestamps();
 

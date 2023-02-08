@@ -16,6 +16,7 @@ use Filament\Notifications\Notification;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class TestController extends Controller
 {
@@ -35,12 +36,19 @@ class TestController extends Controller
 
     public function test(): bool
     {
-        $recipient = auth()->user();
 
-        Notification::make()
-            ->title('Saved successfully')
-            ->body('Toto je body message')
-            ->sendToDatabase($recipient);
+        Log::channel('site')->error('pokus');
+
+
+//        $recipient = auth()->user();
+//
+//
+//
+//
+//        Notification::make()
+//            ->title('Saved successfully')
+//            ->body('Toto je body message')
+//            ->sendToDatabase($recipient);
 
         //$pokus = new OrisApiService();
         //$return = $pokus->updateEvent(7012);

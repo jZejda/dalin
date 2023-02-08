@@ -7,7 +7,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Carbon;
 
 /**
  * App\Models\UserRaceProfile
@@ -21,9 +20,9 @@ use Illuminate\Support\Carbon;
  * @property string|null $email
  * @property string|null $phone
  * @property string $gender
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
  * @property-read string $user_race_full_name
  * @property-read User|null $user
  */

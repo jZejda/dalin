@@ -21,8 +21,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $source
  * @property ?int $source_user_id
  * @property string $credit_type
- * @property string $created_at
- * @property string $updated_at
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property-read User $user
  * @property-read User $sourceUser

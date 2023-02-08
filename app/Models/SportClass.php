@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $climbing
  * @property string|null $controls
  * @property float|null $fee
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property-read SportClassDefinition $classDefinition
  */

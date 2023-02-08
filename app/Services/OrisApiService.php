@@ -18,7 +18,9 @@ use App\Models\SportEvent;
 use App\Models\SportRegion;
 use App\Models\SportService;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class OrisApiService
 {
@@ -173,16 +175,26 @@ class OrisApiService
         return $this->orisResponse->getItemsInfo();
     }
 
-
     private function saveClassDefinitionModel(SportClassDefinition $model, ClassDefinition $data, int $sportId): SportClassDefinition
     {
-        $model->oris_id = $data->getID();
-        $model->sport_id = $sportId;
-        $model->age_from = $data->getAgeFrom();
-        $model->age_to = $data->getAgeTo();
-        $model->gender = $data->getGender();
-        $model->name = $data->getName();
-        $model->save();
+            $model->oris_id = $data->getID();
+            $model->sport_id = $sportId;
+            $model->age_from = $data->getAgeFrom();
+            $model->age_to = $data->getAgeTo();
+            $model->gender = $data->getGender();
+            $model->name = $data->getName();
+
+        try {
+            if ($model->save() === false) {
+                throw new ApiStoreResponseException(
+                    message: 'Can\'t save SportClassDefinition model OrisId ' . $data->getID(),
+                    model: 'SportClassDefinition',
+                    userId: Auth::id(),
+                );
+            }
+        } catch (ApiStoreResponseException $error) {
+            Log::channel('site')->error($error->getStoreError());
+        }
 
         return $model;
     }

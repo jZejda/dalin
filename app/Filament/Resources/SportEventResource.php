@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SportEventResource\Pages;
 use App\Filament\Resources\SportEventResource\RelationManagers\SportClassesRelationManager;
 use App\Filament\Resources\SportEventResource\RelationManagers\SportServicesRelationManager;
+use App\Models\Club;
 use App\Models\SportDiscipline;
 use App\Models\SportEvent;
 use App\Models\SportLevel;
@@ -17,9 +18,11 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -86,8 +89,6 @@ class SportEventResource extends Resource
                                                 ->json('Data');
 
 
-//                                            dd($countryData);
-
                                         } catch (RequestException $e) {
                                             Filament::notify('danger', 'Nepodařilo se načíst data.');
                                             return;
@@ -106,13 +107,29 @@ class SportEventResource extends Resource
 
                                         }
                                     }
+
+                                    $organizations = [];
+                                    if (isset($orisResponse['Org1']['Abbr'] )) {
+                                        $organizations[] = $orisResponse['Org1']['Abbr'];
+                                    }
+                                        if (isset($orisResponse['Org2']['Abbr'] )) {
+                                            $organizations[] = $orisResponse['Org2']['Abbr'];
+                                        }
+
                                     $set('region', $region);
+                                    $set('organization', $organizations);
 
                                     $set('discipline_id', $orisResponse['Discipline']['ID'] ?? null);
                                     $set('sport_id', $orisResponse['Sport']['ID'] ?? null);
                                     $set('level_id', $orisResponse['Level']['ID'] ?? null);
 
                                     $set('use_oris_for_entries', $orisResponse['UseORISForEntries'] ?? null);
+
+                                    $set('start_time', $orisResponse['StartTime'] ?? null);
+                                    $set('gps_lat', $orisResponse['GPSLat'] ?? null);
+                                    $set('gps_lon', $orisResponse['GPSLon'] ?? null);
+
+                                    $set('entry_desc', $orisResponse['EntryDescCZ'] ?? null);
 
                                     })
                                 ),
@@ -133,6 +150,17 @@ class SportEventResource extends Resource
                                 ->displayFormat('d.m.Y')
                                 ->required(),
 
+                            TextInput::make('gps_lat')
+                                ->label('GPS Lat'),
+
+                            TextInput::make('gps_lon')
+                                ->label('GPS Lon'),
+
+                            Grid::make()->schema([
+                                MarkdownEditor::make('entry_desc')
+                                    ->label('Popis')
+                            ])->columns(1),
+
                             Grid::make()->schema([
 
                                 Select::make('discipline_id')
@@ -140,10 +168,6 @@ class SportEventResource extends Resource
                                     ->options(SportDiscipline::all()->pluck('long_name', 'id'))
                                     ->searchable()
                                     ->required(),
-                                Select::make('region')
-                                    ->multiple()
-                                    ->options(SportRegion::all()->pluck('long_name', 'short_name'))
-                                    ->searchable(),
                                 Select::make('sport_id')
                                     ->label('Sport')
                                     ->options(SportList::all()->pluck('short_name', 'id'))
@@ -153,6 +177,18 @@ class SportEventResource extends Resource
                                 Select::make('level_id')
                                     ->label('Level')
                                     ->options(SportLevel::all()->pluck('long_name', 'oris_id'))
+                                    ->searchable(),
+
+                                Select::make('organization')
+                                    ->multiple()
+                                    ->options(Club::all()->pluck('name', 'abbr'))
+                                    ->maxItemsMessage('Je možné definovat pouze dva kluby')
+                                    ->maxItems(2)
+                                    ->searchable(),
+
+                                Select::make('region')
+                                    ->multiple()
+                                    ->options(SportRegion::all()->pluck('long_name', 'short_name'))
                                     ->searchable(),
 
                                 Toggle::make('use_oris_for_entries')
@@ -181,6 +217,7 @@ class SportEventResource extends Resource
                     Section::make('Termíny')
                         ->description('Možné vypnout automatickou aktualizaci na 2. a 3. termín.')
                         ->schema([
+                            TextInput::make('start_time')->label('Čas startu'),
                             DateTimePicker::make('entry_date_1')->displayFormat('d.m.Y H:i:s')->label('První termín'),
                             DateTimePicker::make('entry_date_2')->displayFormat('d.m.Y H:i:s')->label('Druhý termín'),
                             DateTimePicker::make('entry_date_3')->displayFormat('d.m.Y H:i:s')->label('Třetí termín'),
@@ -188,6 +225,7 @@ class SportEventResource extends Resource
                             'sm' => 1,
                             'md' => 4
                         ]),
+
 
                 ])
             ]);
@@ -224,6 +262,11 @@ class SportEventResource extends Resource
                     ->dateTime('d.m.Y')
                     ->sortable()
                     ->searchable(),
+
+                TextColumn::make('organization')
+                    ->label('Klub(y)')
+                    ->searchable()
+                    ->sortable(),
 
                 TextColumn::make('region')->label('Region'),
 

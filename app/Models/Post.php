@@ -18,10 +18,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property bool $private
  * @property int $user_id
  * @property int $content_mode
- * @property string $created_at
- * @property string $updated_at
+ * @property string|null $created_at
+ * @property string|null $updated_at
 
- * @property User $user
+ * @property-read User $user
  */
 class Post extends Model
 {

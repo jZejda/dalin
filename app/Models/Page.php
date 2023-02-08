@@ -19,13 +19,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $page_menu
  * @property int $content_format
  * @property int $weight
- * @property string $created_at
- * @property string $updated_at
- * @property User $user
  * @property int|null $content_category_id
  * @property string $picture_attachment
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
- * @property-read ContentCategory|null $content_category
+ * @property-read User $user
+ * @property-read ContentCategory $content_category
  */
 
 class Page extends Model

@@ -21,8 +21,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property int $password
  * @property ?string $remember_token
  * @property ?string $email_verified_at
- * @property string $created_at
- * @property string $updated_at
+ * @property string|null $created_at
+ * @property string|null $updated_at
  *
  * @property-read string $user_identification
  */
