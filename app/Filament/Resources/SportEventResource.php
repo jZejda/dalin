@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
+use Closure;
 use App\Filament\Resources\SportEventResource\Pages;
 use App\Filament\Resources\SportEventResource\RelationManagers\SportClassesRelationManager;
 use App\Filament\Resources\SportEventResource\RelationManagers\SportServicesRelationManager;
@@ -11,7 +14,6 @@ use App\Models\SportEvent;
 use App\Models\SportLevel;
 use App\Models\SportList;
 use App\Models\SportRegion;
-use Closure;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Card;
@@ -22,7 +24,6 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -109,10 +110,10 @@ class SportEventResource extends Resource
                                     }
 
                                     $organizations = [];
-                                    if (isset($orisResponse['Org1']['Abbr'] )) {
+                                    if (isset($orisResponse['Org1']['Abbr'])) {
                                         $organizations[] = $orisResponse['Org1']['Abbr'];
                                     }
-                                        if (isset($orisResponse['Org2']['Abbr'] )) {
+                                        if (isset($orisResponse['Org2']['Abbr'])) {
                                             $organizations[] = $orisResponse['Org2']['Abbr'];
                                         }
 
@@ -275,7 +276,7 @@ class SportEventResource extends Resource
                     ->view('filament.tables.columns.entryDates'),
 
                 BadgeColumn::make('oris_id')
-                    ->label('Použit orit')
+                    ->label('ORIS ID')
                     ->color(static function ($state): string {
                         if ($state == true) {
                             return 'success';

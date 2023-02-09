@@ -12,7 +12,7 @@ return new class () extends Migration {
             $table->string('name', 255);
             $table->string('alt_name', 255)->nullable();
             $table->integer('oris_id')->nullable();
-            $table->date('date');
+            $table->date('date')->nullable();
             $table->string('place')->nullable();
             $table->string('organization')->nullable();
             $table->string('region')->nullable();
@@ -21,6 +21,8 @@ return new class () extends Migration {
             $table->foreign('sport_id')->references('id')->on('sport_lists');
             $table->unsignedBigInteger('discipline_id');
             $table->foreign('discipline_id')->references('id')->on('sport_disciplines');
+            $table->unsignedBigInteger('level_id');
+            $table->foreign('level_id')->references('id')->on('sport_levels');
             $table->boolean('use_oris_for_entries');
             $table->boolean('ranking')->nullable();
             $table->float('ranking_coefficient')->nullable();

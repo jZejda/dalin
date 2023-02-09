@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Components\Oris\Response;
 
+use App\Http\Components\Oris\Response\Entity\Discipline;
+use App\Http\Components\Oris\Response\Entity\Level;
 use App\Http\Components\Oris\Response\Entity\Org;
+use App\Http\Components\Oris\Response\Entity\Sport;
 
 class OrisEvent
 {
@@ -26,8 +29,11 @@ class OrisEvent
     public ?string $GPSLat;
     public ?string $GPSLon;
     public array $Services;
+    public Sport $Sport;
+    public Discipline $Discipline;
+    public Level $Level;
 
-    public function __construct(int $ID, string $Name, string $Date, string $Place, ?string $Map, Org $Org1, ?Org $Org2, string $Region, string $EntryDate1, ?string $EntryDate2, ?string $EntryDate3, string $EntryInfo, string $Currency, string $Ranking, ?string $StartTime, ?string $GPSLat, ?string $GPSLon, array $Services)
+    public function __construct(int $ID, string $Name, string $Date, string $Place, ?string $Map, Org $Org1, ?Org $Org2, string $Region, string $EntryDate1, ?string $EntryDate2, ?string $EntryDate3, string $EntryInfo, string $Currency, string $Ranking, ?string $StartTime, ?string $GPSLat, ?string $GPSLon, array $Services, Sport $Sport, Discipline $Discipline, Level $Level)
     {
         $this->ID = $ID;
         $this->Name = $Name;
@@ -47,6 +53,9 @@ class OrisEvent
         $this->GPSLat = $GPSLat;
         $this->GPSLon = $GPSLon;
         $this->Services = $Services;
+        $this->Sport = $Sport;
+        $this->Discipline = $Discipline;
+        $this->Level = $Level;
     }
 
     public function getID(): int
@@ -137,5 +146,20 @@ class OrisEvent
     public function getServices(): array
     {
         return $this->Services;
+    }
+
+    public function getSport(): Sport
+    {
+        return $this->Sport;
+    }
+
+    public function getDiscipline(): Discipline
+    {
+        return $this->Discipline;
+    }
+
+    public function getLevel(): Level
+    {
+        return $this->Level;
     }
 }

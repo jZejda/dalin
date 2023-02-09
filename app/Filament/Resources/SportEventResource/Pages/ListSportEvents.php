@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEventResource\Pages;
 
+use Closure;
+use Filament\Forms;
 use App\Filament\Resources\SportEventResource;
 use App\Http\Controllers\Discord\DiscordWebhookHelper;
 use App\Http\Controllers\Discord\RaceEventAddedNotification;
@@ -11,19 +13,14 @@ use App\Models\SportEvent;
 use App\Models\SportList;
 use App\Models\SportRegion;
 use App\Services\OrisApiService;
-use Closure;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions;
 use Filament\Pages\Actions\Action;
-use Filament\Tables\Actions\EditAction;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Forms;
 use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
 class ListSportEvents extends ListRecords
@@ -65,7 +62,7 @@ class ListSportEvents extends ListRecords
             })
             ->color('secondary')
             ->label('Přidej závod z ORISU')
-            ->icon('heroicon-s-cog')
+            ->icon('heroicon-o-plus-circle')
             ->modalHeading('Přidej závod z ORISU')
             ->modalSubheading('Přidá do systému zvolený závod s daty které aktuálně poskytuje ORIS')
             ->modalButton('Přidej závod')
@@ -105,7 +102,7 @@ class ListSportEvents extends ListRecords
                                     return $get('oris_event_id');
                                 })
                                 ->suffixAction(
-                                    fn ($state, Closure $set, callable $get) =>
+                                    action: fn ($state, Closure $set, callable $get) =>
                                     \Filament\Forms\Components\Actions\Action::make('get_event')
                                         ->icon('heroicon-o-search')
                                         ->action(function () use ($state, $set, $get) {
@@ -152,8 +149,6 @@ class ListSportEvents extends ListRecords
                                                 $orisEventData[$event['ID']] = $event['ID'] . ' - ' . $event['Date'] . ' - ' . $event['Org1']['Abbr'] . ' - ' . $event['Name'] . ' - ' . $event['Discipline']['NameCZ'];
                                             }
 
-                                            //$orisEventData = Arr::pluck($orisResponse, 'Name', 'ID');
-
                                             $set('oris_event_id', $orisEventData);
 
                                         })
@@ -180,7 +175,7 @@ class ListSportEvents extends ListRecords
                 })
                 ->color('secondary')
                 ->label('Pošli notifikaci')
-                ->icon('heroicon-s-cog')
+                ->icon('heroicon-s-paper-airplane')
                 ->modalHeading('Pošli notifikaci k závodu/akci')
                 ->modalSubheading('Notifikace je možná poslat do různých kanálů na objekty, jakékoliv objekty v listu')
                 ->modalButton('Ano poslat notifikaci')

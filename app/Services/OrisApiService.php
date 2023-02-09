@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class OrisApiService
+final class OrisApiService
 {
     private ?OrisResponse $orisResponse;
 
@@ -46,13 +46,55 @@ class OrisApiService
         if ($event->checkOrisResponse($orisResponse)) {
             $orisData = $event->data($orisResponse);
 
+            //dd(strlen($orisData->getEntryDate1()) !== 0 ? $orisData->getEntryDate1() : null);
+
             // Create|Update Event
             /** @var SportEvent $eventModel */
             $eventModel = SportEvent::where('oris_id', $eventId)->first();
+            $newEvent = false;
             if (is_null($eventModel)) {
                 $eventModel = new SportEvent();
+                $newEvent = true;
             }
+
+            $regions = [];
+            if (str_contains(', ', $orisData->getRegion())) {
+                $orisRegions = explode(', ', $orisData->getRegion());
+                foreach($orisRegions as $region) {
+                    $regions[] = $region;
+                }
+            } else {
+                $regions[] = $orisData->getRegion();
+            }
+
             $eventModel->name = $orisData->getName();
+            $eventModel->oris_id = $eventId;
+            $eventModel->date = $orisData->getDate();
+            $eventModel->place = $orisData->getPlace();
+            $eventModel->sport_id = (int)$orisData->getSport()->getID();
+            $eventModel->discipline_id = (int)$orisData->getDiscipline()->getID();
+            $eventModel->level_id = (int)$orisData->getLevel()->getID();
+
+            $eventModel->start_time = $orisData->getStartTime();
+
+            $eventModel->entry_date_1 = strlen($orisData->getEntryDate1()) !== 0 ? $orisData->getEntryDate1() : null;
+            if ($newEvent) {
+                $eventModel->entry_date_2 = strlen($orisData->getEntryDate2()) !== 0 ? $orisData->getEntryDate2() : null;
+                $eventModel->entry_date_3 = strlen($orisData->getEntryDate3()) !== 0 ? $orisData->getEntryDate3() : null;
+            }
+
+            $organization = [$orisData->getOrg1()->getAbbr()];
+            if (!is_null($orisData->getOrg2()?->getAbbr())) {
+                $organization[] = $orisData->getOrg2()?->getAbbr();
+            }
+            $eventModel->organization = $organization;
+            $eventModel->region = $regions;
+            $eventModel->entry_desc = $orisData->getEntryInfo();
+            $eventModel->ranking = $orisData->getRanking();
+            $eventModel->gps_lat = $orisData->getGPSLat();
+            $eventModel->gps_lon = $orisData->getGPSLon();
+            $eventModel->use_oris_for_entries = true;
+
             $eventModel->save();
 
             // Create|Update Classes
@@ -70,9 +112,6 @@ class OrisApiService
                     $classDefinitionModel = new SportClassDefinition();
                     $classDefinitionModel = $this->saveClassDefinitionModel($classDefinitionModel, $class->getClassDefinition(), $eventModel->id);
                 }
-
-                //dd($class->getClassDefinition()->getID());
-
 
                 $classModel->sport_event_id = $eventModel->id;
                 $classModel->oris_id = $class->getID();

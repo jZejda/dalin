@@ -24,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $entry_desc
  * @property int $sport_id
  * @property int $discipline_id
+ * @property int $level_id
  * @property bool $use_oris_for_entries
  * @property bool|null $ranking
  * @property float|null $ranking_coefficient
@@ -43,6 +44,7 @@ use Illuminate\Support\Carbon;
  * @property-read string $sport_event_oris_title
  * @property-read SportDiscipline|null $sportDiscipline
  * @property-read SportService|null $sportServices
+ * @property-read SportLevel|null $sportLevel
  */
 
 class SportEvent extends Model
@@ -60,6 +62,7 @@ class SportEvent extends Model
         'entry_desc',
         'sport_id',
         'discipline_id',
+        'level_id',
         'use_oris_for_entries',
         'ranking',
         'ranking_coefficient',
@@ -93,6 +96,11 @@ class SportEvent extends Model
     public function sportDiscipline(): HasOne
     {
         return $this->hasOne(SportDiscipline::class, 'id', 'discipline_id');
+    }
+
+    public function sportLevel(): HasOne
+    {
+        return $this->hasOne(SportLevel::class, 'id', 'level_id');
     }
 
     public function sportClasses(): HasMany
