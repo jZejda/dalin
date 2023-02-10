@@ -30,7 +30,7 @@ return new class () extends Migration {
             $table->tinyInteger('page_menu')->default(0)->unsigned();
             $table->timestamps();
 
-            $table->index(['title']);
+            // $table->index(['title']);
         });
     }
 

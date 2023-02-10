@@ -24,7 +24,7 @@ return new class () extends Migration {
             $table->tinyInteger('private')->nullable();
             $table->timestamps();
 
-            $table->index(['title']);
+            // $table->index(['title']);
         });
     }
 
