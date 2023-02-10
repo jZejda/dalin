@@ -237,7 +237,6 @@ class SportEventResource extends Resource
         return $table
 
             ->columns([
-
                 TextColumn::make('name')
                     ->searchable()
                     ->label('Název')
@@ -281,12 +280,11 @@ class SportEventResource extends Resource
                         if ($state == true) {
                             return 'success';
                         }
-
                         return 'secondary';
                     })
                     ->sortable(),
+            ])->defaultSort('date')
 
-            ])
             ->filters([
                 SelectFilter::make('sport_id')
                     ->label('Sport')
@@ -300,8 +298,11 @@ class SportEventResource extends Resource
                     ->options(SportLevel::all()->pluck('long_name', 'oris_id')),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make()
+                        ->visible(auth()->user()->hasRole(['super_admin', 'event_master'])),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

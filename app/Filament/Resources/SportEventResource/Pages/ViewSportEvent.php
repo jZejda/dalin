@@ -6,7 +6,11 @@ namespace App\Filament\Resources\SportEventResource\Pages;
 
 use App\Filament\Resources\SportEventResource;
 use App\Http\Controllers\Discord\RaceEventAddedNotification;
+use App\Models\User;
+use App\Services\OrisApiService;
+use Auth;
 use Filament\Facades\Filament;
+use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ViewRecord;
@@ -15,22 +19,47 @@ class ViewSportEvent extends ViewRecord
 {
     protected static string $resource = SportEventResource::class;
 
-//    protected function getActions(): array
-//    {
-//        return [
-//            //Actions\CreateAction::make(),
-//
-//            Action::make('settings')
-//                ->label('pocli discord')
-//                ->color('secondary')
-//                ->icon('heroicon-s-cog')
-//                ->action('sendDiscordNotification'),
-//        ];
-//    }
-//
-//    public function sendDiscordNotification(): void
-//    {
-//        (new RaceEventAddedNotification($this->getRecord()))->notification();
-//        Filament::notify('danger', 'Nepodařilo se načíst data.');
-//    }
+    protected function getActions(): array
+    {
+        return [
+
+            Actions\EditAction::make(),
+            $this->showUpdateEventFromOris(),
+        ];
+    }
+
+    protected function showUpdateEventFromOris(): ?Action
+    {
+        return Action::make('updateSportEvent')
+            ->action(function (array $data): void {
+
+                $result = (new OrisApiService())->updateEvent($this->data['oris_id']);
+
+                if ($result) {
+                    Notification::make()
+                        ->title('Aktualizace závodu')
+                        ->body('Závod byl úspěšně aktualizován')
+                        ->success()
+                        ->seconds(8)
+                        ->send();
+                } else {
+                    Notification::make()
+                        ->title('Aktualizace závodu')
+                        ->body('Něco se nepovedlo, Můžeš vyzkoušet akci zopakovat nebo kontaktuj admina s popisem chyby, děkujeme.')
+                        ->danger()
+                        ->send();
+                }
+            })
+
+            ->color('secondary')
+            ->label('Aktualizovat závod')
+            ->disabled(!$this->data['use_oris_for_entries'])
+            ->icon('heroicon-s-refresh')
+            ->modalHeading('Aktualizovat závod z ORISu')
+            ->modalSubheading('Provede aktualizaci závodu s aktuálními daty v ORISu')
+            ->modalButton('Aktualizovat')
+            ->visible(auth()->user()->hasRole(['super_admin', 'event_master']))
+            ->form([
+            ]);
+    }
 }
