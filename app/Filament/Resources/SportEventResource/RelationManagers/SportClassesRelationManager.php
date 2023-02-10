@@ -3,7 +3,10 @@
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
 use App\Models\SportClass;
+use App\Models\SportClassDefinition;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
@@ -24,9 +27,21 @@ class SportClassesRelationManager extends RelationManager
     {
         return $form
             ->schema([
+                Select::make('class_definition_id')
+                    ->label('Kategorie')
+                    ->options(SportClassDefinition::all()->pluck('id', 'Name'))
+                    ->searchable(),
                 Forms\Components\TextInput::make('class_definition_id')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('distance')
+                    ->label('Délka'),
+                TextInput::make('climbing')
+                    ->label('Převýšení'),
+                TextInput::make('controls')
+                    ->label('Kontrol'),
+                TextInput::make('fee')
+                    ->label('Poplatek')
             ]);
     }
 
@@ -35,7 +50,7 @@ class SportClassesRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('classDefinition.name')
-                    ->label('ORIS ID')
+                    ->label('Kategorie')
                     ->description(fn (SportClass $record): string => $record->classDefinition->class_definition_fullLabel ?? '')
                     ->searchable(),
                 TextColumn::make('oris_id')->label('ORIS ID'),

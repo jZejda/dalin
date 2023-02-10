@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
@@ -22,8 +23,9 @@ class SportServicesRelationManager extends RelationManager
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('service_name_cz')
+            ->schema(schema: [
+                TextInput::make('service_name_cz')
+                    ->label('Název služby')
                     ->required()
                     ->maxLength(255),
             ]);
