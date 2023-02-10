@@ -5,6 +5,7 @@ namespace App\Filament\Resources\SportEventResource\RelationManagers;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
@@ -27,21 +28,60 @@ class SportClassesRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Select::make('class_definition_id')
-                    ->label('Kategorie')
-                    ->options(SportClassDefinition::all()->pluck('id', 'Name'))
-                    ->searchable(),
-                Forms\Components\TextInput::make('class_definition_id')
-                    ->required()
-                    ->maxLength(255),
+                Grid::make()->schema([
+                    Select::make('class_definition_id')
+                        ->label('Kategorie')
+                        ->required()
+                        ->options(SportClassDefinition::all()->pluck('class_definition_full_label', 'id'))
+                        ->searchable(),
+                ])->columns(1),
                 TextInput::make('distance')
-                    ->label('Délka'),
+                    ->label('Délka')
+                    ->suffix('km')
+                    ->mask(fn (TextInput\Mask $mask) => $mask
+                        ->numeric()
+                        ->decimalPlaces(2)
+                        ->decimalSeparator('.')
+                        ->mapToDecimalSeparator([','])
+                        ->minValue(0)
+                        ->normalizeZeros()
+                        ->padFractionalZeros()
+                        ->thousandsSeparator(' '),
+                    ),
                 TextInput::make('climbing')
-                    ->label('Převýšení'),
+                    ->label('Převýšení')
+                    ->suffix('m')
+                    ->mask(fn (TextInput\Mask $mask) => $mask
+                        ->numeric()
+                        ->decimalPlaces(2)
+                        ->decimalSeparator('.')
+                        ->mapToDecimalSeparator([','])
+                        ->minValue(0)
+                        ->normalizeZeros()
+                        ->padFractionalZeros()
+                        ->thousandsSeparator(' '),
+                    ),
                 TextInput::make('controls')
-                    ->label('Kontrol'),
+                    ->label('Kontrol')
+                    ->mask(fn (TextInput\Mask $mask) => $mask
+                        ->numeric()
+                        ->decimalPlaces(0)
+                        ->integer()
+                        ->minValue(0)
+                        ->thousandsSeparator(' ')
+                    ),
                 TextInput::make('fee')
                     ->label('Poplatek')
+                    ->mask(fn (TextInput\Mask $mask) => $mask
+                        ->numeric()
+                        ->decimalPlaces(2)
+                        ->decimalSeparator('.')
+                        ->mapToDecimalSeparator([','])
+                        ->minValue(0)
+                        ->normalizeZeros()
+                        ->padFractionalZeros()
+                        ->thousandsSeparator(' '),
+                    ),
             ]);
     }
 
@@ -66,8 +106,10 @@ class SportClassesRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-              //  Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                // Tables\Actions\DeleteBulkAction::make(),

@@ -2,7 +2,11 @@
 
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
+use App\Models\SportClassDefinition;
 use Filament\Forms;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -23,11 +27,46 @@ class SportServicesRelationManager extends RelationManager
     public static function form(Form $form): Form
     {
         return $form
-            ->schema(schema: [
-                TextInput::make('service_name_cz')
-                    ->label('Název služby')
+            ->schema([
+                Grid::make()->schema([
+                    TextInput::make('service_name_cz')
+                        ->label('Název služby')
+                        ->required(),
+                ])->columns(1),
+                DateTimePicker::make('last_booking_date_time')
+                    ->label('Datum poslední možné objednávky')
+                    ->required(),
+                TextInput::make('unit_price')
+                    ->label('Cena za jednotku')
                     ->required()
-                    ->maxLength(255),
+                    ->mask(fn (TextInput\Mask $mask) => $mask
+                        ->numeric()
+                        ->decimalPlaces(2)
+                        ->decimalSeparator('.')
+                        ->mapToDecimalSeparator([','])
+                        ->minValue(0)
+                        ->normalizeZeros()
+                        ->padFractionalZeros()
+                        ->thousandsSeparator(' '),
+                    ),
+                TextInput::make('qty_available')
+                    ->label('Volných')
+                    ->mask(fn (TextInput\Mask $mask) => $mask
+                        ->numeric()
+                        ->decimalPlaces(0)
+                        ->integer()
+                        ->minValue(0)
+                        ->thousandsSeparator(' ')
+                    ),
+                TextInput::make('qty_already_ordered')
+                    ->label('Již objednáno')
+                    ->mask(fn (TextInput\Mask $mask) => $mask
+                        ->numeric()
+                        ->decimalPlaces(0)
+                        ->integer()
+                        ->minValue(0)
+                        ->thousandsSeparator(' ')
+                    ),
             ]);
     }
 
@@ -59,8 +98,10 @@ class SportServicesRelationManager extends RelationManager
             ])
             ->headerActions(self::buttonCreateActionVisibility())
             ->actions([
-                Tables\Actions\EditAction::make(),
-              //  Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
              //   Tables\Actions\DeleteBulkAction::make(),
