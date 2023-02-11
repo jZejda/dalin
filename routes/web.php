@@ -21,6 +21,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/cron-scheduler/' . env('CRON_URL_KEY', 'key'), function() {
+    Artisan::call('schedule:run');
+});
+
 Route::get('/novinka/{id}', ShowPost::class);
 Route::get('/stranka/{slug}', ShowPage::class);
 
