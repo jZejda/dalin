@@ -21,7 +21,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/cron-scheduler/' . env('CRON_URL_KEY', 'key'), function() {
+Route::get('/cron-scheduler/' . env('CRON_URL_KEY', 'key'), function () {
     Artisan::call('schedule:run');
 });
 

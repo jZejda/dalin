@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'dark_mode' => false,
+    'dark_mode' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -27,7 +27,7 @@ return [
     */
 
     'database' => [
-        'enabled' => false,
+        'enabled' => true,
         'trigger' => null,
         'polling_interval' => '30s',
     ],

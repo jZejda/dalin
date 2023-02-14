@@ -42,6 +42,13 @@ class UserRaceProfile extends Model
      * @property ?string $email
      * @property ?string $phone
      * @property string $gender
+     * @property string $city
+     * @property string $street
+     * @property string $zip
+     * @property string $licence_ob
+     * @property string $licence_lob
+     * @property string $licence_mtbo
+     *
      * @property string $created_at
      * @property string $updated_at
      *
@@ -57,6 +64,11 @@ class UserRaceProfile extends Model
         'email',
         'phone',
         'gender',
+        'city',
+        'zip',
+        'licence_ob',
+        'licence_lob',
+        'licence_mtbo',
     ];
 
     public function user(): HasOne

@@ -4,7 +4,6 @@ namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
-use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -38,7 +37,8 @@ class SportClassesRelationManager extends RelationManager
                 TextInput::make('distance')
                     ->label('Délka')
                     ->suffix('km')
-                    ->mask(fn (TextInput\Mask $mask) => $mask
+                    ->mask(
+                        fn (TextInput\Mask $mask) => $mask
                         ->numeric()
                         ->decimalPlaces(2)
                         ->decimalSeparator('.')
@@ -51,7 +51,8 @@ class SportClassesRelationManager extends RelationManager
                 TextInput::make('climbing')
                     ->label('Převýšení')
                     ->suffix('m')
-                    ->mask(fn (TextInput\Mask $mask) => $mask
+                    ->mask(
+                        fn (TextInput\Mask $mask) => $mask
                         ->numeric()
                         ->decimalPlaces(2)
                         ->decimalSeparator('.')
@@ -63,7 +64,8 @@ class SportClassesRelationManager extends RelationManager
                     ),
                 TextInput::make('controls')
                     ->label('Kontrol')
-                    ->mask(fn (TextInput\Mask $mask) => $mask
+                    ->mask(
+                        fn (TextInput\Mask $mask) => $mask
                         ->numeric()
                         ->decimalPlaces(0)
                         ->integer()
@@ -72,7 +74,8 @@ class SportClassesRelationManager extends RelationManager
                     ),
                 TextInput::make('fee')
                     ->label('Poplatek')
-                    ->mask(fn (TextInput\Mask $mask) => $mask
+                    ->mask(
+                        fn (TextInput\Mask $mask) => $mask
                         ->numeric()
                         ->decimalPlaces(2)
                         ->decimalSeparator('.')

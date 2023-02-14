@@ -5,11 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\SportEventResource\Pages;
 
 use App\Filament\Resources\SportEventResource;
-use App\Http\Controllers\Discord\RaceEventAddedNotification;
-use App\Models\User;
 use App\Services\OrisApiService;
-use Auth;
-use Filament\Facades\Filament;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action;
 use Filament\Pages\Actions;

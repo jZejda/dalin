@@ -26,6 +26,15 @@ return new class () extends Migration {
             $table->string('phone')->nullable();
             $table->string('gender', 3);
             $table->integer('si')->unsigned()->nullable();
+
+            $table->string('city')->nullable();
+            $table->string('street')->nullable();
+            $table->string('zip')->nullable();
+
+            $table->string('licence_ob', 3)->nullable();
+            $table->string('licence_lob', 3)->nullable();
+            $table->string('licence_mtbo', 3)->nullable();
+
             $table->timestamps();
         });
     }

@@ -12,19 +12,13 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('user_notify_settings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('title', 255);
-            $table->string('editorial', 255);
-            $table->string('img_url', 255)->nullable();
-            $table->longText('content')->nullable();
-            $table->tinyInteger('content_mode')->default(1);
-            $table->tinyInteger('private')->nullable();
+            $table->text('type');
+            $table->json('options')->nullable();
             $table->timestamps();
-
-            $table->index(['title']);
         });
     }
 
@@ -35,6 +29,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('user_notify_settings');
     }
 };

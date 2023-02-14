@@ -26,6 +26,6 @@ class AppServiceProvider extends ServiceProvider
     {
         // TODO remove after release product db mysql up 5.7
         // setting for older version db
-        Schema::defaultStringLength(191);
+        // Schema::defaultStringLength(191);
     }
 }

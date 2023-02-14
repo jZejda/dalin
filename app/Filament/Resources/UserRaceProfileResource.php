@@ -93,8 +93,8 @@ class UserRaceProfileResource extends Resource
                             Select::make('gender')
                                 ->label('Pohlaví')
                                 ->options([
-                                    'H' => 'Muži',
-                                    'D' => 'Ženy'
+                                    'H' => 'Muž',
+                                    'D' => 'Žena',
                                 ])
                                 ->required(),
 
@@ -105,10 +105,37 @@ class UserRaceProfileResource extends Resource
                                 ->label('Příjmení')
                                 ->required(), // TODO validation on regex ABM...
 
+                            TextInput::make('city')
+                                ->label('Město'),
+                            TextInput::make('street')
+                                ->label('Ulize číslo domu'),
+                            TextInput::make('zip')
+                                ->label('PSČ'),
+
+
                             TextInput::make('email')
                                 ->label('E-mail'),
                             TextInput::make('phone')
                                 ->label('Telefon'),
+
+                            Select::make('licence_ob')
+                                ->label('Licence OB')
+                                ->options(
+                                    self::getSportLicenceOptions()
+                                )
+                                ->default('-'),
+                            Select::make('licence_lob')
+                                ->label('Licence OB')
+                                ->options(
+                                    self::getSportLicenceOptions()
+                                )
+                                ->default('-'),
+                            Select::make('licence_mtbo')
+                                ->label('Licence OB')
+                                ->options(
+                                    self::getSportLicenceOptions()
+                                )
+                                ->default('-'),
                         ])
                         ->columns(2)
                         ->columnSpan([
@@ -207,6 +234,18 @@ class UserRaceProfileResource extends Resource
             'index' => Pages\ListUserRaceProfiles::route('/'),
             'create' => Pages\CreateUserRaceProfile::route('/create'),
             'edit' => Pages\EditUserRaceProfile::route('/{record}/edit'),
+        ];
+    }
+
+    private static function getSportLicenceOptions(): array{
+        return [
+            'E' => 'E',
+            'A' => 'A',
+            'B' => 'B',
+            'C' => 'C',
+            'D' => 'D',
+            'R' => 'R',
+            '-' => '-',
         ];
     }
 }

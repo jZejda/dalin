@@ -2,11 +2,8 @@
 
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
-use App\Models\SportClassDefinition;
-use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -39,7 +36,8 @@ class SportServicesRelationManager extends RelationManager
                 TextInput::make('unit_price')
                     ->label('Cena za jednotku')
                     ->required()
-                    ->mask(fn (TextInput\Mask $mask) => $mask
+                    ->mask(
+                        fn (TextInput\Mask $mask) => $mask
                         ->numeric()
                         ->decimalPlaces(2)
                         ->decimalSeparator('.')
@@ -51,7 +49,8 @@ class SportServicesRelationManager extends RelationManager
                     ),
                 TextInput::make('qty_available')
                     ->label('Volných')
-                    ->mask(fn (TextInput\Mask $mask) => $mask
+                    ->mask(
+                        fn (TextInput\Mask $mask) => $mask
                         ->numeric()
                         ->decimalPlaces(0)
                         ->integer()
@@ -60,7 +59,8 @@ class SportServicesRelationManager extends RelationManager
                     ),
                 TextInput::make('qty_already_ordered')
                     ->label('Již objednáno')
-                    ->mask(fn (TextInput\Mask $mask) => $mask
+                    ->mask(
+                        fn (TextInput\Mask $mask) => $mask
                         ->numeric()
                         ->decimalPlaces(0)
                         ->integer()

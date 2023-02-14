@@ -10,13 +10,18 @@ use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
 use App\Http\Controllers\Cron\OrisUpdateEntry;
+
 use App\Models\SportClassDefinition;
-use App\Services\OrisApiService;
+
+use App\Models\User;
 use Filament\Notifications\Notification;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 use Illuminate\Http\Client\Response;
+
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+
 
 class TestController extends Controller
 {
@@ -32,9 +37,43 @@ class TestController extends Controller
         $this->client = $client;
     }
 
-
-
     public function test(): bool
+    {
+
+        $recipient = auth()->user();
+
+        Notification::make()
+            ->title('Saved successfully')
+            ->sendToDatabase($recipient);
+
+        return true;
+
+        //$users = User::find(2)->first();
+
+        //dd($users->id);
+        //$sportEventsFirst = DB::table('sport_events')->where('id', '=', 1)->first();
+
+        //dd($sportEventsFirst);
+
+
+
+//        $users = User::where('id', '=', 1)->first();
+        //dd($users->id);
+
+
+//        Mail::to($users)
+//            ->queue(new AddUpdateSportEvent($users));
+
+
+//        dd($users->id);
+
+
+//        $email = new AddUpdateSportEvent();
+//        Mail::to([$users])->queue($email);
+    }
+
+
+    public function testEtest(): bool
     {
 
         Log::channel('site')->error('pokus');

@@ -2,9 +2,9 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,11 +13,13 @@ use Illuminate\Support\Facades\DB;
 
 class AddUpdateSportEvent extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;use SerializesModels;
 
-    public function __construct()
+    private User $user;
+
+    public function __construct(User $user)
     {
-        //
+        $this->user = $user;
     }
 
     public function envelope(): Envelope
@@ -34,7 +36,13 @@ class AddUpdateSportEvent extends Mailable
 //            ->whereBetween('entry_date_1', [Carbon::now()->addDay(), Carbon::now()->addDays(2)])
 //            ->get();
 
-        $sportEventsFirst = DB::table('sport_events')->get();
+        if ($this->user->id === 1) {
+            $sportEventsFirst = DB::table('sport_events')->where('id', '=', 1)->get();
+        } else {
+            $sportEventsFirst = DB::table('sport_events')->where('id', '=', 2)->get();
+        }
+
+        //$sportEventsFirst = DB::table('sport_events')->where('id')->get();
 
         return new Content(
             markdown: 'emails.event.addUpdateSportEvent',
