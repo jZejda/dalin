@@ -45,18 +45,11 @@
 
 .app-front-content a {
     @apply font-semibold text-gray-900 underline dark:text-white decoration-green-500;
-
-    .link {
-        @apply font-semibold;
-    }
 }
 
 .app-front-content figcaption {
     @apply mt-0;
 }
-
-
-
 
 .app-front-content img {
     max-width: 600px;

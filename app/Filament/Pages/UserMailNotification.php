@@ -127,8 +127,8 @@ class UserMailNotification extends Page implements HasForms, HasTable
                     CheckboxList::make('news')
                         ->label('Novinky')
                         ->options([
-                            'news_public' => 'Novinky veřejné',
-                            'news_private' => 'Novinky interní',
+                            '0' => 'Novinky veřejné',
+                            '1' => 'Novinky interní',
                         ]),
                     TextInput::make('news_time_trigger')
                         ->label('Přibližná hodina upozornění')

@@ -25,20 +25,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Post extends Model
 {
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
+    public const POST_PUBLIC = 0;
+    public const POST_PRIVATE = 1;
+
     protected $casts = [
         'private' => 'boolean',
     ];
 
-    /**
-     * Fillable fields.
-     *
-     * @var array<string>
-     **/
+    /* @var array<string> */
     protected $fillable = [
         'title',
         'content',
@@ -49,11 +43,6 @@ class Post extends Model
         'editorial',
     ];
 
-    /**
-     * Returns User object for single Post
-     *
-     * @return HasOne
-     */
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');

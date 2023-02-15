@@ -237,7 +237,7 @@ class UserRaceProfileResource extends Resource
         ];
     }
 
-    private static function getSportLicenceOptions(): array{
+    private static function getSportLicenceOptions(): array {
         return [
             'E' => 'E',
             'A' => 'A',

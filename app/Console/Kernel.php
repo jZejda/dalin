@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Jobs\SendAddUpdateSportEventEmailJob;
+use App\Jobs\SendNewPostsEmailJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,8 +17,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->job(new SendAddUpdateSportEventEmailJob())->dailyAt('7:00');
         $schedule->command('queue:work --stop-when-empty')->everyFiveMinutes();
+
+        // Mails
+        $schedule->job(new SendAddUpdateSportEventEmailJob())->dailyAt('7:00');
+        $schedule->job(new SendNewPostsEmailJob())->hourly();
     }
 
     /**
