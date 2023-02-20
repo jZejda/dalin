@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\SportClassDefinition
@@ -18,8 +19,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $age_to
  * @property string|null $gender
  * @property string $name
- * @property string|null $created_at
- * @property string|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  *
  * @property-read SportList $sport
  * @property-read string $class_definition_full_label

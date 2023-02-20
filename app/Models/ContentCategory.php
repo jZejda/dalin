@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\ContentCategory
@@ -14,8 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $title
  * @property string $description
  * @property string $slug
- * @property string|null $created_at
- * @property string|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  *
  * @property-read Page $page
  */

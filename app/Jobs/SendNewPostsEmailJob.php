@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Jobs;
 
 use App\Mail\NewPosts;
@@ -32,7 +34,6 @@ class SendNewPostsEmailJob implements ShouldQueue
         foreach ($mailNotifications as $mailNotification) {
             $user = User::where('user_id', '=', $mailNotification->user_id)->first();
             $options = $mailNotification->options['news'];
-
 
             Mail::to($user)
                 ->queue(new NewPosts($user, $options));
