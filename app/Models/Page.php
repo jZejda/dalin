@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Page
@@ -21,8 +22,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $weight
  * @property int|null $content_category_id
  * @property string $picture_attachment
- * @property string|null $created_at
- * @property string|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  *
  * @property-read User $user
  * @property-read ContentCategory $content_category

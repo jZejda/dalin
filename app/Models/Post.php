@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Post
@@ -18,8 +19,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property bool $private
  * @property int $user_id
  * @property int $content_mode
- * @property string|null $created_at
- * @property string|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
 
  * @property-read User $user
  */
