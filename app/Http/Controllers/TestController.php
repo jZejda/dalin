@@ -14,12 +14,10 @@ use App\Http\Controllers\Cron\OrisUpdateEntry;
 use App\Models\SportClassDefinition;
 
 use App\Models\User;
-use App\Models\UserNotifySetting;
 use Filament\Notifications\Notification;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 use Illuminate\Http\Client\Response;
 
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -41,14 +39,7 @@ class TestController extends Controller
     public function test(): bool
     {
 
-        $hour = Carbon::now()->format('H');
-        $mailNotification = UserNotifySetting::where('options->news_time_trigger', $hour)
-            ->get();
 
-        $mailNotification[0]->
-
-
-        dd($mailNotification);
 
         // toto funguje ----------
 //        $recipient = auth()->user();

@@ -1,15 +1,16 @@
 <x-mail::message>
 ## Byla zveřejněna novinka
 
-Nejake novinky asi.
+Něco nového na stránkách :-).
 
 
 @foreach ($postContent as $post)
-    ### {{ $post->title }}
+## {{ $post->title }}
 
-    {{ $post->content }}
+{{ $post->content }}
+
+***
 @endforeach
-
 
 Mějte se fajn a jezděte na závody - ABM
 

@@ -30,7 +30,9 @@ class UserMailNotification extends Page implements HasForms, HasTable
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.user-mail-notification';
     protected static ?string $slug = 'mail-notification';
-    protected static ?string $navigationGroup = 'Správa';
+    protected static ?string $navigationLabel = 'Nastavení notifikací';
+    protected static ?string $navigationGroup = 'Uživatel';
+    protected static ?string $title = 'Nastavení notifikací';
 
     private const DEFAULT_TRIGGER_EVENT = 17;
 
@@ -109,7 +111,7 @@ class UserMailNotification extends Page implements HasForms, HasTable
     protected function getActions(): array
     {
         return [
-            ButtonAction::make('settings')->action('openSettingsModal'),
+            // ButtonAction::make('settings')->action('openSettingsModal'),
         ];
     }
 

@@ -4,25 +4,22 @@ declare(strict_types=1);
 
 namespace App\Mail;
 
-use App\Models\Post;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 
 class NewPosts extends Mailable
 {
     use Queueable;use SerializesModels;
 
-    private User $user;
-    private array $options;
+    private Collection $postContent;
 
-    public function __construct(User $user, array $options)
+    public function __construct(Collection $postContent)
     {
-        $this->user = $user;
-        $this->options = $options;
+        $this->postContent = $postContent;
     }
 
     public function envelope(): Envelope
@@ -34,13 +31,11 @@ class NewPosts extends Mailable
 
     public function content(): Content
     {
-        $mailContent = Post::wherein('private', $this->options)->get();
-
         return new Content(
             markdown: 'emails.site.newPosts',
             with: [
                 'type' => 'private',
-                'postContent' => $mailContent
+                'postContent' => $this->postContent
             ]
         );
     }

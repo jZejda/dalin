@@ -10,7 +10,7 @@ body *:not(html):not(style):not(br):not(tr):not(code) {
 
 body {
     -webkit-text-size-adjust: none;
-    background-color: #ffffff;
+    background-color: #bae6fd;
     color: #718096;
     height: 100%;
     line-height: 1.4;
@@ -25,6 +25,7 @@ ol,
 blockquote {
     line-height: 1.4;
     text-align: left;
+    color: #334155;
 }
 
 a {
@@ -38,7 +39,7 @@ a img {
 /* Typography */
 
 h1 {
-    color: #3d4852;
+    color: #1e293b;
     font-size: 18px;
     font-weight: bold;
     margin-top: 0;
@@ -46,7 +47,7 @@ h1 {
 }
 
 h2 {
-    color: #3d4852;
+    color: #1e293b;
     font-size: 16px;
     font-weight: bold;
     margin-top: 0;
@@ -75,13 +76,20 @@ img {
     max-width: 100%;
 }
 
+hr {
+    color: #1e293b;
+    background-color: #ffffff;
+    height: 0px;
+}
+
+
 /* Layout */
 
 .wrapper {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #edf2f7;
+    background-color: #bae6fd;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -104,7 +112,7 @@ img {
 }
 
 .header a {
-    color: #3d4852;
+    color: #1e293b;
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
@@ -124,7 +132,7 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #edf2f7;
+    background-color: #bae6fd;
     border-bottom: 1px solid #edf2f7;
     border-top: 1px solid #edf2f7;
     margin: 0;
@@ -171,7 +179,7 @@ img {
 }
 
 .footer p {
-    color: #b0adc5;
+    color: #3b82f6;
     font-size: 12px;
     text-align: center;
 }
@@ -193,14 +201,16 @@ img {
 
 .table th {
     border-bottom: 1px solid #edeff2;
+    color: #334155;
+    font-size: 13px;
     margin: 0;
     padding-bottom: 8px;
 }
 
 .table td {
-    color: #74787e;
-    font-size: 14px;
-    line-height: 14px;
+    color: #334155;
+    font-size: 13px;
+    line-height: 13px;
     margin: 0;
     padding: 10px 0;
 }
