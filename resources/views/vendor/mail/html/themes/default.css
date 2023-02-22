@@ -48,14 +48,31 @@ h1 {
 
 h2 {
     color: #1e293b;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: bold;
     margin-top: 0;
     text-align: left;
 }
 
 h3 {
-    font-size: 14px;
+    color: #1e293b;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 0;
+    text-align: left;
+}
+
+h4 {
+    color: #1e293b;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 0;
+    text-align: left;
+}
+
+h5 {
+    color: #1e293b;
+    font-size: 15px;
     font-weight: bold;
     margin-top: 0;
     text-align: left;

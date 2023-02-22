@@ -32,7 +32,7 @@ class SendNewPostsEmailJob implements ShouldQueue
                 $options = $mailNotification->options['news'];
 
                 $mailContent = Post::wherein('private', $options)
-                    ->where('created_at', '>', Carbon::now()->subDay())
+                    ->where('created_at', '>', Carbon::now()->subDays(2))
                     ->get();
 
                 if ($mailContent->isNotEmpty()) {

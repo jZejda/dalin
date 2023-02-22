@@ -11,13 +11,19 @@ use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
 use App\Http\Controllers\Cron\OrisUpdateEntry;
 
+use App\Mail\EventEntryEnds;
+use App\Mail\NewPosts;
+use App\Models\Post;
 use App\Models\SportClassDefinition;
 
+use App\Models\SportEvent;
 use App\Models\User;
+use App\Models\UserNotifySetting;
 use Filament\Notifications\Notification;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 use Illuminate\Http\Client\Response;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -39,6 +45,29 @@ class TestController extends Controller
     public function test(): bool
     {
 
+        $hour = Carbon::now()->format('H');
+        $mailNotifications = UserNotifySetting::where('options->sport_time_trigger', $hour)->get();
+
+        if ($mailNotifications->isNotEmpty()) {
+            /** @var UserNotifySetting $mailNotification */
+            foreach ($mailNotifications as $mailNotification) {
+                $user = User::where('id', '=', $mailNotification->user_id)->first();
+                $options = $mailNotification->options['sport'];
+                $daysBefore = $mailNotification->options['days_before_event_entry_ends'];
+
+                $mailContent = SportEvent::wherein('sport_id', $options)
+                    ->where('entry_date_1', '>', Carbon::now()->addDays($daysBefore))
+                    ->where('entry_date_1', '<', Carbon::now()->addDays($daysBefore + 1))
+                    ->get();
+
+                dd($mailContent);
+
+                if ($mailContent->isNotEmpty()) {
+                    Mail::to($user)
+                        ->queue(new EventEntryEnds($mailContent, $daysBefore));
+                }
+            }
+        }
 
 
         // toto funguje ----------
