@@ -14,6 +14,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class SendNewPostsEmailJob implements ShouldQueue
@@ -23,6 +24,9 @@ class SendNewPostsEmailJob implements ShouldQueue
     public function handle(): void
     {
         $hour = Carbon::now()->format('H');
+
+        Log::channel('site')->info(sprintf('E-mail notifikace New Post v %d hodin', $hour));
+
         $mailNotifications = UserNotifySetting::where('options->news_time_trigger', $hour)->get();
 
         if ($mailNotifications->isNotEmpty()) {

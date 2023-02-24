@@ -14,6 +14,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class SendSportEventEntryEndingEmailJob implements ShouldQueue
@@ -22,7 +23,12 @@ class SendSportEventEntryEndingEmailJob implements ShouldQueue
 
     public function handle(): void
     {
+
+
         $hour = Carbon::now()->format('H');
+
+        Log::channel('site')->info(sprintf('E-mail notifikace SportEvent v %d hodin', count($hour)));
+
         $mailNotifications = UserNotifySetting::where('options->sport_time_trigger', $hour)->get();
 
         if ($mailNotifications->isNotEmpty()) {

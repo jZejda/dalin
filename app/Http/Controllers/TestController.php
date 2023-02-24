@@ -48,7 +48,13 @@ class TestController extends Controller
         $hour = Carbon::now()->format('H');
         $mailNotifications = UserNotifySetting::where('options->sport_time_trigger', $hour)->get();
 
+
+
+
         if ($mailNotifications->isNotEmpty()) {
+
+            Log::channel('site')->info(sprintf('E-mail notifikace pro %d', count($mailNotifications)));
+
             /** @var UserNotifySetting $mailNotification */
             foreach ($mailNotifications as $mailNotification) {
                 $user = User::where('id', '=', $mailNotification->user_id)->first();

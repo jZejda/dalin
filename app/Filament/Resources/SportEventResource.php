@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Models\Post;
 use Closure;
 use App\Filament\Resources\SportEventResource\Pages;
 use App\Filament\Resources\SportEventResource\RelationManagers\SportClassesRelationManager;
@@ -302,6 +303,11 @@ class SportEventResource extends Resource
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make()
                         ->visible(auth()->user()->hasRole(['super_admin', 'event_master'])),
+                    Tables\Actions\Action::make('registr_entry')
+                        ->icon('heroicon-o-calendar')
+                        ->label('Přihlásit na závod.')
+                        ->url(fn (SportEvent $record): string => route('filament.resources.sport-events.entry', $record))
+                        ->openUrlInNewTab()
                 ])
             ])
             ->bulkActions([
@@ -324,6 +330,7 @@ class SportEventResource extends Resource
             'create' => Pages\CreateSportEvent::route('/create'),
             'edit' => Pages\EditSportEvent::route('/{record}/edit'),
             'view' => Pages\ViewSportEvent::route('/{record}'),
+            'entry' => Pages\EventEntry::route('/{record}/entry'),
         ];
     }
 
@@ -345,6 +352,11 @@ class SportEventResource extends Resource
             'Název' => $record->name,
             'Místo' => $record->place,
         ];
+    }
+
+    protected function getTableRecordUrlUsing(): ?Closure
+    {
+        return fn (Model $record): string => route('filament.resources.sport-events.entry', ['record' => $record]);
     }
 
 }
