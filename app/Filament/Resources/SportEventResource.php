@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Models\Post;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Closure;
 use App\Filament\Resources\SportEventResource\Pages;
 use App\Filament\Resources\SportEventResource\RelationManagers\SportClassesRelationManager;
@@ -38,7 +39,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
 
-class SportEventResource extends Resource
+class SportEventResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = SportEvent::class;
 
@@ -330,7 +331,7 @@ class SportEventResource extends Resource
             'create' => Pages\CreateSportEvent::route('/create'),
             'edit' => Pages\EditSportEvent::route('/{record}/edit'),
             'view' => Pages\ViewSportEvent::route('/{record}'),
-            'entry' => Pages\EventEntry::route('/{record}/entry'),
+            'entry' => Pages\EntrySportEvent::route('/{record}/entry'),
         ];
     }
 
@@ -359,4 +360,22 @@ class SportEventResource extends Resource
         return fn (Model $record): string => route('filament.resources.sport-events.entry', ['record' => $record]);
     }
 
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'restore',
+            'restore_any',
+            'replicate',
+            'reorder',
+            'delete',
+            'delete_any',
+            'force_delete',
+            'force_delete_any',
+            'entry'
+        ];
+    }
 }

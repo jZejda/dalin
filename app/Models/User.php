@@ -33,6 +33,9 @@ class User extends Authenticatable
     use HasRoles;
 
     public const ROLE_SUPER_ADMIN = 'super_admin';
+    public const ROLE_EVENT_MASTER = 'event_master';
+    public const ROLE_MEMBER = 'member';
+    public const ROLE_REDACTOR = 'redactor';
 
     /** @var array<int, string> */
     protected $fillable = [

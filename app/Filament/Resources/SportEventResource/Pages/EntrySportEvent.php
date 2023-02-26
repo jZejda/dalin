@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEventResource\Pages;
 
+use App\Models\User;
+use BezhanSalleh\FilamentShield\Support\Utils;
 use Closure;
 use App\Filament\Resources\SportEventResource;
 use App\Models\UserRaceProfile;
@@ -19,9 +21,10 @@ use Filament\Resources\Pages\Page;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
-class EventEntry extends Page implements HasForms, HasTable
+class EntrySportEvent extends Page implements HasForms, HasTable
 {
     use HasPageShield;
 
@@ -38,16 +41,31 @@ class EventEntry extends Page implements HasForms, HasTable
 
     public string $cancel_button_url = 'cancel-link';
 
+    public function booted()
+    {
+        $this->beforeBooted();
+
+        // @todo refactor check Filament::user ability.
+        if (!Auth::user()->hasRole(User::ROLE_MEMBER . '|' . User::ROLE_EVENT_MASTER . '|' . User::ROLE_SUPER_ADMIN) ) {
+            $this->notify('warning', __('filament-shield::filament-shield.forbidden'));
+
+            $this->beforeShieldRedirects();
+
+            redirect($this->getShieldRedirectPath());
+
+            return;
+        }
+
+        if (method_exists(parent::class, 'booted')) {
+            parent::booted();
+        }
+
+        $this->afterBooted();
+    }
+
     public function mount($record): void
     {
         $this->record = $this->resolveRecord($record);
-        $this->authorizeAccess();
-    }
-
-    protected function authorizeAccess(): void
-    {
-        static::authorizeResourceAccess();
-        abort_unless(static::getResource()::canEdit($this->getRecord()), 403);
     }
 
     protected array $rules = [
