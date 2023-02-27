@@ -8,9 +8,6 @@ use App\Models\UserRaceProfile;
 use Closure;
 use Filament\Facades\Filament;
 use Filament\Forms;
-use Filament\Forms\Components\Card;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
@@ -38,7 +35,7 @@ class UserRaceProfileResource extends Resource
         if (Auth::user()->hasRole('super_admin')) {
             return UserRaceProfile::query();
         } else {
-            return UserRaceProfile::query()->where('user_id', '=',  Auth::user()->id);
+            return UserRaceProfile::query()->where('user_id', '=', Auth::user()->id);
         }
     }
 

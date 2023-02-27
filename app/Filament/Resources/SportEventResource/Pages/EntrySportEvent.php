@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEventResource\Pages;
 
+use App\Http\Components\Oris\CreateEntry;
+use App\Http\Components\Oris\GuzzleClient;
+use App\Models\SportClass;
 use App\Models\User;
-use BezhanSalleh\FilamentShield\Support\Utils;
+use App\Services\OrisApiService;
 use Closure;
 use App\Filament\Resources\SportEventResource;
 use App\Models\UserRaceProfile;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
+use Filament\Pages\Actions\Action as ModalAction;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -32,21 +36,19 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     use InteractsWithTable;
     use InteractsWithRecord;
 
+
     protected static string $resource = SportEventResource::class;
     protected static string $view = 'filament.resources.sport-event-resource.pages.event-entry';
 
+    public string $back_button_url = '/admin/sport-events';
 
-    public string $sportEventId = '';
-    public string $orisClassId = '';
-
-    public string $cancel_button_url = 'cancel-link';
 
     public function booted()
     {
         $this->beforeBooted();
 
         // @todo refactor check Filament::user ability.
-        if (!Auth::user()->hasRole(User::ROLE_MEMBER . '|' . User::ROLE_EVENT_MASTER . '|' . User::ROLE_SUPER_ADMIN) ) {
+        if (!Auth::user()->hasRole(User::ROLE_MEMBER . '|' . User::ROLE_EVENT_MASTER . '|' . User::ROLE_SUPER_ADMIN)) {
             $this->notify('warning', __('filament-shield::filament-shield.forbidden'));
 
             $this->beforeShieldRedirects();
@@ -72,13 +74,64 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         'oris_class_id' => 'required|min:3',
     ];
 
-    protected function getFormSchema(): array
+
+    protected function getActions(): array
     {
         return [
-            Section::make('Zvolte závodní profil a vyberte vhodnou kategorii')
-                ->columns(1)
-                ->schema([
-                    Select::make('sportEventId')
+            $this->getOrisEvent(),
+        ];
+    }
+
+    private function getOrisEvent(): ModalAction
+    {
+        return ModalAction::make('createEventEntry')
+            ->action(function (array $data): void {
+
+                $params = [
+                    'clubuser' => $data['raceProfileId'],
+                    'class' => $data['orisClassId'],
+                ];
+
+                $guzzleClient = new GuzzleClient();
+                $clientResponse = $guzzleClient->create()->request('POST', 'API', $guzzleClient->generateMultipartForm(GuzzleClient::METHOD_CREATE_ENTRY, $params));
+
+                $response = new CreateEntry();
+                $orisResponse = $response->data($clientResponse->getBody()->getContents());
+
+//                dd($orisResponse);
+//                +Method: "createEntry"
+//                +Format: "json"
+//                +Status: "OK"
+//                +ExportCreated: "2023-02-28 00:22:55"
+//                +data: null
+
+
+                //dd($orisResponse->getStatus() === 'OK'); funguje cekni jestli jsi dostal OK
+                //dd($orisResponse->getData()?->getEntry()->getID()); //funguje ID prihlasky
+                //dd($orisResponse->getExportCreated()); //cas prihlasky taky uloz
+
+
+                if (true) {
+
+                    $userData = UserRaceProfile::where('oris_id', '=', $data['raceProfileId'])->first();
+                    $orisCategory = SportClass::where('oris_id', '=', $data['orisClassId'])->first();
+
+                    Notification::make()
+                        ->title('Přihláška  ' . $userData?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $orisCategory?->classDefinition->name ?? 'N/A')
+                        ->body('Prihlášku si zkontroluj na stránkách závodu.')
+                        ->success()
+                        ->seconds(8)
+                        ->send();
+                }
+            })
+            ->color('secondary')
+            ->label('Přihlásit na závod')
+            ->icon('heroicon-o-plus-circle')
+            ->modalHeading('Přihlášení na závod')
+            ->modalSubheading('Vyber závodní profil, vyhledej vhodné kategorie a přihlas se.')
+            ->modalButton('Přihlásit')
+            ->form([
+                    Select::make('raceProfileId')
                         ->label('Vyber zavod/udalost')
                         ->options(UserRaceProfile::all()->pluck('user_race_full_name', 'oris_id'))
                         ->searchable()
@@ -89,6 +142,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                             Action::make('search_oris_category_by_oris_id')
                                 ->icon('heroicon-o-search')
                                 ->action(function () use ($state, $set) {
+
                                     if (blank($state))
                                     {
                                         Filament::notify('danger', 'Zvol závodní profil.');
@@ -102,7 +156,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                                 'format' => 'json',
                                                 'method' => 'getValidClasses',
                                                 'clubuser' => $state,
-                                                'comp' => '7721',
+                                                'comp' => $this->record->oris_id,
                                             ]
                                         )
                                             ->throw()
@@ -135,8 +189,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         })
                         ->searchable()
                         ->required()
-                ]),
-        ];
+            ]);
     }
-
 }

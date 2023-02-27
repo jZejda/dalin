@@ -12,15 +12,15 @@ class CreateEntry
     public string $Format;
     public string $Status;
     public string $ExportCreated; //YMD HIS
-    public ?Data $data;
+    public ?Data $Data;
 
-    public function __construct(string $Method, string $Format, string $Status, string $ExportCreated, ?Data $data)
+    public function __construct(string $Method, string $Format, string $Status, string $ExportCreated, ?Data $Data)
     {
         $this->Method = $Method;
         $this->Format = $Format;
         $this->Status = $Status;
         $this->ExportCreated = $ExportCreated;
-        $this->data = $data;
+        $this->Data = $Data;
     }
 
     public function getMethod(): string
@@ -45,6 +45,6 @@ class CreateEntry
 
     public function getData(): ?Data
     {
-        return $this->data;
+        return $this->Data;
     }
 }

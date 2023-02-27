@@ -51,8 +51,8 @@
                 Načti ORIS
             </x-filament::button>
 
-            <x-filament::button type="button" color="secondary" tag="a" :href="$this->cancel_button_url">
-                Cancel
+            <x-filament::button type="button" color="secondary" tag="a" :href="$this->back_button_url">
+                Zpět
             </x-filament::button>
         </div>
     </form>

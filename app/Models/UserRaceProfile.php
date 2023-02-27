@@ -78,7 +78,7 @@ class UserRaceProfile extends Model
 
     public function getUserRaceFullNameAttribute(): string
     {
-        return "{$this->first_name} {$this->last_name}";
+        return "{$this->reg_number} - {$this->first_name} {$this->last_name}";
     }
 
 }

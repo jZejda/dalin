@@ -12,8 +12,6 @@ use App\Http\Components\Oris\Response\Entity\Services;
 use App\Http\Controllers\Cron\OrisUpdateEntry;
 
 use App\Mail\EventEntryEnds;
-use App\Mail\NewPosts;
-use App\Models\Post;
 use App\Models\SportClassDefinition;
 
 use App\Models\SportEvent;
@@ -191,7 +189,7 @@ class TestController extends Controller
         $clientResponse = $client->request('POST', 'API', $this->client->generateMultipartForm(GuzzleClient::METHOD_DELETE_ENTRY, $params));
 
 
-        //dd($clientResponse->getBody()->getContents());
+        dd($clientResponse->getBody()->getContents());
 
         $response = new CreateEntry();
         $orisResponse = $response->data($clientResponse->getBody()->getContents());

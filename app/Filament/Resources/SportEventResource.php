@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
-use App\Models\Post;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Closure;
 use App\Filament\Resources\SportEventResource\Pages;
@@ -305,7 +304,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     Tables\Actions\EditAction::make()
                         ->visible(auth()->user()->hasRole(['super_admin', 'event_master'])),
                     Tables\Actions\Action::make('registr_entry')
-                        ->icon('heroicon-o-calendar')
+                        ->icon('heroicon-o-ticket')
                         ->label('Přihlásit na závod.')
                         ->url(fn (SportEvent $record): string => route('filament.resources.sport-events.entry', $record))
                         ->openUrlInNewTab()

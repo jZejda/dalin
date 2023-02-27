@@ -6,15 +6,15 @@ namespace App\Http\Components\Oris\Response\Entity\EntryData;
 
 class Data
 {
-    public Entry $entry;
+    public Entry $Entry;
 
-    public function __construct(Entry $entry)
+    public function __construct(Entry $Entry)
     {
-        $this->entry = $entry;
+        $this->Entry = $Entry;
     }
 
     public function getEntry(): Entry
     {
-        return $this->entry;
+        return $this->Entry;
     }
 }
