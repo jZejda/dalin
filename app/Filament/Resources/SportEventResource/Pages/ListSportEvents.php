@@ -20,6 +20,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Actions;
 use Filament\Pages\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 
@@ -34,6 +35,11 @@ class ListSportEvents extends ListRecords
             $this->getOrisEvent(),
             $this->getNotifiAction()->tooltip('Umožní poslat ručně notifikaci na vybraný kanál.'),
         ];
+    }
+
+    protected function getTableRecordUrlUsing(): ?Closure
+    {
+        return fn (Model $record): string => route('filament.resources.sport-events.entry', ['record' => $record]);
     }
 
     public function openSettingsModal(): void

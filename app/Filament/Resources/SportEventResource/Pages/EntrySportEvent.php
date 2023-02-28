@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEventResource\Pages;
 
+use App\Enums\EntryStatus;
 use App\Http\Components\Oris\CreateEntry;
 use App\Http\Components\Oris\GuzzleClient;
 use App\Models\SportClass;
 use App\Models\User;
-use App\Services\OrisApiService;
+use App\Models\UserEntry;
 use Closure;
 use App\Filament\Resources\SportEventResource;
 use App\Models\UserRaceProfile;
@@ -25,6 +26,8 @@ use Filament\Resources\Pages\Page;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
@@ -111,13 +114,26 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 //dd($orisResponse->getExportCreated()); //cas prihlasky taky uloz
 
 
-                if (true) {
+                if ($orisResponse->getStatus() === 'OK') {
 
-                    $userData = UserRaceProfile::where('oris_id', '=', $data['raceProfileId'])->first();
-                    $orisCategory = SportClass::where('oris_id', '=', $data['orisClassId'])->first();
+                    $userProfileData = UserRaceProfile::where('oris_id', '=', $data['raceProfileId'])->first();
+                    $category = SportClass::where('oris_id', '=', $data['orisClassId'])->first();
+
+                    $entry = new UserEntry();
+                    $entry->oris_entry_id = $orisResponse->getData()?->getEntry()->getID();
+                    $entry->sport_event_id = $this->record->id;
+                    $entry->user_race_profile_id = $userProfileData->id;
+                    $entry->class_definition_id = $category->id;
+                    $entry->note = null;
+                    $entry->club_note = null;
+                    $entry->requested_start = null;
+                    $entry->stage_x = null;
+                    $entry->entry_created = Carbon::now()->toDateTimeString();;
+                    $entry->entry_status = EntryStatus::Created;
+                    $entry->saveOrFail();
 
                     Notification::make()
-                        ->title('Přihláška  ' . $userData?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $orisCategory?->classDefinition->name ?? 'N/A')
+                        ->title('Přihláška  ' . $userProfileData?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $category?->classDefinition->name ?? 'N/A')
                         ->body('Prihlášku si zkontroluj na stránkách závodu.')
                         ->success()
                         ->seconds(8)
@@ -131,64 +147,81 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             ->modalSubheading('Vyber závodní profil, vyhledej vhodné kategorie a přihlas se.')
             ->modalButton('Přihlásit')
             ->form([
-                    Select::make('raceProfileId')
-                        ->label('Vyber zavod/udalost')
-                        ->options(UserRaceProfile::all()->pluck('user_race_full_name', 'oris_id'))
-                        ->searchable()
-                        ->required()
-                        ->reactive()
-                        ->suffixAction(
-                            fn ($state, Closure $set) =>
-                            Action::make('search_oris_category_by_oris_id')
-                                ->icon('heroicon-o-search')
-                                ->action(function () use ($state, $set) {
+                Select::make('raceProfileId')
+                    ->label('Vyber zavod/udalost')
+                    ->options($this->getUserRaceProfiles())
+                    ->disablePlaceholderSelection()
+                    ->searchable()
+//                    ->default(52722)
+                    ->required()
+                    ->reactive()
+                    ->suffixAction(
+                        fn ($state, Closure $set) =>
+                        Action::make('search_oris_category_by_oris_id')
+                            ->icon('heroicon-o-search')
+                            ->action(function () use ($state, $set) {
 
-                                    if (blank($state))
-                                    {
-                                        Filament::notify('danger', 'Zvol závodní profil.');
-                                        return;
-                                    }
+                                if (blank($state))
+                                {
+                                    Filament::notify('danger', 'Zvol závodní profil.');
+                                    return;
+                                }
 
-                                    try {
-                                        $orisResponse = Http::get(
-                                            'https://oris.orientacnisporty.cz/API',
-                                            [
-                                                'format' => 'json',
-                                                'method' => 'getValidClasses',
-                                                'clubuser' => $state,
-                                                'comp' => $this->record->oris_id,
-                                            ]
-                                        )
-                                            ->throw()
-                                            ->json('Data');
+                                try {
+                                    $orisResponse = Http::get(
+                                        'https://oris.orientacnisporty.cz/API',
+                                        [
+                                            'format' => 'json',
+                                            'method' => 'getValidClasses',
+                                            'clubuser' => $state,
+                                            'comp' => $this->record->oris_id,
+                                        ]
+                                    )
+                                        ->throw()
+                                        ->json('Data');
 
 
-                                        // TODO pokud je to null tak hlaska nemuzet se prihlasit :-)
-                                        //dd($orisResponse);
+                                    // TODO pokud je to null tak hlaska nemuzet se prihlasit :-)
+                                    //dd($orisResponse);
 
-                                        $selectData = [];
-                                        if (count($orisResponse) > 0) {
-                                            foreach ($orisResponse as $class) {
-                                                $selectData[$class['ID']] = $class['ClassDesc'];
-                                            }
+                                    $selectData = [];
+                                    if (count($orisResponse) > 0) {
+                                        foreach ($orisResponse as $class) {
+                                            $selectData[$class['ID']] = $class['ClassDesc'];
                                         }
-
-                                    } catch (RequestException $e) {
-                                        Filament::notify('danger', 'Nepodařilo se načíst data.');
-                                        return;
                                     }
-                                    Filament::notify('success', 'ORIS v pořádku vrátil požadovaná data.');
 
-                                    $set('oris_response_class_id', $selectData ?? []);
-                                })
-                        ),
-                    Select::make('orisClassId')
-                        ->label('Vyber kategorii orisu')
-                        ->options(function (callable $get) {
-                            return $get('oris_response_class_id');
-                        })
-                        ->searchable()
-                        ->required()
+                                } catch (RequestException $e) {
+                                    Filament::notify('danger', 'Nepodařilo se načíst data.');
+                                    return;
+                                }
+                                Filament::notify('success', 'ORIS v pořádku vrátil požadovaná data.');
+
+                                $set('oris_response_class_id', $selectData ?? []);
+                            })
+                    ),
+                Select::make('orisClassId')
+                    ->label('Vyber kategorii orisu')
+                    ->options(function (callable $get) {
+                        return $get('oris_response_class_id');
+                    })
+                    ->searchable()
+                    ->required()
             ]);
+    }
+
+    public function getUserRaceProfiles(): Collection
+    {
+
+        /*
+            54 => "ABM7805 - Jiří Zejda"
+            52722 => "ABM1602 - David Zejda"
+            dotaz na csechny profily, pak sestav pole z tech ktere nejsu prihlaseny
+         */
+        return UserRaceProfile::all()
+            ->where('user_id', '=', auth()->user()->id)
+            ->pluck('user_race_full_name', 'oris_id');
+
+
     }
 }

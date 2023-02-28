@@ -354,11 +354,6 @@ class SportEventResource extends Resource implements HasShieldPermissions
         ];
     }
 
-    protected function getTableRecordUrlUsing(): ?Closure
-    {
-        return fn (Model $record): string => route('filament.resources.sport-events.entry', ['record' => $record]);
-    }
-
     public static function getPermissionPrefixes(): array
     {
         return [
