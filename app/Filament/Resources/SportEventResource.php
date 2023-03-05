@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\SportEventResource\RelationManagers\UserEntryRelationManager;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Closure;
 use App\Filament\Resources\SportEventResource\Pages;
@@ -318,6 +319,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
     public static function getRelations(): array
     {
         return [
+            UserEntryRelationManager::class,
             SportClassesRelationManager::class,
             SportServicesRelationManager::class,
         ];
