@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\EntryStatus;
-use App\Http\Components\Oris\Response\Entity\ClassDefinition;
+use App\Models\SportClassDefinition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -30,7 +30,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  *
  * @property-read SportEvent $sportEvent
- * @property-read ClassDefinition $classDefinition
+ * @property-read SportClassDefinition $sportClassDefinition
  * @property-read UserRaceProfile $userRaceProfile
  */
 class UserEntry extends Model
@@ -62,9 +62,9 @@ class UserEntry extends Model
         return $this->hasOne(SportEvent::class, 'id', 'sport_event_id');
     }
 
-    public function classDefinition(): HasOne
+    public function sportClassDefinition(): HasOne
     {
-        return $this->hasOne(ClassDefinition::class, 'id', 'class_definition_id');
+        return $this->hasOne(SportClassDefinition::class, 'id', 'class_definition_id');
     }
 
     public function userRaceProfile(): HasOne

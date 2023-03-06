@@ -23,8 +23,11 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action as ModalAction;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -38,7 +41,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     use InteractsWithForms;
     use InteractsWithTable;
     use InteractsWithRecord;
-
 
     protected static string $resource = SportEventResource::class;
     protected static string $view = 'filament.resources.sport-event-resource.pages.event-entry';
@@ -82,6 +84,54 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     {
         return [
             $this->getOrisEvent(),
+        ];
+    }
+
+
+    protected function getTableQuery(): Builder
+    {
+        return UserEntry::where('sport_event_id', '=', $this->record->id);
+    }
+
+    protected function getTableColumns(): array
+    {
+        return [
+            TextColumn::make('sportClassDefinition.name')
+                ->label('Kategorie')
+                ->searchable()
+                ->sortable(),
+            BadgeColumn::make('userRaceProfile.UserRaceFullName')
+                ->label('Registrace')
+                ->color(static function ($state): string {
+                    if ($state === 'published') {
+                        return 'success';
+                    }
+                    return 'secondary';
+                    }),
+            BadgeColumn::make('userRaceProfile.user.name')
+                ->label('Uživatel')
+                ->color(static function ($state): string {
+                    if ($state === \auth()->user()->name) {
+                        return 'success';
+                    }
+                    return 'secondary';
+                })
+                ->searchable(),
+            TextColumn::make('sportEvent.date')
+                ->label('Start')
+                ->dateTime('d. m. Y - H:i')
+                ->searchable()
+                ->sortable(),
+            TextColumn::make('note')
+                ->label('Poznámka'),
+            TextColumn::make('club_note')
+                ->label('Klubová poznámka'),
+            TextColumn::make('requested_start')
+                ->label('Start v'),
+            TextColumn::make('rent_si')
+                ->label('Půjčit čip'),
+            TextColumn::make('stage_x')
+                ->label('Etapa'),
         ];
     }
 

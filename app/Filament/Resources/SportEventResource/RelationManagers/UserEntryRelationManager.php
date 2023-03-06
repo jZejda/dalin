@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
+use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Columns\TextColumn;
 
 class UserEntryRelationManager extends RelationManager
 {
@@ -32,17 +32,31 @@ class UserEntryRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('UserEntryName'),
+                TextColumn::make('sportClassDefinition.name')
+                    ->label('Kategorie')
+                    ->searchable(),
+                TextColumn::make('userRaceProfile.UserRaceFullName')
+                    ->label('Závodní profil'),
+                TextColumn::make('note')
+                    ->label('Poznámka'),
+                TextColumn::make('club_note')
+                    ->label('Klubová poznámka'),
+                TextColumn::make('requested_start')
+                    ->label('Start v'),
+                TextColumn::make('rent_si')
+                    ->label('Půjčit čip'),
+                TextColumn::make('stage_x')
+                    ->label('Etapa'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                // Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\EditAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

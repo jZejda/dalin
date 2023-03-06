@@ -57,4 +57,8 @@
         </div>
     </form>
 
+    <div>
+        {{ $this->table }}
+    </div>
+
 </x-filament::page>
