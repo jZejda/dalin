@@ -25,6 +25,7 @@ use Illuminate\Support\Carbon;
  * @property bool $rent_si
  * @property int $stage_x
  * @property Carbon|null $entry_created
+ * @property EntryStatus $entry_status
  *
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at

@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEventResource\Pages;
 
+use App\Http\Components\Oris\ManageEntry;
+use App\Models\SportEvent;
+use App\Shared\Helpers\EmptyType;
+use Closure;
 use App\Enums\EntryStatus;
-use App\Http\Components\Oris\CreateEntry;
 use App\Http\Components\Oris\GuzzleClient;
 use App\Models\SportClass;
 use App\Models\User;
 use App\Models\UserEntry;
-use Closure;
 use App\Filament\Resources\SportEventResource;
 use App\Models\UserRaceProfile;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Tables\Actions\Action as TableAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -33,6 +36,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use phpDocumentor\Reflection\Types\Integer;
+use Filament\Notifications\Actions\Action as NotificationAction;
 
 class EntrySportEvent extends Page implements HasForms, HasTable
 {
@@ -46,7 +51,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     protected static string $view = 'filament.resources.sport-event-resource.pages.event-entry';
 
     public string $back_button_url = '/admin/sport-events';
-
 
     public function booted()
     {
@@ -79,14 +83,12 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         'oris_class_id' => 'required|min:3',
     ];
 
-
     protected function getActions(): array
     {
         return [
             $this->getOrisEvent(),
         ];
     }
-
 
     protected function getTableQuery(): Builder
     {
@@ -132,6 +134,90 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->label('Půjčit čip'),
             TextColumn::make('stage_x')
                 ->label('Etapa'),
+            BadgeColumn::make('entry_status')
+                ->enum([
+                    'deleted' => 'Smazáno',
+                    'created' => 'Vytvořeno',
+                ])
+                ->colors([
+                    'success' => 'created',
+                    'danger' => 'deleted',
+                ])
+                ->searchable(),
+        ];
+    }
+
+    protected function getTableActions(): array
+    {
+        return [
+//            DeleteAction::make()
+//                    ->before(function (DeleteAction $action) {
+//                        if (true) {
+//
+//                            $action->halt();
+//                        }
+//                    })
+//                ->color('primary')
+//                ->modalHeading(fn (UserEntry $record): string => (string)$record->id),
+
+            TableAction::make('delete_user_entry')
+                ->hidden(fn (UserEntry $record): bool => $this->hideDeleteAction($record))
+                ->action(function (UserEntry $record): void {
+
+                    $deletedRaceProfile = $record->userRaceProfile->user_race_full_name;
+                    $eventOrisId = $record->sportEvent->oris_id;
+
+                    /* @description  Delete from Oris Entry */
+                    if (EmptyType::intNotEmpty($record->oris_entry_id)) {
+                        $params = [
+                            'entryid' => $record->oris_entry_id,
+                        ];
+
+                        $guzzleClient = new GuzzleClient();
+                        $clientResponse = $guzzleClient->create()->request('POST', 'API', $guzzleClient->generateMultipartForm(GuzzleClient::METHOD_DELETE_ENTRY, $params));
+
+                        $response = new ManageEntry();
+                        $orisResponse = $response->data($clientResponse->getBody()->getContents());
+
+
+//                    +Method: "deleteEntry"
+//                    +Format: "json"
+//                    +Status: "OK"
+//                    +ExportCreated: "2023-03-08 23:31:58"
+//                    +Data: null
+
+                        if ($orisResponse->getStatus() === 'OK') {
+
+                            $record->entry_status = EntryStatus::Deleted;
+                            $record->saveOrFail();
+
+                            Notification::make()
+                                ->title('Úspěšně jsme odhlásili ' . $deletedRaceProfile . 'ze závodu')
+                                ->body('Odhlášku doporučujeme zkontrolovat na ORISu.')
+                                ->actions([
+                                    NotificationAction::make('view')
+                                        ->button()
+                                        ->openUrlInNewTab()
+                                        ->url('https://oris.orientacnisporty.cz/Zavod?id=' . $eventOrisId),
+                                    NotificationAction::make('undo')
+                                        ->button()
+                                        ->color('secondary'),
+                                ])
+                                ->send();
+                        }
+                    }
+
+
+                })
+                ->color('danger')
+                ->label('Odhlásit')
+                ->icon('heroicon-o-trash')
+                //->modalHidden(fn (UserEntry $record): bool => $record->userRaceProfile->user() === auth()->user())
+
+                ->modalHeading(fn (UserEntry $record): string => $record->userRaceProfile->user_race_full_name . ' - odhlášení ze závodu')
+                ->modalContent(view('filament.modals.user-cancel-entry'))
+                ->modalSubheading('Odhlšení proběhne pokud.')
+                ->modalButton('Odhlásit'),
         ];
     }
 
@@ -148,7 +234,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 $guzzleClient = new GuzzleClient();
                 $clientResponse = $guzzleClient->create()->request('POST', 'API', $guzzleClient->generateMultipartForm(GuzzleClient::METHOD_CREATE_ENTRY, $params));
 
-                $response = new CreateEntry();
+                $response = new ManageEntry();
                 $orisResponse = $response->data($clientResponse->getBody()->getContents());
 
 //                dd($orisResponse);
@@ -262,7 +348,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
     public function getUserRaceProfiles(): Collection
     {
-
         /*
             54 => "ABM7805 - Jiří Zejda"
             52722 => "ABM1602 - David Zejda"
@@ -273,5 +358,28 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             ->pluck('user_race_full_name', 'oris_id');
 
 
+    }
+
+    /**
+     * @description Show/Hide delete table Action
+     */
+    private function hideDeleteAction(UserEntry $userEntry): bool
+    {
+        /** @var SportEvent $sportEvent */
+        $sportEvent = $this->record;
+
+        if ($userEntry->entry_status === EntryStatus::Deleted) {
+            return true;
+        }
+
+        if ($userEntry->userRaceProfile->user->id !== auth()->user()?->id)
+        {
+            return true;
+        }
+
+        // TODO skryt kdy6 je po poslednim datu
+
+
+        return false;
     }
 }

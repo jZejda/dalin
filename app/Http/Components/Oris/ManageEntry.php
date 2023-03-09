@@ -6,7 +6,7 @@ namespace App\Http\Components\Oris;
 
 use App\Http\Components\Oris\Response\CreateEntry as CreateEntryResponse;
 
-class CreateEntry extends OrisResponse
+class ManageEntry extends OrisResponse
 {
     public function data(string $postResponse): CreateEntryResponse
     {

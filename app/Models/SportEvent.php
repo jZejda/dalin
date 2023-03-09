@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Shared\Helpers\EmptyType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,9 +29,9 @@ use Illuminate\Support\Carbon;
  * @property bool $use_oris_for_entries
  * @property bool|null $ranking
  * @property float|null $ranking_coefficient
- * @property string $entry_date_1
- * @property string|null $entry_date_2
- * @property string|null $entry_date_3
+ * @property Carbon $entry_date_1
+ * @property Carbon|null $entry_date_2
+ * @property Carbon|null $entry_date_3
  * @property string|null $start_time
  * @property string|null $gps_lat
  * @property string|null $gps_lon
@@ -40,6 +41,8 @@ use Illuminate\Support\Carbon;
  * @property string|null $last_update
  * @property string|null $created_at
  * @property string|null $updated_at
+ *
+ * @property-read Carbon|null $lastEntryDate
  *
  * @property-read string $sport_event_oris_title
  * @property-read SportDiscipline|null $sportDiscipline
@@ -93,6 +96,16 @@ class SportEvent extends Model
         'dont_update_excluded' => 'bool',
     ];
 
+    public function lastEntryDate(): ?Carbon
+    {
+        if (EmptyType::stringNotEmpty($this->entry_date_3)) {
+            return $this->entry_date_3;
+        } else if (EmptyType::stringNotEmpty($this->entry_date_2)) {
+            return $this->entry_date_2;
+        } else {
+            return $this->entry_date_1;
+        }
+    }
 
     public function sportDiscipline(): HasOne
     {
