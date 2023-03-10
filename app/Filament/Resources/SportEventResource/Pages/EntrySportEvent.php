@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEventResource\Pages;
 
+use Closure;
 use App\Http\Components\Oris\ManageEntry;
 use App\Models\SportEvent;
 use App\Shared\Helpers\EmptyType;
-use Closure;
 use App\Enums\EntryStatus;
 use App\Http\Components\Oris\GuzzleClient;
 use App\Models\SportClass;
@@ -30,13 +30,13 @@ use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use phpDocumentor\Reflection\Types\Integer;
 use Filament\Notifications\Actions\Action as NotificationAction;
 
 class EntrySportEvent extends Page implements HasForms, HasTable
@@ -136,16 +136,32 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->label('Etapa'),
             BadgeColumn::make('entry_status')
                 ->enum([
-                    'deleted' => 'Smazáno',
                     'created' => 'Vytvořeno',
+                    'edited' => 'Upraveno',
+                    'deleted' => 'Smazáno',
                 ])
                 ->colors([
                     'success' => 'created',
+                    'secondary' => 'edited',
                     'danger' => 'deleted',
                 ])
-                ->searchable(),
+                ->searchable()
         ];
     }
+
+    protected function getTableFilters(): array
+    {
+        return [
+            SelectFilter::make('entry_status')
+                ->options([
+                    'created' => 'Vytvořeno',
+                    'edited' => 'Upraveno',
+                    'deleted' => 'Smazáno',
+                ])->multiple()
+                ->default(['created', 'edited']),
+        ];
+    }
+
 
     protected function getTableActions(): array
     {
