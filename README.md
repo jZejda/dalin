@@ -12,16 +12,18 @@ Follow this instructions to install the project:
     # or
     $ git clone https://gitlab.com/jzejda/dalin.git
     ```
-2. `$ cd oplan`
+2. `$ cd dalin`
 3. `$ composer install`
 4. `$ cp .env.example .env`
 5. `$ php artisan key:generate`
 6. Set **database config** on `.env` file
 7. `$ php artisan migrate --seed` - run migrations and seeding data
+8. `$ php artisan shield:install` -> yes and yes
 8. `$ npm install` - install frontend dependencies
 9. `$ npm run dev` - compile the assets
 10. `$ php artisan serve` - start development server
 11. Open `https://localhost:8000` with browser.
+12. Login into application under `http://127.0.0.1:8000/admin/login` with credentilas from `database/seeders/UserTableSeeder.php`
 
 ### Show Demo
 
