@@ -22,6 +22,7 @@ use Illuminate\Support\Carbon;
  * @property ?string $note
  * @property ?string $club_note
  * @property ?int $requested_start
+ * @property ?int $si
  * @property bool $rent_si
  * @property int $stage_x
  * @property Carbon|null $entry_created
@@ -46,6 +47,7 @@ class UserEntry extends Model
         'note',
         'club_note',
         'requested_start',
+        'si',
         'rent_si',
         'stage_x',
         'entry_created',

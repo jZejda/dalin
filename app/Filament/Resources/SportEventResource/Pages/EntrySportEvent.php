@@ -18,6 +18,9 @@ use App\Models\UserRaceProfile;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Tables\Actions\Action as TableAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -242,10 +245,27 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         return ModalAction::make('createEventEntry')
             ->action(function (array $data): void {
 
-                $params = [
+                $requiredParams = [
                     'clubuser' => $data['raceProfileId'],
                     'class' => $data['orisClassId'],
                 ];
+
+                $allOptionalParams = [
+                    'si' => $data['si'],
+                    'note' => $data['note'],
+                    'clubnote' => $data['club_note'],
+                    'rent_si' => $data['rent_si'],
+                    'requested_start' => $data['requested_start'],
+                ];
+
+                $optionalParams = [];
+                foreach ($allOptionalParams as $key => $value) {
+                    if (!is_null($value)) {
+                        $optionalParams[$key] = $value;
+                    }
+                }
+
+                $params = array_merge($requiredParams, $optionalParams);
 
                 $guzzleClient = new GuzzleClient();
                 $clientResponse = $guzzleClient->create()->request('POST', 'API', $guzzleClient->generateMultipartForm(GuzzleClient::METHOD_CREATE_ENTRY, $params));
@@ -263,7 +283,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                 //dd($orisResponse->getStatus() === 'OK'); funguje cekni jestli jsi dostal OK
                 //dd($orisResponse->getData()?->getEntry()->getID()); //funguje ID prihlasky
-                //dd($orisResponse->getExportCreated()); //cas prihlasky taky uloz
+//                dd($orisResponse->getData());
+//                dd($orisResponse->getExportCreated()); //cas prihlasky taky uloz
 
 
                 if ($orisResponse->getStatus() === 'OK') {
@@ -276,9 +297,11 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     $entry->sport_event_id = $this->record->id;
                     $entry->user_race_profile_id = $userProfileData->id;
                     $entry->class_definition_id = $category->id;
-                    $entry->note = null;
-                    $entry->club_note = null;
-                    $entry->requested_start = null;
+                    $entry->note = $data['note'];
+                    $entry->club_note = $data['club_note'];
+                    $entry->requested_start = $data['requested_start'];
+                    $entry->si = $data['si'];
+                    $entry->rent_si = $data['rent_si'] ?? 0;
                     $entry->stage_x = null;
                     $entry->entry_created = Carbon::now()->toDateTimeString();;
                     $entry->entry_status = EntryStatus::Created;
@@ -320,18 +343,16 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 }
 
                                 try {
-                                    $orisResponse = Http::get(
-                                        'https://oris.orientacnisporty.cz/API',
-                                        [
-                                            'format' => 'json',
-                                            'method' => 'getValidClasses',
-                                            'clubuser' => $state,
-                                            'comp' => $this->record->oris_id,
-                                        ]
-                                    )
+                                    $params = [
+                                        'format' => 'json',
+                                        'method' => 'getValidClasses',
+                                        'clubuser' => $state,
+                                        'comp' => $this->record->oris_id,
+                                    ];
+
+                                    $orisResponse = Http::get('https://oris.orientacnisporty.cz/API', $params)
                                         ->throw()
                                         ->json('Data');
-
 
                                     // TODO pokud je to null tak hlaska nemuzet se prihlasit :-)
                                     //dd($orisResponse);
@@ -343,6 +364,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                         }
                                     }
 
+                                    $userProfileSi = UserRaceProfile::where('oris_id', '=', $state)->get();
+
                                 } catch (RequestException $e) {
                                     Filament::notify('danger', 'Nepodařilo se načíst data.');
                                     return;
@@ -350,6 +373,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 Filament::notify('success', 'ORIS v pořádku vrátil požadovaná data.');
 
                                 $set('oris_response_class_id', $selectData ?? []);
+                                $set('si', $userProfileSi[0]?->si);
                             })
                     ),
                 Select::make('orisClassId')
@@ -358,7 +382,27 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         return $get('oris_response_class_id');
                     })
                     ->searchable()
-                    ->required()
+                    ->required(),
+
+                Grid::make()->schema([
+                    TextInput::make('note')
+                        ->label('Poznámka')
+                        ->hint('Poznámka pořadateli.'),
+                    TextInput::make('club_note')
+                        ->label('Klubová poznámka')
+                        ->hint('Interní poznámka.'),
+                    TextInput::make('requested_start')
+                        ->label('Požadovaný start')
+                        ->hint('Prosím s rozmyslem.'),
+                    TextInput::make('si')
+                        ->label('Číslo SI čipu'),
+                    Toggle::make('rent_si')
+                        ->extraAttributes(['class' => 'mt-4'])
+                        ->label('Půjčit čip')
+                        ->onIcon('heroicon-s-check')
+                        ->offIcon('heroicon-s-x')
+                        ->default(false),
+                ])->columns(2),
             ]);
     }
 

@@ -19,7 +19,8 @@ return new class extends Migration
             $table->foreign('user_race_profile_id')->references('id')->on('user_race_profiles');
             $table->string('note', 255)->nullable();
             $table->text('club_note')->nullable();
-            $table->integer('requested_start')->nullable();
+            $table->string('requested_start')->nullable();
+            $table->integer('si')->nullable();
             $table->boolean('rent_si')->default(0);
             $table->integer('stage_x')->nullable();
             $table->string('entry_status')->default('created');

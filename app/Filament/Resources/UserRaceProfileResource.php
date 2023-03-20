@@ -131,6 +131,8 @@ class UserRaceProfileResource extends Resource
                                 Forms\Components\TextInput::make('si')
                                     ->label('Si čip')
                                     ->helperText('Preferovaný SI čip')
+                                    ->numeric()
+                                    ->integer()
                                     ->columnSpan('full'),
                             ])
                             ->columns(2),

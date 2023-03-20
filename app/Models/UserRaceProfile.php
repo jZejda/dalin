@@ -42,6 +42,7 @@ class UserRaceProfile extends Model
      * @property ?string $email
      * @property ?string $phone
      * @property string $gender
+     * @property ?int $si
      * @property string $city
      * @property string $street
      * @property string $zip
@@ -66,6 +67,7 @@ class UserRaceProfile extends Model
         'gender',
         'city',
         'zip',
+        'si',
         'licence_ob',
         'licence_lob',
         'licence_mtbo',
