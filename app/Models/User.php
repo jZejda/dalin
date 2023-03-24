@@ -24,6 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string|null $created_at
  * @property string|null $updated_at
  *
+ * @property-read UserRaceProfile $userRaceProfile
  * @property-read string $user_identification
  */
 

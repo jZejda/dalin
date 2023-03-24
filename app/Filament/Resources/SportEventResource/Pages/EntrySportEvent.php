@@ -39,6 +39,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Filament\Notifications\Actions\Action as NotificationAction;
 
@@ -286,11 +287,10 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 //                dd($orisResponse->getData());
 //                dd($orisResponse->getExportCreated()); //cas prihlasky taky uloz
 
+                $userProfileData = UserRaceProfile::where('oris_id', '=', $data['raceProfileId'])->first();
+                $category = SportClass::where('oris_id', '=', $data['orisClassId'])->first();
 
                 if ($orisResponse->getStatus() === 'OK') {
-
-                    $userProfileData = UserRaceProfile::where('oris_id', '=', $data['raceProfileId'])->first();
-                    $category = SportClass::where('oris_id', '=', $data['orisClassId'])->first();
 
                     $entry = new UserEntry();
                     $entry->oris_entry_id = $orisResponse->getData()?->getEntry()->getID();
@@ -313,7 +313,16 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         ->success()
                         ->seconds(8)
                         ->send();
+                } else {
+                    Notification::make()
+                        ->title('Přihláška  ' . $userProfileData?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $category?->classDefinition->name ?? 'N/A')
+                        ->body('Nebyla provedena. ORIS vrátil zprávu: ' . $orisResponse->getStatus())
+                        ->warning()
+                        ->seconds(8)
+                        ->send();
                 }
+
+
             })
             ->color('secondary')
             ->label('Přihlásit na závod')
@@ -408,16 +417,42 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
     public function getUserRaceProfiles(): Collection
     {
+        /** @var SportEvent $sportEvent */
+        $sportEvent = $this->record;
+        $relevantUserRaceProfile = new Collection();
+        if (!is_null($sportEvent->oris_id) && $sportEvent->use_oris_for_entries) {
+
+            //vyselektuje relevatni profily pro uzivatel
+            $relevantUserRaceProfile = UserRaceProfile::all()
+                ->where('user_id', '=', auth()->user()->id)
+                ->whereNotNull('oris_id')
+                ->pluck('user_race_full_name', 'oris_id');
+
+            // zjisti id profil; ktere jsou uz v zavode pro uzivatele
+            $entries = DB::table('user_race_profiles as urp')
+                ->select(['urp.oris_id'])
+                ->leftJoin('user_entries AS ue', 'ue.user_race_profile_id', '=', 'urp.id')
+                ->where('ue.sport_event_id', '=', $sportEvent->id)
+                ->where('urp.user_id', '=', auth()->user()->id)
+                ->whereNotIn('ue.entry_status', [EntryStatus::Deleted])
+                ->get();
+
+            // unsetne z pole relevatn9ch profil;
+            foreach ($entries as $entry) {
+                $relevantUserRaceProfile->forget((int)$entry->oris_id);
+            }
+        } else {
+            // tedy to bude platit kdy6 nebude oris z8vod
+        }
+
         /*
             54 => "ABM7805 - Jiří Zejda"
             52722 => "ABM1602 - David Zejda"
             dotaz na csechny profily, pak sestav pole z tech ktere nejsu prihlaseny
          */
-        return UserRaceProfile::all()
-            ->where('user_id', '=', auth()->user()->id)
-            ->pluck('user_race_full_name', 'oris_id');
 
 
+        return $relevantUserRaceProfile;
     }
 
     /**
