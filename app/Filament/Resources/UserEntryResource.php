@@ -22,7 +22,11 @@ class UserEntryResource extends Resource
 {
     protected static ?string $model = UserEntry::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationGroup = 'Uživatel';
+    protected static ?string $navigationIcon = 'heroicon-o-flag';
+    protected static ?string $navigationLabel = 'Přihlášky';
+    protected static ?string $label = 'Přihláška na závody';
+    protected static ?string $pluralLabel = 'Přihlášky na závody';
 
     public static function getEloquentQuery(): Builder
     {
