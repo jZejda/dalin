@@ -356,6 +356,11 @@ class SportEventResource extends Resource implements HasShieldPermissions
         ];
     }
 
+    protected static function getNavigationBadge(): ?string
+    {
+        return (string)static::$model::where('cancelled', 0)->count();
+    }
+
     public static function getPermissionPrefixes(): array
     {
         return [
