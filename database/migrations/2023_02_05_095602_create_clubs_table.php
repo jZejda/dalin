@@ -22,7 +22,7 @@ return new class () extends Migration {
             $table->string('oris_number')->nullable();
             $table->timestamps();
 
-            //$table->index(['abbr', 'name']);
+            $table->index(['abbr', 'name']);
 
         });
     }

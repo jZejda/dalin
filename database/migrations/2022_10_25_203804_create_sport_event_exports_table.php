@@ -23,7 +23,7 @@ return new class () extends Migration {
             $table->string('result_path', 255);
             $table->timestamps();
 
-            //$table->index(['title']);
+            $table->index(['title']);
         });
     }
 

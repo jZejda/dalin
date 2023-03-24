@@ -27,6 +27,7 @@ use Illuminate\Support\Carbon;
  * @property int $stage_x
  * @property Carbon|null $entry_created
  * @property EntryStatus $entry_status
+ * @property bool $entry_lock
  *
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -50,6 +51,7 @@ class UserEntry extends Model
         'si',
         'rent_si',
         'stage_x',
+        'entry_lock',
         'entry_created',
         'entry_status',
     ];
@@ -57,6 +59,7 @@ class UserEntry extends Model
     protected $casts = [
         'entry_created' => 'datetime:Y-m-d H:i:s',
         'rent_si' => 'bool',
+        'entry_lock' => 'bool',
         'entry_status' => EntryStatus::class,
     ];
 

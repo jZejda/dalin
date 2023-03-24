@@ -38,7 +38,7 @@ return new class () extends Migration {
             $table->boolean('dont_update_excluded')->default(true);
             $table->timestamps();
 
-            //$table->index(['name']);
+            $table->index(['name', 'sport_id']);
         });
     }
 

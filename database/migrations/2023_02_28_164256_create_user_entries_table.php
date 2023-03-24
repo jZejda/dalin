@@ -24,8 +24,11 @@ return new class extends Migration
             $table->boolean('rent_si')->default(0);
             $table->integer('stage_x')->nullable();
             $table->string('entry_status')->default('created');
+            $table->boolean('entry_lock')->default(0);
             $table->dateTime('entry_created')->nullable();
             $table->timestamps();
+
+            $table->index(['sport_event_id', 'user_race_profile_id', 'si']);
         });
     }
 
