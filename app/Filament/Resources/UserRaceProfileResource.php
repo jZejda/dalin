@@ -24,6 +24,7 @@ class UserRaceProfileResource extends Resource
 {
     protected static ?string $model = UserRaceProfile::class;
 
+    protected static ?int $navigationSort = 12;
     protected static ?string $navigationGroup = 'Uživatel';
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
     protected static ?string $navigationLabel = 'Závodní profil';
@@ -171,13 +172,13 @@ class UserRaceProfileResource extends Resource
                                     )
                                     ->default('-'),
                                 Select::make('licence_lob')
-                                    ->label('Licence OB')
+                                    ->label('Licence LOB')
                                     ->options(
                                         self::getSportLicenceOptions()
                                     )
                                     ->default('-'),
                                 Select::make('licence_mtbo')
-                                    ->label('Licence OB')
+                                    ->label('Licence MTBO')
                                     ->options(
                                         self::getSportLicenceOptions()
                                     )

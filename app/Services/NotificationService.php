@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Models\SportEvent;
+use App\Models\User;
 use Filament\Notifications\Notification;
 
 final class NotificationService
 {
-    // TODO toto NEFUNGUJE ????????
-
     private string $title;
     private string $body;
-    /** @var User $recipients */
+    /** @var User[] $recipients */
     private array $recipients;
 
     public function __construct(string $title, string $body, array $recipients)

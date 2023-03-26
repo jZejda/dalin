@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
-use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;

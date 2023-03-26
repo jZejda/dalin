@@ -23,12 +23,15 @@ use Illuminate\Support\Carbon;
  * @property array|null $region
  * @property array|null $organization
  * @property string|null $entry_desc
+ * @property string|null $event_info
+ * @property string|null $event_warning
  * @property int $sport_id
  * @property int $discipline_id
  * @property int $level_id
  * @property bool $use_oris_for_entries
  * @property bool|null $ranking
  * @property float|null $ranking_coefficient
+ * @property string|null $event_type
  * @property Carbon $entry_date_1
  * @property Carbon|null $entry_date_2
  * @property Carbon|null $entry_date_3
@@ -64,12 +67,15 @@ class SportEvent extends Model
         'region',
         'organization',
         'entry_desc',
+        'event_info',
+        'event_warning',
         'sport_id',
         'discipline_id',
         'level_id',
         'use_oris_for_entries',
         'ranking',
         'ranking_coefficient',
+        'event_type',
         'entry_date_1',
         'entry_date_2',
         'entry_date_3',
@@ -100,7 +106,7 @@ class SportEvent extends Model
     {
         if (EmptyType::stringNotEmpty($this->entry_date_3)) {
             return $this->entry_date_3;
-        } else if (EmptyType::stringNotEmpty($this->entry_date_2)) {
+        } elseif (EmptyType::stringNotEmpty($this->entry_date_2)) {
             return $this->entry_date_2;
         } else {
             return $this->entry_date_1;

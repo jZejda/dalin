@@ -16,14 +16,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class ContentCategoryResource extends Resource
 {
+    protected static ?int $navigationSort = 20;
     protected static ?string $model = ContentCategory::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-
     protected static ?string $navigationGroup = 'Obsah';
-
     protected static ?string $label = 'Kategorie';
-
     protected static ?string $pluralLabel = 'Kategorie';
 
     public static function form(Form $form): Form

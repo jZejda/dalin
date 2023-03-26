@@ -23,9 +23,13 @@ class UserCreditResource extends Resource
 {
     protected static ?string $model = UserCredit::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cash';
 
-    protected static ?string $navigationGroup = 'User';
+    protected static ?int $navigationSort = 12;
+    protected static ?string $navigationGroup = 'Uživatel';
+    protected static ?string $navigationIcon = 'heroicon-o-cash';
+    protected static ?string $navigationLabel = 'Kredit';
+    protected static ?string $label = 'Kredit';
+    protected static ?string $pluralLabel = 'Kredit';
 
     public static function form(Form $form): Form
     {

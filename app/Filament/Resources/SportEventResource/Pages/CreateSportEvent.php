@@ -28,15 +28,19 @@ class CreateSportEvent extends CreateRecord
 
     protected function afterCreate(): void
     {
-        /** @var User $recipient */
-        $recipient = auth()->user();
+        /** @var User $recipientOrigin */
+        $recipientOrigin = auth()->user();
 
         /** @var SportEvent $sportEvent */
         $sportEvent = $this->record;
 
-        Notification::make()
-            ->title('Vytvořen nový závod')
-            ->body('Uživatel: ' . $recipient->name . ' | Název: ' . $sportEvent->name)
-            ->sendToDatabase($recipient);
+        $recipients = User::whereHas("roles", function($q){ $q->whereIn('name', ['super_admin', 'event_master']); })->get();
+
+        foreach ($recipients as $recipient) {
+            Notification::make()
+                ->title('Vytvořen nový závod')
+                ->body('Uživatel: ' . $recipientOrigin->name . ' | Název: ' . $sportEvent->name)
+                ->sendToDatabase($recipient);
+        }
     }
 }

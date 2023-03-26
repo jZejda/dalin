@@ -90,6 +90,8 @@ final class OrisApiService
             $eventModel->organization = $organization;
             $eventModel->region = $regions;
             $eventModel->entry_desc = $orisData->getEntryInfo();
+            $eventModel->event_info = $orisData->getEventInfo();
+            $eventModel->event_warning = $orisData->getEventWarning();
             $eventModel->ranking = $orisData->getRanking();
             $eventModel->gps_lat = $orisData->getGPSLat();
             $eventModel->gps_lon = $orisData->getGPSLon();

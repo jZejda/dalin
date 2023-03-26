@@ -34,10 +34,14 @@ use Filament\Tables;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Forms;
+use Illuminate\Database\Eloquent\Builder;
 
 class SportEventResource extends Resource implements HasShieldPermissions
 {
@@ -45,11 +49,12 @@ class SportEventResource extends Resource implements HasShieldPermissions
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
     protected static ?int $navigationSort = 1;
-    protected static ?string $navigationGroup = 'Závody / Akce';
+    protected static ?string $navigationGroup = 'Akce/Závody';
     protected static ?string $navigationLabel = 'Závod';
     protected static ?string $label = 'Závod / událost';
     protected static ?string $pluralLabel = 'Závody / události';
     protected static ?string $recordTitleAttribute = 'name';
+
 
     public static function form(Form $form): Form
     {
@@ -237,7 +242,6 @@ class SportEventResource extends Resource implements HasShieldPermissions
     public static function table(Table $table): Table
     {
         return $table
-
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
@@ -290,7 +294,24 @@ class SportEventResource extends Resource implements HasShieldPermissions
             ->filters([
                 SelectFilter::make('sport_id')
                     ->label('Sport')
-                    ->options(SportList::all()->pluck('short_name', 'id')),
+                    ->options(SportList::all()->pluck('short_name', 'id'))
+                    ->default(1),
+                Filter::make('date')
+                    ->form([
+                        Forms\Components\DatePicker::make('date')->default(now()->subDays(7)),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['date'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
+                            );
+                    })->indicateUsing(function (array $data): ?string {
+                        if (! $data['date']) {
+                            return null;
+                        }
+                        return 'Závody novější: ' . Carbon::parse($data['date'])->format('d.m.Y');
+                    })->default(now()->subDays(7)),
                 SelectFilter::make('discipline_id')
                     ->label('Disciplína')
                     ->multiple()

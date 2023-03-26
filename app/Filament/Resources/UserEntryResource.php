@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserEntryResource\Pages;
-use App\Filament\Resources\UserEntryResource\RelationManagers;
 use App\Models\SportEvent;
 use App\Models\UserEntry;
 use Carbon\Carbon;
@@ -17,11 +16,11 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-
 class UserEntryResource extends Resource
 {
     protected static ?string $model = UserEntry::class;
 
+    protected static ?int $navigationSort = 10;
     protected static ?string $navigationGroup = 'Uživatel';
     protected static ?string $navigationIcon = 'heroicon-o-flag';
     protected static ?string $navigationLabel = 'Přihlášky';
@@ -33,13 +32,13 @@ class UserEntryResource extends Resource
         if (Auth::user()->hasRole('super_admin')) {
             return UserEntry::query();
         } else {
-            return UserEntry::query()->where('user_id', '=', Auth::user()->id);
+            return UserEntry::query()
+                ->from('user_entries', 'ue')
+                ->leftJoin('user_race_profiles AS urp', 'urp.id', '=', 'ue.user_race_profile_id')
+                ->where('urp.user_id', '=', Auth::user()->id)
+                ->orderByDesc('ue.created_at');
         }
     }
-//    public static function getEloquentQuery(): Builder
-//    {
-//        //return UserEntry::query()->from('user_entries', 'ue')->leftJoin('sport_events AS se', 'se.id', '=', 'ue.sport_event_id')->where('se.date', '>', Carbon::now());
-//    }
 
     public static function form(Form $form): Form
     {
@@ -66,8 +65,8 @@ class UserEntryResource extends Resource
                 TextColumn::make('userRaceProfile.UserRaceFullName')
                     ->label('Registrace'),
                 TextColumn::make('sportEvent.date')
-                    ->label('Start')
-                    ->dateTime('d. m. Y - H:i')
+                    ->label('Konání')
+                    ->dateTime('d. m. Y')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('note')

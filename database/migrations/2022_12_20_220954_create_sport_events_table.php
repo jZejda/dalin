@@ -17,12 +17,15 @@ return new class () extends Migration {
             $table->string('organization')->nullable();
             $table->string('region')->nullable();
             $table->string('entry_desc')->nullable();
+            $table->string('event_info')->nullable();
+            $table->string('event_warning')->nullable();
             $table->unsignedBigInteger('sport_id')->default(1);
             $table->foreign('sport_id')->references('id')->on('sport_lists');
             $table->unsignedBigInteger('discipline_id');
             $table->foreign('discipline_id')->references('id')->on('sport_disciplines');
             $table->unsignedBigInteger('level_id');
             $table->foreign('level_id')->references('id')->on('sport_levels');
+            $table->string('event_type', 32)->nullable();
             $table->boolean('use_oris_for_entries');
             $table->boolean('ranking')->nullable();
             $table->float('ranking_coefficient')->nullable();
@@ -38,7 +41,7 @@ return new class () extends Migration {
             $table->boolean('dont_update_excluded')->default(true);
             $table->timestamps();
 
-            $table->index(['name', 'sport_id']);
+            $table->index(['name', 'sport_id', 'entry_date_1', 'date', 'oris_id']);
         });
     }
 
