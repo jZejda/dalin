@@ -34,7 +34,7 @@ class CreateSportEvent extends CreateRecord
         /** @var SportEvent $sportEvent */
         $sportEvent = $this->record;
 
-        $recipients = User::whereHas("roles", function($q){ $q->whereIn('name', ['super_admin', 'event_master']); })->get();
+        $recipients = User::whereHas("roles", function ($q) { $q->whereIn('name', ['super_admin', 'event_master']); })->get();
 
         foreach ($recipients as $recipient) {
             Notification::make()

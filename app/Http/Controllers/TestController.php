@@ -43,7 +43,7 @@ class TestController extends Controller
     public function test(): bool
     {
 
-        dd(User::whereHas("roles", function($q){ $q->whereIn('name', ['super_admin', 'event_master']); })->get());
+        dd(User::whereHas("roles", function ($q) { $q->whereIn('name', ['super_admin', 'event_master']); })->get());
 
         $hour = Carbon::now()->format('H');
         $mailNotifications = UserNotifySetting::where('options->sport_time_trigger', $hour)->get();

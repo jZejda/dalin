@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SportEventResource\RelationManagers\UserEntryRelationManager;
+use App\Shared\Helpers\AppHelper;
+use App\Shared\Helpers\EmptyType;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Closure;
 use App\Filament\Resources\SportEventResource\Pages;
@@ -226,9 +228,9 @@ class SportEventResource extends Resource implements HasShieldPermissions
                         ->description('Možné vypnout automatickou aktualizaci na 2. a 3. termín.')
                         ->schema([
                             TextInput::make('start_time')->label('Čas startu'),
-                            DateTimePicker::make('entry_date_1')->displayFormat('d.m.Y H:i:s')->label('První termín'),
-                            DateTimePicker::make('entry_date_2')->displayFormat('d.m.Y H:i:s')->label('Druhý termín'),
-                            DateTimePicker::make('entry_date_3')->displayFormat('d.m.Y H:i:s')->label('Třetí termín'),
+                            DateTimePicker::make('entry_date_1')->displayFormat(AppHelper::DATE_TIME_FULL_FORMAT)->label('První termín'),
+                            DateTimePicker::make('entry_date_2')->displayFormat(AppHelper::DATE_TIME_FULL_FORMAT)->label('Druhý termín'),
+                            DateTimePicker::make('entry_date_3')->displayFormat(AppHelper::DATE_TIME_FULL_FORMAT)->label('Třetí termín'),
                         ])->columnSpan([
                             'sm' => 1,
                             'md' => 4
@@ -254,6 +256,18 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     //->description(fn (SportEvent $record): string => $record->oris_id ? 'ORIS ID: ' . $record->oris_id : ''),
                     ->description(fn (SportEvent $record): string => $record->alt_name ? $record->alt_name : ''),
 
+                TextColumn::make('date')
+                    ->icon('heroicon-o-calendar')
+                    ->label('Datum')
+                    ->dateTime(AppHelper::DATE_FORMAT)
+                    ->sortable()
+                    ->searchable(),
+
+                BadgeColumn::make('user_entry_count')
+                    ->label('Přihlášeno')
+                    ->counts('userEntry')
+                    ->color(fn (SportEvent $record): string => count($record->userEntry()->get()) > 0 ? 'success' : 'info'),
+
                 TextColumn::make('place')
                     ->searchable()
                     ->sortable()
@@ -261,13 +275,6 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->label('Místo')
                     ->limit(25, '...')
                     ->alignLeft(),
-
-                TextColumn::make('date')
-                    ->icon('heroicon-o-calendar')
-                    ->label('Datum')
-                    ->dateTime('d.m.Y')
-                    ->sortable()
-                    ->searchable(),
 
                 TextColumn::make('organization')
                     ->label('Klub(y)')
@@ -282,12 +289,18 @@ class SportEventResource extends Resource implements HasShieldPermissions
 
                 BadgeColumn::make('oris_id')
                     ->label('ORIS ID')
-                    ->color(static function ($state): string {
-                        if ($state == true) {
-                            return 'success';
-                        }
-                        return 'secondary';
-                    })
+                    ->tooltip(
+                        fn (SportEvent $record): string => EmptyType::intNotEmpty($record->oris_id) && $record->use_oris_for_entries
+                        ? 'Přihláška do ORISu'
+                        : 'Závod má přiděleno ORIS ID, prihlášení bude pouze do interního systému.'
+                    )
+                    ->color(fn (SportEvent $record): string => EmptyType::intNotEmpty($record->oris_id) && $record->use_oris_for_entries ? 'success' : 'danger')
+//                    ->color(static function ($state): string {
+//                        if ($state == true) {
+//                            return 'success';
+//                        }
+//                        return 'secondary';
+//                    })
                     ->sortable(),
             ])->defaultSort('date')
 

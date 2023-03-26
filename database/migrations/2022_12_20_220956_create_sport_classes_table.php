@@ -20,6 +20,8 @@ return new class () extends Migration {
             $table->double('fee')->nullable();
 
             $table->timestamps();
+
+            $table->index(['class_definition_id', 'sport_event_id']);
         });
     }
 

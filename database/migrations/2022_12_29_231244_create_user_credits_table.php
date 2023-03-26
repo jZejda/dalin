@@ -26,6 +26,8 @@ return new class () extends Migration {
             $table->foreign('source_user_id')->references('id')->on('users');
             $table->string('credit_type', 60);
             $table->timestamps();
+
+            $table->index(['user_id', 'source_user_id', 'sport_event_id']);
         });
     }
 
