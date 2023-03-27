@@ -346,7 +346,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                 ])
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                // Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 

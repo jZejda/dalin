@@ -17,6 +17,7 @@ use App\Models\SportClassDefinition;
 use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserNotifySetting;
+use App\Services\OpenMapService;
 use Filament\Notifications\Notification;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 use Illuminate\Http\Client\Response;
@@ -43,12 +44,16 @@ class TestController extends Controller
     public function test(): bool
     {
 
+        $pokus = new OpenMapService();
+        $response = $pokus->getWeather();
+
+
+        dd($response);
+
         dd(User::whereHas("roles", function ($q) { $q->whereIn('name', ['super_admin', 'event_master']); })->get());
 
         $hour = Carbon::now()->format('H');
         $mailNotifications = UserNotifySetting::where('options->sport_time_trigger', $hour)->get();
-
-
 
 
         if ($mailNotifications->isNotEmpty()) {
