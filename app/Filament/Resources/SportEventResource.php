@@ -141,6 +141,9 @@ class SportEventResource extends Resource implements HasShieldPermissions
 
                                     $set('entry_desc', $orisResponse['EntryDescCZ'] ?? null);
 
+                                    $set('event_info', $orisResponse['EventInfo'] ?? null);
+                                    $set('event_warning', $orisResponse['EventWarning'] ?? null);
+
                                     })
                                 ),
                             TextInput::make('name')
@@ -168,7 +171,11 @@ class SportEventResource extends Resource implements HasShieldPermissions
 
                             Grid::make()->schema([
                                 MarkdownEditor::make('entry_desc')
-                                    ->label('Popis')
+                                    ->label('Popis'),
+                                TextInput::make('event_info')
+                                    ->label('Info'),
+                                TextInput::make('event_warning')
+                                    ->label('Upozornění')
                             ])->columns(1),
 
                             Grid::make()->schema([
@@ -187,7 +194,8 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                 Select::make('level_id')
                                     ->label('Level')
                                     ->options(SportLevel::all()->pluck('long_name', 'oris_id'))
-                                    ->searchable(),
+                                    ->searchable()
+                                    ->required(),
 
                                 Select::make('organization')
                                     ->multiple()

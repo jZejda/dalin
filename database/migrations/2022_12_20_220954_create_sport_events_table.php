@@ -36,6 +36,7 @@ return new class () extends Migration {
             $table->time('start_time')->nullable();
             $table->string('gps_lat')->nullable();
             $table->string('gps_lon')->nullable();
+            $table->json('weather')->nullable();
             $table->integer('parent_id')->nullable();
             $table->boolean('cancelled')->default(false);
             $table->boolean('dont_update_excluded')->default(true);

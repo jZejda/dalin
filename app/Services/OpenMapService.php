@@ -24,23 +24,21 @@ final class OpenMapService
     public function getWeather(float $lat = null, float $lon = null): BaseResponse
     {
         $getParams = [
-            'lat' => "50.1436",
-            'lon' => "15.8961",
+            'lat' => $lat,
+            'lon' => $lon,
             'appid' => env('OPEN_MAP_API_KEY', 'key'),
             'lang' => 'cz',
             'units' => 'metric',
         ];
-        $openMapResponse = $this->orisGetResponse($getParams);
+        $openMapResponse = $this->openMapGetResponse($getParams);
 
-        $forecast = new OpenMapResponse();
-        return $forecast->response($openMapResponse);
+        //$forecast = new OpenMapResponse();
+        return $this->openMapResponse->response($openMapResponse);
     }
 
-    private function orisGetResponse(array $getParams): Response
+    private function openMapGetResponse(array $getParams): Response
     {
         $params = array_merge_recursive(['mode' => self::OPEN_MAP_DEFAULT_FORMAT], $getParams);
-
-        ///return Http::dd()->get(self::OPEN_MAP_API_URL, $params)->throw();
         return Http::get(self::OPEN_MAP_API_URL, $params)->throw();
     }
 }

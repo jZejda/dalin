@@ -38,6 +38,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $start_time
  * @property string|null $gps_lat
  * @property string|null $gps_lon
+ * @property array|null $weather
  * @property int|null $parent_id
  * @property bool $dont_update_excluded
  * @property bool $cancelled
@@ -82,6 +83,7 @@ class SportEvent extends Model
         'start_time',
         'gps_lat',
         'gps_lon',
+        'weather',
         'parent_id',
         'last_update',
         'cancelled',
@@ -99,6 +101,7 @@ class SportEvent extends Model
         'entry_date_3' => 'datetime:Y-m-d H:i:s',
         'last_update' => 'datetime:Y-m-d H:i:s',
         'cancelled' => 'bool',
+        'weather' => 'array',
         'dont_update_excluded' => 'bool',
     ];
 
@@ -133,9 +136,9 @@ class SportEvent extends Model
         return $this->hasMany(SportService::class, 'sport_event_id', 'id');
     }
 
-    public function userEntry(): HasMany
+    public function userEntry(): HasOne
     {
-        return $this->hasMany(UserEntry::class, 'sport_event_id', 'id');
+        return $this->HasOne(UserEntry::class, 'sport_event_id', 'id');
     }
 
     public function getSportEventOrisTitleAttribute(): string
