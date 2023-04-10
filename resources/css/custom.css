@@ -7,4 +7,5 @@
 * Backend content
 */
 @import 'content/_filament_backend.scss';
+@import 'content/_filament_widget.scss';
 

@@ -11,11 +11,12 @@ use Illuminate\Support\Carbon;
  * App\Models\UserCreditNote
  *
  * @property int $id
- * @property int $user_id
- * @property int $user_credit_id
+ * @property ?int $user_id
+ * @property ?int $user_credit_id
  * @property int $note_user_id
- * @property string $note
- * @property ?string $status
+ * @property ?string $note
+ * @property ?array $params
+ * @property bool $internal
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
@@ -32,7 +33,13 @@ class UserCreditNote extends Model
         'user_credit_id',
         'note_user_id',
         'note',
+        'params',
         'status',
+    ];
+
+    protected $casts = [
+        'internal' => 'bool',
+        'params' => 'array',
     ];
 
     public function user(): HasOne

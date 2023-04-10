@@ -5,9 +5,9 @@ module.exports = {
     darkMode: 'class',
     content: [
         './resources/**/*.blade.php',
-        './resources/**/**/*.blade.php',
-        './vendor/filament/**/*.blade.php',
-        './node_modules/flowbite/**/*.js',
+       './resources/**/**/*.blade.php',
+       './vendor/filament/**/*.blade.php',
+       './node_modules/flowbite/**/*.js',
     ],
     theme: {
         extend: {
