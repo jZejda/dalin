@@ -44,6 +44,10 @@ class TestController extends Controller
     public function test(): bool
     {
 
+
+        dd(User::all()->pluck('name', 'id'));
+
+
         $pokus = new OpenMapService();
         $response = $pokus->getWeather();
 

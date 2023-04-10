@@ -2,18 +2,33 @@
 
 namespace App\Filament\Resources\UserCreditResource\Widgets;
 
+use App\Models\UserCredit;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 
 class UserCreditStats extends BaseWidget
 {
+    public ?Model $record = null;
+
     protected function getCards(): array
     {
         return [
-            Card::make('Zbývá na kontě Kč', DB::table('user_credits')->sum('amount')),
-            Card::make('Transakcí', DB::table('user_credits')->count('*')),
-            Card::make('Průměrná cena akce', number_format(DB::table('user_credits')->avg('amount'), 2)),
+            Card::make('Nepřiřazené transakce Kč', $this->getSumUnAssignCredit()),
+            Card::make('Počet nepřiřazených', $this->getCountUnAssignCredit()),
+            Card::make('Pokus', $this->record),
         ];
+    }
+
+
+    protected function getSumUnAssignCredit(): null|float
+    {
+        return DB::table('user_credits')->where('status', '=', UserCredit::STATUS_UN_ASSIGN)->sum('amount');
+    }
+
+    protected function getCountUnAssignCredit(): null|float
+    {
+        return DB::table('user_credits')->where('status', '=', UserCredit::STATUS_UN_ASSIGN)->count('id');
     }
 }

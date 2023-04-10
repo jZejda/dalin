@@ -6,6 +6,7 @@ return [
     'user_profile' => 'Závodní profil',
     'user_source_id' => 'Založil/Změnil',
     'event_name' => 'Závod/událost',
+    'status' => 'Status',
 
     // Credit Resource
     'form' => [

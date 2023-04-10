@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use Closure;
 use App\Filament\Resources\SportEventResource\RelationManagers\UserEntryRelationManager;
 use App\Shared\Helpers\AppHelper;
 use App\Shared\Helpers\EmptyType;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
-use Closure;
 use App\Filament\Resources\SportEventResource\Pages;
 use App\Filament\Resources\SportEventResource\RelationManagers\SportClassesRelationManager;
 use App\Filament\Resources\SportEventResource\RelationManagers\SportServicesRelationManager;

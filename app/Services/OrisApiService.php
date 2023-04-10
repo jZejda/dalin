@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Http\Components\Oris\GetClubs;
+use App\Http\Components\Oris\GetEventEntries;
 use App\Http\Components\Oris\Response\Entity\Clubs;
+use App\Http\Components\Oris\Response\Entity\EventEntries;
 use App\Models\Club;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
@@ -17,8 +19,11 @@ use App\Http\Components\Oris\Response\Entity\Services;
 use App\Models\SportEvent;
 use App\Models\SportRegion;
 use App\Models\SportService;
+use App\Models\UserCredit;
+use App\Models\UserCreditNote;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -238,6 +243,113 @@ final class OrisApiService
         }
 
         return $model;
+    }
+
+    public function getEventBalance(SportEvent $sportEvent, string $source = UserCredit::SOURCE_USER): void
+    {
+        $getParams = [
+            'method' => 'getEventEntries',
+            'clubid' => 1, // TODO dej do params
+            'eventid' => $sportEvent->oris_id,
+        ];
+        $orisResponse = $this->orisGetResponse($getParams);
+
+        $eventEntries = new GetEventEntries();
+        if ($eventEntries->checkOrisResponse($orisResponse)) {
+
+            /** @var EventEntries[] $orisData */
+            $orisData = $eventEntries->data($orisResponse);
+
+            foreach ($orisData as $entry) {
+                $regUserNumber = $entry->getRegNo();
+
+                $userRaceProfile = DB::table('user_race_profiles')
+                    ->where('reg_number', '=', $regUserNumber)
+                    ->first();
+
+                // TODO cekni jestli uz to neni prirazeno
+                if ($userRaceProfile !== null) {
+
+                    /** @var UserCredit $userCredit */
+                    $userCredit = UserCredit::where('oris_balance_id', '=', $entry->getID())->first();
+                    if ($userCredit === null) {
+                        $userCredit = new UserCredit();
+                        $userCredit->status = UserCredit::STATUS_DONE;
+                    }
+
+                    $userCredit->oris_balance_id = $entry->getID();
+                    $userCredit->user_id = $userRaceProfile->user_id;
+                    $userCredit->user_race_profile_id = $userRaceProfile->id;
+                    $userCredit->sport_event_id = $sportEvent->id;
+                    $userCredit->amount = -(float)$entry->getFee();
+                    $userCredit->currency = UserCredit::CURRENCY_CZK;
+                    $userCredit->credit_type = UserCredit::CREDIT_TYPE_CACHE_OUT;
+                    $userCredit->source = $source;
+                    $userCredit->source_user_id = auth()->user()->id;
+                    $userCredit->created_at = now();
+                    $userCredit->updated_at = now();
+
+                    $userCredit->saveOrFail();
+                } else {
+                    /** @var UserCredit $userCredit */
+                    $userCredit = UserCredit::where('oris_balance_id', '=', $entry->getID())->first();
+                    if ($userCredit === null) {
+                        $userCredit = new UserCredit();
+                        $userCredit->status = UserCredit::STATUS_UN_ASSIGN;
+                    }
+                    $userCredit->oris_balance_id = $entry->getID();
+                    $userCredit->user_id = null;
+                    $userCredit->user_race_profile_id = null;
+                    $userCredit->sport_event_id = $sportEvent->id;
+                    $userCredit->amount = -(float)$entry->getFee();
+                    $userCredit->currency = UserCredit::CURRENCY_CZK;
+                    $userCredit->credit_type = UserCredit::CREDIT_TYPE_CACHE_OUT;
+                    $userCredit->source = UserCredit::SOURCE_USER;
+                    $userCredit->source_user_id = auth()->user()->id;
+                    $userCredit->created_at = now();
+                    $userCredit->updated_at = now();
+
+                    $userCredit->saveOrFail();
+                }
+
+                $userCreditNote = UserCreditNote::where('internal', '=', true)
+                    ->where('user_credit_id', '=', $userCredit->id)
+                    ->count();
+                if ($userCreditNote === 0) {
+                    $this->createUserCreditSystemNote($userCredit, $entry);
+                }
+            }
+        }
+    }
+
+    private function createUserCreditSystemNote(UserCredit $userCredit, EventEntries $entry): void
+    {
+        $entryParams = [
+            'id' => $entry->getID(),
+            'classDesc' => $entry->getClassDesc(),
+            'regNo' => $entry->getRegNo(),
+            'name' => $entry->getName(),
+            'firstName' => $entry->getFirstName(),
+            'lastName' => $entry->getLastName(),
+            'rentSI' => $entry->getRentSI(),
+            'userID' => $entry->getUserID(),
+            'clubUserID' => $entry->getClubUserID(),
+            'fee' => -(float)$entry->getFee(),
+            'note' => $entry->getNote(),
+            'entryStop' => $entry->getEntryStop(),
+            'CreatedDateTime' => $entry->getCreatedDateTime(),
+            'CreatedByUserID' => $entry->getCreatedByUserID(),
+            'UpdatedDateTime' => $entry->getUpdatedDateTime(),
+            'UpdatedByUserID' => $entry->getUpdatedByUserID(),
+        ];
+
+        $model = new UserCreditNote();
+        $model->note_user_id = 1;
+        $model->user_credit_id = $userCredit->id;
+        $model->note = 'Data načtena z ORISu. Informace k záznamu byly v pořádku uloženy do databáze.';
+        $model->internal = true;
+        $model->params = $entryParams;
+        $model->saveOrFail();
     }
 
 

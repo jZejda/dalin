@@ -2,7 +2,6 @@
 
 namespace App\Http\Components\OpenMap\Response;
 
-
 class BaseResponse
 {
     private string $cod; // "200" OK

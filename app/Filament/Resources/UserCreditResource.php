@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserCreditResource\Pages;
@@ -16,20 +18,25 @@ use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
+use Filament\Forms;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserCreditResource extends Resource
 {
     protected static ?string $model = UserCredit::class;
 
-
-    protected static ?int $navigationSort = 12;
-    protected static ?string $navigationGroup = 'Uživatel';
+    protected static ?int $navigationSort = 40;
+    protected static ?string $navigationGroup = 'Správa Financí';
     protected static ?string $navigationIcon = 'heroicon-o-cash';
-    protected static ?string $navigationLabel = 'Kredit';
-    protected static ?string $label = 'Kredit';
-    protected static ?string $pluralLabel = 'Kredit';
+    protected static ?string $navigationLabel = 'Vyúčtování akcí';
+    protected static ?string $label = 'Vyúčtování akcí';
+    protected static ?string $pluralLabel = 'Vyúčtování akcí';
 
     public static function form(Form $form): Form
     {
@@ -46,8 +53,7 @@ class UserCreditResource extends Resource
                             Select::make('user_id')
                                 ->label(__('user-credit.user'))
                                 ->options(User::all()->pluck('user_identification', 'id'))
-                                ->searchable()
-                                ->required(),
+                                ->searchable(),
                             Select::make('user_race_profile_id')
                                 ->label(__('user-credit.user_profile'))
                                 ->options(UserRaceProfile::all()->pluck('reg_number', 'id'))
@@ -106,9 +112,16 @@ class UserCreditResource extends Resource
                                 ->options(User::all()->pluck('user_identification', 'id'))
                                 ->searchable()
                                 ->default(Auth::id())
-                                ->disabled()
+                                ->disabled(),
 
-                            // ....
+                            Select::make('status')
+                                ->label(__('user-credit.status'))
+                                ->options([
+                                    UserCredit::STATUS_DONE => 'Hotovo',
+                                    UserCredit::STATUS_OPEN => 'V rešení',
+                                    UserCredit::STATUS_UN_ASSIGN => 'Nepřiřazeno',
+                                ])
+                                ->searchable(),
 
                         ])->columnSpan([
                             'sm' => 1,
@@ -128,7 +141,10 @@ class UserCreditResource extends Resource
                     ->dateTime('d.m.Y'),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
-                    ->description(fn (UserCredit $record): string => 'popis transakce'),
+                    ->description(fn (UserCredit $record): string => $record->sportEvent->alt_name != null ? $record->sportEvent->alt_name : 'záznam ID: ' . (string)$record->sportEvent->id),
+                TextColumn::make('user.name')
+                    ->label('Uživatel')
+                    ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label('RegNumber')
                     ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? ''),
@@ -136,18 +152,67 @@ class UserCreditResource extends Resource
                     ->label(__('user-credit.table.amount_title')),
                 TextColumn::make('amount')
                     ->label(__('user-credit.table.amount_title')),
+                TextColumn::make('user_credit_notes_count')
+                    ->label('Komentářů')
+                    ->counts('userCreditNotes'),
+                BadgeColumn::make('status')
+                    ->label('Status')
+                    ->enum(self::getUserCreditStatuses())
+                    ->colors([
+                        'success' => UserCredit::STATUS_DONE,
+                        'secondary' => UserCredit::STATUS_OPEN,
+                        'danger' => UserCredit::STATUS_UN_ASSIGN,
+                    ])
+                    ->searchable(),
                 TextColumn::make('sourceUser.name')
                     ->label(__('user-credit.table.source_user_title')),
             ])
             ->filters([
-                //
+                SelectFilter::make('sport_event_id')
+                    ->label('Závod')
+                    ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id')),
+                SelectFilter::make('status')
+                    ->options(self::getUserCreditStatuses())
+                    ->default(''),
+                Filter::make('user_id')
+                    ->label('Nená přiřazeno závodníka')
+                    ->query(fn (Builder $query): Builder => $query->where('user_id', '=', null))
+                    ->default(true),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\Action::make('create_comment')
+                    ->icon('heroicon-o-ticket')
+                    ->label('Přihlásit na závod.')
+                    ->action(function (Collection $records, array $data): void {
+
+                        dd($data);
+
+
+                    })
+                    ->form([
+                        Forms\Components\Select::make('authorId')
+                            ->label('Author')
+                            ->options(User::query()->pluck('name', 'id'))
+                            ->required(),
+                        Forms\Components\TextInput::make('stiznost')
+                            ->label('stiznost')
+                    ])
+                    ->modalFooter(view('filament.modals.user-credit-comment', (['data' => self::$model])))
+                ])
+
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                //Tables\Actions\DeleteBulkAction::make(),
             ]);
+    }
+
+    private static function getPluckUsers(): Collection
+    {
+        dd();
+        return User::all()->pluck('name', 'id');
     }
 
     public static function getWidgets(): array
@@ -170,6 +235,16 @@ class UserCreditResource extends Resource
             'index' => Pages\ListUserCredits::route('/'),
             'create' => Pages\CreateUserCredit::route('/create'),
             'edit' => Pages\EditUserCredit::route('/{record}/edit'),
+            'view' => Pages\ViewUserCredit::route('/{record}'),
+        ];
+    }
+
+    private static function getUserCreditStatuses(): array
+    {
+        return [
+            UserCredit::STATUS_DONE => 'Hotovo',
+            UserCredit::STATUS_OPEN => 'V rešení',
+            UserCredit::STATUS_UN_ASSIGN => 'Nepřiřazeno',
         ];
     }
 }
