@@ -59,4 +59,12 @@ class ListUserCredits extends ListRecords
 
             ]);
     }
+
+    public function filterFromDay(string $from, string $until): void
+    {
+        $this->tableFilters['date_range']['created_from'] = $from;
+        $this->tableFilters['date_range']['created_until'] = $until;
+
+        $this->getTableFilters();
+    }
 }

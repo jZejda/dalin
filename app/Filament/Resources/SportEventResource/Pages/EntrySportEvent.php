@@ -115,7 +115,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         return 'success';
                     }
                     return 'secondary';
-                    }),
+                }),
             BadgeColumn::make('userRaceProfile.user.name')
                 ->label('Uživatel')
                 ->color(static function ($state): string {
@@ -193,11 +193,11 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         $orisResponse = $response->data($clientResponse->getBody()->getContents());
 
 
-//                    +Method: "deleteEntry"
-//                    +Format: "json"
-//                    +Status: "OK"
-//                    +ExportCreated: "2023-03-08 23:31:58"
-//                    +Data: null
+                        //                    +Method: "deleteEntry"
+                        //                    +Format: "json"
+                        //                    +Status: "OK"
+                        //                    +ExportCreated: "2023-03-08 23:31:58"
+                        //                    +Data: null
 
                         if ($orisResponse->getStatus() === 'OK') {
 
@@ -275,7 +275,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         $entry->si = $data['si'];
                         $entry->rent_si = $data['rent_si'] ?? 0;
                         $entry->stage_x = null;
-                        $entry->entry_created = Carbon::now()->toDateTimeString();;
+                        $entry->entry_created = Carbon::now()->toDateTimeString();
+                        ;
                         $entry->entry_status = EntryStatus::Created;
                         $entry->saveOrFail();
 
@@ -310,13 +311,13 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                     //dd($data);
 
-//                    "raceProfileId" => "2"
-//                      "classId" => "4"
-//                      "note" => "fsfs"
-//                      "club_note" => "fsd"
-//                      "requested_start" => "fsddd"
-//                      "si" => "fsd"
-//                      "rent_si" => false
+                    //                    "raceProfileId" => "2"
+                    //                      "classId" => "4"
+                    //                      "note" => "fsfs"
+                    //                      "club_note" => "fsd"
+                    //                      "requested_start" => "fsddd"
+                    //                      "si" => "fsd"
+                    //                      "rent_si" => false
 
                     $entry = new UserEntry();
                     $entry->sport_event_id = $this->record->id;
@@ -328,7 +329,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     $entry->si = $data['si'];
                     $entry->rent_si = $data['rent_si'] ?? 0;
                     $entry->stage_x = null;
-                    $entry->entry_created = Carbon::now()->toDateTimeString();;
+                    $entry->entry_created = Carbon::now()->toDateTimeString();
+                    ;
                     $entry->entry_status = EntryStatus::Created;
                     $entry->saveOrFail();
 
@@ -536,17 +538,17 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
 
         //                dd($orisResponse);
-//                +Method: "createEntry"
-//                +Format: "json"
-//                +Status: "OK"
-//                +ExportCreated: "2023-02-28 00:22:55"
-//                +data: null
+        //                +Method: "createEntry"
+        //                +Format: "json"
+        //                +Status: "OK"
+        //                +ExportCreated: "2023-02-28 00:22:55"
+        //                +data: null
 
 
         //dd($orisResponse->getStatus() === 'OK'); funguje cekni jestli jsi dostal OK
         //dd($orisResponse->getData()?->getEntry()->getID()); //funguje ID prihlasky
-//                dd($orisResponse->getData());
-//                dd($orisResponse->getExportCreated()); //cas prihlasky taky uloz
+        //                dd($orisResponse->getData());
+        //                dd($orisResponse->getExportCreated()); //cas prihlasky taky uloz
 
     }
 
@@ -562,8 +564,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             return true;
         }
 
-        if ($userEntry->userRaceProfile->user->id !== auth()->user()?->id)
-        {
+        if ($userEntry->userRaceProfile->user->id !== auth()->user()?->id) {
             return true;
         }
 

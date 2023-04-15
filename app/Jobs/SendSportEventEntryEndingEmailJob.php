@@ -7,7 +7,7 @@ namespace App\Jobs;
 use App\Mail\EventEntryEnds;
 use App\Models\SportEvent;
 use App\Models\User;
-use App\Models\UserNotifySetting;
+use App\Models\UserSetting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,7 +19,10 @@ use Illuminate\Support\Facades\Mail;
 
 class SendSportEventEntryEndingEmailJob implements ShouldQueue
 {
-    use Dispatchable;use InteractsWithQueue;use Queueable;use SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public function handle(): void
     {
@@ -29,10 +32,10 @@ class SendSportEventEntryEndingEmailJob implements ShouldQueue
 
         Log::channel('site')->info(sprintf('E-mail notifikace SportEvent v %d hodin', $hour));
 
-        $mailNotifications = UserNotifySetting::where('options->sport_time_trigger', $hour)->get();
+        $mailNotifications = UserSetting::where('options->sport_time_trigger', $hour)->get();
 
         if ($mailNotifications->isNotEmpty()) {
-            /** @var UserNotifySetting $mailNotification */
+            /** @var UserSetting $mailNotification */
             foreach ($mailNotifications as $mailNotification) {
                 $user = User::where('id', '=', $mailNotification->user_id)->first();
                 $options = $mailNotification->options['sport'];

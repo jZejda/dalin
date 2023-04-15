@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * App\Models\UserNotifySetting
+ * App\Models\UserSetting
  *
  * @property integer $id
  * @property integer $user_id
@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property-read User $user
  */
-class UserNotifySetting extends Model
+class UserSetting extends Model
 {
     use HasFactory;
 

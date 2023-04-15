@@ -58,8 +58,7 @@ class UserRaceProfileResource extends Resource
                                         Forms\Components\Actions\Action::make('search_oris_id_by_reg_num')
                                             ->icon('heroicon-o-search')
                                             ->action(function () use ($state, $set) {
-                                                if (blank($state))
-                                                {
+                                                if (blank($state)) {
                                                     Filament::notify('danger', 'Vyplň prosím Registracni cislo.');
                                                     return;
                                                 }
@@ -77,7 +76,7 @@ class UserRaceProfileResource extends Resource
                                                         ->json('Data');
 
 
-//                                            dd($countryData);
+                                                    //                                            dd($countryData);
 
                                                 } catch (RequestException $e) {
                                                     Filament::notify('danger', 'Nepodařilo se načíst data.');
@@ -251,7 +250,8 @@ class UserRaceProfileResource extends Resource
         ];
     }
 
-    private static function getSportLicenceOptions(): array {
+    private static function getSportLicenceOptions(): array
+    {
         return [
             'E' => 'E',
             'A' => 'A',

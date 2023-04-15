@@ -16,7 +16,7 @@ use App\Models\SportClassDefinition;
 
 use App\Models\SportEvent;
 use App\Models\User;
-use App\Models\UserNotifySetting;
+use App\Models\UserSetting;
 use App\Services\OpenMapService;
 use Filament\Notifications\Notification;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
@@ -57,14 +57,14 @@ class TestController extends Controller
         dd(User::whereHas("roles", function ($q) { $q->whereIn('name', ['super_admin', 'event_master']); })->get());
 
         $hour = Carbon::now()->format('H');
-        $mailNotifications = UserNotifySetting::where('options->sport_time_trigger', $hour)->get();
+        $mailNotifications = UserSetting::where('options->sport_time_trigger', $hour)->get();
 
 
         if ($mailNotifications->isNotEmpty()) {
 
             Log::channel('site')->info(sprintf('E-mail notifikace pro %d', count($mailNotifications)));
 
-            /** @var UserNotifySetting $mailNotification */
+            /** @var UserSetting $mailNotification */
             foreach ($mailNotifications as $mailNotification) {
                 $user = User::where('id', '=', $mailNotification->user_id)->first();
                 $options = $mailNotification->options['sport'];
@@ -86,11 +86,11 @@ class TestController extends Controller
 
 
         // toto funguje ----------
-//        $recipient = auth()->user();
-//        Notification::make()
-//            ->title('Saved successfully')
-//            ->sendToDatabase($recipient);
-//        -----------------
+        //        $recipient = auth()->user();
+        //        Notification::make()
+        //            ->title('Saved successfully')
+        //            ->sendToDatabase($recipient);
+        //        -----------------
 
         return true;
 
@@ -103,19 +103,19 @@ class TestController extends Controller
 
 
 
-//        $users = User::where('id', '=', 1)->first();
+        //        $users = User::where('id', '=', 1)->first();
         //dd($users->id);
 
 
-//        Mail::to($users)
-//            ->queue(new AddUpdateSportEvent($users));
+        //        Mail::to($users)
+        //            ->queue(new AddUpdateSportEvent($users));
 
 
-//        dd($users->id);
+        //        dd($users->id);
 
 
-//        $email = new AddUpdateSportEvent();
-//        Mail::to([$users])->queue($email);
+        //        $email = new AddUpdateSportEvent();
+        //        Mail::to([$users])->queue($email);
     }
 
 
@@ -125,15 +125,15 @@ class TestController extends Controller
         Log::channel('site')->error('pokus');
 
 
-//        $recipient = auth()->user();
-//
-//
-//
-//
-//        Notification::make()
-//            ->title('Saved successfully')
-//            ->body('Toto je body message')
-//            ->sendToDatabase($recipient);
+        //        $recipient = auth()->user();
+        //
+        //
+        //
+        //
+        //        Notification::make()
+        //            ->title('Saved successfully')
+        //            ->body('Toto je body message')
+        //            ->sendToDatabase($recipient);
 
         //$pokus = new OrisApiService();
         //$return = $pokus->updateEvent(7012);
@@ -244,8 +244,8 @@ class TestController extends Controller
         $client = $this->client->create();
         $clientResponse = $client->request('POST', 'API', $this->client->getMultipartParams($params));
 
-//        var_dump($clientResponse->getBody()->getContents());
-//        die;
+        //        var_dump($clientResponse->getBody()->getContents());
+        //        die;
 
         //{"Method":"createEntry","Format":"json","Status":"OK","ExportCreated":"2023-01-20 01:07:57","Data":{"Entry":{"ID":2248669}}}
 

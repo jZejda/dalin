@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Pages;
 
 use App\Models\SportList;
-use App\Models\UserNotifySetting;
+use App\Models\UserSetting;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\CheckboxList;
@@ -46,7 +46,7 @@ class UserMailNotification extends Page implements HasForms, HasTable
     public function mount(): void
     {
 
-        $mailNotification = UserNotifySetting::where('user_id', '=', auth()->user()->id)->first();
+        $mailNotification = UserSetting::where('user_id', '=', auth()->user()->id)->first();
         if (!is_null($mailNotification)) {
             $this->news = $mailNotification->options['news'] ?? [];
             $this->news_time_trigger = $mailNotification->options['news_time_trigger'] ?? self::DEFAULT_TRIGGER_EVENT;
@@ -61,9 +61,9 @@ class UserMailNotification extends Page implements HasForms, HasTable
     {
         $this->form->getState();
 
-        $mailNotification = UserNotifySetting::where('user_id', '=', auth()->user()->id)->first();
+        $mailNotification = UserSetting::where('user_id', '=', auth()->user()->id)->first();
         if (is_null($mailNotification)) {
-            $mailNotification = new UserNotifySetting();
+            $mailNotification = new UserSetting();
             $mailNotification->user_id = auth()->user()->id;
             $mailNotification->type = 'mail';
         }
@@ -79,10 +79,6 @@ class UserMailNotification extends Page implements HasForms, HasTable
         $mailNotification->options = $options;
 
         $mailNotification->save();
-
-
-
-
 
         $recipient = auth()->user();
 

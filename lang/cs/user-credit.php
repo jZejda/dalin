@@ -1,6 +1,18 @@
 <?php
 
+use App\Enums\UserCreditStatus;
+
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | UserCredit Resource
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines contain the default strings in UserCredit
+    | resource.
+    |
+    */
 
     'user' => 'Přidat uživateli',
     'user_profile' => 'Závodní profil',
@@ -20,6 +32,12 @@ return [
         'in' => 'Vklad',
         'out' => 'Výběr',
         'donation' => 'Dar',
+    ],
+
+    'credit_status_enum' => [
+        UserCreditStatus::Done->value => 'Hotovo',
+        UserCreditStatus::UnAssign->value => 'Nepřiřazeno',
+        UserCreditStatus::Open->value => 'Otevřeno',
     ],
 
     'credit_source_enum' => [

@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class SendSportEventNearestMail extends Mailable
 {
-    use Queueable;use SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public function __construct()
     {

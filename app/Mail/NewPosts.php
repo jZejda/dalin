@@ -13,7 +13,8 @@ use Illuminate\Support\Collection;
 
 class NewPosts extends Mailable
 {
-    use Queueable;use SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     private Collection $postContent;
 

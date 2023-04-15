@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\SportEventType;
 use App\Http\Components\Oris\GetClubs;
 use App\Http\Components\Oris\GetEventEntries;
 use App\Http\Components\Oris\Response\Entity\Clubs;
@@ -21,6 +22,8 @@ use App\Models\SportRegion;
 use App\Models\SportService;
 use App\Models\UserCredit;
 use App\Models\UserCreditNote;
+use App\Shared\Helpers\AppHelper;
+use Carbon\Carbon;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -101,6 +104,7 @@ final class OrisApiService
             $eventModel->gps_lat = $orisData->getGPSLat();
             $eventModel->gps_lon = $orisData->getGPSLon();
             $eventModel->use_oris_for_entries = true;
+            $eventModel->event_type = SportEventType::Race->value;
 
             $eventModel->save();
 
@@ -223,12 +227,12 @@ final class OrisApiService
 
     private function saveClassDefinitionModel(SportClassDefinition $model, ClassDefinition $data, int $sportId): SportClassDefinition
     {
-            $model->oris_id = $data->getID();
-            $model->sport_id = $sportId;
-            $model->age_from = $data->getAgeFrom();
-            $model->age_to = $data->getAgeTo();
-            $model->gender = $data->getGender();
-            $model->name = $data->getName();
+        $model->oris_id = $data->getID();
+        $model->sport_id = $sportId;
+        $model->age_from = $data->getAgeFrom();
+        $model->age_to = $data->getAgeTo();
+        $model->gender = $data->getGender();
+        $model->name = $data->getName();
 
         try {
             if ($model->save() === false) {
@@ -286,8 +290,8 @@ final class OrisApiService
                     $userCredit->credit_type = UserCredit::CREDIT_TYPE_CACHE_OUT;
                     $userCredit->source = $source;
                     $userCredit->source_user_id = auth()->user()->id;
-                    $userCredit->created_at = now();
-                    $userCredit->updated_at = now();
+                    $userCredit->created_at = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);
+                    $userCredit->updated_at = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);
 
                     $userCredit->saveOrFail();
                 } else {
@@ -306,8 +310,8 @@ final class OrisApiService
                     $userCredit->credit_type = UserCredit::CREDIT_TYPE_CACHE_OUT;
                     $userCredit->source = UserCredit::SOURCE_USER;
                     $userCredit->source_user_id = auth()->user()->id;
-                    $userCredit->created_at = now();
-                    $userCredit->updated_at = now();
+                    $userCredit->created_at = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);
+                    $userCredit->updated_at = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);
 
                     $userCredit->saveOrFail();
                 }

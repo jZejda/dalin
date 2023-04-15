@@ -3,7 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Schema;
+use Filament\Facades\Filament;
+use Illuminate\Foundation\Vite;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,5 +28,14 @@ class AppServiceProvider extends ServiceProvider
         // TODO remove after release product db mysql up 5.7
         // setting for older version db
         // Schema::defaultStringLength(191);
+
+        Filament::serving(function () {
+            // Using Vite
+            Filament::registerTheme(
+                app(Vite::class)('resources/css/app.css'),
+            );
+        });
     }
+
+
 }

@@ -19,9 +19,9 @@ class ApiStoreResponseException extends Exception
     {
         $message = 'ORIS-API | ';
         $message .= 'Model: ' . $this->model . ' | ';
-        $message .= 'UserId: ' . $this->userId ?? 'NaN' . ' | ';
+        $message .= 'UserId: ' . $this->userId . ' | ';
         $message .= 'Message: ' . $this->message . ' | ';
-        $message .= 'Error: ' . $this->getPrevious() ?? 'NaN';
+        $message .= 'Error: ' . $this->getPrevious();
 
         return $message;
     }

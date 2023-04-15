@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\AppRoles;
+use App\Enums\SportEventType;
 use Closure;
 use App\Filament\Resources\SportEventResource\RelationManagers\UserEntryRelationManager;
 use App\Shared\Helpers\AppHelper;
@@ -62,197 +64,216 @@ class SportEventResource extends Resource implements HasShieldPermissions
     {
         return $form
             ->schema([
-                Grid::make([
-                    'sm' => 1,
-                    'md' => 12,
-                ])->schema([
-                    // Main column
-                    Card::make()
-                        ->schema([
+                Forms\Components\Group::make()
+                    ->schema([
+                        Card::make()
+                            ->schema([
+                                Grid::make()->schema([
+                                    TextInput::make('oris_id')
+                                        ->label('ORIS ID')
+                                        ->hint('unikátní ID závodu na ORIS stránkách')
+                                        ->hintIcon('heroicon-s-exclamation')
+                                        ->suffixAction(
+                                            fn ($state, Closure $set) =>
+                                            Action::make('hledej-podle-oris-id')
+                                                ->icon('heroicon-o-search')
+                                                ->action(function () use ($state, $set) {
+                                                    if (blank($state)) {
+                                                        Filament::notify('danger', 'Vyplň prosím ORIS ID závodu.');
+                                                        return;
+                                                    }
 
-                            TextInput::make('oris_id')
-                                ->label('ORIS ID')
-                                ->hint('unikátní ID závodu na ORIS stránkách')
-                                ->hintIcon('heroicon-s-exclamation')
-                                ->suffixAction(
-                                    fn ($state, Closure $set) =>
-                                Action::make('hledej-podle-oris-id')
-                                    ->icon('heroicon-o-search')
-                                    ->action(function () use ($state, $set) {
-                                        if (blank($state))
-                                        {
-                                            Filament::notify('danger', 'Vyplň prosím ORIS ID závodu.');
-                                            return;
-                                        }
-
-                                        try {
-                                            //$client = (new GuzzleClient())->create();
-                                            $orisResponse = Http::get(
-                                                'https://oris.orientacnisporty.cz/API',
-                                                [
-                                                    'format' => 'json',
-                                                    'method' => 'getEvent',
-                                                    'id' => $state,
-                                                ]
-                                            )
-                                                ->throw()
-                                                ->json('Data');
+                                                    try {
+                                                        //$client = (new GuzzleClient())->create();
+                                                        $orisResponse = Http::get(
+                                                            'https://oris.orientacnisporty.cz/API',
+                                                            [
+                                                                'format' => 'json',
+                                                                'method' => 'getEvent',
+                                                                'id' => $state,
+                                                            ]
+                                                        )
+                                                            ->throw()
+                                                            ->json('Data');
 
 
-                                        } catch (RequestException $e) {
-                                            Filament::notify('danger', 'Nepodařilo se načíst data.');
-                                            return;
-                                        }
-                                    $set('name', $orisResponse['Name'] ?? null);
-                                    $set('place', $orisResponse['Place'] ?? null);
-                                    $set('date', $orisResponse['Date'] ?? null);
-                                    $set('entry_date_1', $orisResponse['EntryDate1'] ?? null);
-                                    $set('entry_date_2', $orisResponse['EntryDate2'] ?? null);
-                                    $set('entry_date_3', $orisResponse['EntryDate3'] ?? null);
+                                                    } catch (RequestException $e) {
+                                                        Filament::notify('danger', 'Nepodařilo se načíst data.');
+                                                        return;
+                                                    }
+                                                    $set('name', $orisResponse['Name'] ?? null);
+                                                    $set('place', $orisResponse['Place'] ?? null);
+                                                    $set('date', $orisResponse['Date'] ?? null);
+                                                    $set('entry_date_1', $orisResponse['EntryDate1'] ?? null);
+                                                    $set('entry_date_2', $orisResponse['EntryDate2'] ?? null);
+                                                    $set('entry_date_3', $orisResponse['EntryDate3'] ?? null);
 
-                                    $region = [];
-                                    if (isset($orisResponse['Regions'])) {
-                                        foreach ($orisResponse['Regions'] as $item) {
-                                            $region[] = $item['ID'];
+                                                    $region = [];
+                                                    if (isset($orisResponse['Regions'])) {
+                                                        foreach ($orisResponse['Regions'] as $item) {
+                                                            $region[] = $item['ID'];
 
-                                        }
-                                    }
+                                                        }
+                                                    }
 
-                                    $organizations = [];
-                                    if (isset($orisResponse['Org1']['Abbr'])) {
-                                        $organizations[] = $orisResponse['Org1']['Abbr'];
-                                    }
-                                        if (isset($orisResponse['Org2']['Abbr'])) {
-                                            $organizations[] = $orisResponse['Org2']['Abbr'];
-                                        }
+                                                    $organizations = [];
+                                                    if (isset($orisResponse['Org1']['Abbr'])) {
+                                                        $organizations[] = $orisResponse['Org1']['Abbr'];
+                                                    }
+                                                    if (isset($orisResponse['Org2']['Abbr'])) {
+                                                        $organizations[] = $orisResponse['Org2']['Abbr'];
+                                                    }
 
-                                    $set('region', $region);
-                                    $set('organization', $organizations);
+                                                    $set('region', $region);
+                                                    $set('organization', $organizations);
 
-                                    $set('discipline_id', $orisResponse['Discipline']['ID'] ?? null);
-                                    $set('sport_id', $orisResponse['Sport']['ID'] ?? null);
-                                    $set('level_id', $orisResponse['Level']['ID'] ?? null);
+                                                    $set('discipline_id', $orisResponse['Discipline']['ID'] ?? null);
+                                                    $set('sport_id', $orisResponse['Sport']['ID'] ?? null);
+                                                    $set('level_id', $orisResponse['Level']['ID'] ?? null);
 
-                                    $set('use_oris_for_entries', $orisResponse['UseORISForEntries'] ?? null);
+                                                    $set('use_oris_for_entries', $orisResponse['UseORISForEntries'] ?? null);
 
-                                    $set('start_time', $orisResponse['StartTime'] ?? null);
-                                    $set('gps_lat', $orisResponse['GPSLat'] ?? null);
-                                    $set('gps_lon', $orisResponse['GPSLon'] ?? null);
+                                                    $set('start_time', $orisResponse['StartTime'] ?? null);
+                                                    $set('gps_lat', $orisResponse['GPSLat'] ?? null);
+                                                    $set('gps_lon', $orisResponse['GPSLon'] ?? null);
 
-                                    $set('entry_desc', $orisResponse['EntryDescCZ'] ?? null);
+                                                    $set('entry_desc', $orisResponse['EntryDescCZ'] ?? null);
 
-                                    $set('event_info', $orisResponse['EventInfo'] ?? null);
-                                    $set('event_warning', $orisResponse['EventWarning'] ?? null);
+                                                    $set('event_info', $orisResponse['EventInfo'] ?? null);
+                                                    $set('event_warning', $orisResponse['EventWarning'] ?? null);
 
-                                    })
-                                ),
-                            TextInput::make('name')
-                                ->label('Název závodu/akce')
-                                ->required(),
+                                                })
+                                        ),
 
-                            Grid::make()->schema([
-                                TextInput::make('alt_name')
-                                    ->label('Alternativní název závodu')
-                                    ->hint('Nebude automaticky aktualizován cronem.'),
-                            ])->columns(1),
+                                    Select::make('event_type')
+                                        ->label(__('sport-event.event_type'), )
+                                        ->options(SportEventType::enumArray())
+                                        ->default(SportEventType::Race->value),
 
-                            TextInput::make('place')
-                                ->label('Místo'),
-                            DatePicker::make('date')
-                                ->label('Datum od')
-                                ->displayFormat('d.m.Y')
-                                ->required(),
+                                    TextInput::make('name')
+                                        ->label('Název závodu/akce')
+                                        ->required(),
 
-                            TextInput::make('gps_lat')
-                                ->label('GPS Lat'),
+                                ])->columns(3),
 
-                            TextInput::make('gps_lon')
-                                ->label('GPS Lon'),
+                                Grid::make()->schema([
+                                    TextInput::make('alt_name')
+                                        ->label('Alternativní název závodu')
+                                        ->hint('Nebude automaticky aktualizován cronem.'),
+                                ])->columns(1),
 
-                            Grid::make()->schema([
-                                MarkdownEditor::make('entry_desc')
-                                    ->label('Popis'),
-                                TextInput::make('event_info')
-                                    ->label('Info'),
-                                TextInput::make('event_warning')
-                                    ->label('Upozornění')
-                            ])->columns(1),
-
-                            Grid::make()->schema([
-
-                                Select::make('discipline_id')
-                                    ->label('Disciplína')
-                                    ->options(SportDiscipline::all()->pluck('long_name', 'id'))
-                                    ->searchable()
-                                    ->required(),
-                                Select::make('sport_id')
-                                    ->label('Sport')
-                                    ->options(SportList::all()->pluck('short_name', 'id'))
-                                    ->searchable()
+                                TextInput::make('place')
+                                    ->label('Místo'),
+                                DatePicker::make('date')
+                                    ->label('Datum od')
+                                    ->displayFormat('d.m.Y')
                                     ->required(),
 
-                                Select::make('level_id')
-                                    ->label('Level')
-                                    ->options(SportLevel::all()->pluck('long_name', 'oris_id'))
-                                    ->searchable()
-                                    ->required(),
+                                TextInput::make('gps_lat')
+                                    ->label('GPS Lat'),
 
-                                Select::make('organization')
-                                    ->multiple()
-                                    ->options(Club::all()->pluck('name', 'abbr'))
-                                    ->maxItemsMessage('Je možné definovat pouze dva kluby')
-                                    ->maxItems(2)
-                                    ->searchable(),
+                                TextInput::make('gps_lon')
+                                    ->label('GPS Lon'),
 
-                                Select::make('region')
-                                    ->multiple()
-                                    ->options(SportRegion::all()->pluck('long_name', 'short_name'))
-                                    ->searchable(),
+                                Grid::make()->schema([
+                                    MarkdownEditor::make('entry_desc')
+                                        ->label('Popis'),
+                                    TextInput::make('event_info')
+                                        ->label('Info'),
+                                    TextInput::make('event_warning')
+                                        ->label('Upozornění')
+                                ])->columns(1),
+                            ])
+                            ->columns(2)
+                    ])
+                    ->columnSpan(['lg' => 2]),
 
-                                Toggle::make('use_oris_for_entries')
-                                    ->extraAttributes(['class' => 'mt-4'])
-                                    ->label('Použít ORIS k přihláškám?')
-                                    ->onIcon('heroicon-s-check')
-                                    ->offIcon('heroicon-s-x'),
+                Forms\Components\Group::make()
+                    ->schema([
+                        Section::make('Termíny')
+                            ->description('Možné vypnout automatickou aktualizaci na 2. a 3. termín.')
+                            ->schema([
+                                TextInput::make('start_time')->label('Čas startu'),
+                                DateTimePicker::make('entry_date_1')->displayFormat(AppHelper::DATE_TIME_FULL_FORMAT)->label('První termín'),
+                                Grid::make()->schema([
+                                    DateTimePicker::make('entry_date_2')->displayFormat(AppHelper::DATE_TIME_FULL_FORMAT)->label('Druhý termín'),
+                                    DateTimePicker::make('entry_date_3')->displayFormat(AppHelper::DATE_TIME_FULL_FORMAT)->label('Třetí termín'),
+                                ])->columns(2),
+                            ]),
+                        Section::make('Ostatní parametry')
+                            ->schema([
+                                Grid::make()->schema([
 
-                                Toggle::make('dont_update_excluded')
-                                    ->extraAttributes(['class' => 'mt-4'])
-                                    ->label('Neaktualizovat vybrané')
-                                    ->onIcon('heroicon-s-check')
-                                    ->offIcon('heroicon-s-x')
-                                    ->default(true),
+                                    Select::make('discipline_id')
+                                        ->label('Disciplína')
+                                        ->options(SportDiscipline::all()->pluck('long_name', 'id'))
+                                        ->searchable()
+                                        ->required(),
+                                    Select::make('sport_id')
+                                        ->label('Sport')
+                                        ->options(SportList::all()->pluck('short_name', 'id'))
+                                        ->searchable()
+                                        ->required(),
+
+                                    Select::make('level_id')
+                                        ->label('Level')
+                                        ->options(SportLevel::all()->pluck('long_name', 'oris_id'))
+                                        ->searchable()
+                                        ->required(),
+
+                                    Select::make('organization')
+                                        ->multiple()
+                                        ->options(Club::all()->pluck('name', 'abbr'))
+                                        ->maxItemsMessage('Je možné definovat pouze dva kluby')
+                                        ->maxItems(2)
+                                        ->searchable(),
+
+                                    Grid::make()->schema([
+                                        Select::make('region')
+                                            ->multiple()
+                                            ->options(SportRegion::all()->pluck('long_name', 'short_name'))
+                                            ->searchable(),
+                                    ])->columns(1),
+
+                                    Grid::make()->schema([
+                                        Toggle::make('use_oris_for_entries')
+                                            ->label('Používá ORIS?')
+                                            ->inline(false)
+                                            ->onIcon('heroicon-s-check')
+                                            ->offIcon('heroicon-s-x'),
+
+                                        Toggle::make('dont_update_excluded')
+                                            ->label('Neaktualizovat')
+                                            ->inline(false)
+                                            ->onIcon('heroicon-s-check')
+                                            ->offIcon('heroicon-s-x')
+                                            ->default(true),
+                                        Toggle::make('cancelled')
+                                            ->label('Zrušeno')
+                                            ->inline(false)
+                                            ->onIcon('heroicon-s-check')
+                                            ->offIcon('heroicon-s-x')
+                                            ->onColor('danger')
+                                            ->default(false),
+                                    ])->columns(3),
 
 
-                            ])->columns(3),
-                        ])
-                        ->columns(2)
-                        ->columnSpan([
-                            'sm' => 1,
-                            'md' => 8
-                        ]),
-
-                    // Right Column
-                    Section::make('Termíny')
-                        ->description('Možné vypnout automatickou aktualizaci na 2. a 3. termín.')
-                        ->schema([
-                            TextInput::make('start_time')->label('Čas startu'),
-                            DateTimePicker::make('entry_date_1')->displayFormat(AppHelper::DATE_TIME_FULL_FORMAT)->label('První termín'),
-                            DateTimePicker::make('entry_date_2')->displayFormat(AppHelper::DATE_TIME_FULL_FORMAT)->label('Druhý termín'),
-                            DateTimePicker::make('entry_date_3')->displayFormat(AppHelper::DATE_TIME_FULL_FORMAT)->label('Třetí termín'),
-                        ])->columnSpan([
-                            'sm' => 1,
-                            'md' => 4
-                        ]),
-
-
-                ])
-            ]);
+                                ])->columns(2),
+                            ]),
+                    ])
+                    ->columnSpan(['lg' => 1]),
+            ])
+            ->columns(3);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                ViewColumn::make('entry_type')
+                    ->label('Typ')
+                    ->view('filament.tables.columns.entryType'),
+
                 TextColumn::make('name')
                     ->searchable()
                     ->label('Název')
@@ -261,6 +282,9 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->weight('medium')
                     ->alignLeft()
                     ->limit(50)
+                    ->color(fn (SportEvent $record): string => $record->cancelled === true ? 'danger' : '')
+                    ->icon(fn (SportEvent $record): string => $record->cancelled === true ? 'heroicon-s-x-circle' : '')
+                    ->iconPosition('before') // `before` or `after`
                     //->description(fn (SportEvent $record): string => $record->oris_id ? 'ORIS ID: ' . $record->oris_id : ''),
                     ->description(fn (SportEvent $record): string => $record->alt_name ? $record->alt_name : ''),
 
@@ -271,10 +295,10 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->sortable()
                     ->searchable(),
 
-                BadgeColumn::make('user_entry_count')
-                    ->label('Přihlášeno')
+                ViewColumn::make('user_entry_count')
+                    ->label('Př.')
                     ->counts('userEntry')
-                    ->color(fn (SportEvent $record): string => count($record->userEntry()->get()) > 0 ? 'success' : 'info'),
+                    ->view('filament.tables.columns.entry-user-counts'),
 
                 TextColumn::make('place')
                     ->searchable()
@@ -313,6 +337,9 @@ class SportEventResource extends Resource implements HasShieldPermissions
             ])->defaultSort('date')
 
             ->filters([
+                SelectFilter::make('event_type')
+                    ->label(__('sport-event.event_type'), )
+                    ->options(SportEventType::enumArray()),
                 SelectFilter::make('sport_id')
                     ->label('Sport')
                     ->options(SportList::all()->pluck('short_name', 'id'))
@@ -345,7 +372,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make()
-                        ->visible(auth()->user()->hasRole(['super_admin', 'event_master'])),
+                        ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value])),
                     Tables\Actions\Action::make('registr_entry')
                         ->icon('heroicon-o-ticket')
                         ->label('Přihlásit na závod.')
