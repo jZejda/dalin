@@ -81,8 +81,8 @@ class EntryData extends Page implements HasForms, HasTable
             ->throw()
             ->object();
 
-//        /** @var UserRaceProfile $userRaceProfiles */
-//        $userRaceProfiles = DB::table('user_race_profiles')->get();
+        //        /** @var UserRaceProfile $userRaceProfiles */
+        //        $userRaceProfiles = DB::table('user_race_profiles')->get();
 
 
         if ($orisResponse->Status === 'OK') {
@@ -117,12 +117,12 @@ class EntryData extends Page implements HasForms, HasTable
             }
         }
 
-//        $detail = [
-//            'url' => 'Mail from ItSolutionStuff.com',
-//        ];
-//
-//
-//
+        //        $detail = [
+        //            'url' => 'Mail from ItSolutionStuff.com',
+        //        ];
+        //
+        //
+        //
         // Mail::to('zejda.jiri@gmail.com')->send(new SendSportEventNearestMail());
 
         // auth()->user()->update($state);

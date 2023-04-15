@@ -13,6 +13,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
+use Filament\Resources\Form;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Http\Client\RequestException;
@@ -52,25 +53,25 @@ class UserCreateEntry extends Page implements HasForms, HasTable
 
 
         dd($formData);
-//        $orisResponse = Http::get(OrisApiService::ORIS_API_URL,
-//            [
-//                'format' => 'json',
-//                'method' => 'getEventEntries',
-//                'clubid' => 1,
-//                'eventid' => $eventEntry->oris_id,
-//            ])
-//            ->throw()
-//            ->object();
+        //        $orisResponse = Http::get(OrisApiService::ORIS_API_URL,
+        //            [
+        //                'format' => 'json',
+        //                'method' => 'getEventEntries',
+        //                'clubid' => 1,
+        //                'eventid' => $eventEntry->oris_id,
+        //            ])
+        //            ->throw()
+        //            ->object();
 
-//        /** @var UserRaceProfile $userRaceProfiles */
-//        $userRaceProfiles = DB::table('user_race_profiles')->get();
+        //        /** @var UserRaceProfile $userRaceProfiles */
+        //        $userRaceProfiles = DB::table('user_race_profiles')->get();
 
 
-//        if ($orisResponse->Status === 'OK') {
-//            foreach ($orisResponse->Data as $entry) {
-//
-//            }
-//        }
+        //        if ($orisResponse->Status === 'OK') {
+        //            foreach ($orisResponse->Data as $entry) {
+        //
+        //            }
+        //        }
 
         // auth()->user()->update($state);
 
@@ -98,8 +99,7 @@ class UserCreateEntry extends Page implements HasForms, HasTable
                         Action::make('search_oris_category_by_oris_id')
                             ->icon('heroicon-o-search')
                             ->action(function () use ($state, $set) {
-                                if (blank($state))
-                                {
+                                if (blank($state)) {
                                     Filament::notify('danger', 'Zvol závodní profil.');
                                     return;
                                 }
@@ -119,7 +119,7 @@ class UserCreateEntry extends Page implements HasForms, HasTable
 
 
                                     // TODO pokud je to null tak hlaska nemuzet se prihlasit :-)
-                                     //dd($orisResponse);
+                                    //dd($orisResponse);
 
                                     $selectData = [];
                                     if (count($orisResponse) > 0) {
@@ -134,7 +134,7 @@ class UserCreateEntry extends Page implements HasForms, HasTable
                                 }
                                 Filament::notify('success', 'ORIS v pořádku vrátil požadovaná data.');
 
-                                $set('oris_response_class_id', $selectData ?? []);
+                                $set('oris_response_class_id', $selectData);
                             })
                         ),
                     Select::make('orisClassId')

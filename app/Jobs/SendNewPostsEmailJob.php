@@ -7,7 +7,7 @@ namespace App\Jobs;
 use App\Mail\NewPosts;
 use App\Models\Post;
 use App\Models\User;
-use App\Models\UserNotifySetting;
+use App\Models\UserSetting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,7 +19,10 @@ use Illuminate\Support\Facades\Mail;
 
 class SendNewPostsEmailJob implements ShouldQueue
 {
-    use Dispatchable;use InteractsWithQueue;use Queueable;use SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public function handle(): void
     {
@@ -27,15 +30,15 @@ class SendNewPostsEmailJob implements ShouldQueue
 
         Log::channel('site')->info(sprintf('E-mail notifikace New Post v %d hodin', $hour));
 
-        $mailNotifications = UserNotifySetting::where('options->news_time_trigger', $hour)->get();
+        $mailNotifications = UserSetting::where('options->news_time_trigger', $hour)->get();
 
         if ($mailNotifications->isNotEmpty()) {
-            /** @var UserNotifySetting $mailNotification */
+            /** @var UserSetting $mailNotification */
             foreach ($mailNotifications as $mailNotification) {
                 $user = User::where('id', '=', $mailNotification->user_id)->first();
                 $options = $mailNotification->options['news'];
 
-                $mailContent = Post::wherein('private', $options)
+                $mailContent = Post::whereIn('private', $options)
                     ->where('created_at', '>', Carbon::now()->subDays(2))
                     ->get();
 

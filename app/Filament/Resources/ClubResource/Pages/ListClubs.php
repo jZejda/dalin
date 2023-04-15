@@ -27,8 +27,8 @@ class ListClubs extends ListRecords
 
                     if ($result->getStatus() === 'OK') {
 
-                        $newClubs = count($result->getNewItems());
-                        $updateClubs = count($result->getUpdatedItems());
+                        $newClubs = count($result->getNewItems() ?? []);
+                        $updateClubs = count($result->getUpdatedItems() ?? []);
 
                         Notification::make()
                             ->title('Aktualizace klubů')

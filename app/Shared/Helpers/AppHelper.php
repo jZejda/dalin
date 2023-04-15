@@ -12,6 +12,8 @@ final class AppHelper
     public const DATE_TIME_FULL_FORMAT = 'd. m. Y H:i:s';
     public const DATE_FORMAT = 'd. m. Y';
 
+    public const MYSQL_DATE_TIME = 'Y-m-d H:i:s';
+
 
     public function getDataEntryClassCollor(Carbon $dataTime): string
     {

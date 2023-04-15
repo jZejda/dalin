@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEventResource\Pages;
 
+use App\Enums\AppRoles;
+use App\Shared\Helpers\AppHelper;
+use Carbon\Carbon;
 use Closure;
 use Filament\Forms;
 use App\Filament\Resources\SportEventResource;
@@ -54,7 +57,7 @@ class ListSportEvents extends ListRecords
             ->action(function (array $data): void {
 
 
-               // dd($data['oris_id']));
+                // dd($data['oris_id']));
 
                 $event = (new OrisApiService())->updateEvent(intval($data['oris_id']));
                 if ($event) {
@@ -72,6 +75,7 @@ class ListSportEvents extends ListRecords
             ->modalHeading('Přidej závod z ORISU')
             ->modalSubheading('Přidá do systému zvolený závod s daty které aktuálně poskytuje ORIS')
             ->modalButton('Přidej závod')
+            ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
             ->form([
                 Forms\Components\Grid::make(2)
                     ->schema([
@@ -112,11 +116,11 @@ class ListSportEvents extends ListRecords
                                     \Filament\Forms\Components\Actions\Action::make('get_event')
                                         ->icon('heroicon-o-search')
                                         ->action(function () use ($state, $set, $get) {
-//                                        if (blank($state))
-//                                        {
-//                                            Filament::notify('danger', 'Zvol konkrétní závod.');
-//                                            return;
-//                                        }
+                                            //                                        if (blank($state))
+                                            //                                        {
+                                            //                                            Filament::notify('danger', 'Zvol konkrétní závod.');
+                                            //                                            return;
+                                            //                                        }
 
                                             try {
 
@@ -152,7 +156,8 @@ class ListSportEvents extends ListRecords
 
                                             $orisEventData = [];
                                             foreach ($orisResponse as $event) {
-                                                $orisEventData[$event['ID']] = $event['ID'] . ' - ' . $event['Date'] . ' - ' . $event['Org1']['Abbr'] . ' - ' . $event['Name'] . ' - ' . $event['Discipline']['NameCZ'];
+                                                $date = Carbon::parse($event['Date'])->format(AppHelper::DATE_FORMAT);
+                                                $orisEventData[$event['ID']] = $event['ID'] . ' - ' . $date . ' - ' . $event['Org1']['Abbr'] . ' - ' . $event['Name'] . ' - ' . $event['Discipline']['NameCZ'];
                                             }
 
                                             $set('oris_event_id', $orisEventData);
@@ -185,6 +190,7 @@ class ListSportEvents extends ListRecords
                 ->modalHeading('Pošli notifikaci k závodu/akci')
                 ->modalSubheading('Notifikace je možná poslat do různých kanálů na objekty, jakékoliv objekty v listu')
                 ->modalButton('Ano poslat notifikaci')
+                ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
                 ->form([
                     Forms\Components\Grid::make(2)
                         ->schema([

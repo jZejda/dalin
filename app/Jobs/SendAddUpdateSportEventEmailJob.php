@@ -13,7 +13,10 @@ use Illuminate\Support\Facades\Mail;
 
 class SendAddUpdateSportEventEmailJob implements ShouldQueue
 {
-    use Dispatchable;use InteractsWithQueue;use Queueable;use SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public function __construct()
     {

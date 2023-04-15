@@ -27,12 +27,12 @@ class UserTableSeeder extends Seeder
         ]);
 
         //TODO delete
-//        DB::table('users')->insert([
-//            'name' => 'Virtualr',
-//            'email' => 'virtual@example.com',
-//            'password' => bcrypt(env('VIRTUAL_USER_PASSWORD', 'secret')),
-//            'created_at' => date_format($date, 'Y-m-d H:i:s'),
-//            'updated_at' => date_format($date, 'Y-m-d H:i:s'),
-//        ]);
+        //        DB::table('users')->insert([
+        //            'name' => 'Virtualr',
+        //            'email' => 'virtual@example.com',
+        //            'password' => bcrypt(env('VIRTUAL_USER_PASSWORD', 'secret')),
+        //            'created_at' => date_format($date, 'Y-m-d H:i:s'),
+        //            'updated_at' => date_format($date, 'Y-m-d H:i:s'),
+        //        ]);
     }
 }

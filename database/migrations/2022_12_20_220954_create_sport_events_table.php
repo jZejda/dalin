@@ -21,9 +21,9 @@ return new class () extends Migration {
             $table->string('event_warning')->nullable();
             $table->unsignedBigInteger('sport_id')->default(1);
             $table->foreign('sport_id')->references('id')->on('sport_lists');
-            $table->unsignedBigInteger('discipline_id');
+            $table->unsignedBigInteger('discipline_id')->nullable();
             $table->foreign('discipline_id')->references('id')->on('sport_disciplines');
-            $table->unsignedBigInteger('level_id');
+            $table->unsignedBigInteger('level_id')->nullable();
             $table->foreign('level_id')->references('id')->on('sport_levels');
             $table->string('event_type', 32)->nullable();
             $table->boolean('use_oris_for_entries');

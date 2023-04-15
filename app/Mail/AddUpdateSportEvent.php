@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\DB;
 
 class AddUpdateSportEvent extends Mailable
 {
-    use Queueable;use SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     private User $user;
 
@@ -32,9 +33,9 @@ class AddUpdateSportEvent extends Mailable
     public function content(): Content
     {
         // Note if any change in events Add or Update for last day
-//        $sportEventsFirst = DB::table('sport_events')
-//            ->whereBetween('entry_date_1', [Carbon::now()->addDay(), Carbon::now()->addDays(2)])
-//            ->get();
+        //        $sportEventsFirst = DB::table('sport_events')
+        //            ->whereBetween('entry_date_1', [Carbon::now()->addDay(), Carbon::now()->addDays(2)])
+        //            ->get();
 
         if ($this->user->id === 1) {
             $sportEventsFirst = DB::table('sport_events')->where('id', '=', 1)->get();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\SportEventType;
 use App\Shared\Helpers\EmptyType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,25 +17,25 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property string $name
- * @property ?string $alt_name
+ * @property string|null $alt_name
  * @property int|null $oris_id
- * @property Carbon $date
+ * @property string $date
  * @property string|null $place
  * @property array|null $region
  * @property array|null $organization
  * @property string|null $entry_desc
  * @property string|null $event_info
  * @property string|null $event_warning
- * @property int $sport_id
- * @property int $discipline_id
- * @property int $level_id
+ * @property int|null $sport_id
+ * @property int|null $discipline_id
+ * @property int|null $level_id
  * @property bool $use_oris_for_entries
  * @property bool|null $ranking
  * @property float|null $ranking_coefficient
  * @property string|null $event_type
- * @property Carbon $entry_date_1
- * @property Carbon|null $entry_date_2
- * @property Carbon|null $entry_date_3
+ * @property string $entry_date_1
+ * @property string|null $entry_date_2
+ * @property string|null $entry_date_3
  * @property string|null $start_time
  * @property string|null $gps_lat
  * @property string|null $gps_lon
@@ -103,6 +104,7 @@ class SportEvent extends Model
         'cancelled' => 'bool',
         'weather' => 'array',
         'dont_update_excluded' => 'bool',
+        'event_type' => SportEventType::class,
     ];
 
     public function lastEntryDate(): ?Carbon
