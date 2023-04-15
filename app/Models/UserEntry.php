@@ -18,10 +18,11 @@ use Illuminate\Support\Carbon;
  * @property int $sport_event_id
  * @property int $class_definition_id
  * @property int $user_race_profile_id
- * @property ?string $note
- * @property ?string $club_note
- * @property ?int $requested_start
- * @property ?int $si
+ * @property string|null $class_name
+ * @property string|null $note
+ * @property string|null $club_note
+ * @property int|null $requested_start
+ * @property int|null $si
  * @property bool $rent_si
  * @property int $stage_x
  * @property Carbon|null $entry_created
@@ -44,6 +45,7 @@ class UserEntry extends Model
         'sport_event_id',
         'class_definition_id',
         'user_race_profile_id',
+        'class_name',
         'note',
         'club_note',
         'requested_start',

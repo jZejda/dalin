@@ -46,6 +46,9 @@ case "$1" in
     deploy)
         echo "${BOLD}Run Deploy to product server...${NORMAL}"
         php artisan config:cache
+        php artisan event:cache
+        php artisan route:cache
+        php artisan view:cache
     ;;
     help)
         help

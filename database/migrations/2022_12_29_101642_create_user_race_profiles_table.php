@@ -26,6 +26,7 @@ return new class () extends Migration {
             $table->string('phone')->nullable();
             $table->string('gender', 3);
             $table->integer('si')->unsigned()->nullable();
+            $table->integer('iof_id')->unsigned()->nullable();
 
             $table->string('city')->nullable();
             $table->string('street')->nullable();

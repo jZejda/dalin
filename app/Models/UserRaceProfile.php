@@ -8,24 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-/**
- * App\Models\UserRaceProfile
- *
- * @property int $id
- * @property string $first_name
- * @property string $last_name
- * @property int $user_id
- * @property string $reg_number
- * @property string|null $oris_id
- * @property string|null $email
- * @property string|null $phone
- * @property string $gender
- * @property string|null $created_at
- * @property string|null $updated_at
- *
- * @property-read string $user_race_full_name
- * @property-read User|null $user
- */
 class UserRaceProfile extends Model
 {
     use HasFactory;
@@ -38,11 +20,12 @@ class UserRaceProfile extends Model
      * @property string $last_name
      * @property int $user_id
      * @property string $reg_number
-     * @property ?int $oris_id
-     * @property ?string $email
-     * @property ?string $phone
+     * @property int|null $oris_id
+     * @property int|null $iof_id
+     * @property string|null $email
+     * @property string|null $phone
      * @property string $gender
-     * @property ?int $si
+     * @property int|null $si
      * @property string $city
      * @property string $street
      * @property string $zip
@@ -62,6 +45,7 @@ class UserRaceProfile extends Model
         'user_id',
         'reg_number',
         'oris_id',
+        'iof_id',
         'email',
         'phone',
         'gender',

@@ -16,6 +16,7 @@ return new class () extends Migration {
             $table->foreign('class_definition_id')->references('id')->on('sport_class_definitions');
             $table->unsignedBigInteger('user_race_profile_id');
             $table->foreign('user_race_profile_id')->references('id')->on('user_race_profiles');
+            $table->string('class_name', 60)->nullable();
             $table->string('note', 255)->nullable();
             $table->text('club_note')->nullable();
             $table->string('requested_start')->nullable();
