@@ -281,7 +281,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->tooltip(fn (SportEvent $record): string => $record->last_update ? 'Poslední hromadná aktualizace: ' . $record->last_update->format('m.d.Y - H:i') : '')
                     ->weight('medium')
                     ->alignLeft()
-                    ->limit(50)
+                    ->limit(40)
                     ->color(fn (SportEvent $record): string => $record->cancelled === true ? 'danger' : '')
                     ->icon(fn (SportEvent $record): string => $record->cancelled === true ? 'heroicon-s-x-circle' : '')
                     ->iconPosition('before') // `before` or `after`

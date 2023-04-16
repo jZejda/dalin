@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\AppRoles;
 use App\Filament\Resources\UserRaceProfileResource\Pages;
 use App\Models\User;
 use App\Models\UserRaceProfile;
@@ -197,8 +198,8 @@ class UserRaceProfileResource extends Resource
                     ->label('Registrace')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('user.name')
-                    ->label('Uživatel')
+                TextColumn::make('si')
+                    ->label('SI')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('first_name')
@@ -219,6 +220,11 @@ class UserRaceProfileResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->copyable(),
+
+                Tables\Columns\BadgeColumn::make('user.name')
+                    ->label('Uživatel')
+                    ->colors(['primary'])
+                    ->searchable(),
             ])
             ->filters([
                 //
@@ -226,11 +232,11 @@ class UserRaceProfileResource extends Resource
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make()
-                        ->visible(auth()->user()->hasRole([User::ROLE_SUPER_ADMIN])),
+                        ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value])),
                 ])
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                // Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
