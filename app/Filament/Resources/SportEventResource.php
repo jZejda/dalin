@@ -46,6 +46,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms;
 use Illuminate\Database\Eloquent\Builder;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use pxlrbt\FilamentExcel\Columns\Column;
 
 class SportEventResource extends Resource implements HasShieldPermissions
 {
@@ -377,7 +380,17 @@ class SportEventResource extends Resource implements HasShieldPermissions
                         ->icon('heroicon-o-ticket')
                         ->label('Přihlásit na závod.')
                         ->url(fn (SportEvent $record): string => route('filament.resources.sport-events.entry', $record))
-                        ->openUrlInNewTab()
+                        ->openUrlInNewTab(),
+                        ExportAction::make()
+                        ->exports([
+                            // Pass a string
+                            ExcelExport::make()
+                                ->withFilename(date('Y-m-d') . ' - export')
+                                ->withColumns([
+                                    Column::make('name')->heading('User name'),
+                                    Column::make('created_at')->heading('Creation date'),
+                                ]),    
+                        ])
                 ])
             ])
             ->bulkActions([

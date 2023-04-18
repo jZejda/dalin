@@ -269,6 +269,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         $entry->sport_event_id = $this->record->id;
                         $entry->user_race_profile_id = $userProfileData->id;
                         $entry->class_definition_id = $category?->classDefinition->id;
+                        $entry->class_name = $category->name ?? 'N/A';
                         $entry->note = $data['note'];
                         $entry->club_note = $data['club_note'];
                         $entry->requested_start = $data['requested_start'];
@@ -276,7 +277,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         $entry->rent_si = $data['rent_si'] ?? 0;
                         $entry->stage_x = null;
                         $entry->entry_created = Carbon::now()->toDateTimeString();
-                        ;
                         $entry->entry_status = EntryStatus::Created;
                         $entry->saveOrFail();
 
@@ -323,6 +323,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     $entry->sport_event_id = $this->record->id;
                     $entry->user_race_profile_id = $userProfileData->id;
                     $entry->class_definition_id = $category?->classDefinition->id;
+                    $entry->class_name = $category->name ?? 'N/A';
                     $entry->note = $data['note'];
                     $entry->club_note = $data['club_note'];
                     $entry->requested_start = $data['requested_start'];

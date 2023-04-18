@@ -127,6 +127,7 @@ final class OrisApiService
                 $classModel->sport_event_id = $eventModel->id;
                 $classModel->oris_id = $class->getID();
                 $classModel->class_definition_id = $classDefinitionModel->id;
+                $classModel->name = $class->getName();
                 $classModel->distance = $class->getDistance();
                 $classModel->controls = $class->getControls();
                 $classModel->fee = $class->getFee();

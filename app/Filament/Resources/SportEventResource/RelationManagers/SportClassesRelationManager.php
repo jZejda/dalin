@@ -92,7 +92,7 @@ class SportClassesRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                TextColumn::make('classDefinition.name')
+                TextColumn::make('name')
                     ->label('Kategorie')
                     ->description(fn (SportClass $record): string => $record->classDefinition->class_definition_fullLabel ?? '')
                     ->searchable(),

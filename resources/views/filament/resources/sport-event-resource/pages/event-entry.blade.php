@@ -1,6 +1,8 @@
 @php
     use App\Shared\Helpers\EmptyType;
     use App\Models\SportEvent;
+    use App\Enums\AppRoles;
+    use App\Shared\Helpers\AppHelper;
 
     /** @var SportEvent $record */
 @endphp
@@ -134,7 +136,39 @@
                 </div>
             </div>
         </div>
+
+        @if(count($record->userEntry) >0 && auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
+        <div class="ml-6" x-data="{ openCsos: false }">
+            <button x-on:click="openCsos = ! openCsos" type="button" class="px-3 py-2 text-xs font-medium text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">Export CSOS format</button>
+
+
+            <div x-show="openCsos" class="mt-2">
+                @if(!is_null($record->userEntry))
+                    <div class="mr-5 mt-2 mb-5 pb-5">
+                        <div class="bg-gray-100 p-6 rounded-lg">
+
+                            @foreach($record->userEntry as $entry)
+                                @php
+                                $regNumber = AppHelper::getWhiteSpaceBeforeString($entry->userRaceProfile->reg_number, 8);
+                                $className = AppHelper::getWhiteSpaceBeforeString($entry->class_name, 11);
+                                $si = AppHelper::getWhiteSpaceBeforeString($entry->userRaceProfile->si, 11);
+                                $fullName = $entry->userRaceProfile->last_name . ' ' . $entry->userRaceProfile->first_name;
+                                $name = AppHelper::getWhiteSpaceBeforeString($fullName, 26);
+                                @endphp
+                            <p class="font-mono">{!!$regNumber!!}{!!$className!!}{!!$si!!}{!!$name!!}L {{$entry->note}}</p>
+                            @endforeach
+                        </div>
+                    </div>
+
+                @endif
+            </div>
+        </div>
+        @endif
     </section>
+
+
+
+
 
     <form wire:submit.prevent="submit" class="space-y-6">
         {{ $this->form }}

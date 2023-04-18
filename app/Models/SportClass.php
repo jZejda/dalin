@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property int $sport_event_id
  * @property int|null $oris_id
  * @property int $class_definition_id
+ * @property string|null $name
  * @property string|null $distance
  * @property string|null $climbing
  * @property string|null $controls
@@ -34,6 +35,7 @@ class SportClass extends Model
         'sport_event_id',
         'oris_id',
         'class_definition_id',
+        'name',
         'distance',
         'climbing',
         'controls',

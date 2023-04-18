@@ -27,4 +27,15 @@ final class AppHelper
         return '';
     }
 
+    public static function getWhiteSpaceBeforeString(string $characters, int $totalLength): string
+    {
+        $stringLength = mb_strlen($characters);
+
+        $string = $characters;
+        for ($i = 0; $i < $totalLength - $stringLength; $i++){
+            $string = $string . '&nbsp;';
+        }
+        return $string;
+    }
+
 }

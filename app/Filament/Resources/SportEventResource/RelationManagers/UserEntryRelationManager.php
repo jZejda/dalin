@@ -2,12 +2,17 @@
 
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
+use App\Models\UserEntry;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
+use pxlrbt\FilamentExcel\Columns\Column;
+use Filament\Tables\Actions\Action;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserEntryRelationManager extends RelationManager
 {
@@ -31,7 +36,7 @@ class UserEntryRelationManager extends RelationManager
     {
         return $table
             ->columns([
-                TextColumn::make('sportClassDefinition.name')
+                TextColumn::make('class_name')
                     ->label('Kategorie')
                     ->searchable(),
                 TextColumn::make('userRaceProfile.UserRaceFullName')
@@ -51,6 +56,37 @@ class UserEntryRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
+                ExportAction::make('exportToFile')
+                    ->label('Export přihlášek')
+                    ->exports([
+                        ExcelExport::make()
+                            ->askForFilename(date('Y-m-d') . '_export_prihlasek')
+                            ->askForWriterType()
+                            ->withColumns([
+                                Column::make('si')->heading('SI'),
+                                Column::make('userRaceProfile.reg_number')->heading('Registrační číslo'),
+                                Column::make('userRaceProfile.last_name')->heading('Příjmení'),
+                                Column::make('userRaceProfile.first_name')->heading('Jméno'),
+                                Column::make('class_name')->heading('Kategorie'),
+                                Column::make('note')->heading('Poznámka'),
+                                Column::make('club_note')->heading('Klubová poznámka'),
+                                Column::make('requested_start')->heading('Požadavek na start'),
+                                Column::make('rent_si')->heading('Pujčit čip')->formatStateUsing(fn ($state) => str_replace('=TRUE()', 'ANO', $state)),
+                                Column::make('stage_x')->heading('Etapa'),
+                            ]),
+                    ]),
+                Action::make('exportCsos')
+                    ->label('Přihlášky ČSOS')
+                    ->action(function (Collection $records) {
+                        dd($records);
+                    })
+                    ->form([
+                        Forms\Components\Textarea::make('prihlasky')
+                            ->label('Prihlasky')
+                            ->default(function (UserEntry $record): void {
+                                dd($record);
+                            }),
+                    ])
                 // Tables\Actions\CreateAction::make(),
             ])
             ->actions([
@@ -58,7 +94,7 @@ class UserEntryRelationManager extends RelationManager
                 // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                // Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 }

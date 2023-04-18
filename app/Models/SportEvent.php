@@ -138,9 +138,9 @@ class SportEvent extends Model
         return $this->hasMany(SportService::class, 'sport_event_id', 'id');
     }
 
-    public function userEntry(): HasOne
+    public function userEntry(): HasMany
     {
-        return $this->HasOne(UserEntry::class, 'sport_event_id', 'id');
+        return $this->HasMany(UserEntry::class, 'sport_event_id', 'id');
     }
 
     public function getSportEventOrisTitleAttribute(): string
