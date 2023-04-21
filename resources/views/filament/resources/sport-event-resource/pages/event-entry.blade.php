@@ -11,7 +11,7 @@
 {{--@vite(['resources/css/app.css'])--}}
 
 <x-filament::page>
-    <section class="bg-white dark:bg-gray-900">
+    <section class="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700">
         <div class="py-4 px-4">
             <h2 class="mb-2 text-2xl tracking-tight font-extrabold text-gray-900 dark:text-white">{{ $record->name }}
                 @if (EmptyType::intNotEmpty($record->oris_id))
@@ -145,7 +145,7 @@
             <div x-show="openCsos" class="mt-2">
                 @if(!is_null($record->userEntry))
                     <div class="mr-5 mt-2 mb-5 pb-5">
-                        <div class="bg-gray-100 p-6 rounded-lg">
+                        <div class="bg-gray-100 p-6 rounded-lg dark:bg-gray-800 dark:text-gray-100">
 
                             @foreach($record->userEntry as $entry)
                                 @php

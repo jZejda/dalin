@@ -2,17 +2,14 @@
 
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
-use App\Models\UserEntry;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Table;
 use Filament\Tables\Columns\TextColumn;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
+use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use pxlrbt\FilamentExcel\Columns\Column;
-use Filament\Tables\Actions\Action;
-use Illuminate\Database\Eloquent\Collection;
 
 class UserEntryRelationManager extends RelationManager
 {
@@ -21,6 +18,7 @@ class UserEntryRelationManager extends RelationManager
     protected static ?string $recordTitleAttribute = 'Přihlášky';
 
     protected static ?string $title = 'Přihlášky';
+
 
     public static function form(Form $form): Form
     {
@@ -34,6 +32,10 @@ class UserEntryRelationManager extends RelationManager
 
     public static function table(Table $table): Table
     {
+        //var_dump(\Route::current());
+
+        //dd('fdsfds');
+
         return $table
             ->columns([
                 TextColumn::make('class_name')
@@ -56,10 +58,19 @@ class UserEntryRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                ExportAction::make('exportToFile')
+                //
+            ])
+            ->actions([
+                // Tables\Actions\EditAction::make(),
+                // Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                // Tables\Actions\DeleteBulkAction::make(),
+                ExportBulkAction::make('exportToFile')
                     ->label('Export přihlášek')
                     ->exports([
                         ExcelExport::make()
+                            //->modifyQueryUsing(fn ($query, $ownerRecord) => $query->where('sport_event_id', '=', 16)
                             ->askForFilename(date('Y-m-d') . '_export_prihlasek')
                             ->askForWriterType()
                             ->withColumns([
@@ -75,26 +86,11 @@ class UserEntryRelationManager extends RelationManager
                                 Column::make('stage_x')->heading('Etapa'),
                             ]),
                     ]),
-                Action::make('exportCsos')
-                    ->label('Přihlášky ČSOS')
-                    ->action(function (Collection $records) {
-                        dd($records);
-                    })
-                    ->form([
-                        Forms\Components\Textarea::make('prihlasky')
-                            ->label('Prihlasky')
-                            ->default(function (UserEntry $record): void {
-                                dd($record);
-                            }),
-                    ])
-                // Tables\Actions\CreateAction::make(),
-            ])
-            ->actions([
-                // Tables\Actions\EditAction::make(),
-                // Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                // Tables\Actions\DeleteBulkAction::make(),
             ]);
+    }
+
+    protected function getModelId()
+    {
+        return $this->id;
     }
 }

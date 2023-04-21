@@ -16,6 +16,7 @@ use App\Models\SportClass;
 use App\Models\User;
 use App\Models\UserEntry;
 use App\Filament\Resources\SportEventResource;
+use App\Filament\Resources\SportEventResource\Widgets\EventMap;
 use App\Models\UserRaceProfile;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Facades\Filament;
@@ -502,6 +503,18 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             }
         }
         return $relevantUserRaceProfile;
+    }
+
+    protected function getHeaderWidgetsColumns(): int|array
+    {
+        return 3;
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            EventMap::class,
+        ];
     }
 
     private function orisCreateEntry(array $entryData): CreateEntry

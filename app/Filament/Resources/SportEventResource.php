@@ -173,10 +173,12 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                     ->required(),
 
                                 TextInput::make('gps_lat')
-                                    ->label('GPS Lat'),
+                                    ->label('GPS Lat')
+                                    ->numeric(),
 
                                 TextInput::make('gps_lon')
-                                    ->label('GPS Lon'),
+                                    ->label('GPS Lon')
+                                    ->numeric(),
 
                                 Grid::make()->schema([
                                     MarkdownEditor::make('entry_desc')
@@ -389,7 +391,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                 ->withColumns([
                                     Column::make('name')->heading('User name'),
                                     Column::make('created_at')->heading('Creation date'),
-                                ]),    
+                                ]),
                         ])
                 ])
             ])
