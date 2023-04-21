@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\SportEventType;
+use App\Enums\SportEventMarkerType;
 
 return [
 
@@ -22,4 +23,10 @@ return [
         SportEventType::TrainingCamp->value => 'Soustředění',
         SportEventType::Other->value => 'Ostatní',
     ],
+
+    'type_enum_markers' => [
+        SportEventMarkerType::StageStart->value => 'Start etapy',
+        SportEventMarkerType::Parking->value => 'Parkování',
+        SportEventMarkerType::Other->value => 'Ostatní',
+    ]
 ];

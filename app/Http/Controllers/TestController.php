@@ -41,7 +41,13 @@ class TestController extends Controller
         $this->client = $client;
     }
 
-    public function test(): bool
+    public function test(): void
+    {
+        dd(\Route::current());
+    }
+
+
+    public function oldeTestBook(): bool
     {
 
 

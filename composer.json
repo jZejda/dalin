@@ -23,7 +23,8 @@
         "sentry/sentry-laravel": "^3.2",
         "spatie/laravel-markdown": "^2.2",
         "symfony/property-access": "^6.2",
-        "symfony/serializer": "^6.2"
+        "symfony/serializer": "^6.2",
+        "webbingbrasil/filament-maps": "^1.4"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",
