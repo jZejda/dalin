@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\SportEventLinkType;
 use App\Enums\SportEventType;
 use App\Http\Components\Oris\GetClubs;
 use App\Http\Components\Oris\GetEventEntries;
@@ -12,10 +13,12 @@ use App\Http\Components\Oris\Response\Entity\EventEntries;
 use App\Models\Club;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
+use App\Models\SportEventLink;
 use App\Http\Components\Oris\GetClassDefinitions;
 use App\Http\Components\Oris\GetOris;
 use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\Classes;
+use App\Http\Components\Oris\Response\Entity\Links;
 use App\Http\Components\Oris\Response\Entity\Services;
 use App\Models\SportEvent;
 use App\Models\SportRegion;
@@ -24,6 +27,7 @@ use App\Models\UserCredit;
 use App\Models\UserCreditNote;
 use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
+use Doctrine\DBAL\Types\StringType;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +46,7 @@ final class OrisApiService
         $this->orisResponse = $orisResponse ?? new OrisResponse();
     }
 
-    public function updateEvent(int $eventId): bool
+    public function updateEvent(int $eventId, bool $updateByCron = false): bool
     {
         $getParams = [
             'method' => 'getEvent',
@@ -105,6 +109,10 @@ final class OrisApiService
             $eventModel->gps_lon = $orisData->getGPSLon();
             $eventModel->use_oris_for_entries = true;
             $eventModel->event_type = SportEventType::Race->value;
+            if ($updateByCron) {
+                var_dump('jsem tady');
+                $eventModel->last_update = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);
+            }
 
             $eventModel->save();
 
@@ -152,6 +160,28 @@ final class OrisApiService
                 $serviceModel->qty_available = intval($service->getQtyAvailable());
                 $serviceModel->qty_remaining = intval($service->getQtyRemaining());
                 $serviceModel->save();
+            }
+
+            // Create|Update Links
+            /** @var Links[] $links */
+            $links = $event->links($orisResponse);
+            foreach ($links as $link) {
+                /** @var SportEventLink $sportEventLink */
+                $sportEventLink = SportEventLink::where(['sport_event_id' => $eventModel->id, 'external_key' => (int)$link->getID()])->first();
+                if (is_null($sportEventLink)) {
+                    $sportEventLink = new SportEventLink();
+                    $sportEventLink->sport_event_id = $eventModel->id;
+                }
+
+                $sportEventLink->external_key = (int)$link->getID();
+                $sportEventLink->internal = false;
+                $sportEventLink->source_url = $link->getUrl();
+                $sportEventLink->source_type = SportEventLinkType::mapOrisIdtoEnum((int)$link->getSourceType()?->getID() ?? null); // tady namapovat ID na enum
+                $sportEventLink->name_cz = $link->getSourceType()?->getNameCZ();
+                $sportEventLink->name_en = $link->getSourceType()?->getNameEN();
+                $sportEventLink->description_cz = $link->getOtherDescCZ();
+                $sportEventLink->description_en = $link->getOtherDescEN();
+                $sportEventLink->saveOrFail();
             }
         }
 

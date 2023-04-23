@@ -393,6 +393,11 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                             ->send();
                                     }
 
+
+                                    dd($orisResponse);
+                          
+
+
                                     $selectData = [];
                                     if (count($orisResponse) > 0) {
                                         foreach ($orisResponse as $class) {
@@ -549,7 +554,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         $response = new ManageEntry();
 
         return $response->data($clientResponse->getBody()->getContents());
-
 
         //                dd($orisResponse);
         //                +Method: "createEntry"

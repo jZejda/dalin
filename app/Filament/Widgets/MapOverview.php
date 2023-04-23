@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Widgets;
 
+use App\Enums\SportEventType;
 use DB;
 use App\Models\SportEvent;
 use App\Shared\Helpers\EmptyType;
@@ -65,6 +66,7 @@ class MapOverview extends MapWidget
             $eventMarkers[] = Marker::make((string)$marker->id)
                 ->lat((float)$marker->gps_lat)
                 ->lng((float)$marker->gps_lon)
+                ->color($this->getMarkerByEventType($marker->event_type))
 //                ->icon(
 //                    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
 //                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -100,5 +102,16 @@ class MapOverview extends MapWidget
             ->where('gps_lat', '!=', 0.0)
             ->where('gps_lon', '!=', 0.0)
             ->get();
+    }
+
+    private function getMarkerByEventType(string $eventType): string
+    {
+        return match ($eventType) {
+            SportEventType::Race->value => Marker::COLOR_GREEN,
+            SportEventType::Training->value => Marker::COLOR_YELLOW,
+            SportEventType::TrainingCamp->value => Marker::COLOR_VIOLET,
+            SportEventType::Other->value => Marker::COLOR_ORANGE,
+            default => Marker::COLOR_BLUE,
+        };
     }
 }

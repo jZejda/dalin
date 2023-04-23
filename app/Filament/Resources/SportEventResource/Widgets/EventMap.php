@@ -41,6 +41,7 @@ class EventMap extends MapWidget
 
     public function setUp(): void
     {
+
         /** @var SportEvent[] $sportEvents */
         $sportEvents = $this->getAppropriateEvents();
 
@@ -52,8 +53,16 @@ class EventMap extends MapWidget
             ];
         }
 
-        $this->fitBounds($boundCoords);
+        //$this->fitBounds($boundCoords); // todele ti omezi mapu na body se zoomem
+        $this->mapOptions(['center' => [0, 0], 'zoom' => 2]);
     }
+
+    public function getActions(): array
+{
+    return [
+        Actions\CenterMapAction::make()->centerTo([51.505, -0.09])->zoom(13),
+    ];
+}
 
     public function getMarkers(): array
     {
@@ -93,8 +102,12 @@ class EventMap extends MapWidget
 
     private function getAppropriateEvents(): Collection
     {
+        $uri = $_SERVER['REQUEST_URI'];
+        $uri = explode('/', $uri);
+
         return DB::table('sport_events')
             ->where('cancelled', '!=', 1)
+            ->where('id', '=', (int)$uri[3])
             ->where('gps_lat', '!=', 0.0)
             ->where('gps_lon', '!=', 0.0)
             ->get();

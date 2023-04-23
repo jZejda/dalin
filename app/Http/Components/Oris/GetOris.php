@@ -39,5 +39,15 @@ final class GetOris extends OrisResponse
         );
     }
 
+    public function links(Response $response): array
+    {
+        $data = $this->getResponseArrayPart($response, 'Data.Links');
+        return $this->getSerializerArray()->deserialize(
+            $data,
+            'App\Http\Components\Oris\Response\Entity\Links[]',
+            'json'
+        );
+    }
+
 
 }

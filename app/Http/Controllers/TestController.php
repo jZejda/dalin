@@ -10,6 +10,7 @@ use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
 use App\Http\Controllers\Cron\OrisUpdateEntry;
+use DB;
 
 use App\Mail\EventEntryEnds;
 use App\Models\SportClassDefinition;
@@ -18,6 +19,7 @@ use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserSetting;
 use App\Services\OpenMapService;
+use App\Services\OrisApiService;
 use Filament\Notifications\Notification;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 use Illuminate\Http\Client\Response;
@@ -32,18 +34,41 @@ class TestController extends Controller
     use ManagesFrequencies;
 
     private GuzzleClient $client;
+    private ?OrisApiService $orisApiService;
 
     public const ORIS_API_URL = 'https://oris.orientacnisporty.cz/API';
     public const ORIS_API_DEFAULT_FORMAT = 'json';
 
-    public function __construct(GuzzleClient $client)
+
+    public function __construct(GuzzleClient $client, ?OrisApiService $orisApiService = null)
     {
         $this->client = $client;
+        $this->orisApiService = $orisApiService ?? new OrisApiService();
     }
 
     public function test(): void
     {
-        dd(\Route::current());
+
+       /** @var SportEvent[] $sportEvents */
+       $sportEvents = DB::table('sport_events')
+            ->where('last_update', '<', Carbon::now()->subDays(7))
+            ->whereNotNull('oris_id')
+            ->orWhereNull('last_update')
+            ->where('date', '>', Carbon::now()->addDays(4))
+            ->orderBy('date', 'asc')
+            ->limit(5)
+            ->get();
+
+ 
+
+
+    foreach ($sportEvents as $sportEvent) {
+
+    
+        $this->orisApiService->updateEvent($sportEvent->oris_id, true);
+        Log::channel('site')->info('CRON - Automatický update události ID: ' . $sportEvent->id . ' nazev: ' . $sportEvent->name);
+   
+        }
     }
 
 
@@ -81,7 +106,7 @@ class TestController extends Controller
                     ->where('entry_date_1', '<', Carbon::now()->addDays($daysBefore + 1))
                     ->get();
 
-                dd($mailContent);
+                //dd($mailContent);
 
                 if ($mailContent->isNotEmpty()) {
                     Mail::to($user)

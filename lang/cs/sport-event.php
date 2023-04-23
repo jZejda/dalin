@@ -2,6 +2,7 @@
 
 use App\Enums\SportEventType;
 use App\Enums\SportEventMarkerType;
+use App\Enums\SportEventLinkType;
 
 return [
 
@@ -28,5 +29,22 @@ return [
         SportEventMarkerType::StageStart->value => 'Start etapy',
         SportEventMarkerType::Parking->value => 'Parkování',
         SportEventMarkerType::Other->value => 'Ostatní',
-    ]
+    ],
+
+    'type_enum_links' => [
+        SportEventLinkType::StartList->value => 'Startovka',
+        SportEventLinkType::ResultList->value => 'Výsledky',
+        SportEventLinkType::EventWebsite->value => 'Stránky závodu',
+        SportEventLinkType::TerrainPhotos->value => 'Fotky terénu',
+        SportEventLinkType::Invitation->value => 'Pozvánka',
+        SportEventLinkType::Schedule->value => 'Rozpis',
+        SportEventLinkType::Guidelines->value => 'Pokyny',
+        SportEventLinkType::Accommodation->value => 'Ubytování',
+        SportEventLinkType::MapSample->value => 'Ukázky mapy',
+        SportEventLinkType::RouteChoices->value => 'Postupy',
+        SportEventLinkType::Livelox->value => 'Livevox',
+        SportEventLinkType::Oresults->value => 'Rresult',
+        SportEventLinkType::Photos->value => 'Fotky',
+        SportEventLinkType::Other->value => 'Ostatní',
+    ],
 ];
