@@ -29,7 +29,7 @@ final class AppHelper
 
     public static function getWhiteSpaceBeforeString(?string $characters, int $totalLength): string
     {
-        if (EmptyType::stringNotEmpty($characters)) {
+        if (EmptyType::stringNotEmpty($characters) && !is_null($characters)) {
             $stringLength = mb_strlen($characters);
 
             $string = $characters;

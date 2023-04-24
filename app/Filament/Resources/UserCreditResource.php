@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\UserCreditStatus;
 use App\Filament\Resources\UserCreditResource\Pages;
 use App\Filament\Resources\UserCreditResource\Widgets\UserCreditStats;
 use App\Models\SportEvent;
@@ -116,11 +117,7 @@ class UserCreditResource extends Resource
 
                             Select::make('status')
                                 ->label(__('user-credit.status'))
-                                ->options([
-                                    UserCredit::STATUS_DONE => 'Hotovo',
-                                    UserCredit::STATUS_OPEN => 'V rešení',
-                                    UserCredit::STATUS_UN_ASSIGN => 'Nepřiřazeno',
-                                ])
+                                ->options(UserCreditStatus::enumArray())
                                 ->searchable(),
 
                         ])->columnSpan([
@@ -159,9 +156,9 @@ class UserCreditResource extends Resource
                     ->label('Status')
                     ->enum(self::getUserCreditStatuses())
                     ->colors([
-                        'success' => UserCredit::STATUS_DONE,
-                        'secondary' => UserCredit::STATUS_OPEN,
-                        'danger' => UserCredit::STATUS_UN_ASSIGN,
+                        'success' => UserCreditStatus::Done->value,
+                        'secondary' => UserCreditStatus::Open->value,
+                        'danger' => UserCreditStatus::UnAssign->value,
                     ])
                     ->searchable(),
                 TextColumn::make('sourceUser.name')
@@ -241,10 +238,6 @@ class UserCreditResource extends Resource
 
     private static function getUserCreditStatuses(): array
     {
-        return [
-            UserCredit::STATUS_DONE => 'Hotovo',
-            UserCredit::STATUS_OPEN => 'V rešení',
-            UserCredit::STATUS_UN_ASSIGN => 'Nepřiřazeno',
-        ];
+        return UserCreditStatus::enumArray();
     }
 }

@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEventResource\Widgets;
 
-use App\Enums\SportEventMarkerType;
 use DB;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\EmptyType;
 use App\Models\SportEvent;
-use App\Models\SportEventMarker;
-use App\Models\UserEntry;
-use Illuminate\Support\Str;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
 use Illuminate\Support\Collection;
 use Webbingbrasil\FilamentMaps\Actions;
 use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;

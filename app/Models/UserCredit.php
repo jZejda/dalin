@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\UserCreditStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property ?int $sport_event_id
  * @property ?int $sport_service_id
  * @property float $amount
+ * @property ?float $balance
  * @property string $currency
  * @property string $source
  * @property UserCreditStatus $status
@@ -44,11 +46,6 @@ class UserCredit extends Model
 
     public const SOURCE_CRON = 'cron';
     public const SOURCE_USER = 'user';
-
-    public const STATUS_DONE = 'done';
-    public const STATUS_UN_ASSIGN = 'un_assign';
-    public const STATUS_OPEN = 'open';
-
     public const CREDIT_TYPE_DONATION = 'donation';
     public const CREDIT_TYPE_CACHE_IN = 'in';
     public const CREDIT_TYPE_CACHE_OUT = 'out';
@@ -105,7 +102,7 @@ class UserCredit extends Model
         return $this->hasMany(UserCreditNote::class, 'user_credit_id', 'id');
     }
 
-    public function userCreditNotInternalNotes(): HasMany
+    public function userCreditNotInternalNotes(): Builder
     {
         return $this->hasMany(UserCreditNote::class, 'user_credit_id', 'id')->where('internal', '!=', 1);
     }

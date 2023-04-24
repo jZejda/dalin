@@ -44,11 +44,11 @@ class Kernel extends ConsoleKernel
                 ->limit(5)
                 ->get();
 
-                foreach ($sportEvents as $sportEvent) {
-                    $service = new OrisApiService();
-                    $service->updateEvent($sportEvent->oris_id, true);
-                    Log::channel('site')->info('CRON - Automatický update události ID: ' . $sportEvent->id . ' nazev: ' . $sportEvent->name);
-                }
+            foreach ($sportEvents as $sportEvent) {
+                $service = new OrisApiService();
+                $service->updateEvent($sportEvent->oris_id, true);
+                Log::channel('site')->info('CRON - Automatický update události ID: ' . $sportEvent->id . ' nazev: ' . $sportEvent->name);
+            }
         })->dailyAt('22:00');
 
     }

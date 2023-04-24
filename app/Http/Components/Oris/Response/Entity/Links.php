@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Components\Oris\Response\Entity;
 
-use App\Http\Components\Oris\Response\Entity\SourceType;
-
 final class Links
 {
     public string $ID;
@@ -14,7 +12,7 @@ final class Links
     public string|null $OtherDescCZ;
     public string|null $OtherDescEN;
 
-    public function __construct (string $ID, string $Url, ?SourceType $SourceType, ?string $OtherDescCZ, ?string $OtherDescEN)
+    public function __construct(string $ID, string $Url, ?SourceType $SourceType, ?string $OtherDescCZ, ?string $OtherDescEN)
     {
         $this->ID = $ID;
         $this->Url = $Url;

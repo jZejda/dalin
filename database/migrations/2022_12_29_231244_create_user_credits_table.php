@@ -22,6 +22,7 @@ return new class () extends Migration {
             $table->integer('oris_balance_id')->nullable();
             $table->string('status')->default('done');
             $table->float('amount');
+            $table->float('balance')->nullable();
             $table->string('currency', 5)->default('CZK');
             $table->string('source', 60);
             $table->unsignedBigInteger('source_user_id')->nullable();

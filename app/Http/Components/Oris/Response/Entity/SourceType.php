@@ -10,7 +10,7 @@ final class SourceType
     public string|null $NameCZ;
     public string|null $NameEN;
 
-    public function __construct (int $ID, ?string $NameCZ, ?string $NameEN)
+    public function __construct(int $ID, ?string $NameCZ, ?string $NameEN)
     {
         $this->ID = $ID;
         $this->NameCZ = $NameCZ;

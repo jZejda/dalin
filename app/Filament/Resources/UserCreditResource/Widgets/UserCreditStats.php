@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\UserCreditResource\Widgets;
 
-use App\Models\UserCredit;
+use App\Enums\UserCreditStatus;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
 use Illuminate\Support\Facades\DB;
@@ -24,11 +24,11 @@ class UserCreditStats extends BaseWidget
 
     protected function getSumUnAssignCredit(): null|float
     {
-        return DB::table('user_credits')->where('status', '=', UserCredit::STATUS_UN_ASSIGN)->sum('amount');
+        return DB::table('user_credits')->where('status', '=', UserCreditStatus::UnAssign->value)->sum('amount');
     }
 
     protected function getCountUnAssignCredit(): null|float
     {
-        return DB::table('user_credits')->where('status', '=', UserCredit::STATUS_UN_ASSIGN)->count('id');
+        return DB::table('user_credits')->where('status', '=', UserCreditStatus::UnAssign->value)->count('id');
     }
 }

@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace App\Filament\Resources\SportEventResource\Widgets;
 
 use App\Enums\SportEventType;
-use App\Shared\Helpers\EmptyType;
-use DB;
 use App\Models\SportEvent;
 use App\Models\SportEventMarker;
-use Illuminate\Support\Str;
-use Filament\Forms\Components\TextInput;
+use App\Shared\Helpers\EmptyType;
+use DB;
 use Illuminate\Support\Collection;
 use Webbingbrasil\FilamentMaps\Actions;
-use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
 use Webbingbrasil\FilamentMaps\Marker;
 use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
 
@@ -54,15 +51,17 @@ class EventMap extends MapWidget
         }
 
         //$this->fitBounds($boundCoords); // todele ti omezi mapu na body se zoomem
-        $this->mapOptions(['center' => [0, 0], 'zoom' => 2]);
+        $coords = $this->getCenterMapEvent();
+        $this->mapOptions(['center' => [$coords['lat'], $coords['lng']], 'zoom' => 12]);
     }
 
     public function getActions(): array
-{
-    return [
-        Actions\CenterMapAction::make()->centerTo([51.505, -0.09])->zoom(13),
-    ];
-}
+    {
+        $coords = $this->getCenterMapEvent();
+        return [
+            Actions\CenterMapAction::make()->centerTo([$coords['lat'], $coords['lng']])->zoom(12),
+        ];
+    }
 
     public function getMarkers(): array
     {
@@ -86,6 +85,16 @@ class EventMap extends MapWidget
                 ->popup(EmptyType::stringNotEmpty($marker->alt_name) ? $marker->name .' | ' . $marker->alt_name : $marker->name)
                 ->tooltip(EmptyType::stringNotEmpty($marker->alt_name) ? $marker->name .' | ' . $marker->alt_name : $marker->name);
         }
+
+        /** @var SportEventMarker $eventMarker*/
+        foreach($this->getAdditionalMarkers() as $eventMarker) {
+            $eventMarkers[] = Marker::make((string)$eventMarker->id)
+                ->lat((float)$eventMarker->lat)
+                ->lng((float)$eventMarker->lon)
+                ->color('yellow')
+                ->tooltip(EmptyType::stringNotEmpty($eventMarker->desc) ? $eventMarker->label .' | ' . $eventMarker->desc : $eventMarker->label);
+
+        }
         return $eventMarkers;
     }
 
@@ -100,16 +109,54 @@ class EventMap extends MapWidget
         };
     }
 
+    private function getCenterMapEvent(): array
+    {
+        $uri = $_SERVER['REQUEST_URI'];
+        $uri = explode('/', $uri);
+
+        /** @var SportEvent $event */
+        $event = DB::table('sport_events')
+            ->where('cancelled', '!=', 1)
+            ->where('id', '=', (int)$uri[3])
+            ->where('gps_lat', '!=', 0.0)
+            ->where('gps_lon', '!=', 0.0)
+            ->first();
+
+        if (is_null($event)) {
+            return [
+                'lat' => 49.2062264,
+                'lng' => 16.6066842,
+            ];
+        }
+
+        return [
+            'lat' => (float)$event->gps_lat,
+            'lng' => (float)$event->gps_lon
+        ];
+
+    }
+
     private function getAppropriateEvents(): Collection
     {
         $uri = $_SERVER['REQUEST_URI'];
         $uri = explode('/', $uri);
+
 
         return DB::table('sport_events')
             ->where('cancelled', '!=', 1)
             ->where('id', '=', (int)$uri[3])
             ->where('gps_lat', '!=', 0.0)
             ->where('gps_lon', '!=', 0.0)
+            ->get();
+    }
+
+    private function getAdditionalMarkers(): Collection
+    {
+        $uri = $_SERVER['REQUEST_URI'];
+        $uri = explode('/', $uri);
+
+        return DB::table('sport_event_markers')
+            ->where('sport_event_id', '=', (int)$uri[3])
             ->get();
     }
 }

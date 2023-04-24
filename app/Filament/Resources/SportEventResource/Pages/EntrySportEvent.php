@@ -395,7 +395,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
 
                                     dd($orisResponse);
-                          
+
 
 
                                     $selectData = [];

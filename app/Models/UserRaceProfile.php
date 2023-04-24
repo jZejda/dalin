@@ -8,36 +8,35 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * App\Models\UserRaceProfile
+ *
+ * @property int $id
+ * @property string $first_name
+ * @property string $last_name
+ * @property int $user_id
+ * @property string $reg_number
+ * @property int|null $oris_id
+ * @property int|null $iof_id
+ * @property string|null $email
+ * @property string|null $phone
+ * @property string $gender
+ * @property int|null $si
+ * @property string $city
+ * @property string $street
+ * @property string $zip
+ * @property string $licence_ob
+ * @property string $licence_lob
+ * @property string $licence_mtbo
+ *
+ * @property string $created_at
+ * @property string $updated_at
+ *
+ * @property User $user
+ */
 class UserRaceProfile extends Model
 {
     use HasFactory;
-
-    /**
-     * App\Models\UserRaceProfile
-     *
-     * @property int $id
-     * @property string $first_name
-     * @property string $last_name
-     * @property int $user_id
-     * @property string $reg_number
-     * @property int|null $oris_id
-     * @property int|null $iof_id
-     * @property string|null $email
-     * @property string|null $phone
-     * @property string $gender
-     * @property int|null $si
-     * @property string $city
-     * @property string $street
-     * @property string $zip
-     * @property string $licence_ob
-     * @property string $licence_lob
-     * @property string $licence_mtbo
-     *
-     * @property string $created_at
-     * @property string $updated_at
-     *
-     * @property User $user
-     */
 
     protected $fillable = [
         'first_name',

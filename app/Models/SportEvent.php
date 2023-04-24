@@ -107,7 +107,7 @@ class SportEvent extends Model
         'event_type' => SportEventType::class,
     ];
 
-    public function lastEntryDate(): ?Carbon
+    public function lastEntryDate(): ?string
     {
         if (EmptyType::stringNotEmpty($this->entry_date_3)) {
             return $this->entry_date_3;

@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Enums\SportEventLinkType;
 use App\Enums\SportEventType;
+use App\Enums\UserCreditStatus;
 use App\Http\Components\Oris\GetClubs;
 use App\Http\Components\Oris\GetEventEntries;
 use App\Http\Components\Oris\Response\Entity\Clubs;
@@ -14,6 +15,7 @@ use App\Models\Club;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
 use App\Models\SportEventLink;
+use App\Models\UserRaceProfile;
 use App\Http\Components\Oris\GetClassDefinitions;
 use App\Http\Components\Oris\GetOris;
 use App\Http\Components\Oris\Response\Entity\ClassDefinition;
@@ -23,11 +25,11 @@ use App\Http\Components\Oris\Response\Entity\Services;
 use App\Models\SportEvent;
 use App\Models\SportRegion;
 use App\Models\SportService;
+use App\Models\User;
 use App\Models\UserCredit;
 use App\Models\UserCreditNote;
 use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
-use Doctrine\DBAL\Types\StringType;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -176,7 +178,7 @@ final class OrisApiService
                 $sportEventLink->external_key = (int)$link->getID();
                 $sportEventLink->internal = false;
                 $sportEventLink->source_url = $link->getUrl();
-                $sportEventLink->source_type = SportEventLinkType::mapOrisIdtoEnum((int)$link->getSourceType()?->getID() ?? null); // tady namapovat ID na enum
+                $sportEventLink->source_type = SportEventLinkType::mapOrisIdtoEnum((int)$link->getSourceType()?->getID()); // tady namapovat ID na enum
                 $sportEventLink->name_cz = $link->getSourceType()?->getNameCZ();
                 $sportEventLink->name_en = $link->getSourceType()?->getNameEN();
                 $sportEventLink->description_cz = $link->getOtherDescCZ();
@@ -298,6 +300,7 @@ final class OrisApiService
             foreach ($orisData as $entry) {
                 $regUserNumber = $entry->getRegNo();
 
+                /** @var UserRaceProfile $userRaceProfile */
                 $userRaceProfile = DB::table('user_race_profiles')
                     ->where('reg_number', '=', $regUserNumber)
                     ->first();
@@ -309,7 +312,7 @@ final class OrisApiService
                     $userCredit = UserCredit::where('oris_balance_id', '=', $entry->getID())->first();
                     if ($userCredit === null) {
                         $userCredit = new UserCredit();
-                        $userCredit->status = UserCredit::STATUS_DONE;
+                        $userCredit->status = UserCreditStatus::Done;
                     }
 
                     $userCredit->oris_balance_id = $entry->getID();
@@ -317,6 +320,7 @@ final class OrisApiService
                     $userCredit->user_race_profile_id = $userRaceProfile->id;
                     $userCredit->sport_event_id = $sportEvent->id;
                     $userCredit->amount = -(float)$entry->getFee();
+                    $userCredit->balance = $this->getBalance($userRaceProfile->user, -(float)$entry->getFee());
                     $userCredit->currency = UserCredit::CURRENCY_CZK;
                     $userCredit->credit_type = UserCredit::CREDIT_TYPE_CACHE_OUT;
                     $userCredit->source = $source;
@@ -330,7 +334,7 @@ final class OrisApiService
                     $userCredit = UserCredit::where('oris_balance_id', '=', $entry->getID())->first();
                     if ($userCredit === null) {
                         $userCredit = new UserCredit();
-                        $userCredit->status = UserCredit::STATUS_UN_ASSIGN;
+                        $userCredit->status = UserCreditStatus::UnAssign;
                     }
                     $userCredit->oris_balance_id = $entry->getID();
                     $userCredit->user_id = null;
@@ -393,5 +397,23 @@ final class OrisApiService
         $params = array_merge_recursive(['format' => self::ORIS_API_DEFAULT_FORMAT], $getParams);
 
         return Http::get(self::ORIS_API_URL, $params)->throw();
+    }
+
+    private function getBalance(User $user, float $amouth): float
+    {
+
+        /** @var UserCredit $lastCase*/
+        $lastCase = DB::table('user_credits')
+            ->where('user_id', '=', $user->id)
+            ->whereNotNull('balance')
+            ->orderBy('modified_at', 'desc')
+            ->first();
+
+        if (!is_null($lastCase)) {
+            return $amouth;
+        }
+
+        return $lastCase?->balance;
+
     }
 }

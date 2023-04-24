@@ -58,7 +58,7 @@ class EditSportEvent extends EditRecord
                     ->body('K události byl přidán bod zájmu.')
                     ->success()
                     ->seconds(8)
-                    ->send();               
+                    ->send();
             })
 
 
