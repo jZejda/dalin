@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Models\UserEntry;
 use App\Filament\Resources\SportEventResource;
 use App\Filament\Resources\SportEventResource\Widgets\EventMap;
+use App\Filament\Resources\SportEventResource\Widgets\EventLink;
 use App\Models\UserRaceProfile;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Facades\Filament;
@@ -261,6 +262,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     $userProfileData = UserRaceProfile::where('oris_id', '=', $data['raceProfileId'])->first();
                     $category = SportClass::where('oris_id', '=', $data['classId'])->first();
 
+                    //dd($data['raceProfileId']);
                     $orisResponse = $this->orisCreateEntry($data);
 
                     if ($orisResponse->getStatus() === 'OK') {
@@ -394,7 +396,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                     }
 
 
-                                    dd($orisResponse);
+                                   //dd($orisResponse);
 
 
 
@@ -519,14 +521,16 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     {
         return [
             EventMap::class,
+            // UserCreditChat::class,
+            EventLink::class,
         ];
     }
 
     private function orisCreateEntry(array $entryData): CreateEntry
     {
         $requiredParams = [
-            'clubuser' => $entryData['raceProfileId'],
-            'class' => $entryData['classId'],
+            'clubuser' => 16005,
+            'class' => 172612,
         ];
 
         $allOptionalParams = [

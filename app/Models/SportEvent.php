@@ -54,6 +54,7 @@ use Illuminate\Support\Carbon;
  * @property-read SportService|null $sportServices
  * @property-read SportLevel|null $sportLevel
  * @property-read UserEntry $userEntry
+ * @property-read SportEventLink $sportEventLink
  */
 
 class SportEvent extends Model
@@ -141,6 +142,11 @@ class SportEvent extends Model
     public function userEntry(): HasMany
     {
         return $this->HasMany(UserEntry::class, 'sport_event_id', 'id');
+    }
+
+    public function sportEventLinks(): HasMany
+    {
+        return $this->HasMany(SportEventLink::class, 'sport_event_id', 'id');
     }
 
     public function getSportEventOrisTitleAttribute(): string
