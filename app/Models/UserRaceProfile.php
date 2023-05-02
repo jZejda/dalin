@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $user_id
  * @property string $reg_number
  * @property int|null $oris_id
+ * @property int|null $club_user_id
  * @property int|null $iof_id
  * @property string|null $email
  * @property string|null $phone
@@ -44,6 +45,7 @@ class UserRaceProfile extends Model
         'user_id',
         'reg_number',
         'oris_id',
+        'club_user_id',
         'iof_id',
         'email',
         'phone',

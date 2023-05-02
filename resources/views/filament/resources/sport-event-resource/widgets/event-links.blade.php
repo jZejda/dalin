@@ -25,7 +25,7 @@ use App\Models\SportEventLink;
                     </ul>       
                 @endforeach
             @else
-                 <h2 class="mb-2 tracking-tight text-lg font-semibold text-gray-900 dark:text-white">Závod nemá zatím žádné odkazy 172612</h2>   
+                 <h2 class="mb-2 tracking-tight text-lg font-semibold text-gray-900 dark:text-white">Závod nemá zatím žádné odkazy</h2>   
             @endif
            
         </div>

@@ -22,6 +22,7 @@ return new class () extends Migration {
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('reg_number')->unique();
             $table->string('oris_id')->nullable();
+            $table->string('club_user_id')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('gender', 3);

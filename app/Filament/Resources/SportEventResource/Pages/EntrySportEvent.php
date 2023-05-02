@@ -263,7 +263,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     $category = SportClass::where('oris_id', '=', $data['classId'])->first();
 
                     //dd($data['raceProfileId']);
-                    $orisResponse = $this->orisCreateEntry($data);
+                    $orisResponse = $this->orisCreateEntry($data, $userProfileData);
 
                     if ($orisResponse->getStatus() === 'OK') {
 
@@ -374,10 +374,13 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 }
 
                                 try {
+
+                                    $userProfile = UserRaceProfile::where('oris_id', '=', $state)->first();
+
                                     $params = [
                                         'format' => 'json',
                                         'method' => 'getValidClasses',
-                                        'clubuser' => $state,
+                                        'clubuser' => $userProfile->club_user_id,
                                         'comp' => $this->record->oris_id,
                                     ];
 
@@ -396,7 +399,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                     }
 
 
-                                   //dd($orisResponse);
+                                    //dd($orisResponse);
 
 
 
@@ -407,8 +410,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                         }
                                     }
 
-                                    $userProfileSi = UserRaceProfile::where('oris_id', '=', $state)->first();
-
                                 } catch (RequestException $e) {
                                     Filament::notify('danger', 'Nepodařilo se načíst data.');
                                     return;
@@ -416,7 +417,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 Filament::notify('success', 'ORIS v pořádku vrátil požadovaná data.');
 
                                 $set('specific_response_class_id', $selectData ?? []);
-                                $set('si', $userProfileSi?->si);
+                                $set('si', $userProfile?->si);
                             })
                     ),
                 Select::make('classId')
@@ -526,11 +527,11 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         ];
     }
 
-    private function orisCreateEntry(array $entryData): CreateEntry
+    private function orisCreateEntry(array $entryData, UserRaceProfile $userProfile): CreateEntry
     {
         $requiredParams = [
-            'clubuser' => 16005,
-            'class' => 172612,
+            'clubuser' => $userProfile->club_user_id,
+            'class' => $entryData['classId'],
         ];
 
         $allOptionalParams = [

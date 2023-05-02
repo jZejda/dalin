@@ -6,7 +6,7 @@ namespace App\Http\Components\Oris;
 
 use Illuminate\Http\Client\Response;
 
-class GetClassDefinitions extends OrisResponse
+class GetClubUserId extends OrisResponse
 {
     public function data(Response $response): array
     {
@@ -14,7 +14,7 @@ class GetClassDefinitions extends OrisResponse
 
         return $this->getSerializerArray()->deserialize(
             $data,
-            'App\Http\Components\Oris\Response\Entity\ClassDefinition[]',
+            'App\Http\Components\Oris\Response\Entity\ClubUser[]',
             'json'
         );
     }

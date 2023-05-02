@@ -34,7 +34,7 @@ class UserRaceProfileResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        if (Auth::user()->hasRole('super_admin')) {
+        if (Auth::user()->hasRole(AppRoles::SuperAdmin->value)) {
             return UserRaceProfile::query();
         } else {
             return UserRaceProfile::query()->where('user_id', '=', Auth::user()->id);

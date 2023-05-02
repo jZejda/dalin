@@ -17,11 +17,13 @@ use App\Models\SportClassDefinition;
 use App\Models\SportEventLink;
 use App\Models\UserRaceProfile;
 use App\Http\Components\Oris\GetClassDefinitions;
+use App\Http\Components\Oris\GetClubUserId;
 use App\Http\Components\Oris\GetOris;
 use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Links;
 use App\Http\Components\Oris\Response\Entity\Services;
+use App\Http\Components\Oris\Response\Entity\ClubUser;
 use App\Models\SportEvent;
 use App\Models\SportRegion;
 use App\Models\SportService;
@@ -416,4 +418,38 @@ final class OrisApiService
         return $lastCase?->balance;
 
     }
+
+    public function updateUserClubId(): bool
+    {
+
+        $userRaceProfiles= DB::table('user_race_profiles')
+                ->whereNotNull('oris_id')
+                ->get();
+
+        foreach ($userRaceProfiles as $userRaceProfile) {
+            $getParams = [
+                'method' => 'getClubUsers',
+                'user' => $userRaceProfile->oris_id,
+            ];
+            $orisResponse = $this->orisGetResponse($getParams);
+
+            $clubUserId = new GetClubUserId();
+            if ($clubUserId->checkOrisResponse($orisResponse)) {
+
+                /** @var ClubUser[] $orisData */
+                $orisData = $clubUserId->data($orisResponse);
+
+                foreach ($orisData as $data) {
+                    /** @var UserRaceProfile $model */
+                    $model = UserRaceProfile::where('oris_id', $userRaceProfile->oris_id)->first();
+                    if (!is_null($model) && $data->getRegNo() === $model->reg_number) {
+                        $model->club_user_id = $data->getID();
+                        $model->saveOrFail();
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
 }
