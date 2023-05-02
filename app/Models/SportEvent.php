@@ -33,9 +33,9 @@ use Illuminate\Support\Carbon;
  * @property bool|null $ranking
  * @property float|null $ranking_coefficient
  * @property string|null $event_type
- * @property string $entry_date_1
- * @property string|null $entry_date_2
- * @property string|null $entry_date_3
+ * @property Carbon $entry_date_1
+ * @property Carbon|null $entry_date_2
+ * @property Carbon|null $entry_date_3
  * @property string|null $start_time
  * @property string|null $gps_lat
  * @property string|null $gps_lon
@@ -55,6 +55,7 @@ use Illuminate\Support\Carbon;
  * @property-read SportLevel|null $sportLevel
  * @property-read UserEntry $userEntry
  * @property-read SportEventLink $sportEventLink
+ * @property-read string|null $lastEntryDate
  */
 
 class SportEvent extends Model
@@ -108,7 +109,7 @@ class SportEvent extends Model
         'event_type' => SportEventType::class,
     ];
 
-    public function lastEntryDate(): ?string
+    public function lastEntryDate(): ?Carbon
     {
         if (EmptyType::stringNotEmpty($this->entry_date_3)) {
             return $this->entry_date_3;

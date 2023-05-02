@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Shared\Helpers;
 
+use App\Models\SportEvent;
 use Illuminate\Support\Carbon;
 
 final class AppHelper
@@ -40,6 +41,16 @@ final class AppHelper
         }
 
         return $string;
+    }
+
+    public static function allowModifyUserEntry(SportEvent $sportEvent): bool
+    {
+
+        $lastEntryDate = Carbon::createFromFormat(self::MYSQL_DATE_TIME, $sportEvent->lastEntryDate());
+        $now = Carbon::now();
+
+        return $lastEntryDate->lte($now);
+
     }
 
 }

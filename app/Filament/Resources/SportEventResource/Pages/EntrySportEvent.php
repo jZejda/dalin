@@ -19,6 +19,7 @@ use App\Filament\Resources\SportEventResource;
 use App\Filament\Resources\SportEventResource\Widgets\EventMap;
 use App\Filament\Resources\SportEventResource\Widgets\EventLink;
 use App\Models\UserRaceProfile;
+use App\Shared\Helpers\AppHelper;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
@@ -240,6 +241,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->color('danger')
                 ->label('Odhlásit')
                 ->icon('heroicon-o-trash')
+                ->disabled(fn (UserEntry $record): bool => AppHelper::allowModifyUserEntry($record->sportEvent))
+                //->disabled(fn (UserEntry $record) => dd($record))
                 //->modalHidden(fn (UserEntry $record): bool => $record->userRaceProfile->user() === auth()->user())
 
                 ->modalHeading(fn (UserEntry $record): string => $record->userRaceProfile->user_race_full_name . ' - odhlášení ze závodu')
@@ -334,7 +337,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     $entry->rent_si = $data['rent_si'] ?? 0;
                     $entry->stage_x = null;
                     $entry->entry_created = Carbon::now()->toDateTimeString();
-                    ;
                     $entry->entry_status = EntryStatus::Created;
                     $entry->saveOrFail();
 
@@ -374,7 +376,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 }
 
                                 try {
-
                                     $userProfile = UserRaceProfile::where('oris_id', '=', $state)->first();
 
                                     $params = [
@@ -397,11 +398,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                             ->seconds(10)
                                             ->send();
                                     }
-
-
-                                    //dd($orisResponse);
-
-
 
                                     $selectData = [];
                                     if (count($orisResponse) > 0) {
@@ -469,6 +465,11 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         /** @var SportEvent $sportEvent */
         $sportEvent = $this->record;
         $relevantUserRaceProfile = new Collection();
+
+        if (AppHelper::allowModifyUserEntry($sportEvent)) {
+            return new Collection();
+        }
+
         if (!is_null($sportEvent->oris_id) && $sportEvent->use_oris_for_entries) {
 
             //vyselektuje relevatni profily pro uzivatel
@@ -486,7 +487,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->whereNotIn('ue.entry_status', [EntryStatus::Deleted])
                 ->get();
 
-            // unsetne z pole relevatn9ch profil;
+            // unsetne z pole relevatnich profil;
             foreach ($entries as $entry) {
                 $relevantUserRaceProfile->forget((int)$entry->oris_id);
             }
