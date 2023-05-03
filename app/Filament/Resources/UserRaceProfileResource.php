@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Enums\AppRoles;
@@ -25,7 +27,7 @@ class UserRaceProfileResource extends Resource
 {
     protected static ?string $model = UserRaceProfile::class;
 
-    protected static ?int $navigationSort = 12;
+    protected static ?int $navigationSort = 35;
     protected static ?string $navigationGroup = 'Uživatel';
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
     protected static ?string $navigationLabel = 'Závodní profil';
@@ -34,10 +36,10 @@ class UserRaceProfileResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        if (Auth::user()->hasRole(AppRoles::SuperAdmin->value)) {
+        if (Auth::user()?->hasRole(AppRoles::SuperAdmin->value)) {
             return UserRaceProfile::query();
         } else {
-            return UserRaceProfile::query()->where('user_id', '=', Auth::user()->id);
+            return UserRaceProfile::query()->where('user_id', '=', Auth::user()?->id);
         }
     }
 
@@ -51,7 +53,7 @@ class UserRaceProfileResource extends Resource
                             ->schema([
                                 TextInput::make('reg_number')
                                     ->label('Registrace')
-                                    ->disabled(!Auth::user()->hasRole(User::ROLE_SUPER_ADMIN))
+                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->unique(ignoreRecord: true)
                                     ->required()
                                     ->suffixAction(
@@ -97,16 +99,16 @@ class UserRaceProfileResource extends Resource
                                         'H' => 'Muž',
                                         'D' => 'Žena',
                                     ])
-                                    ->disabled(!Auth::user()->hasRole(User::ROLE_SUPER_ADMIN))
+                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->required(),
 
                                 TextInput::make('first_name')
                                     ->label('Jméno')
-                                    ->disabled(!Auth::user()->hasRole(User::ROLE_SUPER_ADMIN))
+                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->required(),
                                 TextInput::make('last_name')
                                     ->label('Příjmení')
-                                    ->disabled(!Auth::user()->hasRole(User::ROLE_SUPER_ADMIN))
+                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->required(),
                             ])
                             ->columns(2),
@@ -146,13 +148,13 @@ class UserRaceProfileResource extends Resource
                             ->schema([
                                 TextInput::make('oris_id')
                                     ->label('Oris ID')
-                                    ->disabled(!Auth::user()->hasRole(User::ROLE_SUPER_ADMIN)),
+                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN)),
                                 Select::make('user_id')
                                     ->options(function () {
                                         return User::all()->pluck('user_identification', 'id');
                                     })
                                     ->searchable()
-                                    ->disabled(!Auth::user()->hasRole(User::ROLE_SUPER_ADMIN))
+                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->default(Auth::id())
                                     ->helperText('Automaticky přiřazeno uživateli')
                                     ->disabled(function () {

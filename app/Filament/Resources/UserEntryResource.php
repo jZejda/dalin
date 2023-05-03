@@ -20,7 +20,7 @@ class UserEntryResource extends Resource
 {
     protected static ?string $model = UserEntry::class;
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 30;
     protected static ?string $navigationGroup = 'Uživatel';
     protected static ?string $navigationIcon = 'heroicon-o-flag';
     protected static ?string $navigationLabel = 'Přihlášky';
@@ -29,7 +29,7 @@ class UserEntryResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        if (Auth::user()->hasRole('super_admin')) {
+        if (Auth::user()?->hasRole('super_admin')) {
             return UserEntry::query();
         } else {
             return UserEntry::query()

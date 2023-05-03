@@ -322,7 +322,8 @@ final class OrisApiService
                     $userCredit->user_race_profile_id = $userRaceProfile->id;
                     $userCredit->sport_event_id = $sportEvent->id;
                     $userCredit->amount = -(float)$entry->getFee();
-                    $userCredit->balance = $this->getBalance($userRaceProfile->user, -(float)$entry->getFee());
+                    //$userCredit->balance = $this->getBalance($userRaceProfile->user, -(float)$entry->getFee());
+                    $userCredit->balance = -(float)$entry->getFee();
                     $userCredit->currency = UserCredit::CURRENCY_CZK;
                     $userCredit->credit_type = UserCredit::CREDIT_TYPE_CACHE_OUT;
                     $userCredit->source = $source;

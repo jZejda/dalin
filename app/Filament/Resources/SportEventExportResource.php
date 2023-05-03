@@ -24,8 +24,9 @@ class SportEventExportResource extends Resource
 {
     protected static ?string $model = SportEventExport::class;
 
+    public static ?int $navigationSort = 12;
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-    protected static ?string $navigationGroup = 'Správa';
+    protected static ?string $navigationGroup = 'Akce/Závody';
     protected static ?string $label = 'Výstup pro pořádání';
     protected static ?string $pluralLabel = 'Výstupy pro pořádání';
 

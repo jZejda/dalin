@@ -30,7 +30,7 @@ class StatsOverview extends BaseWidget
             ->where('date', '<', $endOfYear)
             ->count();
 
-        $jo = Auth::user()->hasRole('super_admin');
+        $jo = Auth::user()?->hasRole('super_admin');
 
         return [
             Card::make('Uživatelů', $usersCount),

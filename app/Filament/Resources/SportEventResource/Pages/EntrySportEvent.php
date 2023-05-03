@@ -66,7 +66,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         $this->beforeBooted();
 
         // @todo refactor check Filament::user ability.
-        if (!Auth::user()->hasRole(User::ROLE_MEMBER . '|' . User::ROLE_EVENT_MASTER . '|' . User::ROLE_SUPER_ADMIN)) {
+        if (!Auth::user()?->hasRole(User::ROLE_MEMBER . '|' . User::ROLE_EVENT_MASTER . '|' . User::ROLE_SUPER_ADMIN)) {
             $this->notify('warning', __('filament-shield::filament-shield.forbidden'));
 
             $this->beforeShieldRedirects();

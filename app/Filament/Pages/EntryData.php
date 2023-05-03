@@ -38,6 +38,8 @@ class EntryData extends Page implements HasForms, HasTable
     use InteractsWithForms;
     use InteractsWithTable;
 
+
+    public static ?int $navigationSort = 110;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.entry-data';
     protected static ?string $slug = 'custom-url-slug';
@@ -46,8 +48,6 @@ class EntryData extends Page implements HasForms, HasTable
     public string $sportEventId = '';
 
     public array $last_files = [];
-
-
 
     public function mount(): void
     {

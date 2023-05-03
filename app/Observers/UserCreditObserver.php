@@ -13,6 +13,6 @@ class UserCreditObserver
          */
     public function updated(UserCredit $userCredit): void
     {
-        dd('dela to neco?');
+        //dd('dela to neco?');
     }
 }

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\UserCreditResource\Pages;
 
+use App\Enums\AppRoles;
 use App\Filament\Resources\UserCreditResource;
 use App\Filament\Resources\UserCreditResource\Widgets\UserCreditChat;
+use App\Models\User;
 use App\Models\UserCreditNote;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Notifications\Notification;
@@ -54,6 +56,15 @@ class ViewUserCredit extends ViewRecord
                         ->success()
                         ->seconds(8)
                         ->send();
+
+                    $notificationUsers = User::role([AppRoles::BillingSpecialist->value , AppRoles::SuperAdmin->value])->get();
+                    // vytahni si data podle $this->record
+                    foreach ($notificationUsers as $recipient) {
+                        Notification::make()
+                            ->title('Poznámka k vyúčtování')
+                            ->body('Uživatel: ' . auth()->user()?->name . ' | Vyúčtování ID: ' . $this->record->id)
+                            ->sendToDatabase($recipient);
+                    }
                 }
             })
 

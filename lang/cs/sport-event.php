@@ -3,6 +3,7 @@
 use App\Enums\SportEventType;
 use App\Enums\SportEventMarkerType;
 use App\Enums\SportEventLinkType;
+use App\Enums\UserCreditStatus;
 
 return [
 
@@ -17,6 +18,13 @@ return [
     */
 
     'event_type' => 'Typ akcí',
+
+
+    'type_enum_credit_status' => [
+        UserCreditStatus::Done->value => 'hotovo',
+        UserCreditStatus::UnAssign->value => 'nepřiřazeno',
+        UserCreditStatus::Open->value => 'otevřeno',
+    ],
 
     'type_enum' => [
         SportEventType::Race->value => 'Závod',

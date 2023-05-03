@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ContentCategoryResource extends Resource
 {
-    protected static ?int $navigationSort = 20;
+    protected static ?int $navigationSort = 69;
     protected static ?string $model = ContentCategory::class;
     protected static ?string $navigationIcon = 'heroicon-o-tag';
     protected static ?string $navigationGroup = 'Obsah';

@@ -27,6 +27,7 @@ use Illuminate\Support\Str;
 
 class PageResource extends Resource
 {
+    public static ?int $navigationSort = 60;
     protected static ?string $model = Page::class;
     protected static ?string $navigationIcon = 'heroicon-o-document';
     protected static ?string $navigationGroup = 'Obsah';
@@ -87,7 +88,7 @@ class PageResource extends Resource
                                             1 => 'HTML',
                                             2 => 'Markdown',
                                         ])->default(2)
-                                ->disabled(!Auth::user()->hasRole('super_admin'))
+                                ->disabled(!Auth::user()?->hasRole('super_admin'))
                                 ->required(),
 
                             Select::make('content_category_id')

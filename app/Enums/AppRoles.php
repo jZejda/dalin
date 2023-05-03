@@ -11,6 +11,7 @@ enum AppRoles: string
     case Member = 'member';
     case Racer = 'racer';
     case Redactor = 'redactor';
+    case BillingSpecialist = 'billing_specialist';
 
     public static function enumArray(): array
     {
@@ -20,6 +21,7 @@ enum AppRoles: string
             'member' => self::Member,
             'racer' => self::Racer,
             'redactor' => self::Redactor,
+            'billing_specialist' => self::BillingSpecialist,
         ];
     }
 }

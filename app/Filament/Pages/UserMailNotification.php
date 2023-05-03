@@ -27,7 +27,7 @@ class UserMailNotification extends Page implements HasForms, HasTable
     use InteractsWithForms;
     use InteractsWithTable;
 
-    protected static ?int $navigationSort = 13;
+    protected static ?int $navigationSort = 37;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.user-mail-notification';
     protected static ?string $slug = 'mail-notification';

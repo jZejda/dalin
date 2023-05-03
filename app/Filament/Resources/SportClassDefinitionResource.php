@@ -17,9 +17,9 @@ class SportClassDefinitionResource extends Resource
 {
     protected static ?string $model = SportClassDefinition::class;
 
+    protected static ?int $navigationSort = 100;
     protected static ?string $navigationIcon = 'heroicon-o-collection';
-    protected static ?int $navigationSort = 10;
-    protected static ?string $navigationGroup = 'Akce/Závody';
+    protected static ?string $navigationGroup = 'Správa';
     protected static ?string $label = 'Definice kategorie';
     protected static ?string $pluralLabel = 'Definice kategorií';
 

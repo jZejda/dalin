@@ -19,7 +19,7 @@
                 $userName = $note->userNoteMade->name;
             @endphp
 
-            @if (Auth::user()->hasRole(['super_admin']) && !$note->private )
+            @if (Auth::user()?->hasRole(['super_admin']) && !$note->private )
                 @if ($loop->last)
                     <li class="ml-4">
                 @else

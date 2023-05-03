@@ -49,26 +49,7 @@ class TestController extends Controller
     public function test(): void
     {
 
-        /** @var SportEvent[] $sportEvents */
-        $sportEvents = DB::table('sport_events')
-             ->where('last_update', '<', Carbon::now()->subDays(7))
-             ->whereNotNull('oris_id')
-             ->orWhereNull('last_update')
-             ->where('date', '>', Carbon::now()->addDays(4))
-             ->orderBy('date', 'asc')
-             ->limit(5)
-             ->get();
-
-
-
-
-        foreach ($sportEvents as $sportEvent) {
-
-
-            $this->orisApiService->updateEvent($sportEvent->oris_id, true);
-            Log::channel('site')->info('CRON - Automatický update události ID: ' . $sportEvent->id . ' nazev: ' . $sportEvent->name);
-
-        }
+        dd(User::role(['super_admin'])->get());
     }
 
 

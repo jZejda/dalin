@@ -29,6 +29,7 @@ use Illuminate\Support\Str;
 
 class PostResource extends Resource
 {
+    public static ?int $navigationSort = 65;
     protected static ?string $model = Post::class;
     protected static ?string $navigationIcon = 'heroicon-o-newspaper';
     protected static ?string $navigationGroup = 'Obsah';
@@ -93,7 +94,7 @@ class PostResource extends Resource
                                         2 => 'Markdown',
                                     ]
                                 )->default(2)
-                                ->disabled(!Auth::user()->hasRole('super_admin'))
+                                ->disabled(!Auth::user()?->hasRole('super_admin'))
                                 ->required(),
                         ])->columnSpan([
                             'sm' => 1,

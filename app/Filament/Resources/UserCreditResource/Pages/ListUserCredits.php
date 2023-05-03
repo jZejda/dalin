@@ -12,6 +12,7 @@ use Filament\Forms\Components\Select;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Forms\Components\Grid;
+use Illuminate\Contracts\View\View;
 
 class ListUserCredits extends ListRecords
 {
@@ -23,6 +24,17 @@ class ListUserCredits extends ListRecords
             Actions\CreateAction::make(),
             $this->getEventOrisBalance(),
         ];
+    }
+
+    public array $data_list= [
+        'calc_columns' => [
+            'amount',
+        ],
+    ];
+
+    protected function getTableContentFooter(): ?View
+    {
+        return view('filament.resources.user-credit-resource.tables.footer', $this->data_list);
     }
 
     protected function getHeaderWidgets(): array

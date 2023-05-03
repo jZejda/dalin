@@ -18,8 +18,8 @@ class ClubResource extends Resource
 {
     protected static ?string $model = Club::class;
 
+    public static ?int $navigationSort = 11;
     protected static ?string $navigationIcon = 'heroicon-o-identification';
-    public static ?int $navigationSort = 9;
     protected static ?string $navigationGroup = 'Akce/Závody';
     protected static ?string $label = 'Klub';
     protected static ?string $pluralLabel = 'Kluby';

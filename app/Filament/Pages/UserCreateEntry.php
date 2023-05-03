@@ -27,6 +27,7 @@ class UserCreateEntry extends Page implements HasForms, HasTable
     use InteractsWithForms;
     use InteractsWithTable;
 
+    public static ?int $navigationSort = 120;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.user-create-entry';
     protected static ?string $slug = 'user-create-entry';

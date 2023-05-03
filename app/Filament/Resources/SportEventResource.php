@@ -54,8 +54,8 @@ class SportEventResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = SportEvent::class;
 
+    protected static ?int $navigationSort = 10;
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
-    protected static ?int $navigationSort = 1;
     protected static ?string $navigationGroup = 'Akce/Závody';
     protected static ?string $navigationLabel = 'Závod';
     protected static ?string $label = 'Závod / událost';
