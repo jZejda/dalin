@@ -45,12 +45,6 @@ final class AppHelper
 
     public static function allowModifyUserEntry(SportEvent $sportEvent): bool
     {
-
-        $lastEntryDate = Carbon::createFromFormat(self::MYSQL_DATE_TIME, $sportEvent->lastEntryDate());
-        $now = Carbon::now();
-
-        return $lastEntryDate->lte($now);
-
+        return $sportEvent->lastEntryDate()->lte(Carbon::now());
     }
-
 }

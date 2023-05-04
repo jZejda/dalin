@@ -46,7 +46,9 @@ class UserMailNotification extends Page implements HasForms, HasTable
     public function mount(): void
     {
 
-        $mailNotification = UserSetting::where('user_id', '=', auth()->user()->id)->first();
+        $mailNotification = UserSetting::where('user_id', '=', auth()->user()->id)
+            ->where('type', '=', 'mail')
+            ->first();
         if (!is_null($mailNotification)) {
             $this->news = $mailNotification->options['news'] ?? [];
             $this->news_time_trigger = $mailNotification->options['news_time_trigger'] ?? self::DEFAULT_TRIGGER_EVENT;
@@ -61,7 +63,9 @@ class UserMailNotification extends Page implements HasForms, HasTable
     {
         $this->form->getState();
 
-        $mailNotification = UserSetting::where('user_id', '=', auth()->user()->id)->first();
+        $mailNotification = UserSetting::where('user_id', '=', auth()->user()->id)
+            ->where('type', '=', 'mail')
+            ->first();
         if (is_null($mailNotification)) {
             $mailNotification = new UserSetting();
             $mailNotification->user_id = auth()->user()->id;

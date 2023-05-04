@@ -55,7 +55,6 @@ use Illuminate\Support\Carbon;
  * @property-read SportLevel|null $sportLevel
  * @property-read UserEntry $userEntry
  * @property-read SportEventLink $sportEventLink
- * @property-read string|null $lastEntryDate
  */
 
 class SportEvent extends Model
@@ -111,9 +110,9 @@ class SportEvent extends Model
 
     public function lastEntryDate(): ?Carbon
     {
-        if (EmptyType::stringNotEmpty($this->entry_date_3)) {
+        if (!is_null($this->entry_date_3)) {
             return $this->entry_date_3;
-        } elseif (EmptyType::stringNotEmpty($this->entry_date_2)) {
+        } elseif (!is_null($this->entry_date_2)) {
             return $this->entry_date_2;
         } else {
             return $this->entry_date_1;

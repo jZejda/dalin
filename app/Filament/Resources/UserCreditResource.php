@@ -208,7 +208,6 @@ class UserCreditResource extends Resource
 
     private static function getPluckUsers(): Collection
     {
-        dd();
         return User::all()->pluck('name', 'id');
     }
 
