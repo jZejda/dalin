@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\SportEventType;
-use App\Shared\Helpers\EmptyType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -142,6 +141,11 @@ class SportEvent extends Model
     public function userEntry(): HasMany
     {
         return $this->HasMany(UserEntry::class, 'sport_event_id', 'id');
+    }
+
+    public function userEntryActive(): int
+    {
+        return $this->HasMany(UserEntry::class, 'sport_event_id', 'id')->whereIn('entry_status',['created'])->count();
     }
 
     public function sportEventLinks(): HasMany

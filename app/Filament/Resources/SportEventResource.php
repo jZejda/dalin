@@ -300,9 +300,8 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->sortable()
                     ->searchable(),
 
-                ViewColumn::make('user_entry_count')
+                ViewColumn::make('user_entry')
                     ->label('Př.')
-                    ->counts('userEntry')
                     ->view('filament.tables.columns.entry-user-counts'),
 
                 TextColumn::make('place')

@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $created_at
  * @property string|null $updated_at
  *
+ * @property-read int $userCreditNoteCount
  * @property-read User $user
  * @property-read User $sourceUser
  * @property-read UserRaceProfile $userRaceProfile
@@ -102,9 +103,9 @@ class UserCredit extends Model
         return $this->hasMany(UserCreditNote::class, 'user_credit_id', 'id');
     }
 
-    public function userCreditNotInternalNotes(): Builder
+    public function userCreditNoteCount(): int
     {
-        return $this->hasMany(UserCreditNote::class, 'user_credit_id', 'id')->where('internal', '!=', 1);
+        return $this->hasMany(UserCreditNote::class, 'user_credit_id', 'id')->whereNotIn('internal', [1])->count();
     }
 
     public function userCreditInternalOrisNote(int $userCreditId): ?Model

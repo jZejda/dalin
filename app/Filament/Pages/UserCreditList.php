@@ -12,6 +12,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
@@ -54,7 +55,7 @@ class UserCreditList extends Page implements HasForms, HasTable
             TextColumn::make('sportEvent.name')
                 ->label(__('user-credit.table.sport_event_title'))
                 ->url(fn (UserCredit $record): string => route('filament.resources.user-credits.view', ['record' => $record->id]))
-                ->description(fn (UserCredit $record): string => $record->sportEvent->alt_name != null ? $record->sportEvent->alt_name : 'záznam ID: ' . (string)$record->sportEvent->id)
+                ->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name != null ? $record->sportEvent?->alt_name : 'záznam ID: ' . (string)$record->id)
                 ->sortable()
                 ->searchable(),
             TextColumn::make('userRaceProfile.reg_number')
@@ -63,12 +64,12 @@ class UserCreditList extends Page implements HasForms, HasTable
                 ->sortable()
                 ->searchable(),
             TextColumn::make('amount')
+                ->icon(fn(UserCredit $record): string => $record->amount >= 0 ? 'heroicon-s-trending-up' : 'heroicon-s-trending-down')
+                ->color(fn(UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')
                 ->label(__('user-credit.table.amount_title')),
-            TextColumn::make('amount')
-                ->label(__('user-credit.table.amount_title')),
-            TextColumn::make('user_credit_notes_count')
+            ViewColumn::make('user_entry')
                 ->label('Komentářů')
-                ->counts('userCreditNotes'),
+                ->view('filament.tables.columns.user-credit-comments-count'),
             TextColumn::make('sourceUser.name')
                 ->label(__('user-credit.table.source_user_title')),
         ];

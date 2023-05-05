@@ -1,9 +1,9 @@
 <?php
-    use App\Models\SportEvent;
+use App\Models\UserCredit;
 
-    /** @var SportEvent $sportEvent  */
-    $sportEvent = $getRecord();
-    $count = $sportEvent->userEntryActive();
+/** @var UserCredit $userCredit  */
+$userCredit = $getRecord();
+$count = $userCredit->userCreditNoteCount();
 ?>
 
 <div class="ml-4">
@@ -14,8 +14,9 @@
             </div>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="file: mt-4 h-6 w-6">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
-                <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+                <path d="M8 9h8"></path>
+                <path d="M8 13h6"></path>
+                <path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"></path>
             </svg>
         </div>
     @endif
