@@ -9,6 +9,7 @@ use App\Http\Components\Oris\GuzzleClient;
 use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
+use App\Http\Controllers\Cron\Jobs\UpdateEventWeather;
 use App\Http\Controllers\Cron\OrisUpdateEntry;
 use App\Models\UserRaceProfile;
 use DB;
@@ -50,29 +51,7 @@ class TestController extends Controller
     public function test(): void
     {
 
-        $relevantUserRaceProfile = UserRaceProfile::all();
-        if (true) {
-            $relevantUserRaceProfile = $relevantUserRaceProfile->where('user_id', '=', auth()->user()->id);
-        }
-
-        // Add AllowingAnotherUserRaceProfile
-        $allowRegisterUserProfile = UserSetting::where('user_id', '=', auth()->user()->id)
-            ->where('type', '=', 'allowRegisterUserProfile')
-            ->first();
-//
-        if (isset($allowRegisterUserProfile->options['profileIds'])) {
-            foreach ($allowRegisterUserProfile->options['profileIds'] as $profileId) {
-                $userProfile = UserRaceProfile::where('id', '=', $profileId)->first();
-
-                $relevantUserRaceProfile->add($userProfile);
-            }
-
-        }
-
-        $relevantUserRaceProfile = $relevantUserRaceProfile->whereNotNull('oris_id')
-            ->pluck('user_race_full_name', 'oris_id');
-
-        dd($relevantUserRaceProfile);
+        (new UpdateEventWeather())->run();
 
     }
 

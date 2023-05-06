@@ -20,6 +20,12 @@ class CommonCron extends Controller
         $pokus = $updateEvent->getTaskCommandLine();
 
 
+        return 'ok';
+
+    }
+
+    public function runHourly(): void
+    {
 
     }
 
