@@ -45,6 +45,9 @@ final class AppHelper
 
     public static function allowModifyUserEntry(SportEvent $sportEvent): bool
     {
+        if (is_null($sportEvent->lastEntryDate())) {
+            return false;
+        }
         return $sportEvent->lastEntryDate()->lte(Carbon::now());
     }
 }

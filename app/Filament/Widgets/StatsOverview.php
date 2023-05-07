@@ -51,7 +51,7 @@ class StatsOverview extends BaseWidget
             ->where('se.date', '>', $date->format(AppHelper::MYSQL_DATE_TIME))
             ->get();
 
-        $userProfilesCount = DB::table('user_race_profiles')->count();
+        $userProfilesCount = DB::table('user_race_profiles')->where('user_id', '=', Auth::user()->id)->count();
         $sportEventsCount = DB::table('sport_events')
             ->where('date', '>', $startOfYear)
             ->where('date', '<', $endOfYear)
