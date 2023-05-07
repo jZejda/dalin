@@ -9,7 +9,6 @@ use App\Models\SportEvent;
 use App\Services\OpenMapService;
 use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
-use DB;
 
 class UpdateEventWeather
 {

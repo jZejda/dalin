@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             SportDisciplinesSeeder::class,
             SportRegionsSeeder::class,
             SportLevelSeeder::class,
+            UserRolesSeeder::class,
         ]);
     }
 }
