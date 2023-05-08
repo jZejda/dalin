@@ -9,6 +9,7 @@ use App\Models\SportEvent;
 use App\Services\OpenMapService;
 use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class UpdateEventWeather
 {
@@ -48,6 +49,7 @@ class UpdateEventWeather
                         $findForecast = true;
                        // https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2
                         $event->update(['weather' => $weatherForecast]);
+                        Log::channel('app')->info('Weather update at event' . $event->id . ' id.');
                     }
                 }
             }
