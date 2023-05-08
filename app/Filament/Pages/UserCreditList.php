@@ -64,8 +64,8 @@ class UserCreditList extends Page implements HasForms, HasTable
                 ->sortable()
                 ->searchable(),
             TextColumn::make('amount')
-                ->icon(fn(UserCredit $record): string => $record->amount >= 0 ? 'heroicon-s-trending-up' : 'heroicon-s-trending-down')
-                ->color(fn(UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')
+                ->icon(fn (UserCredit $record): string => $record->amount >= 0 ? 'heroicon-s-trending-up' : 'heroicon-s-trending-down')
+                ->color(fn (UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')
                 ->label(__('user-credit.table.amount_title')),
             ViewColumn::make('user_entry')
                 ->label('Komentářů')

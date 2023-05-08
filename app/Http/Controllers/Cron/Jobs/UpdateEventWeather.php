@@ -31,7 +31,6 @@ class UpdateEventWeather
             ->where('cancelled', '!=', 1)
             ->get();
 
-
         /**
          * @var SportEvent $event
          */
@@ -40,14 +39,13 @@ class UpdateEventWeather
                 $weather = $this->openMapService->getWeather((float)$event->gps_lat, (float)$event->gps_lon);
 
                 $dateExplode = explode(' ', (string)$event->date);
-                $eventStartTimeStamp = Carbon::createFromFormat(AppHelper::MYSQL_DATE_TIME,  $dateExplode[0] . ' ' . (string)$event->start_time)->timestamp;
+                $eventStartTimeStamp = Carbon::createFromFormat(AppHelper::MYSQL_DATE_TIME, $dateExplode[0] . ' ' . (string)$event->start_time)->timestamp;
 
                 $findForecast = false;
                 /** @var ListResponse $weatherForecast */
                 foreach ($weather->getList() as $weatherForecast) {
                     if ($weatherForecast['dt'] > $eventStartTimeStamp && !$findForecast) {
                         $findForecast = true;
-                       // https://openweathermap.org/weather-conditions#Weather-Condition-Codes-2
                         $event->update(['weather' => $weatherForecast]);
                         Log::channel('app')->info('Weather update at event' . $event->id . ' id.');
                     }

@@ -286,7 +286,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->tooltip(fn (SportEvent $record): string => $record->last_update ? 'Poslední hromadná aktualizace: ' . $record->last_update->format('m.d.Y - H:i') : '')
                     ->weight('medium')
                     ->alignLeft()
-                    ->limit(40)
+                    ->limit(35)
                     ->color(fn (SportEvent $record): string => $record->cancelled === true ? 'danger' : '')
                     ->icon(fn (SportEvent $record): string => $record->cancelled === true ? 'heroicon-s-x-circle' : '')
                     ->iconPosition('before') // `before` or `after`
@@ -300,6 +300,10 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->sortable()
                     ->searchable(),
 
+                ViewColumn::make('entry_weather')
+                    ->label('Předpověď')
+                    ->view('filament.tables.columns.entry-forecast'),
+
                 ViewColumn::make('user_entry')
                     ->label('Př.')
                     ->view('filament.tables.columns.entry-user-counts'),
@@ -312,16 +316,16 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->limit(25, '...')
                     ->alignLeft(),
 
+                ViewColumn::make('entries')
+                    ->label('Terminy')
+                    ->view('filament.tables.columns.entryDates'),
+
                 TextColumn::make('organization')
                     ->label('Klub(y)')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('region')->label('Region'),
-
-                ViewColumn::make('entries')
-                    ->label('Terminy')
-                    ->view('filament.tables.columns.entryDates'),
 
                 BadgeColumn::make('oris_id')
                     ->label('ORIS ID')

@@ -145,7 +145,7 @@ class SportEvent extends Model
 
     public function userEntryActive(): int
     {
-        return $this->HasMany(UserEntry::class, 'sport_event_id', 'id')->whereIn('entry_status',['created'])->count();
+        return $this->HasMany(UserEntry::class, 'sport_event_id', 'id')->whereIn('entry_status', ['created'])->count();
     }
 
     public function sportEventLinks(): HasMany

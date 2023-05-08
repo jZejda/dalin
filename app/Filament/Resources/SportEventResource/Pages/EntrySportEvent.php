@@ -325,7 +325,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             ->color($registerAll ? 'secondary' : 'primary')
             ->label($registerAll ? 'Přihlásit kohokoliv' : 'Přihlásit na závod')
             ->disabled(EmptyType::arrayEmpty($this->getUserRaceProfiles()->toArray()))
-            ->icon($registerAll ? 'heroicon-o-users' : 'heroicon-o-plus-circle' )
+            ->icon($registerAll ? 'heroicon-o-users' : 'heroicon-o-plus-circle')
             ->modalHeading('Přihlášení na závod')
             ->modalSubheading('Vyber závodní profil, vyhledej vhodné kategorie a přihlas se.')
             ->modalButton('Přihlásit')
@@ -483,15 +483,15 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         } else {
             //Non ORIS race
             $relevantUserRaceProfile = UserRaceProfile::all();
-             if (!$registerAnyone) {
-                 $relevantUserRaceProfile = $relevantUserRaceProfile->where('user_id', '=', auth()->user()->id);
-             }
+            if (!$registerAnyone) {
+                $relevantUserRaceProfile = $relevantUserRaceProfile->where('user_id', '=', auth()->user()->id);
+            }
 
             // Add AllowingAnotherUserRaceProfile
             $allowRegisterUserProfile = UserSetting::where('user_id', '=', auth()->user()->id)
                 ->where('type', '=', 'allowRegisterUserProfile')
                 ->first();
-//
+            //
             if (isset($allowRegisterUserProfile->options['profileIds'])) {
                 foreach ($allowRegisterUserProfile->options['profileIds'] as $profileId) {
                     $userProfile = UserRaceProfile::where('id', '=', $profileId)->first();

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Cron\CommonCron;
 use App\Http\Controllers\DiscordRaceEventNotification;
 use App\Http\Controllers\TestController;
 use App\Http\Livewire\Frontend\ShowPage;
@@ -24,6 +25,12 @@ Route::get('/', function () {
 Route::get('/cron-scheduler/' . env('CRON_URL_KEY', 'key'), function () {
     Artisan::call('schedule:run');
 });
+
+Route::get('/cron-scheduler/' . env('CRON_URL_KEY', 'key'), function () {
+    Artisan::call('schedule:run');
+});
+
+Route::get('/cron-hourly/' . env('CRON_HOURLY_URL_KEY', 'hourly_key'), [CommonCron::class, 'runHourly']);
 
 Route::get('/novinka/{id}', ShowPost::class);
 Route::get('/stranka/{slug}', ShowPage::class);

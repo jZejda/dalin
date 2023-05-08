@@ -11,7 +11,6 @@ use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
 use App\Http\Controllers\Cron\Jobs\UpdateEventWeather;
 use App\Http\Controllers\Cron\OrisUpdateEntry;
-use App\Models\UserRaceProfile;
 use DB;
 
 use App\Mail\EventEntryEnds;
