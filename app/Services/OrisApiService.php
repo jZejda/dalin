@@ -114,7 +114,6 @@ final class OrisApiService
             $eventModel->use_oris_for_entries = true;
             $eventModel->event_type = SportEventType::Race->value;
             if ($updateByCron) {
-                var_dump('jsem tady');
                 $eventModel->last_update = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);
             }
 

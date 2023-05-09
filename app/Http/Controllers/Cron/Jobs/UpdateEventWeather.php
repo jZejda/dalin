@@ -11,7 +11,7 @@ use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
-class UpdateEventWeather
+final class UpdateEventWeather implements CommonCronJobs
 {
     private ?OpenMapService $openMapService;
 

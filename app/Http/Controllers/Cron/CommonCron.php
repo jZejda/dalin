@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron;
 
+use App\Http\Controllers\Cron\Jobs\UpdateEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Cron\Jobs\UpdateEventWeather;
 use Illuminate\Support\Carbon;
@@ -14,10 +15,19 @@ class CommonCron extends Controller
     public function runHourly(): void
     {
         // Wather updaterun at 08 and 17 hours
-        if ($this->getActualHour() === '08' || $this->getActualHour() === '17') {
+        $updateForecastActive = config('site-config.cron_hourly.event_update.active');
+        $updateForecastHours = config('site-config.cron_hourly.event_update.hours');
+        if ($updateForecastActive && in_array($this->getActualHour(), $updateForecastHours)) {
             Log::channel('app')->info('Start run weather cron at ' . $this->getActualHour());
             (new UpdateEventWeather())->run();
             Log::channel('app')->info('Stop run weather cron at ' . $this->getActualHour());
+        }
+
+        // Update Events
+        $updateEventActive = config('site-config.cron_hourly.event_update.active');
+        $updateEventHours = config('site-config.cron_hourly.event_update.hours');
+        if ($updateEventActive && in_array($this->getActualHour(), $updateEventHours)) {
+            (new UpdateEvent())->run();
         }
     }
 
