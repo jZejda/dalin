@@ -9,6 +9,7 @@ use App\Http\Components\Oris\GuzzleClient;
 use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Services;
+use App\Http\Controllers\Cron\CommonCron;
 use App\Http\Controllers\Cron\Jobs\UpdateEventWeather;
 use App\Http\Controllers\Cron\OrisUpdateEntry;
 use DB;
@@ -50,7 +51,8 @@ class TestController extends Controller
     public function test(): void
     {
 
-        (new UpdateEventWeather())->run();
+        //        (new UpdateEventWeather())->run();
+        (new CommonCron())->runHourly();
 
     }
 

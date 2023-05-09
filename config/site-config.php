@@ -51,7 +51,27 @@ return [
             'webhook_url' => env('DISCORD_CONTENT_NOTIFICATION_WEBHOOK', ''),
             'code' => 'content_notification',
         ]
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Site Cron settings
+    |--------------------------------------------------------------------------
+    |
+    | Config for hourly cron runs
+    |
+    */
+
+    'cron_hourly' => [
+        'weather_forecast' => [
+            'active' => true,
+            'hours' => ['08', '15'],
+        ],
+        'event_update' => [
+            'active' => true,
+            'hours' => ['00'],
+        ],
+    ],
 
 
 
