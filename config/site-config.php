@@ -69,7 +69,7 @@ return [
         ],
         'event_update' => [
             'active' => true,
-            'hours' => ['00'],
+            'hours' => ['22'],
         ],
     ],
 

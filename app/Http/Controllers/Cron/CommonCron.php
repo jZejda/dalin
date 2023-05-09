@@ -15,8 +15,8 @@ class CommonCron extends Controller
     public function runHourly(): void
     {
         // Wather updaterun at 08 and 17 hours
-        $updateForecastActive = config('site-config.cron_hourly.event_update.active');
-        $updateForecastHours = config('site-config.cron_hourly.event_update.hours');
+        $updateForecastActive = config('site-config.cron_hourly.weather_forecast.active');
+        $updateForecastHours = config('site-config.cron_hourly.weather_forecast.hours');
         if ($updateForecastActive && in_array($this->getActualHour(), $updateForecastHours)) {
             Log::channel('app')->info('Start run weather cron at ' . $this->getActualHour());
             (new UpdateEventWeather())->run();
