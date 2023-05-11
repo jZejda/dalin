@@ -324,7 +324,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             })
             ->color($registerAll ? 'secondary' : 'primary')
             ->label($registerAll ? 'Přihlásit kohokoliv' : 'Přihlásit na závod')
-            ->disabled(EmptyType::arrayEmpty($this->getUserRaceProfiles()->toArray()))
+            ->disabled(EmptyType::arrayEmpty($this->getUserRaceProfiles()->toArray()) || $this->record->cancelled)
             ->icon($registerAll ? 'heroicon-o-users' : 'heroicon-o-plus-circle')
             ->modalHeading('Přihlášení na závod')
             ->modalSubheading('Vyber závodní profil, vyhledej vhodné kategorie a přihlas se.')
@@ -444,7 +444,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             return new Collection();
         }
 
-        if (!is_null($sportEvent->oris_id) && $sportEvent->use_oris_for_entries) {
+        if ((!is_null($sportEvent->oris_id) && $sportEvent->use_oris_for_entries)) {
 
             //vyselektuje relevatni profily pro uzivatel
             $relevantUserRaceProfile = UserRaceProfile::all();

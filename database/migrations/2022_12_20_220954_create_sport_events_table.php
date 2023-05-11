@@ -33,12 +33,15 @@ return new class () extends Migration {
             $table->dateTime('entry_date_2')->nullable();
             $table->dateTime('entry_date_3')->nullable();
             $table->dateTime('last_update')->nullable();
+            $table->dateTime('last_calculate_cost')->nullable();
             $table->time('start_time')->nullable();
             $table->string('gps_lat')->nullable();
             $table->string('gps_lon')->nullable();
             $table->json('weather')->nullable();
             $table->integer('parent_id')->nullable();
             $table->boolean('cancelled')->default(false);
+            $table->string('cancelled_reason')->nullable();
+            $table->tinyInteger('stages')->nullable();
             $table->boolean('dont_update_excluded')->default(true);
             $table->timestamps();
 

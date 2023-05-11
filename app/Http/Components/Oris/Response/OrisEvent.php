@@ -30,12 +30,15 @@ class OrisEvent
     public ?string $GPSLon;
     public ?string $EventInfo;
     public ?string $EventWarning;
+    public ?string $Cancelled;
+    public ?string $Stages;
+    public ?string $ParentID;
     public array $Services;
     public Sport $Sport;
     public Discipline $Discipline;
     public Level $Level;
 
-    public function __construct(int $ID, string $Name, string $Date, string $Place, ?string $Map, Org $Org1, ?Org $Org2, string $Region, string $EntryDate1, ?string $EntryDate2, ?string $EntryDate3, string $EntryInfo, string $Currency, string $Ranking, ?string $StartTime, ?string $GPSLat, ?string $GPSLon, ?string $EventInfo, ?string $EventWarning, array $Services, Sport $Sport, Discipline $Discipline, Level $Level)
+    public function __construct(int $ID, string $Name, string $Date, string $Place, ?string $Map, Org $Org1, ?Org $Org2, string $Region, string $EntryDate1, ?string $EntryDate2, ?string $EntryDate3, string $EntryInfo, string $Currency, string $Ranking, ?string $StartTime, ?string $GPSLat, ?string $GPSLon, ?string $EventInfo, ?string $EventWarning, ?string $Cancelled, ?string $Stages, ?string $ParentID, array $Services, Sport $Sport, Discipline $Discipline, Level $Level)
     {
         $this->ID = $ID;
         $this->Name = $Name;
@@ -56,6 +59,9 @@ class OrisEvent
         $this->GPSLon = $GPSLon;
         $this->EventInfo = $EventInfo;
         $this->EventWarning = $EventWarning;
+        $this->Cancelled = $Cancelled;
+        $this->Stages = $Stages;
+        $this->ParentID = $ParentID;
         $this->Services = $Services;
         $this->Sport = $Sport;
         $this->Discipline = $Discipline;
@@ -155,6 +161,21 @@ class OrisEvent
     public function getEventWarning(): ?string
     {
         return $this->EventWarning;
+    }
+
+    public function getCancelled(): ?string
+    {
+        return $this->Cancelled;
+    }
+
+    public function getStages(): ?string
+    {
+        return $this->Stages;
+    }
+
+    public function getParentID(): ?string
+    {
+        return $this->ParentID;
     }
 
     public function getServices(): array

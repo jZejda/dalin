@@ -14,6 +14,9 @@
     <section class="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700">
         <div class="py-4 px-4">
             <h2 class="mb-2 text-2xl tracking-tight font-extrabold text-gray-900 dark:text-white">{{ $record->name }}
+                @if ($record->cancelled)
+                    <span class="align-top bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Zrušeno</span>
+                @endif
                 @if (EmptyType::intNotEmpty($record->oris_id))
                 <span class="font-thin">| {{ $record->oris_id }}</span>
                 @endif

@@ -113,11 +113,13 @@ final class OrisApiService
             $eventModel->gps_lon = $orisData->getGPSLon();
             $eventModel->use_oris_for_entries = true;
             $eventModel->event_type = SportEventType::Race->value;
+            $eventModel->stages = (!is_null($orisData->getStages()) || (int)$orisData->getStages() != 0) ? (int)$orisData->getStages() : null;
+            $eventModel->parent_id = (!is_null($orisData->getParentID()) || (int)$orisData->getParentID() != 0) ? (int)$orisData->getParentID() : null;
             if ($updateByCron) {
                 $eventModel->last_update = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);
             }
 
-            $eventModel->save();
+            $eventModel->saveOrFail();
 
             // Create|Update Classes
             $classes = $event->classes($orisResponse);
@@ -142,7 +144,7 @@ final class OrisApiService
                 $classModel->distance = $class->getDistance();
                 $classModel->controls = $class->getControls();
                 $classModel->fee = $class->getFee();
-                $classModel->save();
+                $classModel->saveOrFail();
             }
 
             // Create|Update Services
@@ -162,7 +164,7 @@ final class OrisApiService
                 $serviceModel->unit_price = floatval($service->getUnitPrice());
                 $serviceModel->qty_available = intval($service->getQtyAvailable());
                 $serviceModel->qty_remaining = intval($service->getQtyRemaining());
-                $serviceModel->save();
+                $serviceModel->saveOrFail();
             }
 
             // Create|Update Links
@@ -248,7 +250,7 @@ final class OrisApiService
                 $model->region_id = !is_null($regionId) ? $regionId->id : 1;
                 $model->oris_id = $data->getID();
                 $model->oris_number = $data->getNumber();
-                $model->save();
+                $model->saveOrFail();
             }
 
             $this->orisResponse->setStatus($clubs->response($orisResponse)->getStatus());
@@ -353,6 +355,7 @@ final class OrisApiService
                     $userCredit->saveOrFail();
                 }
 
+
                 $userCreditNote = UserCreditNote::where('internal', '=', true)
                     ->where('user_credit_id', '=', $userCredit->id)
                     ->count();
@@ -360,6 +363,9 @@ final class OrisApiService
                     $this->createUserCreditSystemNote($userCredit, $entry);
                 }
             }
+
+            $sportEvent->last_calculate_cost = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);
+            $sportEvent->saveOrFail();
         }
     }
 

@@ -55,10 +55,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Site Cron settings
+    | Site Cron Hourly settings
     |--------------------------------------------------------------------------
     |
-    | Config for hourly cron runs
+    | Config for hourly cron runners
     |
     */
 

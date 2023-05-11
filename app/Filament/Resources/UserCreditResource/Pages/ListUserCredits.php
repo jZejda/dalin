@@ -13,6 +13,7 @@ use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Forms\Components\Grid;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
 
 class ListUserCredits extends ListRecords
 {
@@ -63,7 +64,7 @@ class ListUserCredits extends ListRecords
                     ->schema([
                         Select::make('sportEventId')
                             ->label('Závod/událost')
-                            ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id')->sortByDesc('date'))
+                            ->options(SportEvent::all()->pluck('sport_event_last_cost_calculate', 'id')->sortByDesc('date'))
                             ->required()
                             ->columnSpan(2)
                             ->searchable(),

@@ -42,13 +42,17 @@ use Illuminate\Support\Carbon;
  * @property int|null $parent_id
  * @property bool $dont_update_excluded
  * @property bool $cancelled
+ * @property string|null $cancelled_reason
+ * @property int|null $stages
  * @property string|null $last_update
+ * @property string|null $last_calculate_cost
  * @property string|null $created_at
  * @property string|null $updated_at
  *
  * @property-read Carbon|null $lastEntryDate
  *
  * @property-read string $sport_event_oris_title
+ * @property-read string $sport_event_last_cost_calculate
  * @property-read SportDiscipline|null $sportDiscipline
  * @property-read SportService|null $sportServices
  * @property-read SportLevel|null $sportLevel
@@ -87,7 +91,10 @@ class SportEvent extends Model
         'weather',
         'parent_id',
         'last_update',
+        'last_calculate_cost',
         'cancelled',
+        'cancelled_reason',
+        'stages',
         'dont_update_excluded',
     ];
 
@@ -101,7 +108,9 @@ class SportEvent extends Model
         'entry_date_2' => 'datetime:Y-m-d H:i:s',
         'entry_date_3' => 'datetime:Y-m-d H:i:s',
         'last_update' => 'datetime:Y-m-d H:i:s',
+        'last_calculate_cost' => 'datetime:Y-m-d H:i:s',
         'cancelled' => 'bool',
+        'meta' => 'array',
         'weather' => 'array',
         'dont_update_excluded' => 'bool',
         'event_type' => SportEventType::class,
@@ -158,6 +167,15 @@ class SportEvent extends Model
         return ($this->alt_name !== null ? $this->alt_name . ' | ' : '') .
             $this->name . ' | ' .
             ($this->oris_id !== null ? '(ORIS ID: ' . $this->oris_id . ')' : '');
+    }
+
+    public function getSportEventLastCostCalculateAttribute(): string
+    {
+        return ($this->alt_name !== null ? $this->alt_name . ' | ' : '') .
+            $this->name . ' | ' .
+            ($this->oris_id !== null ? '(ORIS ID: ' . $this->oris_id . ')' : '') .
+            ($this->last_calculate_cost !== null ? ' | (Náklady naposled : ' . Carbon::createFromFormat('Y-m-d H:i:s', $this->last_calculate_cost)->format('d.h.Y - H:i') . ')' : '')
+            ;
     }
 
 }
