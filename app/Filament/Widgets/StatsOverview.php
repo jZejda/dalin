@@ -27,12 +27,12 @@ class StatsOverview extends BaseWidget
 
 
         $usersAmountCount = DB::table('user_credits')
-            ->where('user_id', '=', Auth()->user()->id)
+            ->where('user_id', '=', Auth()->user()?->id)
             ->select(['amount'])
             ->sum('amount');
 
         $usersAmountChartData = DB::table('user_credits')
-            ->where('user_id', '=', Auth()->user()->id)
+            ->where('user_id', '=', Auth()->user()?->id)
             ->select(['amount', 'created_at'])
             ->orderByDesc('created_at')
             ->limit('5')
@@ -46,7 +46,7 @@ class StatsOverview extends BaseWidget
             ->leftJoin('user_race_profiles AS urp', 'ue.user_race_profile_id', '=', 'urp.id')
             ->leftJoin('sport_events AS se', 'ue.sport_event_id', '=', 'se.id')
             ->select(['urp.user_id', 'urp.reg_number', 'ue.entry_status', 'se.date', 'se.name', 'se.alt_name'])
-            ->where('urp.user_id', '=', Auth::user()->id)
+            ->where('urp.user_id', '=', Auth::user()?->id)
             ->whereNotIn('ue.entry_status', ['deleted'])
             ->where('se.date', '>', $date->format(AppHelper::MYSQL_DATE_TIME))
             ->get();

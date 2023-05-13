@@ -1,10 +1,17 @@
 @php
     use App\Shared\Helpers\EmptyType;
     use App\Models\SportEvent;
+    use App\Models\SportClass;
+    use App\Models\SportService;
     use App\Enums\AppRoles;
     use App\Shared\Helpers\AppHelper;
 
     /** @var SportEvent $record */
+
+    $classes = SportClass::where('sport_event_id', '=', $record->id)->get();
+    $services = SportService::where('sport_event_id', '=', $record->id)->get();
+
+
 @endphp
 
 {{--<script src="https://cdn.tailwindcss.com"></script>--}}
@@ -24,15 +31,35 @@
             <p class="mb-2 text-gray-500 dark:text-gray-400">{{ $record->alt_name }}</p>
 
             @if (EmptyType::stringNotEmpty($record->event_info))
-            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+            <div class="p-2 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
                 {{ $record->event_info }}
             </div>
             @endif
+
             @if (EmptyType::stringNotEmpty($record->event_warning))
-            <div class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
+            <div class="p-2 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300" role="alert">
                 {{ $record->event_warning }}
             </div>
             @endif
+
+            @if(count($classes) > 0)
+                <div class="mb-2 ml-1">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">Kategorie</span>
+                    @foreach($classes as $class)
+                        <span class="bg-gray-100 text-gray-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">{{$class->name}}</span>
+                    @endforeach
+                </div>
+            @endif
+
+            @if(count($services) > 0)
+                <div class="mb-2 ml-1">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">Doplňkové služby</span>
+                    @foreach($services as $service)
+                        <span class="bg-yellow-100 text-yellow-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">{{$service->service_name_cz}}</span>
+                    @endforeach
+                </div>
+            @endif
+
             <div class="grid pt-2 text-left border-t border-gray-200 md:gap-16 dark:border-gray-700 md:grid-cols-2">
                 <div>
                     <div class="mb-10">

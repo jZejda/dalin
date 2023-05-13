@@ -13,7 +13,6 @@ use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Forms\Components\Grid;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Collection;
 
 class ListUserCredits extends ListRecords
 {

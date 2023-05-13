@@ -51,6 +51,24 @@ class TestController extends Controller
     public function test(): void
     {
 
+        $entries = DB::table('users as u')
+            ->select(['u.id', 'u.email'])
+            ->leftJoin('user_race_profiles AS urp', 'urp.user_id', '=', 'u.id')
+            ->leftJoin('user_entries AS ue', 'ue.user_race_profile_id', '=', 'urp.id')
+            ->leftJoin('sport_events AS se', 'se.id', '=', 'ue.sport_event_id')
+            ->where('se.id', '=', 1)
+            //->where('urp.user_id', '=', auth()->user()->id)
+            ->get();
+
+        if (count($entries) > 0) {
+            foreach ($entries as $user) {
+                dd($user->id);
+            }
+        }
+
+
+        dd(count($entries));
+
         //        (new UpdateEventWeather())->run();
         (new CommonCron())->runHourly();
 

@@ -6,6 +6,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\AppRoles;
 use App\Enums\SportEventType;
+use App\Filament\Resources\SportEventResource\RelationManagers\SportMarkersRelationManager;
 use Closure;
 use App\Filament\Resources\SportEventResource\RelationManagers\UserEntryRelationManager;
 use App\Shared\Helpers\AppHelper;
@@ -409,6 +410,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
             UserEntryRelationManager::class,
             SportClassesRelationManager::class,
             SportServicesRelationManager::class,
+            SportMarkersRelationManager::class,
         ];
     }
 
