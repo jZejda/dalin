@@ -27,7 +27,6 @@ class SportEventMarker extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
         'sport_event_id',
         'label',
         'desc',

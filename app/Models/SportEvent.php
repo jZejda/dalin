@@ -58,6 +58,7 @@ use Illuminate\Support\Carbon;
  * @property-read SportLevel|null $sportLevel
  * @property-read UserEntry $userEntry
  * @property-read SportEventLink $sportEventLink
+ * @property-read SportEventMarker $sportEventMarkers
  */
 
 class SportEvent extends Model
@@ -162,6 +163,11 @@ class SportEvent extends Model
         return $this->HasMany(SportEventLink::class, 'sport_event_id', 'id');
     }
 
+    public function sportEventMarkers(): HasMany
+    {
+        return $this->HasMany(SportEventMarker::class, 'sport_event_id', 'id');
+    }
+
     public function getSportEventOrisTitleAttribute(): string
     {
         return ($this->alt_name !== null ? $this->alt_name . ' | ' : '') .
@@ -175,7 +181,7 @@ class SportEvent extends Model
             $this->name . ' | ' .
             ($this->oris_id !== null ? '(ORIS ID: ' . $this->oris_id . ')' : '') .
             ($this->last_calculate_cost !== null ? ' | (Náklady naposled : ' . Carbon::createFromFormat('Y-m-d H:i:s', $this->last_calculate_cost)->format('d.h.Y - H:i') . ')' : '')
-            ;
+        ;
     }
 
 }

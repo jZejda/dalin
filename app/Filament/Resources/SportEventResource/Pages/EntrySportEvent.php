@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\SportEventResource\Pages;
 
 use App\Enums\AppRoles;
+use App\Filament\Resources\SportEventResource\Pages\Actions\EntrySendMail;
 use App\Http\Components\Oris\Response\CreateEntry;
 use App\Models\SportClassDefinition;
 use App\Models\UserSetting;
@@ -99,8 +100,17 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         $defaultActions = [$this->getOrisEvent()];
         $registerAnyone = Auth::user()->hasRole([AppRoles::EventMaster->value]) ? $this->getOrisEvent(true) : null;
 
+        $sendMailModal = new EntrySendMail($this->record);
+
+        $sendEmail = Auth::user()->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
+            ? $sendMailModal->sendNotification()
+            : null;
+
         if (!is_null($registerAnyone)) {
             $defaultActions[] = $registerAnyone;
+        }
+        if (!is_null($sendEmail)) {
+            $defaultActions[] = $sendEmail;
         }
 
         return $defaultActions;
@@ -264,7 +274,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         return ModalAction::make($registerAll ? 'createEventEntryFull' : 'createEventEntry')
             ->action(function (array $data): void {
 
-                if ($this->record->oris_id !== null) {
+                if ($this->record->oris_id !== null && $this->record->use_oris_for_entries) {
                     /**
                      * ORIS entry
                      * Part of ORIS enty
@@ -341,7 +351,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         fn ($state, Closure $set) =>
                         Action::make('search_oris_category_by_oris_id')
                             ->icon('heroicon-o-search')
-                            ->visible($this->record->oris_id !== null)
+                            ->visible($this->record->oris_id !== null && $this->record->use_oris_for_entries)
                             ->action(function () use ($state, $set) {
 
                                 if (blank($state)) {
@@ -393,7 +403,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 Select::make('classId')
                     ->label('Vyber kategorii orisu')
                     ->options(function (callable $get) {
-                        if ($this->record->oris_id !== null) {
+                        if ($this->record->oris_id !== null && $this->record->use_oris_for_entries) {
                             return $get('specific_response_class_id');
                         } else {
                             $eventClasses = SportClass::where('sport_event_id', '=', $this->record->id)

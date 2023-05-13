@@ -84,8 +84,9 @@ class EditSportEvent extends EditRecord
                     TextInput::make('desc')
                         ->label('Popis bodu')
                         ->required(),
-                    Select::make('event_type')
+                    Select::make('type')
                         ->label('Typ bodu')
+                        ->required()
                         ->options(SportEventMarkerType::enumArray())
                         ->default(SportEventMarkerType::StageStart->value),
         ]);
