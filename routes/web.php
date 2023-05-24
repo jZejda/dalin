@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Cron\CommonCron;
-use App\Http\Controllers\DiscordRaceEventNotification;
 use App\Http\Controllers\TestController;
 use App\Http\Livewire\Frontend\ShowPage;
 use App\Http\Livewire\Frontend\ShowPost;

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enums\UserCreditStatus;
+use App\Enums\UserCreditType;
 use App\Filament\Resources\UserCreditResource\Pages;
 use App\Filament\Resources\UserCreditResource\Widgets\UserCreditStats;
 use App\Models\SportEvent;
@@ -78,11 +79,7 @@ class UserCreditResource extends Resource
                             Grid::make()->schema([
                                 Select::make('credit_type')
                                     ->label(__('user-credit.form.type_title'))
-                                    ->options([
-                                        UserCredit::CREDIT_TYPE_CACHE_IN => __('user-credit.credit_type_enum.' . UserCredit::CREDIT_TYPE_CACHE_IN),
-                                        UserCredit::CREDIT_TYPE_CACHE_OUT => __('user-credit.credit_type_enum.' . UserCredit::CREDIT_TYPE_CACHE_OUT),
-                                        UserCredit::CREDIT_TYPE_DONATION => __('user-credit.credit_type_enum.' . UserCredit::CREDIT_TYPE_DONATION),
-                                    ])
+                                    ->options(UserCreditType::enumArray())
                                     ->required(),
                                 TextInput::make('amount')
                                     ->label(__('user-credit.form.amount_title'))
@@ -118,6 +115,7 @@ class UserCreditResource extends Resource
                             Select::make('status')
                                 ->label(__('user-credit.status'))
                                 ->options(UserCreditStatus::enumArray())
+                                ->default('done')
                                 ->searchable(),
 
                         ])->columnSpan([
@@ -137,8 +135,8 @@ class UserCreditResource extends Resource
                     ->label(__('user-credit.table.created_at_title'))
                     ->dateTime('d.m.Y'),
                 TextColumn::make('sportEvent.name')
-                    ->label(__('user-credit.table.sport_event_title'))
-                    ->description(fn (UserCredit $record): string => $record->sportEvent->alt_name != null ? $record->sportEvent->alt_name : 'záznam ID: ' . (string)$record->sportEvent->id),
+                    ->label(__('user-credit.table.sport_event_title')),
+//                    ->description(fn (UserCredit $record): string => $record->sportEvent->alt_name != null ? $record->sportEvent->alt_name : 'záznam ID: ' . (string)$record->sportEvent->id),
                 TextColumn::make('user.name')
                     ->label('Uživatel')
                     ->searchable(),
@@ -167,7 +165,7 @@ class UserCreditResource extends Resource
             ->filters([
                 SelectFilter::make('sport_event_id')
                     ->label('Závod')
-                    ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id')),
+                    ->options(SportEvent::all()->sortBy('date')->pluck('sport_event_last_cost_calculate', 'id')),
                 SelectFilter::make('status')
                     ->options(self::getUserCreditStatuses())
                     ->default(''),

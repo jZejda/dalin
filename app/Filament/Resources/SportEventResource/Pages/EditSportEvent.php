@@ -117,7 +117,7 @@ class EditSportEvent extends EditRecord
 
             ->color('secondary')
             ->label('Aktualizovat závod')
-            ->disabled(!$this->data['use_oris_for_entries'])
+            ->disabled((!$this->data['use_oris_for_entries'] && is_null($this->data['oris_id'])))
             ->icon('heroicon-s-refresh')
             ->modalHeading('Aktualizovat závod z ORISu')
             ->modalSubheading('Provede aktualizaci závodu s aktuálními daty v ORISu')

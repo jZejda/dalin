@@ -28,12 +28,15 @@ class SportClassesRelationManager extends RelationManager
         return $form
             ->schema([
                 Grid::make()->schema([
+                    TextInput::make('name')
+                        ->label('Název kategorie')
+                        ->required(),
                     Select::make('class_definition_id')
                         ->label('Kategorie')
                         ->required()
                         ->options(SportClassDefinition::all()->pluck('class_definition_full_label', 'id'))
                         ->searchable(),
-                ])->columns(1),
+                ])->columns(2),
                 TextInput::make('distance')
                     ->label('Délka')
                     ->suffix('km')

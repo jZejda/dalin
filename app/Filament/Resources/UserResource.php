@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\AppRoles;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
@@ -14,11 +15,13 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Support\Facades\Hash;
 use Filament\Pages\Page;
-use Illuminate\Support\Str;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
+    protected static ?string $navigationLabel = 'Uživatelé';
+    protected static ?string $label = 'Uživatel';
+    protected static ?string $pluralLabel = 'Uživatelé';
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
@@ -67,11 +70,13 @@ class UserResource extends Resource
                     Card::make()
                         ->schema([
                             Forms\Components\Select::make('roles')
+                                ->label('Role')
                                 ->multiple()
                                 ->searchable()
                                 ->relationship('roles', 'name')
                                 ->preload(),
                             Forms\Components\Select::make('permissions')
+                                ->label('Oprávnění')
                                 ->multiple()
                                 ->searchable()
                                 ->relationship('permissions', 'name')
@@ -97,13 +102,15 @@ class UserResource extends Resource
 
                 Tables\Columns\BadgeColumn::make('roles.name')
                     ->label('Role')
-                    ->formatStateUsing(fn ($state): string => Str::headline($state))
+                    ->enum(AppRoles::enumArray())
                     ->colors(['primary'])
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Vytvořeno')
                     ->dateTime(),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Upraveno')
                     ->dateTime(),
             ])
             ->filters([

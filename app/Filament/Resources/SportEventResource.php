@@ -78,10 +78,10 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                         ->hint('unikátní ID závodu na ORIS stránkách')
                                         ->hintIcon('heroicon-s-exclamation')
                                         ->suffixAction(
-                                            fn ($state, Closure $set) =>
+                                            fn ($state, Closure $set, callable $get) =>
                                             Action::make('hledej-podle-oris-id')
                                                 ->icon('heroicon-o-search')
-                                                ->action(function () use ($state, $set) {
+                                                ->action(function () use ($state, $set, $get) {
                                                     if (blank($state)) {
                                                         Filament::notify('danger', 'Vyplň prosím ORIS ID závodu.');
                                                         return;
@@ -109,8 +109,11 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                                     $set('place', $orisResponse['Place'] ?? null);
                                                     $set('date', $orisResponse['Date'] ?? null);
                                                     $set('entry_date_1', $orisResponse['EntryDate1'] ?? null);
-                                                    $set('entry_date_2', $orisResponse['EntryDate2'] ?? null);
-                                                    $set('entry_date_3', $orisResponse['EntryDate3'] ?? null);
+                                                    if ($get('dont_update_excluded') === false) {
+                                                        $set('entry_date_2', $orisResponse['EntryDate2'] ?? null);
+                                                        $set('entry_date_3', $orisResponse['EntryDate3'] ?? null);
+                                                        $set('use_oris_for_entries', $orisResponse['UseORISForEntries'] ?? null);
+                                                    }
 
                                                     $region = [];
                                                     if (isset($orisResponse['Regions'])) {
@@ -134,8 +137,6 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                                     $set('discipline_id', $orisResponse['Discipline']['ID'] ?? null);
                                                     $set('sport_id', $orisResponse['Sport']['ID'] ?? null);
                                                     $set('level_id', $orisResponse['Level']['ID'] ?? null);
-
-                                                    $set('use_oris_for_entries', $orisResponse['UseORISForEntries'] ?? null);
 
                                                     $set('start_time', $orisResponse['StartTime'] ?? null);
                                                     $set('gps_lat', $orisResponse['GPSLat'] ?? null);
@@ -382,21 +383,22 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make()
                         ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value])),
-                    Tables\Actions\Action::make('registr_entry')
-                        ->icon('heroicon-o-ticket')
-                        ->label('Přihlásit na závod.')
-                        ->url(fn (SportEvent $record): string => route('filament.resources.sport-events.entry', $record))
-                        ->openUrlInNewTab(),
-                        ExportAction::make()
-                        ->exports([
-                            // Pass a string
-                            ExcelExport::make()
-                                ->withFilename(date('Y-m-d') . ' - export')
-                                ->withColumns([
-                                    Column::make('name')->heading('User name'),
-                                    Column::make('created_at')->heading('Creation date'),
-                                ]),
-                        ])
+                        // TODO refactor
+//                    Tables\Actions\Action::make('registr_entry')
+//                        ->icon('heroicon-o-ticket')
+//                        ->label('Přihlásit na závod.')
+//                        ->url(fn (SportEvent $record): string => route('filament.resources.sport-events.entry', $record))
+//                        ->openUrlInNewTab(),
+//                        ExportAction::make()
+//                        ->exports([
+//                            // Pass a string
+//                            ExcelExport::make()
+//                                ->withFilename(date('Y-m-d') . ' - export')
+//                                ->withColumns([
+//                                    Column::make('name')->heading('User name'),
+//                                    Column::make('created_at')->heading('Creation date'),
+//                                ]),
+//                        ])
                 ])
             ])
             ->bulkActions([

@@ -161,15 +161,12 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             TextColumn::make('stage_x')
                 ->label('Etapa'),
             BadgeColumn::make('entry_status')
-                ->enum([
-                    'created' => 'Vytvořeno',
-                    'edited' => 'Upraveno',
-                    'deleted' => 'Smazáno',
-                ])
+                ->label('Stav')
+                ->enum(EntryStatus::enumArray())
                 ->colors([
-                    'success' => 'created',
-                    'secondary' => 'edited',
-                    'danger' => 'deleted',
+                    'success' => EntryStatus::Create->value,
+                    'secondary' => EntryStatus::Edit->value,
+                    'danger' => EntryStatus::Cancel->value,
                 ])
                 ->searchable()
         ];
@@ -179,12 +176,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     {
         return [
             SelectFilter::make('entry_status')
-                ->options([
-                    'created' => 'Vytvořeno',
-                    'edited' => 'Upraveno',
-                    'deleted' => 'Smazáno',
-                ])->multiple()
-                ->default(['created', 'edited']),
+                ->options(EntryStatus::enumArray())->multiple()
+                ->default([EntryStatus::Create->value, EntryStatus::Edit->value]),
         ];
     }
 
@@ -221,7 +214,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                         if ($orisResponse->getStatus() === 'OK') {
 
-                            $record->entry_status = EntryStatus::Deleted;
+                            $record->entry_status = EntryStatus::Cancel;
                             $record->saveOrFail();
 
                             Notification::make()
@@ -245,7 +238,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         }
                     } else {
                         /** @description Delete NonORIS entry */
-                        $record->entry_status = EntryStatus::Deleted;
+                        $record->entry_status = EntryStatus::Cancel;
                         $record->saveOrFail();
 
                         Notification::make()
@@ -483,7 +476,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->leftJoin('user_entries AS ue', 'ue.user_race_profile_id', '=', 'urp.id')
                 ->where('ue.sport_event_id', '=', $sportEvent->id)
                 //->where('urp.user_id', '=', auth()->user()->id)
-                ->whereNotIn('ue.entry_status', [EntryStatus::Deleted])
+                ->whereNotIn('ue.entry_status', [EntryStatus::Cancel])
                 ->get();
 
             // unsetne z pole relevatnich profil;
@@ -517,7 +510,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->leftJoin('user_entries AS ue', 'ue.user_race_profile_id', '=', 'urp.id')
                 ->where('ue.sport_event_id', '=', $sportEvent->id)
                 //->where('urp.user_id', '=', auth()->user()->id)
-                ->whereNotIn('ue.entry_status', [EntryStatus::Deleted])
+                ->whereNotIn('ue.entry_status', [EntryStatus::Cancel])
                 ->get();
 
             // Unset from field
@@ -583,7 +576,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         /** @var SportEvent $sportEvent */
         $sportEvent = $this->record;
 
-        if ($userEntry->entry_status === EntryStatus::Deleted) {
+        if ($userEntry->entry_status === EntryStatus::Cancel) {
             return true;
         }
 
@@ -621,7 +614,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         $entry->rent_si = $data['rent_si'] ?? 0;
         $entry->stage_x = null;
         $entry->entry_created = Carbon::now()->toDateTimeString();
-        $entry->entry_status = EntryStatus::Created;
+        $entry->entry_status = EntryStatus::Create;
 
         if ($entry->saveOrFail()) {
             return true;

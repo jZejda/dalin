@@ -61,7 +61,7 @@ class UserCreditRelationManager extends RelationManager
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
                     ->url(fn (UserCredit $record): string => route('filament.resources.user-credits.view', ['record' => $record->id]))
-                    ->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name != null ? $record->sportEvent?->alt_name : 'záznam ID: ' . (string)$record->id)
+                    ->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name != null ? $record->sportEvent?->alt_name : 'nepřiřazeno k závodu')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')

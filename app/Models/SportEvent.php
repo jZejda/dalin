@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\EntryStatus;
+use Arr;
 use App\Enums\SportEventType;
+use App\Shared\Helpers\AppHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -155,7 +158,7 @@ class SportEvent extends Model
 
     public function userEntryActive(): int
     {
-        return $this->HasMany(UserEntry::class, 'sport_event_id', 'id')->whereIn('entry_status', ['created'])->count();
+        return $this->HasMany(UserEntry::class, 'sport_event_id', 'id')->whereIn('entry_status', [EntryStatus::Create, EntryStatus::Edit])->count();
     }
 
     public function sportEventLinks(): HasMany
@@ -177,7 +180,10 @@ class SportEvent extends Model
 
     public function getSportEventLastCostCalculateAttribute(): string
     {
-        return ($this->alt_name !== null ? $this->alt_name . ' | ' : '') .
+        return
+            (Carbon::createFromFormat(AppHelper::MYSQL_DATE_TIME, $this->date)->format(AppHelper::DATE_FORMAT)) . ' | '  .
+            Arr::join($this->organization, ', ') . ' | ' .
+            ($this->alt_name !== null ? $this->alt_name . ' | ' : '') .
             $this->name . ' | ' .
             ($this->oris_id !== null ? '(ORIS ID: ' . $this->oris_id . ')' : '') .
             ($this->last_calculate_cost !== null ? ' | (Náklady naposled : ' . Carbon::createFromFormat('Y-m-d H:i:s', $this->last_calculate_cost)->format('d.h.Y - H:i') . ')' : '')

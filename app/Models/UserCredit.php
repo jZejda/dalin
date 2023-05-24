@@ -46,10 +46,6 @@ class UserCredit extends Model
 
     public const SOURCE_CRON = 'cron';
     public const SOURCE_USER = 'user';
-    public const CREDIT_TYPE_DONATION = 'donation';
-    public const CREDIT_TYPE_CACHE_IN = 'in';
-    public const CREDIT_TYPE_CACHE_OUT = 'out';
-
 
     /** @var array<int, string> */
     protected $fillable = [

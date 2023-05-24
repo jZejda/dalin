@@ -6,16 +6,17 @@ namespace App\Enums;
 
 enum EntryStatus: string
 {
-    case Created = 'created';
-    case Edited = 'edited';
-    case Deleted = 'deleted';
+    case Create = 'create';
+    case Edit = 'edit';
+    case Cancel = 'cancel';
 
     public static function enumArray(): array
     {
+        $trKey = 'sport-event.type_enum_entry_status.';
         return [
-            'deleted' => self::Deleted,
-            'created' => self::Created,
-            'edited' => self::Edited,
+            'cancel' => __($trKey . self::Cancel->value),
+            'create' => __($trKey . self::Create->value),
+            'edit' => __($trKey . self::Edit->value),
         ];
     }
 }

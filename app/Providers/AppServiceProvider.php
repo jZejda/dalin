@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Vite;
+use Awcodes\Curator\Facades\Curator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        //        Curator::navigationGroup('Obsah')
+        //        ->navigationSort(69);
     }
 
     /**
@@ -36,6 +38,4 @@ class AppServiceProvider extends ServiceProvider
             );
         });
     }
-
-
 }

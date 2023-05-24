@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\EntryStatus;
 use App\Filament\Resources\UserEntryResource\Pages;
 use App\Models\SportEvent;
 use App\Models\UserEntry;
@@ -11,6 +12,7 @@ use Carbon\Carbon;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -58,7 +60,7 @@ class UserEntryResource extends Resource
                     ->url(fn (UserEntry $record): string => route('filament.resources.sport-events.entry', ['record' => $record->sport_event_id]))
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('sportClassDefinition.name')
+                TextColumn::make('class_name')
                     ->label('Kategorie')
                     ->searchable()
                     ->sortable(),
@@ -79,6 +81,15 @@ class UserEntryResource extends Resource
                     ->label('Půjčit čip'),
                 TextColumn::make('stage_x')
                     ->label('Etapa'),
+                BadgeColumn::make('entry_status')
+                    ->label('Stav')
+                    ->enum(EntryStatus::enumArray())
+                    ->colors([
+                        'success' => EntryStatus::Create->value,
+                        'secondary' => EntryStatus::Edit->value,
+                        'danger' => EntryStatus::Cancel->value,
+                    ])
+                    ->searchable(),
             ])
             ->filters([
                 SelectFilter::make('sport_event_id')
@@ -87,7 +98,10 @@ class UserEntryResource extends Resource
                             ->where('date', '>', Carbon::now()->subYear())
                             ->pluck('sport_event_oris_title', 'id')
                     )
-                    ->searchable()
+                    ->searchable(),
+                SelectFilter::make('entry_status')
+                    ->options(EntryStatus::enumArray())->multiple()
+                    ->default([EntryStatus::Create->value, EntryStatus::Edit->value]),
             ])
             ->actions([
 //                Tables\Actions\RestoreAction::make(),
