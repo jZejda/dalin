@@ -15,13 +15,13 @@ enum AppRoles: string
 
     public static function enumArray(): array
     {
+        $trKey = 'app-role.app_role_enum.';
         return [
-            'super_admin' => self::SuperAdmin,
-            'event_master' => self::EventMaster,
-            'member' => self::Member,
-            'racer' => self::Racer,
-            'redactor' => self::Redactor,
-            'billing_specialist' => self::BillingSpecialist,
+            'super_admin' => __($trKey . self::SuperAdmin->value),
+            'event_master' => __($trKey . self::EventMaster->value),
+            'member' => __($trKey . self::Member->value),
+            'redactor' => __($trKey . self::Redactor->value),
+            'billing_specialist' => __($trKey . self::BillingSpecialist->value),
         ];
     }
 }

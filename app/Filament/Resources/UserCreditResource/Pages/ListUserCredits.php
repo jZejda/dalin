@@ -63,7 +63,7 @@ class ListUserCredits extends ListRecords
                     ->schema([
                         Select::make('sportEventId')
                             ->label('Závod/událost')
-                            ->options(SportEvent::all()->pluck('sport_event_last_cost_calculate', 'id')->sortByDesc('date'))
+                            ->options(SportEvent::all()->sortBy('date')->pluck('sport_event_last_cost_calculate', 'id'))
                             ->required()
                             ->columnSpan(2)
                             ->searchable(),

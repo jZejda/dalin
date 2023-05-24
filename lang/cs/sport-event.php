@@ -1,9 +1,11 @@
 <?php
 
+use App\Enums\EntryStatus;
 use App\Enums\SportEventType;
 use App\Enums\SportEventMarkerType;
 use App\Enums\SportEventLinkType;
 use App\Enums\UserCreditStatus;
+use App\Enums\UserCreditType;
 
 return [
 
@@ -24,6 +26,11 @@ return [
         UserCreditStatus::Done->value => 'hotovo',
         UserCreditStatus::UnAssign->value => 'nepřiřazeno',
         UserCreditStatus::Open->value => 'otevřeno',
+    ],
+
+    'type_enum_credit_type' => [
+        UserCreditType::CacheOut->value => 'Výdaj',
+        UserCreditType::UserDonation->value => 'Mimořádný členský vklad',
     ],
 
     'type_enum' => [
@@ -54,5 +61,11 @@ return [
         SportEventLinkType::Oresults->value => 'Rresult',
         SportEventLinkType::Photos->value => 'Fotky',
         SportEventLinkType::Other->value => 'Ostatní',
+    ],
+
+    'type_enum_entry_status' => [
+        EntryStatus::Create->value => 'vytvořeno',
+        EntryStatus::Edit->value => 'upaveno',
+        EntryStatus::Cancel->value => 'stornováno',
     ],
 ];

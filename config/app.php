@@ -197,7 +197,7 @@ return [
 
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 
-        \Awcodes\Curator\CuratorServiceProvider::class,
+        //\Awcodes\Curator\CuratorServiceProvider::class,
 
     ],
 

@@ -16,7 +16,8 @@ Commands:
     phpstan-clear           Clear PHPStan baseline
     lint                    Run PINT linter - autoFixer
     idehelper               Run IDE helper generate file
-    deploy                  Prepare to deploy"
+    deploy                  Prepare to deploy
+    postdeploy              Run post deploy procedure"
 
 }
 
@@ -49,6 +50,14 @@ case "$1" in
         php artisan event:cache
         php artisan route:cache
         php artisan view:cache
+    ;;
+    postdeploy)
+        echo "${BOLD}Run PostDeploy on product server...${NORMAL}"
+        php8.1 artisan config:cache
+        php8.1 artisan event:cache
+        php8.1 artisan route:cache
+        php8.1 artisan view:cache
+        npm run build
     ;;
     help)
         help

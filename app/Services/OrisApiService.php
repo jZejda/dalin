@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Enums\SportEventLinkType;
 use App\Enums\SportEventType;
 use App\Enums\UserCreditStatus;
+use App\Enums\UserCreditType;
 use App\Http\Components\Oris\GetClubs;
 use App\Http\Components\Oris\GetEventEntries;
 use App\Http\Components\Oris\Response\Entity\Clubs;
@@ -94,9 +95,12 @@ final class OrisApiService
             $eventModel->start_time = $orisData->getStartTime();
 
             $eventModel->entry_date_1 = strlen($orisData->getEntryDate1()) !== 0 ? $orisData->getEntryDate1() : null;
-            if ($newEvent || !$eventModel->use_oris_for_entries) {
+
+            //dd(!$eventModel->dont_update_excluded);
+            if ($newEvent || !$eventModel->dont_update_excluded) {
                 $eventModel->entry_date_2 = strlen($orisData->getEntryDate2()) !== 0 ? $orisData->getEntryDate2() : null;
                 $eventModel->entry_date_3 = strlen($orisData->getEntryDate3()) !== 0 ? $orisData->getEntryDate3() : null;
+                $eventModel->use_oris_for_entries = true;
             }
 
             $organization = [$orisData->getOrg1()->getAbbr()];
@@ -111,7 +115,6 @@ final class OrisApiService
             $eventModel->ranking = $orisData->getRanking();
             $eventModel->gps_lat = $orisData->getGPSLat();
             $eventModel->gps_lon = $orisData->getGPSLon();
-            $eventModel->use_oris_for_entries = true;
             $eventModel->event_type = SportEventType::Race->value;
             $eventModel->stages = (!is_null($orisData->getStages()) || (int)$orisData->getStages() != 0) ? (int)$orisData->getStages() : null;
             $eventModel->parent_id = (!is_null($orisData->getParentID()) || (int)$orisData->getParentID() != 0) ? (int)$orisData->getParentID() : null;
@@ -326,7 +329,7 @@ final class OrisApiService
                     //$userCredit->balance = $this->getBalance($userRaceProfile->user, -(float)$entry->getFee());
                     //$userCredit->balance = -(float)$entry->getFee();
                     $userCredit->currency = UserCredit::CURRENCY_CZK;
-                    $userCredit->credit_type = UserCredit::CREDIT_TYPE_CACHE_OUT;
+                    $userCredit->credit_type = UserCreditType::CacheOut->value;
                     $userCredit->source = $source;
                     $userCredit->source_user_id = auth()->user()->id;
                     $userCredit->created_at = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);
@@ -346,7 +349,7 @@ final class OrisApiService
                     $userCredit->sport_event_id = $sportEvent->id;
                     $userCredit->amount = -(float)$entry->getFee();
                     $userCredit->currency = UserCredit::CURRENCY_CZK;
-                    $userCredit->credit_type = UserCredit::CREDIT_TYPE_CACHE_OUT;
+                    $userCredit->credit_type = UserCreditType::CacheOut->value;
                     $userCredit->source = UserCredit::SOURCE_USER;
                     $userCredit->source_user_id = auth()->user()->id;
                     $userCredit->created_at = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);

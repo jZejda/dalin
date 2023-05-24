@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Filament\Widgets;
 
 use App\Enums\SportEventType;
+use App\Shared\Helpers\AppHelper;
+use Carbon\Carbon;
 use DB;
 use App\Models\SportEvent;
 use App\Shared\Helpers\EmptyType;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Illuminate\Support\Collection;
+use stdClass;
 use Webbingbrasil\FilamentMaps\Actions;
 use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
 use Webbingbrasil\FilamentMaps\Marker;
@@ -75,10 +78,21 @@ class MapOverview extends MapWidget
 //                    popupAnchor: [1, -34],
 //                    shadowSize: [41, 41]
 //                )
-                ->popup(EmptyType::stringNotEmpty($marker->alt_name) ? $marker->name .' | ' . $marker->alt_name : $marker->name)
-                ->tooltip(EmptyType::stringNotEmpty($marker->alt_name) ? $marker->name .' | ' . $marker->alt_name : $marker->name);
+                ->popup(EmptyType::stringNotEmpty($marker->alt_name) ? $this->getMarkerHtmlTooltipData($marker) : $marker->name);
+            //->tooltip(EmptyType::stringNotEmpty($marker->alt_name) ? $marker->name .' | ' . $marker->alt_name : $marker->name);
         }
         return $eventMarkers;
+    }
+
+    private function getMarkerHtmlTooltipData(stdClass $sportEvent): string
+    {
+        return $sportEvent->name .' | ' . $sportEvent->alt_name
+            . '<br>'
+            . 'datum: <b>' . Carbon::createFromFormat('Y-m-d', $sportEvent->date)->format(AppHelper::DATE_FORMAT) . '</b>'
+            . '<br>'
+            . 'místo: <b>' . $sportEvent->place . '</b>';
+
+
     }
 
     public function getActions(): array

@@ -21,7 +21,7 @@ return [
     ],
 
     'filament_user' => [
-        'enabled' => true,
+        'enabled' => false,
         'name' => 'filament_user',
     ],
 

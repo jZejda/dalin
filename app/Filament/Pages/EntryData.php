@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
+use App\Enums\UserCreditType;
 use App\Mail\SendSportEventNearestMail;
 use App\Models\SportEvent;
 use App\Models\UserCredit;
@@ -105,7 +106,7 @@ class EntryData extends Page implements HasForms, HasTable
                         'sport_event_id' => $eventEntry->id,
                         'amount' => -$entry->Fee,
                         'currency' => UserCredit::CURRENCY_CZK,
-                        'credit_type' => UserCredit::CREDIT_TYPE_CACHE_OUT,
+                        'credit_type' => UserCreditType::CacheOut->value,
                         'source' => UserCredit::SOURCE_CRON,
                         'source_user_id' => auth()->user()->id,
                         'created_at' => now(),
