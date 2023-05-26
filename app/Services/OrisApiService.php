@@ -184,7 +184,7 @@ final class OrisApiService
                 $sportEventLink->external_key = (int)$link->getID();
                 $sportEventLink->internal = false;
                 $sportEventLink->source_url = $link->getUrl();
-                $sportEventLink->source_type = SportEventLinkType::mapOrisIdtoEnum((int)$link->getSourceType()?->getID()); // tady namapovat ID na enum
+                $sportEventLink->source_type = SportEventLinkType::mapOrisIdtoEnum((int)$link->getSourceType()?->getID());
                 $sportEventLink->name_cz = $link->getSourceType()?->getNameCZ();
                 $sportEventLink->name_en = $link->getSourceType()?->getNameEN();
                 $sportEventLink->description_cz = $link->getOtherDescCZ();

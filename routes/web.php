@@ -25,10 +25,6 @@ Route::get('/cron-scheduler/' . env('CRON_URL_KEY', 'key'), function () {
     Artisan::call('schedule:run');
 });
 
-Route::get('/cron-scheduler/' . env('CRON_URL_KEY', 'key'), function () {
-    Artisan::call('schedule:run');
-});
-
 Route::get('/cron-hourly/' . env('CRON_HOURLY_URL_KEY', 'hourly_key'), [CommonCron::class, 'runHourly']);
 
 Route::get('/novinka/{id}', ShowPost::class);

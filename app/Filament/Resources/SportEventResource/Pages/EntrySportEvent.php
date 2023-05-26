@@ -283,7 +283,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                         if ($storeResult) {
                             Notification::make()
-                                ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $sportClass?->classDefinition->name ?? 'N/A')
+                                ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $sportClass?->name ?? 'N/A')
                                 ->body('Prihlášku si zkontroluj na stránkách závodu přímo v ORISu.')
                                 ->success()
                                 ->actions([
@@ -299,7 +299,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                     } else {
                         Notification::make()
-                            ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $sportClass?->classDefinition->name ?? 'N/A')
+                            ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $sportClass?->name ?? 'N/A')
                             ->body('Nebyla provedena. ORIS vrátil zprávu: ' . $orisResponse->getStatus())
                             ->warning()
                             ->seconds(8)
@@ -317,7 +317,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                     if ($storeResult) {
                         Notification::make()
-                            ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $sportClass?->classDefinition->name ?? 'N/A')
+                            ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $sportClass?->name ?? 'N/A')
                             ->body('Prihlášku byla provedena pouze v interním systému')
                             ->success()
                             ->seconds(8)
@@ -606,7 +606,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         $entry->sport_event_id = $sportEvent->id;
         $entry->user_race_profile_id = $userRaceProfile->id;
         $entry->class_definition_id = $sportClass?->classDefinition->id;
-        $entry->class_name = $category->name ?? 'N/A';
+        $entry->class_name = $sportClass->name ?? 'N/A';
         $entry->note = $data['note'];
         $entry->club_note = $data['club_note'];
         $entry->requested_start = $data['requested_start'];
