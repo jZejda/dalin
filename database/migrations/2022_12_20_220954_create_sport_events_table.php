@@ -39,9 +39,10 @@ return new class () extends Migration {
             $table->string('gps_lon')->nullable();
             $table->json('weather')->nullable();
             $table->integer('parent_id')->nullable();
+            $table->tinyInteger('stages')->nullable();
+            $table->tinyInteger('multi_events')->nullable();
             $table->boolean('cancelled')->default(false);
             $table->string('cancelled_reason')->nullable();
-            $table->tinyInteger('stages')->nullable();
             $table->boolean('dont_update_excluded')->default(true);
             $table->timestamps();
 

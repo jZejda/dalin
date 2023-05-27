@@ -26,7 +26,7 @@ final class OpenMapService
         $getParams = [
             'lat' => $lat,
             'lon' => $lon,
-            'appid' => env('OPEN_MAP_API_KEY', 'key'),
+            'appid' => config('site-config.open_map_forecast_api_key'),
             'lang' => 'cz',
             'units' => 'metric',
         ];

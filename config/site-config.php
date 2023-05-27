@@ -55,6 +55,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Site OpenMapForecast
+    |--------------------------------------------------------------------------
+    |
+    | Config OpenMapForecast
+    |
+    */
+
+    'open_map_forecast_api_key' => env('OPEN_MAP_API_KEY', 'open_map_forecast_api_key'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Site Cron Hourly settings
     |--------------------------------------------------------------------------
     |
@@ -63,6 +74,7 @@ return [
     */
 
     'cron_hourly' => [
+        'url_key' => env('CRON_HOURLY_URL_KEY', 'url_key'),
         'weather_forecast' => [
             'active' => true,
             'hours' => ['08', '15'],
@@ -73,6 +85,6 @@ return [
         ],
     ],
 
-
+    'cron_url_key' => env('CRON_URL_KEY', 'cron_url_key'),
 
 ];

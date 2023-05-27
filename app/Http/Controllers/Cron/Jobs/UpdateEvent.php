@@ -14,7 +14,7 @@ final class UpdateEvent implements CommonCronJobs
     public function run(): void
     {
         $sportEvents = DB::table('sport_events')
-            ->where('last_update', '<', Carbon::now()->subDays(7))
+            ->where('last_update', '<', Carbon::now()->subDays(5))
             ->orWhereNull('last_update')
             ->whereNotNull('oris_id')
             ->where('date', '>', Carbon::now()->addDays(4))

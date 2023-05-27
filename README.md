@@ -32,8 +32,8 @@ This project is presented in [ABM Brno](https://abmbrno.cz/) orienteering club.
 ## Based on
 
 - PHP v8.1
-- MySql 5.6 and Up
-- [Laravel](https://laravel.com/) - PHP framework acctualy in version 9.x
+- MySql 8* and Up
+- [Laravel](https://laravel.com/) - PHP framework acctualy in version 10.x
 - [Filamentphp](https://filamentphp.com/) - in version 2.x
 - [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework
   - [FLowbite](https://flowbite.com/) - open-source tailwind css library

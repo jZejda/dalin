@@ -32,13 +32,24 @@ class OrisEvent
     public ?string $EventWarning;
     public ?string $Cancelled;
     public ?string $Stages;
+    public ?string $Stage1;
+    public ?string $Stage2;
+    public ?string $Stage3;
+    public ?string $Stage4;
+    public ?string $Stage5;
+    public ?string $Stage6;
+    public ?string $Stage7;
+    public ?string $MultiEvents;
+    public ?string $MultiEvent1;
+    public ?string $MultiEvent2;
+    public ?string $MultiEvent3;
     public ?string $ParentID;
     public array $Services;
     public Sport $Sport;
     public Discipline $Discipline;
     public Level $Level;
 
-    public function __construct(int $ID, string $Name, string $Date, string $Place, ?string $Map, Org $Org1, ?Org $Org2, string $Region, string $EntryDate1, ?string $EntryDate2, ?string $EntryDate3, string $EntryInfo, string $Currency, string $Ranking, ?string $StartTime, ?string $GPSLat, ?string $GPSLon, ?string $EventInfo, ?string $EventWarning, ?string $Cancelled, ?string $Stages, ?string $ParentID, array $Services, Sport $Sport, Discipline $Discipline, Level $Level)
+    public function __construct(int $ID, string $Name, string $Date, string $Place, ?string $Map, Org $Org1, ?Org $Org2, string $Region, string $EntryDate1, ?string $EntryDate2, ?string $EntryDate3, string $EntryInfo, string $Currency, string $Ranking, ?string $StartTime, ?string $GPSLat, ?string $GPSLon, ?string $EventInfo, ?string $EventWarning, ?string $Cancelled, ?string $Stages, ?string $Stage1, ?string $Stage2, ?string $Stage3, ?string $Stage4, ?string $Stage5, ?string $Stage6, ?string $Stage7, ?string $MultiEvents, ?string $MultiEvent1, ?string $MultiEvent2, ?string $MultiEvent3, ?string $ParentID, array $Services, Sport $Sport, Discipline $Discipline, Level $Level)
     {
         $this->ID = $ID;
         $this->Name = $Name;
@@ -61,6 +72,17 @@ class OrisEvent
         $this->EventWarning = $EventWarning;
         $this->Cancelled = $Cancelled;
         $this->Stages = $Stages;
+        $this->Stage1 = $Stage1;
+        $this->Stage2 = $Stage2;
+        $this->Stage3 = $Stage3;
+        $this->Stage4 = $Stage4;
+        $this->Stage5 = $Stage5;
+        $this->Stage6 = $Stage6;
+        $this->Stage7 = $Stage7;
+        $this->MultiEvents = $MultiEvents;
+        $this->MultiEvent1 = $MultiEvent1;
+        $this->MultiEvent2 = $MultiEvent2;
+        $this->MultiEvent3 = $MultiEvent3;
         $this->ParentID = $ParentID;
         $this->Services = $Services;
         $this->Sport = $Sport;
@@ -171,6 +193,61 @@ class OrisEvent
     public function getStages(): ?string
     {
         return $this->Stages;
+    }
+
+    public function getStage1(): ?string
+    {
+        return $this->Stage1;
+    }
+
+    public function getStage2(): ?string
+    {
+        return $this->Stage2;
+    }
+
+    public function getStage3(): ?string
+    {
+        return $this->Stage3;
+    }
+
+    public function getStage4(): ?string
+    {
+        return $this->Stage4;
+    }
+
+    public function getStage5(): ?string
+    {
+        return $this->Stage5;
+    }
+
+    public function getStage6(): ?string
+    {
+        return $this->Stage6;
+    }
+
+    public function getStage7(): ?string
+    {
+        return $this->Stage7;
+    }
+
+    public function getMultiEvents(): ?string
+    {
+        return $this->MultiEvents;
+    }
+
+    public function getMultiEvent1(): ?string
+    {
+        return $this->MultiEvent1;
+    }
+
+    public function getMultiEvent2(): ?string
+    {
+        return $this->MultiEvent2;
+    }
+
+    public function getMultiEvent3(): ?string
+    {
+        return $this->MultiEvent3;
     }
 
     public function getParentID(): ?string

@@ -21,11 +21,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/cron-scheduler/' . env('CRON_URL_KEY', 'key'), function () {
+Route::get('/cron-scheduler/' . config('site-config.cron_url_key'), function () {
     Artisan::call('schedule:run');
 });
 
-Route::get('/cron-hourly/' . env('CRON_HOURLY_URL_KEY', 'hourly_key'), [CommonCron::class, 'runHourly']);
+Route::get('/cron-hourly/' . config('site-config.cron_hourly.url_key'), [CommonCron::class, 'runHourly']);
 
 Route::get('/novinka/{id}', ShowPost::class);
 Route::get('/stranka/{slug}', ShowPage::class);

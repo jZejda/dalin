@@ -12,6 +12,7 @@
 .phpstorm.meta.php
 _ide_helper.php
 _ide_helper_models.php
+deploy.sh
 Homestead.json
 Homestead.yaml
 auth.json

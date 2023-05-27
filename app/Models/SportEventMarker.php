@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *
  * @property int $id
  * @property int $sport_event_id
+ * @property ?int $external_key
+ * @property ?string $letter
  * @property string $label
  * @property string|null $desc
  * @property float $lat
@@ -27,7 +29,9 @@ class SportEventMarker extends Model
     use HasFactory;
 
     protected $fillable = [
+        'external_key',
         'sport_event_id',
+        'letter',
         'label',
         'desc',
         'lat',

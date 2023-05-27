@@ -47,6 +47,7 @@ use Illuminate\Support\Carbon;
  * @property bool $cancelled
  * @property string|null $cancelled_reason
  * @property int|null $stages
+ * @property int|null $multi_events
  * @property string|null $last_update
  * @property string|null $last_calculate_cost
  * @property string|null $created_at
@@ -99,6 +100,7 @@ class SportEvent extends Model
         'cancelled',
         'cancelled_reason',
         'stages',
+        'multi_events',
         'dont_update_excluded',
     ];
 

@@ -12,10 +12,12 @@ use App\Http\Components\Oris\GetClubs;
 use App\Http\Components\Oris\GetEventEntries;
 use App\Http\Components\Oris\Response\Entity\Clubs;
 use App\Http\Components\Oris\Response\Entity\EventEntries;
+use App\Http\Components\Oris\Response\Entity\Locations;
 use App\Models\Club;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
 use App\Models\SportEventLink;
+use App\Models\SportEventMarker;
 use App\Models\UserRaceProfile;
 use App\Http\Components\Oris\GetClassDefinitions;
 use App\Http\Components\Oris\GetClubUserId;
@@ -32,6 +34,7 @@ use App\Models\User;
 use App\Models\UserCredit;
 use App\Models\UserCreditNote;
 use App\Shared\Helpers\AppHelper;
+use App\Shared\Helpers\EmptyType;
 use Carbon\Carbon;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Auth;
@@ -116,6 +119,8 @@ final class OrisApiService
             $eventModel->gps_lat = $orisData->getGPSLat();
             $eventModel->gps_lon = $orisData->getGPSLon();
             $eventModel->event_type = SportEventType::Race->value;
+            $eventModel->stages = EmptyType::stringNotEmpty($orisData->getStages()) ? (int)$orisData->getStages() : 0;
+            $eventModel->multi_events = EmptyType::stringNotEmpty($orisData->getMultiEvents()) ? (int)$orisData->getMultiEvents() : 0;
             $eventModel->stages = (!is_null($orisData->getStages()) || (int)$orisData->getStages() != 0) ? (int)$orisData->getStages() : null;
             $eventModel->parent_id = (!is_null($orisData->getParentID()) || (int)$orisData->getParentID() != 0) ? (int)$orisData->getParentID() : null;
             if ($updateByCron) {
@@ -127,7 +132,6 @@ final class OrisApiService
             // Create|Update Classes
             $classes = $event->classes($orisResponse);
             foreach ($classes as $class) {
-                /** @var Classes $class */
                 $classModel = SportClass::where(['sport_event_id' => $eventModel->id, 'oris_id' => $class->getID()])->first();
                 if (is_null($classModel)) {
                     $classModel = new SportClass();
@@ -152,7 +156,6 @@ final class OrisApiService
 
             // Create|Update Services
             $services = $event->services($orisResponse);
-            /** @var Services $service */
             foreach ($services as $service) {
                 /** @var SportService $serviceModel */
                 $serviceModel = SportService::where(['sport_event_id' => $eventModel->id, 'oris_service_id' => $service->getID()])->first();
@@ -171,26 +174,16 @@ final class OrisApiService
             }
 
             // Create|Update Links
-            /** @var Links[] $links */
+            $documents = $event->documents($orisResponse);
             $links = $event->links($orisResponse);
-            foreach ($links as $link) {
-                /** @var SportEventLink $sportEventLink */
-                $sportEventLink = SportEventLink::where(['sport_event_id' => $eventModel->id, 'external_key' => (int)$link->getID()])->first();
-                if (is_null($sportEventLink)) {
-                    $sportEventLink = new SportEventLink();
-                    $sportEventLink->sport_event_id = $eventModel->id;
-                }
+            $this->updateLinksDocuments($documents, $eventModel);
+            $this->updateLinksDocuments($links, $eventModel);
 
-                $sportEventLink->external_key = (int)$link->getID();
-                $sportEventLink->internal = false;
-                $sportEventLink->source_url = $link->getUrl();
-                $sportEventLink->source_type = SportEventLinkType::mapOrisIdtoEnum((int)$link->getSourceType()?->getID());
-                $sportEventLink->name_cz = $link->getSourceType()?->getNameCZ();
-                $sportEventLink->name_en = $link->getSourceType()?->getNameEN();
-                $sportEventLink->description_cz = $link->getOtherDescCZ();
-                $sportEventLink->description_en = $link->getOtherDescEN();
-                $sportEventLink->saveOrFail();
-            }
+
+            // Create|Update locations alias markers
+            $markers = $event->locations($orisResponse);
+            $this->updateMarkers($markers, $eventModel);
+
         }
 
         return true;
@@ -459,6 +452,54 @@ final class OrisApiService
             }
         }
         return true;
+    }
+
+    /**
+     * @param Links[] $entities
+     * @param SportEvent $eventModel
+     */
+    private function updateLinksDocuments(array $entities, SportEvent $eventModel): void
+    {
+        foreach ($entities as $entity) {
+            /** @var SportEventLink $sportEventLink */
+            $sportEventLink = SportEventLink::where(['sport_event_id' => $eventModel->id, 'external_key' => (int)$entity->getID()])->first();
+            if (is_null($sportEventLink)) {
+                $sportEventLink = new SportEventLink();
+                $sportEventLink->sport_event_id = $eventModel->id;
+            }
+
+            $sportEventLink->external_key = (int)$entity->getID();
+            $sportEventLink->internal = false;
+            $sportEventLink->source_url = $entity->getUrl();
+            $sportEventLink->source_type = SportEventLinkType::mapOrisIdtoEnum((int)$entity->getSourceType()?->getID());
+            $sportEventLink->name_cz = $entity->getSourceType()?->getNameCZ();
+            $sportEventLink->name_en = $entity->getSourceType()?->getNameEN();
+            $sportEventLink->description_cz = $entity->getOtherDescCZ();
+            $sportEventLink->description_en = $entity->getOtherDescEN();
+            $sportEventLink->saveOrFail();
+        }
+    }
+
+    /**
+     * @param Locations[] $markers
+     * @param SportEvent $eventModel
+     */
+    private function updateMarkers(array $markers, SportEvent $eventModel)
+    {
+        foreach ($markers as $marker) {
+            /** @var SportEventMarker $sportEventMarker */
+            $sportEventMarker = SportEventMarker::where(['sport_event_id' => $eventModel->id, 'external_key' => (int)$marker->getID()])->first();
+            if (is_null($sportEventMarker)) {
+                $sportEventMarker = new SportEventMarker();
+                $sportEventMarker->sport_event_id = $eventModel->id;
+            }
+            $sportEventMarker->external_key = (int)$marker->getID();
+            $sportEventMarker->letter = $marker->getLetter();
+            $sportEventMarker->label = $marker->getNameCZ();
+            $sportEventMarker->lat = $marker->getGPSLat();
+            $sportEventMarker->lon = $marker->getGPSLon();
+            $sportEventMarker->saveOrFail();
+        }
     }
 
 }

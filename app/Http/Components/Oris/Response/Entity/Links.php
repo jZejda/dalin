@@ -6,11 +6,11 @@ namespace App\Http\Components\Oris\Response\Entity;
 
 final class Links
 {
-    public string $ID;
-    public string $Url;
-    public ?SourceType $SourceType;
-    public string|null $OtherDescCZ;
-    public string|null $OtherDescEN;
+    private string $ID;
+    private string $Url;
+    private ?SourceType $SourceType;
+    private string|null $OtherDescCZ;
+    private string|null $OtherDescEN;
 
     public function __construct(string $ID, string $Url, ?SourceType $SourceType, ?string $OtherDescCZ, ?string $OtherDescEN)
     {

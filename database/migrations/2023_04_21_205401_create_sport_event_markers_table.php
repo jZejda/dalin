@@ -12,13 +12,15 @@ return new class () extends Migration {
     {
         Schema::create('sport_event_markers', function (Blueprint $table) {
             $table->id();
+            $table->unsignedMediumInteger('external_key')->nullable();
             $table->unsignedBigInteger('sport_event_id');
             $table->foreign('sport_event_id')->references('id')->on('sport_events');
+            $table->string('letter', 1)->nullable();
             $table->string('label', 255);
             $table->longText('desc')->nullable();
             $table->float('lat', 10, 6);
             $table->float('lon', 10, 6);
-            $table->string('type', 36);
+            $table->string('type', 36)->nullable();
             $table->timestamps();
         });
     }
