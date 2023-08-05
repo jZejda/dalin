@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Closure;
 use Filament\Forms;
 use App\Filament\Resources\SportEventResource;
+use App\Filament\Resources\SportEventResource\Widgets\EventLink;
 use App\Http\Controllers\Discord\DiscordWebhookHelper;
 use App\Http\Controllers\Discord\RaceEventAddedNotification;
 use App\Models\SportEvent;
@@ -25,6 +26,7 @@ use Filament\Pages\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class ListSportEvents extends ListRecords
@@ -52,21 +54,28 @@ class ListSportEvents extends ListRecords
 
     private function getOrisEvent(): Action
     {
-
         return Action::make('orisEvent')
             ->action(function (array $data): void {
-
-
-                // dd($data['oris_id']));
-
-                $event = (new OrisApiService())->updateEvent(intval($data['oris_id']));
-                if ($event) {
+                $results = DB::select('SELECT id FROM `sport_events` WHERE oris_id = ? LIMIT 1', [$data['oris_id']]);
+                if (!empty($results)) {
+                    $pathToEntry = route('filament.resources.sport-events.edit', ['record' => $results[0]->id]);
                     Notification::make()
-                        ->title('Závod ID ' . intval($data['oris_id']) . ' byl vytvořen')
-                        ->body('V systému byl založen nový závod s kategoriemi a dostupnými službami. Data jsou aktuální oproti ORISu.')
+                        ->title('Závod ID ' . intval($data['oris_id']) . ' nebyl vytvořen')
+                        ->body("V systému byl nalezen existující závod se zadaným [**ORIS ID**]($pathToEntry)")
                         ->success()
                         ->seconds(8)
+                        ->danger()
                         ->send();
+                } else {
+                    $event = (new OrisApiService())->updateEvent(intval($data['oris_id']));
+                    if ($event) {
+                        Notification::make()
+                            ->title('Závod ID ' . intval($data['oris_id']) . ' byl vytvořen')
+                            ->body('V systému byl založen nový závod s kategoriemi a dostupnými službami. Data jsou aktuální oproti ORISu.')
+                            ->success()
+                            ->seconds(8)
+                            ->send();
+                    }
                 }
             })
             ->color('secondary')
@@ -147,8 +156,6 @@ class ListSportEvents extends ListRecords
                                                 $orisResponse = Http::get('https://oris.orientacnisporty.cz/API', $baseUriParams)
                                                     ->throw()
                                                     ->json('Data');
-
-
                                             } catch (RequestException $e) {
                                                 Filament::notify('danger', 'Nepodařilo se načíst data.');
                                                 return;
@@ -161,7 +168,6 @@ class ListSportEvents extends ListRecords
                                             }
 
                                             $set('oris_event_id', $orisEventData);
-
                                         })
                                 ),
                         ])->columns(1),
@@ -172,53 +178,52 @@ class ListSportEvents extends ListRecords
     private function getNotifiAction(): Action
     {
         return Action::make('updateAuthor')
-                ->action(function (array $data): void {
-                    // if notifikace na Discord
-                    /** @var SportEvent $sportEvent */
-                    $sportEvent = SportEvent::query()->where('id', '=', $data['sportEventId'])->first();
-                    (new RaceEventAddedNotification($sportEvent, $data['notificationType']))->sendNotification();
-                    Notification::make()
-                        ->title('Notifikace odeslána')
-                        ->body('Na zvolený kanál jsi zaslal notifikaci ke konkrétnímu závodu')
-                        ->success()
-                        ->seconds(8)
-                        ->send();
-                })
-                ->color('secondary')
-                ->label('Pošli notifikaci')
-                ->icon('heroicon-s-paper-airplane')
-                ->modalHeading('Pošli notifikaci k závodu/akci')
-                ->modalSubheading('Notifikace je možná poslat do různých kanálů na objekty, jakékoliv objekty v listu')
-                ->modalButton('Ano poslat notifikaci')
-                ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
-                ->form([
-                    Forms\Components\Grid::make(2)
-                        ->schema([
-                            Forms\Components\Select::make('sportEventId')
-                                ->label('Závod/událost')
-                                ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id'))
-                                ->required()
-                                ->columnSpan(2)
-                                ->searchable(),
-                            Forms\Components\Select::make('notificationType')
-                                ->label('Typ upozornění')
-                                ->options([
-                                    DiscordWebhookHelper::CONTENT_STATUS_NEW => 'Nová událost',
-                                    DiscordWebhookHelper::CONTENT_STATUS_UPDATE => 'Upravená událost'
-                                ])
-                                ->default(DiscordWebhookHelper::CONTENT_STATUS_NEW)
-                                ->required(),
-                            Forms\Components\Select::make('chanelId')
-                                ->label('Kanál')
-                                ->options([
-                                    1 => 'Discord',
-                                    2 => 'E-mail'
-                                ])
-                                ->default(1)
-                                ->required(),
-                        ]),
+            ->action(function (array $data): void {
+                // if notifikace na Discord
+                /** @var SportEvent $sportEvent */
+                $sportEvent = SportEvent::query()->where('id', '=', $data['sportEventId'])->first();
+                (new RaceEventAddedNotification($sportEvent, $data['notificationType']))->sendNotification();
+                Notification::make()
+                    ->title('Notifikace odeslána')
+                    ->body('Na zvolený kanál jsi zaslal notifikaci ke konkrétnímu závodu')
+                    ->success()
+                    ->seconds(8)
+                    ->send();
+            })
+            ->color('secondary')
+            ->label('Pošli notifikaci')
+            ->icon('heroicon-s-paper-airplane')
+            ->modalHeading('Pošli notifikaci k závodu/akci')
+            ->modalSubheading('Notifikace je možná poslat do různých kanálů na objekty, jakékoliv objekty v listu')
+            ->modalButton('Ano poslat notifikaci')
+            ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
+            ->form([
+                Forms\Components\Grid::make(2)
+                    ->schema([
+                        Forms\Components\Select::make('sportEventId')
+                            ->label('Závod/událost')
+                            ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id'))
+                            ->required()
+                            ->columnSpan(2)
+                            ->searchable(),
+                        Forms\Components\Select::make('notificationType')
+                            ->label('Typ upozornění')
+                            ->options([
+                                DiscordWebhookHelper::CONTENT_STATUS_NEW => 'Nová událost',
+                                DiscordWebhookHelper::CONTENT_STATUS_UPDATE => 'Upravená událost'
+                            ])
+                            ->default(DiscordWebhookHelper::CONTENT_STATUS_NEW)
+                            ->required(),
+                        Forms\Components\Select::make('chanelId')
+                            ->label('Kanál')
+                            ->options([
+                                1 => 'Discord',
+                                2 => 'E-mail'
+                            ])
+                            ->default(1)
+                            ->required(),
+                    ]),
 
-                ]);
+            ]);
     }
-
 }
