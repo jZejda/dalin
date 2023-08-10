@@ -97,7 +97,7 @@ final class OrisApiService
 
             $eventModel->start_time = $orisData->getStartTime();
 
-            $eventModel->entry_date_1 = strlen($orisData->getEntryDate1()) !== 0 ? $orisData->getEntryDate1() : null;
+            $eventModel->entry_date_1 = strlen($orisData->getEntryDate1()) !== 0 ? $orisData->getEntryDate1() : '';
 
             //dd(!$eventModel->dont_update_excluded);
             if ($newEvent || !$eventModel->dont_update_excluded) {

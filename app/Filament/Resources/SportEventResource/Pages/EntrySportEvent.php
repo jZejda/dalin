@@ -334,7 +334,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             ->modalButton('Přihlásit')
             ->form([
                 Select::make('raceProfileId')
-                    ->label('Vyber zavod/udalost')
+                    ->label('Vyberte závodní profil')
                     ->options($registerAll ? $this->getUserRaceProfiles(true) : $this->getUserRaceProfiles())
                     ->disablePlaceholderSelection()
                     ->searchable()

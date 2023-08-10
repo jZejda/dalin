@@ -70,6 +70,10 @@ return [
     |--------------------------------------------------------------------------
     |
     | Config for hourly cron runners
+    | hours in format m ['08', '22']
+    | days in month ['01', '05', '22']
+    | months ['01', '12']
+    | day in week ['1', '5'] 1 = monday
     |
     */
 
@@ -78,10 +82,23 @@ return [
         'weather_forecast' => [
             'active' => true,
             'hours' => ['08', '15'],
+            'days_in_month' => ['*'],
+            'months' => ['*'],
+            'days_in_week' => ['*'],
         ],
         'event_update' => [
             'active' => true,
             'hours' => ['22'],
+            'days_in_month' => ['*'],
+            'months' => ['*'],
+            'days_in_week' => ['*'],
+        ],
+        'mail_monthly_user_debit_report' => [
+            'active' => true,
+            'hours' => ['08'],
+            'days_in_month' => ['01'],
+            'months' => ['*'],
+            'days_in_week' => ['*'],
         ],
     ],
 

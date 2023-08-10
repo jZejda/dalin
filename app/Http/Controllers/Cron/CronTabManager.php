@@ -1,98 +1,79 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Cron;
 
-class CronTabManager
+use App\Shared\Helpers\EmptyType;
+use Illuminate\Support\Carbon;
+
+final class CronTabManager
 {
-    public ?int $minutes;
-    public ?int $hours;
-    public ?int $dayOfMonth;
-    public ?int $months;
-    public ?int $dayOfWeek;
+    public array $hours;
+    public array $daysInMonth;
+    public array $months;
+    public array $daysInWeek;
 
-    public function __construct(?int $minutes = null, ?int $hours  = null, ?int $dayOfMonth  = null, ?int $months  = null, ?int $dayOfWeek  = null)
-    {
-        $this->minutes = $minutes;
-        $this->hours = $hours;
-        $this->dayOfMonth = $dayOfMonth;
-        $this->months = $months;
-        $this->dayOfWeek = $dayOfWeek;
-    }
-
-
-    public function getPass()
-    {
-
-        return $this->getHours();
-
-
-
-    }
-
-    public function getMinutes(): ?int
-    {
-        return $this->minutes;
-    }
-
-    /**
-     * @param int|null $minutes
-     */
-    public function setMinutes(?int $minutes): void
-    {
-        $this->minutes = $minutes;
-    }
-
-    public function getHours(): ?int
-    {
-        return $this->hours;
-    }
-
-    /**
-     * @param int|null $hours
-     */
-    public function setHours(?int $hours): void
+    public function __construct(array $hours, array $daysInMonth, array $months, array $daysInWeek)
     {
         $this->hours = $hours;
-    }
-
-    public function getDayOfMonth(): ?int
-    {
-        return $this->dayOfMonth;
-    }
-
-    /**
-     * @param int|null $dayOfMonth
-     */
-    public function setDayOfMonth(?int $dayOfMonth): self
-    {
-        $this->dayOfMonth = $dayOfMonth;
-    }
-
-    public function getMonths(): ?int
-    {
-        return $this->months;
-    }
-
-    /**
-     * @param int|null $months
-     */
-    public function setMonths(?int $months): self
-    {
+        $this->daysInMonth = $daysInMonth;
         $this->months = $months;
+        $this->daysInWeek = $daysInWeek;
     }
 
-    public function getDayOfWeek(): ?int
+    public function jobRunner(): bool
     {
-        return $this->dayOfWeek;
+        if (
+            $this->checkHour() &&
+            $this->checkDaysInMonth() &&
+            $this->checkMonths() &&
+            $this->checkDaysInWeek()
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
-    /**
-     * @param int|null $dayOfWeek
-     */
-    public function setDayOfWeek(?int $dayOfWeek): void
+    private function checkHour(): bool
     {
-        $this->dayOfWeek = $dayOfWeek;
+        $actualHour = Carbon::now()->format('H');
+        return $this->isInArray($this->hours, $actualHour);
     }
 
+    private function checkDaysInMonth(): bool
+    {
+        $actualDayInMonth = Carbon::now()->format('d');
+        return $this->isInArray($this->daysInMonth, $actualDayInMonth);
+    }
 
+    private function checkMonths(): bool
+    {
+        $actualMonth = Carbon::now()->format('m');
+        return $this->isInArray($this->months, $actualMonth);
+    }
+
+    private function checkDaysInWeek(): bool
+    {
+        $actualDayInWeek = Carbon::now()->dayOfWeek;
+        return $this->isInArray($this->daysInWeek, (string)$actualDayInWeek);
+    }
+
+    private function isInArray(array $array, string $checkValue): bool
+    {
+        if (in_array($checkValue, $array, true)) {
+            return true;
+        }
+
+        if (EmptyType::arrayEmpty($array)) {
+            return true;
+        }
+
+        if ($array[0] === '*') {
+            return true;
+        }
+
+        return false;
+    }
 }
