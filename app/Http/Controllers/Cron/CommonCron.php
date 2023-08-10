@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron;
 
+use App\Http\Controllers\Cron\Jobs\ReportEmailUserDebit;
 use App\Http\Controllers\Cron\Jobs\UpdateEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Cron\Jobs\UpdateEventWeather;
@@ -29,11 +30,36 @@ class CommonCron extends Controller
         if ($updateEventActive && in_array($this->getActualHour(), $updateEventHours)) {
             (new UpdateEvent())->run();
         }
+
+        // Send Mail monthly user debit report - Firs day in month
+        $emailUserDebitPrefix = 'site-config.cron_hourly.mail_monthly_user_debit_report.';
+        $emailUserDebitStatus = config($emailUserDebitPrefix . 'active');
+        $emailUserDebitCheckRun = $this->checkRunningTime(
+            config($emailUserDebitPrefix . 'hours'),
+            config($emailUserDebitPrefix . 'days_in_month'),
+            config($emailUserDebitPrefix . 'months'),
+            config($emailUserDebitPrefix . 'days_in_week'),
+        );
+        if ($emailUserDebitStatus && $emailUserDebitCheckRun) {
+            (new ReportEmailUserDebit())->run();
+        }
     }
 
     private function getActualHour(): string
     {
         return Carbon::now()->format('H');
+    }
+
+    private function checkRunningTime(?array $hours, ?array $daysInMonth, ?array $months, ?array $daysInWeek): bool
+    {
+        $check = new CronTabManager(
+            hours: $hours ?? [],
+            daysInMonth: $daysInMonth ?? [],
+            months: $months ?? [],
+            daysInWeek: $daysInWeek ?? []
+        );
+
+        return $check->jobRunner();
     }
 
 }

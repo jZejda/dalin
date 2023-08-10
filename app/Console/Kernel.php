@@ -1,16 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console;
 
-use DB;
-use App\Models\SportEvent;
 use App\Jobs\SendNewPostsEmailJob;
 use App\Jobs\SendSportEventEntryEndingEmailJob;
-use App\Services\OrisApiService;
+
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
