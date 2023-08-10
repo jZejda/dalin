@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Http;
 
 final class OpenMapService
 {
-    private ?OpenMapResponse $openMapResponse;
+    private OpenMapResponse $openMapResponse;
 
     public const OPEN_MAP_API_URL = 'https://api.openweathermap.org/data/2.5/forecast';
     public const OPEN_MAP_DEFAULT_FORMAT = 'json';
 
-    public function __construct(?OpenMapResponse $openMapResponse = null)
+    public function __construct(OpenMapResponse $openMapResponse = null)
     {
         $this->openMapResponse = $openMapResponse ?? new OpenMapResponse();
     }

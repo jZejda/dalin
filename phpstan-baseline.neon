@@ -1,22 +1,92 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Cannot access property \\$Data on object\\|null\\.$#"
+			count: 1
+			path: app/Filament/Pages/EntryData.php
+
+		-
+			message: "#^Cannot access property \\$Status on object\\|null\\.$#"
+			count: 1
+			path: app/Filament/Pages/EntryData.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Filament/Pages/EntryData.php
+
+		-
+			message: "#^Offset 'sportEventId' does not exist on array\\{sportEventId\\?\\: non\\-falsy\\-string\\}\\.$#"
+			count: 1
+			path: app/Filament/Pages/EntryData.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Filament\\\\Pages\\\\UserCreateEntry\\:\\:\\$form\\.$#"
+			count: 1
+			path: app/Filament/Pages/UserCreateEntry.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: app/Filament/Pages/UserCreateEntry.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Filament/Pages/UserCreditList.php
+
+		-
+			message: "#^Using nullsafe property access on non\\-nullable type App\\\\Models\\\\SportEvent\\. Use \\-\\> instead\\.$#"
+			count: 1
+			path: app/Filament/Pages/UserCreditList.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Filament\\\\Pages\\\\UserMailNotification\\:\\:\\$form\\.$#"
+			count: 1
+			path: app/Filament/Pages/UserMailNotification.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 3
+			path: app/Filament/Pages/UserMailNotification.php
+
+		-
+			message: "#^Class App\\\\Models\\\\UserMailNotification not found\\.$#"
+			count: 1
+			path: app/Filament/Pages/UserMailNotification.php
+
+		-
+			message: "#^Parameter \\#1 \\$users of method Filament\\\\Notifications\\\\Notification\\:\\:sendToDatabase\\(\\) expects array\\|Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|Illuminate\\\\Database\\\\Eloquent\\\\Model\\|Illuminate\\\\Support\\\\Collection, App\\\\Models\\\\User\\|null given\\.$#"
+			count: 1
+			path: app/Filament/Pages/UserMailNotification.php
+
+		-
 			message: "#^Access to an undefined property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$title\\.$#"
 			count: 1
 			path: app/Filament/Resources/ContentCategoryResource.php
 
 		-
-			message: "#^Called 'pluck' on Laravel collection, but could have been retrieved as a query\\.$#"
+			message: "#^Cannot call method format\\(\\) on Illuminate\\\\Support\\\\Carbon\\|null\\.$#"
 			count: 1
 			path: app/Filament/Resources/PageResource.php
 
 		-
-			message: "#^Cannot call method format\\(\\) on string\\.$#"
+			message: "#^Call to static method pathGenerator\\(\\) on an unknown class Awcodes\\\\Curator\\\\Facades\\\\Curator\\.$#"
 			count: 1
-			path: app/Filament/Resources/PageResource.php
+			path: app/Filament/Resources/PostResource.php
 
 		-
-			message: "#^Called 'pluck' on Laravel collection, but could have been retrieved as a query\\.$#"
+			message: "#^Cannot call method format\\(\\) on Illuminate\\\\Support\\\\Carbon\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/PostResource.php
+
+		-
+			message: "#^Class Awcodes\\\\Curator\\\\Generators\\\\DatePathGenerator not found\\.$#"
+			count: 1
+			path: app/Filament/Resources/PostResource.php
+
+		-
+			message: "#^Method App\\\\Filament\\\\Resources\\\\PostResource\\:\\:register\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Filament/Resources/PostResource.php
 
@@ -31,44 +101,264 @@ parameters:
 			path: app/Filament/Resources/SportEventExportResource.php
 
 		-
-			message: "#^Called 'pluck' on Laravel collection, but could have been retrieved as a query\\.$#"
-			count: 4
-			path: app/Filament/Resources/SportEventResource.php
-
-		-
-			message: "#^Variable \\$region on left side of \\?\\? always exists and is not nullable\\.$#"
+			message: "#^Cannot call method format\\(\\) on string\\.$#"
 			count: 1
 			path: app/Filament/Resources/SportEventResource.php
 
 		-
-			message: "#^Call to function is_null\\(\\) with App\\\\Models\\\\Post will always evaluate to false\\.$#"
+			message: "#^Cannot call method hasRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource.php
+
+		-
+			message: "#^Cannot call static method where\\(\\) on string\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource.php
+
+		-
+			message: "#^Cannot call method hasRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/Actions/EntrySendMail.php
+
+		-
+			message: "#^Variable \\$sportEvent in PHPDoc tag @var does not exist\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/Actions/EntrySendMail.php
+
+		-
+			message: "#^Cannot call method hasRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 2
+			path: app/Filament/Resources/SportEventResource/Pages/EditSportEvent.php
+
+		-
+			message: "#^Cannot access property \\$classDefinitionFullLabel on App\\\\Models\\\\SportClassDefinition\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Cannot access property \\$club_user_id on App\\\\Models\\\\UserRaceProfile\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 4
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Cannot access property \\$name on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Cannot call method getData\\(\\) on App\\\\Http\\\\Components\\\\Oris\\\\Response\\\\CreateEntry\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Cannot call method hasRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 2
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 6
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Method App\\\\Filament\\\\Resources\\\\SportEventResource\\\\Pages\\\\EntrySportEvent\\:\\:booted\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Method App\\\\Filament\\\\Resources\\\\SportEventResource\\\\Pages\\\\EntrySportEvent\\:\\:mount\\(\\) has parameter \\$record with no type specified\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Parameter \\#1 \\$item of method Illuminate\\\\Support\\\\Collection\\<int,App\\\\Models\\\\UserRaceProfile\\>\\:\\:add\\(\\) expects App\\\\Models\\\\UserRaceProfile, App\\\\Models\\\\UserRaceProfile\\|null given\\.$#"
+			count: 2
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Parameter \\#2 \\$userProfile of method App\\\\Filament\\\\Resources\\\\SportEventResource\\\\Pages\\\\EntrySportEvent\\:\\:orisCreateEntry\\(\\) expects App\\\\Models\\\\UserRaceProfile, App\\\\Models\\\\UserRaceProfile\\|null given\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Parameter \\#3 \\$userRaceProfile of method App\\\\Filament\\\\Resources\\\\SportEventResource\\\\Pages\\\\EntrySportEvent\\:\\:storeUserEntry\\(\\) expects App\\\\Models\\\\UserRaceProfile, App\\\\Models\\\\UserRaceProfile\\|null given\\.$#"
+			count: 2
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Parameter \\#4 \\$sportClass of method App\\\\Filament\\\\Resources\\\\SportEventResource\\\\Pages\\\\EntrySportEvent\\:\\:storeUserEntry\\(\\) expects App\\\\Models\\\\SportClass, App\\\\Models\\\\SportClass\\|null given\\.$#"
+			count: 2
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Property App\\\\Models\\\\UserEntry\\:\\:\\$entry_created \\(Illuminate\\\\Support\\\\Carbon\\|null\\) does not accept string\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Property App\\\\Models\\\\UserEntry\\:\\:\\$oris_entry_id \\(int\\|null\\) does not accept string\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Property App\\\\Models\\\\UserEntry\\:\\:\\$stage_x \\(int\\) does not accept null\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Using nullsafe property access on non\\-nullable type App\\\\Models\\\\SportClass\\. Use \\-\\> instead\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Variable \\$selectData on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
+
+		-
+			message: "#^Anonymous function has an unused use \\$state\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/ListSportEvents.php
+
+		-
+			message: "#^Cannot call method hasRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 2
+			path: app/Filament/Resources/SportEventResource/Pages/ListSportEvents.php
+
+		-
+			message: "#^Cannot call method hasRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Pages/ViewSportEvent.php
+
+		-
+			message: "#^Method App\\\\Filament\\\\Resources\\\\SportEventResource\\\\RelationManagers\\\\UserEntryRelationManager\\:\\:getModelId\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/RelationManagers/UserEntryRelationManager.php
+
+		-
+			message: "#^Parameter \\#1 \\$bounds of method Webbingbrasil\\\\FilamentMaps\\\\Actions\\\\CenterMapAction\\:\\:fitBounds\\(\\) expects array, array\\|null given\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Widgets/EventEditMap.php
+
+		-
+			message: "#^Parameter \\#1 \\$eventType of method App\\\\Filament\\\\Resources\\\\SportEventResource\\\\Widgets\\\\EventEditMap\\:\\:getMarkerByEventType\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Widgets/EventEditMap.php
+
+		-
+			message: "#^Parameter \\#1 \\$eventType of method App\\\\Filament\\\\Resources\\\\SportEventResource\\\\Widgets\\\\EventMap\\:\\:getMarkerByEventType\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/Filament/Resources/SportEventResource/Widgets/EventMap.php
+
+		-
+			message: "#^Static method App\\\\Filament\\\\Resources\\\\UserCreditResource\\:\\:getPluckUsers\\(\\) is unused\\.$#"
+			count: 1
+			path: app/Filament/Resources/UserCreditResource.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/UserCreditResource/Pages/ViewUserCredit.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/UserEntryResource.php
+
+		-
+			message: "#^Cannot call method hasRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/UserRaceProfileResource.php
+
+		-
+			message: "#^Cannot call method hasRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/UserRaceProfileResource/Pages/ListUserRaceProfiles.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of static method Illuminate\\\\Support\\\\Facades\\\\Hash\\:\\:make\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/Filament/Resources/UserResource.php
+
+		-
+			message: "#^Using nullsafe property access on non\\-nullable type App\\\\Models\\\\SportEvent\\. Use \\-\\> instead\\.$#"
+			count: 1
+			path: app/Filament/Resources/UserResource/RelationManagers/UserCreditRelationManager.php
+
+		-
+			message: "#^Cannot call method format\\(\\) on Carbon\\\\Carbon\\|false\\.$#"
+			count: 1
+			path: app/Filament/Widgets/MapOverview.php
+
+		-
+			message: "#^Parameter \\#1 \\$bounds of method Webbingbrasil\\\\FilamentMaps\\\\Actions\\\\CenterMapAction\\:\\:fitBounds\\(\\) expects array, array\\|null given\\.$#"
+			count: 1
+			path: app/Filament/Widgets/MapOverview.php
+
+		-
+			message: "#^Parameter \\#1 \\$eventType of method App\\\\Filament\\\\Widgets\\\\MapOverview\\:\\:getMarkerByEventType\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/Filament/Widgets/MapOverview.php
+
+		-
+			message: "#^Parameter \\#1 \\$sportEvent of method App\\\\Filament\\\\Widgets\\\\MapOverview\\:\\:getMarkerHtmlTooltipData\\(\\) expects stdClass, App\\\\Models\\\\SportEvent given\\.$#"
+			count: 1
+			path: app/Filament/Widgets/MapOverview.php
+
+		-
+			message: "#^Access to an undefined property Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\:\\:\\$id\\.$#"
 			count: 1
 			path: app/Filament/Widgets/StatsOverview.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\AuthenticatedSessionController\\:\\:create\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			message: "#^Cannot access property \\$id on Illuminate\\\\Contracts\\\\Auth\\\\Authenticatable\\|null\\.$#"
+			count: 1
+			path: app/Filament/Widgets/StatsOverview.php
+
+		-
+			message: "#^Method App\\\\Filament\\\\Widgets\\\\StatsOverview\\:\\:getLastPost\\(\\) is unused\\.$#"
+			count: 1
+			path: app/Filament/Widgets/StatsOverview.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:limit\\(\\) expects int, string given\\.$#"
+			count: 1
+			path: app/Filament/Widgets/StatsOverview.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Components\\\\Oris\\\\OrisResponse\\:\\:getResponseArrayPart\\(\\) should return string but returns string\\|false\\.$#"
+			count: 1
+			path: app/Http/Components/Oris/OrisResponse.php
+
+		-
+			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\AuthenticatedSessionController\\:\\:create\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/AuthenticatedSessionController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\ConfirmablePasswordController\\:\\:show\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			message: "#^Cannot access property \\$email on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/Auth/ConfirmablePasswordController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\NewPasswordController\\:\\:create\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			message: "#^Cannot call method hasVerifiedEmail\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
-			path: app/Http/Controllers/Auth/NewPasswordController.php
+			path: app/Http/Controllers/Auth/EmailVerificationPromptController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\PasswordResetLinkController\\:\\:create\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			message: "#^Cannot call method hasVerifiedEmail\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
-			path: app/Http/Controllers/Auth/PasswordResetLinkController.php
+			path: app/Http/Controllers/Auth/VerifyEmailController.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Controllers\\\\Auth\\\\RegisteredUserController\\:\\:create\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			message: "#^Cannot call method markEmailAsVerified\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
-			path: app/Http/Controllers/Auth/RegisteredUserController.php
+			path: app/Http/Controllers/Auth/VerifyEmailController.php
 
 		-
 			message: "#^Parameter \\#1 \\$user of class Illuminate\\\\Auth\\\\Events\\\\Verified constructor expects Illuminate\\\\Contracts\\\\Auth\\\\MustVerifyEmail, App\\\\Models\\\\User\\|null given\\.$#"
@@ -76,24 +366,44 @@ parameters:
 			path: app/Http/Controllers/Auth/VerifyEmailController.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			message: "#^Method App\\\\Http\\\\Controllers\\\\Cron\\\\CronTabManager\\:\\:getPass\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: app/Http/Controllers/TestController.php
+			path: app/Http/Controllers/Cron/CronTabManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$view of function view expects view\\-string\\|null, string given\\.$#"
+			message: "#^Cannot access offset 'dt' on App\\\\Http\\\\Components\\\\OpenMap\\\\Response\\\\ListResponse\\.$#"
 			count: 1
-			path: app/Http/Livewire/Auth/Register.php
+			path: app/Http/Controllers/Cron/Jobs/UpdateEventWeather.php
 
 		-
-			message: "#^Method App\\\\Http\\\\Livewire\\\\Frontend\\\\NewPost\\:\\:render\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			message: "#^Cannot access property \\$timestamp on Carbon\\\\Carbon\\|false\\.$#"
 			count: 1
-			path: app/Http/Livewire/Frontend/NewPost.php
+			path: app/Http/Controllers/Cron/Jobs/UpdateEventWeather.php
 
 		-
-			message: "#^Parameter \\#1 \\$view of function view expects view\\-string\\|null, string given\\.$#"
+			message: "#^Cannot call method getWeather\\(\\) on App\\\\Services\\\\OpenMapService\\|null\\.$#"
 			count: 1
-			path: app/Http/Livewire/HelloWorld.php
+			path: app/Http/Controllers/Cron/Jobs/UpdateEventWeather.php
+
+		-
+			message: "#^Class App\\\\Mail\\\\AddUpdateSportEvent constructor invoked with 0 parameters, 1 required\\.$#"
+			count: 1
+			path: app/Jobs/SendAddUpdateSportEventEmailJob.php
+
+		-
+			message: "#^Offset 'news' does not exist on array\\|null\\.$#"
+			count: 1
+			path: app/Jobs/SendNewPostsEmailJob.php
+
+		-
+			message: "#^Offset 'days_before_event…' does not exist on array\\|null\\.$#"
+			count: 1
+			path: app/Jobs/SendSportEventEntryEndingEmailJob.php
+
+		-
+			message: "#^Offset 'sport' does not exist on array\\|null\\.$#"
+			count: 1
+			path: app/Jobs/SendSportEventEntryEndingEmailJob.php
 
 		-
 			message: "#^PHPDoc type array of property App\\\\Models\\\\Page\\:\\:\\$casts is not covariant with PHPDoc type array\\<string, string\\> of overridden property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$casts\\.$#"
@@ -101,16 +411,196 @@ parameters:
 			path: app/Models/Page.php
 
 		-
-			message: "#^PHPDoc type array of property App\\\\Models\\\\Post\\:\\:\\$casts is not covariant with PHPDoc type array\\<string, string\\> of overridden property Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:\\$casts\\.$#"
-			count: 1
-			path: app/Models/Post.php
+			message: "#^Cannot call method format\\(\\) on Illuminate\\\\Support\\\\Carbon\\|false\\.$#"
+			count: 2
+			path: app/Models/SportEvent.php
 
 		-
-			message: "#^Method App\\\\View\\\\Components\\\\AppLayout\\:\\:render\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			message: "#^Parameter \\#1 \\$array of static method Illuminate\\\\Support\\\\Arr\\:\\:join\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
-			path: app/View/Components/AppLayout.php
+			path: app/Models/SportEvent.php
 
 		-
-			message: "#^Method App\\\\View\\\\Components\\\\GuestLayout\\:\\:render\\(\\) should return Illuminate\\\\View\\\\View but returns Illuminate\\\\Contracts\\\\View\\\\View\\.$#"
+			message: "#^Parameter \\$media of method App\\\\Policies\\\\MediaPolicy\\:\\:delete\\(\\) has invalid type Awcodes\\\\Curator\\\\Models\\\\Media\\.$#"
+			count: 2
+			path: app/Policies/MediaPolicy.php
+
+		-
+			message: "#^Parameter \\$media of method App\\\\Policies\\\\MediaPolicy\\:\\:forceDelete\\(\\) has invalid type Awcodes\\\\Curator\\\\Models\\\\Media\\.$#"
+			count: 2
+			path: app/Policies/MediaPolicy.php
+
+		-
+			message: "#^Parameter \\$media of method App\\\\Policies\\\\MediaPolicy\\:\\:replicate\\(\\) has invalid type Awcodes\\\\Curator\\\\Models\\\\Media\\.$#"
+			count: 2
+			path: app/Policies/MediaPolicy.php
+
+		-
+			message: "#^Parameter \\$media of method App\\\\Policies\\\\MediaPolicy\\:\\:restore\\(\\) has invalid type Awcodes\\\\Curator\\\\Models\\\\Media\\.$#"
+			count: 2
+			path: app/Policies/MediaPolicy.php
+
+		-
+			message: "#^Parameter \\$media of method App\\\\Policies\\\\MediaPolicy\\:\\:update\\(\\) has invalid type Awcodes\\\\Curator\\\\Models\\\\Media\\.$#"
+			count: 2
+			path: app/Policies/MediaPolicy.php
+
+		-
+			message: "#^Parameter \\$media of method App\\\\Policies\\\\MediaPolicy\\:\\:view\\(\\) has invalid type Awcodes\\\\Curator\\\\Models\\\\Media\\.$#"
+			count: 2
+			path: app/Policies/MediaPolicy.php
+
+		-
+			message: "#^Property App\\\\Services\\\\NotificationService\\:\\:\\$body is never read, only written\\.$#"
 			count: 1
-			path: app/View/Components/GuestLayout.php
+			path: app/Services/NotificationService.php
+
+		-
+			message: "#^Undefined variable\\: \\$sportEvent$#"
+			count: 1
+			path: app/Services/NotificationService.php
+
+		-
+			message: "#^Variable \\$sportEvent in PHPDoc tag @var does not exist\\.$#"
+			count: 1
+			path: app/Services/NotificationService.php
+
+		-
+			message: "#^Cannot call method response\\(\\) on App\\\\Http\\\\Components\\\\OpenMap\\\\OpenMapResponse\\|null\\.$#"
+			count: 1
+			path: app/Services/OpenMapService.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
+			count: 2
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Cannot call method getItemsInfo\\(\\) on App\\\\Services\\\\OrisResponse\\|null\\.$#"
+			count: 2
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Cannot call method newItem\\(\\) on App\\\\Services\\\\OrisResponse\\|null\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Cannot call method setStatus\\(\\) on App\\\\Services\\\\OrisResponse\\|null\\.$#"
+			count: 2
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Cannot call method updatedItem\\(\\) on App\\\\Services\\\\OrisResponse\\|null\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Method App\\\\Services\\\\OrisApiService\\:\\:getBalance\\(\\) is unused\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Method App\\\\Services\\\\OrisApiService\\:\\:updateMarkers\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|null given\\.$#"
+			count: 2
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Parameter \\$userId of class App\\\\Services\\\\ApiStoreResponseException constructor expects int\\|null, int\\|string\\|null given\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\Club\\:\\:\\$oris_id \\(int\\|null\\) does not accept string\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\Club\\:\\:\\$oris_number \\(int\\|null\\) does not accept string\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\Club\\:\\:\\$region_id \\(string\\|null\\) does not accept int\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\SportClass\\:\\:\\$controls \\(string\\|null\\) does not accept int\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\SportEvent\\:\\:\\$entry_date_1 \\(Illuminate\\\\Support\\\\Carbon\\) does not accept string\\|null\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\SportEvent\\:\\:\\$entry_date_2 \\(Illuminate\\\\Support\\\\Carbon\\|null\\) does not accept string\\|null\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\SportEvent\\:\\:\\$entry_date_3 \\(Illuminate\\\\Support\\\\Carbon\\|null\\) does not accept string\\|null\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\SportEvent\\:\\:\\$ranking \\(bool\\|null\\) does not accept string\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\SportEventMarker\\:\\:\\$label \\(string\\) does not accept string\\|null\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\SportEventMarker\\:\\:\\$lat \\(float\\) does not accept string\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\SportEventMarker\\:\\:\\$lon \\(float\\) does not accept string\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\UserCredit\\:\\:\\$oris_balance_id \\(int\\|null\\) does not accept string\\.$#"
+			count: 2
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Property App\\\\Models\\\\UserRaceProfile\\:\\:\\$club_user_id \\(int\\|null\\) does not accept string\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Right side of \\|\\| is always false\\.$#"
+			count: 2
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Using nullsafe method call on non\\-nullable type App\\\\Http\\\\Components\\\\Oris\\\\Response\\\\Entity\\\\Org\\. Use \\-\\> instead\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Using nullsafe property access on non\\-nullable type \\*NEVER\\*\\. Use \\-\\> instead\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Variable \\$classDefinitionExist in PHPDoc tag @var does not match assigned variable \\$classDefinitionModel\\.$#"
+			count: 1
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Undefined variable\\: \\$this$#"
+			count: 1
+			path: routes/console.php
