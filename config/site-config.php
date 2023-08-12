@@ -100,6 +100,13 @@ return [
             'months' => ['*'],
             'days_in_week' => ['*'],
         ],
+        'mail_weekly_user_event_summary' => [
+            'active' => true,
+            'hours' => ['08'],
+            'days_in_month' => ['*'],
+            'months' => ['*'],
+            'days_in_week' => ['7'],
+        ],
     ],
 
     'cron_url_key' => env('CRON_URL_KEY', 'cron_url_key'),

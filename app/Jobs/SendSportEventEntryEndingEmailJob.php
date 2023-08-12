@@ -26,8 +26,6 @@ class SendSportEventEntryEndingEmailJob implements ShouldQueue
 
     public function handle(): void
     {
-
-
         $hour = Carbon::now()->format('H');
 
         Log::channel('site')->info(sprintf('E-mail notifikace SportEvent v %d hodin', $hour));

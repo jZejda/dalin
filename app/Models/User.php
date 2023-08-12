@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Shared\Helpers\EmptyType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -71,5 +73,22 @@ class User extends Authenticatable
     public function getUserIdentificationAttribute(): string
     {
         return "{$this->name}  ({$this->email})";
+    }
+
+    public function userSetting(): HasOne
+    {
+        return $this->hasOne(UserSetting::class, 'user_id', 'id');
+    }
+
+    public function getUserOptions(): array
+    {
+        /** @var UserSetting $userSetting */
+        $userSetting = $this->userSetting()->first();
+
+        if (!is_null($userSetting) && !is_null($userSetting->options)) {
+            return $userSetting->options;
+        } else {
+            return [];
+        }
     }
 }
