@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron;
 
+use App\Http\Controllers\Cron\Jobs\ReportEmailEventWeeklyEndsBySport;
 use App\Http\Controllers\Cron\Jobs\ReportEmailUserDebit;
 use App\Http\Controllers\Cron\Jobs\UpdateEvent;
 use App\Http\Controllers\Controller;
@@ -42,6 +43,19 @@ class CommonCron extends Controller
         );
         if ($emailUserDebitStatus && $emailUserDebitCheckRun) {
             (new ReportEmailUserDebit())->run();
+        }
+
+        // Send Mail weekly sport event summary
+        $emailUserWeeklyReportPrefix = 'site-config.cron_hourly.mail_weekly_user_event_summary.';
+        $emailUserWeeklyReportStatus = config($emailUserWeeklyReportPrefix . 'active');
+        $emailUserWeeklyReportCheckRun = $this->checkRunningTime(
+            config($emailUserWeeklyReportPrefix . 'hours'),
+            config($emailUserWeeklyReportPrefix . 'days_in_month'),
+            config($emailUserWeeklyReportPrefix . 'months'),
+            config($emailUserWeeklyReportPrefix . 'days_in_week'),
+        );
+        if ($emailUserWeeklyReportStatus && $emailUserWeeklyReportCheckRun) {
+            (new ReportEmailEventWeeklyEndsBySport())->run();
         }
     }
 

@@ -39,9 +39,12 @@ class UserMailNotification extends Page implements HasForms, HasTable
 
     public array $news = [];
     public int $news_time_trigger = self::DEFAULT_TRIGGER_EVENT;
+
     public array $sport = [];
     public int $sport_time_trigger = self::DEFAULT_TRIGGER_EVENT;
     public int $days_before_event_entry_ends = 4;
+
+    public array $week_report_by_sport = [];
 
     public function mount(): void
     {
@@ -56,6 +59,8 @@ class UserMailNotification extends Page implements HasForms, HasTable
             $this->sport = $mailNotification->options['sport'] ?? [];
             $this->sport_time_trigger = $mailNotification->options['sport_time_trigger'] ?? self::DEFAULT_TRIGGER_EVENT;
             $this->days_before_event_entry_ends = $mailNotification->options['days_before_event_entry_ends'] ?? 4;
+
+            $this->week_report_by_sport = $mailNotification->options['week_report_by_sport'] ?? [];
         }
 
     }
@@ -80,6 +85,8 @@ class UserMailNotification extends Page implements HasForms, HasTable
 
         $options['days_before_event_entry_ends'] = $this->days_before_event_entry_ends;
 
+        $options['week_report_by_sport'] = $this->week_report_by_sport;
+
         $mailNotification->options = $options;
 
         $mailNotification->save();
@@ -89,7 +96,6 @@ class UserMailNotification extends Page implements HasForms, HasTable
         Notification::make()
             ->title('Saved successfully')
             ->sendToDatabase($recipient);
-
 
         Filament::notify('success', 'Data o notifikacích jsme uložili.');
 
@@ -118,7 +124,7 @@ class UserMailNotification extends Page implements HasForms, HasTable
 
     protected function getFormModel(): Model | string | null
     {
-        return \App\Models\UserMailNotification::class;
+        return UserSetting::class;
     }
 
     protected function getFormSchema(): array
@@ -160,6 +166,13 @@ class UserMailNotification extends Page implements HasForms, HasTable
                         ->maxValue(14)
                         ->minValue(1)
                         ->default(4),
+                ]),
+            Section::make('Souhrn závodů u kterých končí termín přihlášek následující týden')
+                ->columns(2)
+                ->schema([
+                    CheckboxList::make('week_report_by_sport')
+                        ->label('Sport')
+                        ->options(SportList::all()->pluck('short_name', 'id')),
                 ]),
         ];
     }
