@@ -13,6 +13,7 @@ final class AppHelper
     public const DATE_TIME_FULL_FORMAT = 'd. m. Y H:i:s';
     public const DATE_FORMAT = 'd. m. Y';
     public const MYSQL_DATE_TIME = 'Y-m-d H:i:s';
+    public const DB_DATE_TIME = 'Y-m-d';
 
 
     public function getDataEntryClassCollor(Carbon $dataTime): string
@@ -49,7 +50,7 @@ final class AppHelper
             return false;
         }
 
-        $lastEntryDate = Carbon::createFromFormat(self::MYSQL_DATE_TIME, $sportEvent->lastEntryDate());
+        $lastEntryDate = Carbon::createFromFormat(self::MYSQL_DATE_TIME, $sportEvent->lastEntryDate()->format(self::MYSQL_DATE_TIME));
         if ($lastEntryDate !== false) {
             return $lastEntryDate->lte(Carbon::now());
         }
