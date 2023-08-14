@@ -16,12 +16,17 @@ class EventWeeklyEndsBySport extends Mailable
     use Queueable;
     use SerializesModels;
 
-    private Collection $sportEventContent;
+    private Collection $eventFirstDateEnd;
+    private Collection $eventSecondDateEnd;
+    private Collection $eventThirdDateEnd;
 
-    public function __construct(Collection $sportEventContent)
+    public function __construct(Collection $eventFirstDateEnd, Collection $eventSecondDateEnd, Collection $eventThirdDateEnd)
     {
-        $this->sportEventContent = $sportEventContent;
+        $this->eventFirstDateEnd = $eventFirstDateEnd;
+        $this->eventSecondDateEnd = $eventSecondDateEnd;
+        $this->eventThirdDateEnd = $eventThirdDateEnd;
     }
+
 
     public function envelope(): Envelope
     {
@@ -35,7 +40,9 @@ class EventWeeklyEndsBySport extends Mailable
         return new Content(
             markdown: 'emails.event.eventWeeklyEndsBySport',
             with: [
-                'sportEventContent' => $this->sportEventContent,
+                'eventFirstDateEnd' => $this->eventFirstDateEnd->isNotEmpty() ? $this->eventFirstDateEnd : null,
+                'eventSecondDateEnd' => $this->eventSecondDateEnd->isNotEmpty() ? $this->eventSecondDateEnd : null,
+                'eventThirdDateEnd' => $this->eventThirdDateEnd->isNotEmpty() ? $this->eventThirdDateEnd : null,
             ]
         );
     }

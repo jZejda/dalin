@@ -23,9 +23,7 @@ use App\Http\Components\Oris\GetClassDefinitions;
 use App\Http\Components\Oris\GetClubUserId;
 use App\Http\Components\Oris\GetOris;
 use App\Http\Components\Oris\Response\Entity\ClassDefinition;
-use App\Http\Components\Oris\Response\Entity\Classes;
 use App\Http\Components\Oris\Response\Entity\Links;
-use App\Http\Components\Oris\Response\Entity\Services;
 use App\Http\Components\Oris\Response\Entity\ClubUser;
 use App\Models\SportEvent;
 use App\Models\SportRegion;
@@ -97,7 +95,7 @@ final class OrisApiService
 
             $eventModel->start_time = $orisData->getStartTime();
 
-            $eventModel->entry_date_1 = strlen($orisData->getEntryDate1()) !== 0 ? $orisData->getEntryDate1() : '';
+            $eventModel->entry_date_1 = strlen($orisData->getEntryDate1()) !== 0 ? $orisData->getEntryDate1() : null;
 
             //dd(!$eventModel->dont_update_excluded);
             if ($newEvent || !$eventModel->dont_update_excluded) {

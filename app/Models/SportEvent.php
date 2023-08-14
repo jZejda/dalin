@@ -35,7 +35,7 @@ use Illuminate\Support\Carbon;
  * @property bool|null $ranking
  * @property float|null $ranking_coefficient
  * @property string|null $event_type
- * @property Carbon $entry_date_1
+ * @property Carbon|null $entry_date_1
  * @property Carbon|null $entry_date_2
  * @property Carbon|null $entry_date_3
  * @property string|null $start_time
