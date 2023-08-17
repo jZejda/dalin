@@ -14,10 +14,13 @@ Do systemu byly přidány závody:
     @endforeach
 @endcomponent
 
-Mějte se fajn a jezděte na závody - {{ Config::get('site-config.club.abbr') }}
+@component('mail::divider')
 
-@component('mail::subcopy')
-    Odhlášení ze zasílání těchto zpráv můžete upravit přímo v klientské sekci v nastavení.
+## Pokus
+
+Odhlášení ze zasílání těchto zpráv můžete upravit přímo v klientské sekci v nastavení.
 @endcomponent
+
+Mějte se fajn a jezděte na závody - {{ Config::get('site-config.club.abbr') }}
 
 </x-mail::message>

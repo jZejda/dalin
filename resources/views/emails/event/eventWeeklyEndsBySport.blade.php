@@ -16,7 +16,11 @@ use Illuminate\Support\Carbon;
 Blíží ze konec přihlášek na závody vypasané níže. Závody mají konec přihlášek prvního termínu v rámci příštího týdne
 od **{{ Carbon::now()->addDay()->format('d.m.Y') }}** do **{{ Carbon::now()->addDays(8)->format('d.m.Y') }}**.
 
-### Pro první termín
+@component('mail::divider')
+## 1 termín přihlášek
+
+Závody u kterých končí *první termín* přihlášek.
+@endcomponent
 
 @component('mail::table')
     | Přihláška do       | Název akce/závodu        | ORIS ID
@@ -28,7 +32,11 @@ od **{{ Carbon::now()->addDay()->format('d.m.Y') }}** do **{{ Carbon::now()->add
 
 @if(!is_null($eventSecondDateEnd))
 
-### Pro druhý termín
+@component('mail::divider')
+## 2 termín přihlášek
+
+Závody u kterých končí *druhý termín* přihlášek.
+@endcomponent
 
 @component('mail::table')
     | Přihláška do       | Název akce/závodu        | ORIS ID
@@ -41,21 +49,19 @@ od **{{ Carbon::now()->addDay()->format('d.m.Y') }}** do **{{ Carbon::now()->add
 
 @if(!is_null($eventThirdDateEnd))
 
-### Pro třetí termín
+@component('mail::divider')
+## 3 termín přihlášek
+
+Závody u kterých končí *třetí termín* přihlášek.
+@endcomponent
 
 @component('mail::table')
     | Přihláška do       | Název akce/závodu        | ORIS ID
     | :----------------- |:------------- |:------------- |
     @foreach ($eventThirdDateEnd as $thirdDate)
-        | {{ Carbon::parse($thirdDate->entry_date_2)->format('d.m.Y - H:i') }}  | {{$thirdDate->name }} | @if($thirdDate->oris_id !== null)[{{$thirdDate->oris_id }}](https://oris.orientacnisporty.cz/Zavod?id={{$thirdDate->oris_id}})@endif  |
+        | {{ Carbon::parse($thirdDate->entry_date_3)->format('d.m.Y - H:i') }}  | {{$thirdDate->name }} | @if($thirdDate->oris_id !== null)[{{$thirdDate->oris_id }}](https://oris.orientacnisporty.cz/Zavod?id={{$thirdDate->oris_id}})@endif  |
     @endforeach
 @endcomponent
 @endif
-
-Mějte se fajn a jezděte na závody - ABM
-
-@component('mail::subcopy')
-    Odhlášení ze zasílání těchto zpráv můžete upravit přímo v klientské sekci v nastavení.
-@endcomponent
 
 </x-mail::message>

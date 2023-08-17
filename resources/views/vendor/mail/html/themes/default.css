@@ -10,7 +10,7 @@ body *:not(html):not(style):not(br):not(tr):not(code) {
 
 body {
     -webkit-text-size-adjust: none;
-    background-color: #bae6fd;
+    background-color: #282828;
     color: #718096;
     height: 100%;
     line-height: 1.4;
@@ -42,7 +42,7 @@ h1 {
     color: #1e293b;
     font-size: 18px;
     font-weight: bold;
-    margin-top: 0;
+    margin: 0 26px 0 26px;
     text-align: left;
 }
 
@@ -50,7 +50,7 @@ h2 {
     color: #1e293b;
     font-size: 17px;
     font-weight: bold;
-    margin-top: 0;
+    margin: 0 26px 0 26px;
     text-align: left;
 }
 
@@ -58,7 +58,7 @@ h3 {
     color: #1e293b;
     font-size: 16px;
     font-weight: bold;
-    margin-top: 0;
+    margin: 0 26px 0 26px;
     text-align: left;
 }
 
@@ -66,7 +66,7 @@ h4 {
     color: #1e293b;
     font-size: 15px;
     font-weight: bold;
-    margin-top: 0;
+    margin: 0 26px 0 26px;
     text-align: left;
 }
 
@@ -81,7 +81,7 @@ h5 {
 p {
     font-size: 14px;
     line-height: 1.3em;
-    margin-top: 0;
+    margin: 0 26px 0 26px;
     text-align: left;
 }
 
@@ -106,7 +106,7 @@ hr {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #bae6fd;
+    background-color: #282828;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -129,7 +129,7 @@ hr {
 }
 
 .header a {
-    color: #1e293b;
+    color: #ffffff;
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
@@ -149,7 +149,7 @@ hr {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #bae6fd;
+    background-color: #282828;
     border-bottom: 1px solid #edf2f7;
     border-top: 1px solid #edf2f7;
     margin: 0;
@@ -160,15 +160,15 @@ hr {
 .inner-body {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
-    -premailer-width: 600px;
+    -premailer-width: 650px;
     background-color: #ffffff;
     border-color: #e8e5ef;
-    border-radius: 2px;
+    border-radius: 2px 2px 0 0;
     border-width: 1px;
     box-shadow: 0 2px 0 rgba(0, 0, 150, 0.025), 2px 4px 0 rgba(0, 0, 150, 0.015);
     margin: 0 auto;
     padding: 0;
-    width: 600px;
+    width: 650px;
 }
 
 /* Subcopy */
@@ -176,11 +176,38 @@ hr {
 .subcopy {
     border-top: 1px solid #e8e5ef;
     margin-top: 15px;
-    padding-top: 15px;
+    padding: 15px 26px;
+    background-color: #20d65f;
+    color: #010101;
+
 }
 
 .subcopy p {
     font-size: 12px;
+}
+
+/* Footer */
+
+.after {
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+    -premailer-width: 650px;
+    margin: 0 auto;
+    padding-top: 0;
+    text-align: center;
+    width: 650px;
+}
+
+.after p {
+    color: #010101;
+    margin: 26px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.after a {
+    color: #010101;
+    text-decoration: underline;
 }
 
 /* Footer */
@@ -196,7 +223,7 @@ hr {
 }
 
 .footer p {
-    color: #3b82f6;
+    color: #a6a6a6;
     font-size: 12px;
     text-align: center;
 }
@@ -234,7 +261,13 @@ hr {
 
 .content-cell {
     max-width: 100vw;
-    padding: 26px;
+    padding: 26px 0 26px 0;
+}
+
+.after-cell {
+    padding: 0;
+    background-color: #20d65f;
+    border-radius: 0 0 2px 2px;
 }
 
 /* Buttons */
@@ -310,6 +343,35 @@ hr {
     margin-bottom: 0;
     padding-bottom: 0;
 }
+
+/* Divider */
+
+.divider {
+    border-top: #718096 dashed 1px;
+    border-bottom: #718096 dashed 1px;
+    margin: 26px 0;
+}
+
+.divider-content {
+    background-color: #edf2f7;
+    color: #718096;
+    padding: 16px 0;
+}
+
+.divider-content p {
+    color: #1e293b;
+}
+
+.divider-item {
+    padding: 0;
+}
+
+.divider-item p:last-of-type {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+
 
 /* Utilities */
 
