@@ -19,7 +19,7 @@ od **{{ Carbon::now()->addDay()->format('d.m.Y') }}** do **{{ Carbon::now()->add
 @component('mail::divider')
 ## 1 termín přihlášek
 
-Závody u kterých končí *první termín* přihlášek.
+Závody u kterých končí **první termín** přihlášek.
 @endcomponent
 
 @component('mail::table')
@@ -35,7 +35,7 @@ Závody u kterých končí *první termín* přihlášek.
 @component('mail::divider')
 ## 2 termín přihlášek
 
-Závody u kterých končí *druhý termín* přihlášek.
+Závody u kterých končí **druhý termín** přihlášek.
 @endcomponent
 
 @component('mail::table')
@@ -52,7 +52,7 @@ Závody u kterých končí *druhý termín* přihlášek.
 @component('mail::divider')
 ## 3 termín přihlášek
 
-Závody u kterých končí *třetí termín* přihlášek.
+Závody u kterých končí **třetí termín** přihlášek.
 @endcomponent
 
 @component('mail::table')
