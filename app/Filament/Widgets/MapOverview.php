@@ -61,8 +61,10 @@ class MapOverview extends MapWidget
 
     public function getMarkers(): array
     {
-        /** @var SportEvent[] $markers */
+        /** @var SportEvent[]|Collection $markers */
         $markers = $this->getAppropriateEvents();
+
+       // dd($markers);
 
         $eventMarkers = [];
         foreach ($markers as $marker) {
@@ -78,21 +80,27 @@ class MapOverview extends MapWidget
 //                    popupAnchor: [1, -34],
 //                    shadowSize: [41, 41]
 //                )
-                ->popup(EmptyType::stringNotEmpty($marker->alt_name) ? $this->getMarkerHtmlTooltipData($marker) : $marker->name);
+                ->popup($this->getMarkerHtmlTooltipData($marker));
             //->tooltip(EmptyType::stringNotEmpty($marker->alt_name) ? $marker->name .' | ' . $marker->alt_name : $marker->name);
         }
         return $eventMarkers;
     }
 
-    private function getMarkerHtmlTooltipData(stdClass $sportEvent): string
+    private function getMarkerHtmlTooltipData(SportEvent|stdClass $sportEvent): string
     {
-        return $sportEvent->name .' | ' . $sportEvent->alt_name
+        if (EmptyType::stringNotEmpty($sportEvent->alt_name)) {
+            $eventAltName = ' | ' . $sportEvent->alt_name;
+        } else {
+            $eventAltName = '';
+        }
+
+        return '<a href="admin/sport-events/' . $sportEvent->id . '/entry" target="_blank">' . $sportEvent->name . '</a>' . $eventAltName
             . '<br>'
             . 'datum: <b>' . Carbon::createFromFormat('Y-m-d', $sportEvent->date)->format(AppHelper::DATE_FORMAT) . '</b>'
             . '<br>'
-            . 'místo: <b>' . $sportEvent->place . '</b>';
-
-
+            . 'místo: <b>' . $sportEvent->place . '</b>'
+            . '<br>'
+            . 'ORIS: <b><a href="https://oris.orientacnisporty.cz/Zavod?id=' . $sportEvent->oris_id . '" target="_blank">' . $sportEvent->oris_id . '</a></b>';
     }
 
     public function getActions(): array

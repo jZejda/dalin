@@ -99,7 +99,7 @@ class ListSportEvents extends ListRecords
                             ->searchable(),
                         Forms\Components\DatePicker::make('datefrom')
                             ->label('Datum od')
-                            ->default(date('Y-m-d', strtotime('first day of january this year'))),
+                            ->default(Carbon::now()->format(AppHelper::DB_DATE_TIME)),
 
                         Grid::make()->schema([
                             Select::make('oris_id')

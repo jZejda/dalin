@@ -15,12 +15,7 @@ class AddUpdateSportEvent extends Mailable
     use Queueable;
     use SerializesModels;
 
-    private User $user;
 
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
 
     public function envelope(): Envelope
     {
@@ -36,7 +31,9 @@ class AddUpdateSportEvent extends Mailable
         //            ->whereBetween('entry_date_1', [Carbon::now()->addDay(), Carbon::now()->addDays(2)])
         //            ->get();
 
-        if ($this->user->id === 1) {
+        $user = DB::table('users')->find(1);
+
+        if ($user->id === 1) {
             $sportEventsFirst = DB::table('sport_events')->where('id', '=', 1)->get();
         } else {
             $sportEventsFirst = DB::table('sport_events')->where('id', '=', 2)->get();

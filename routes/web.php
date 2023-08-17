@@ -4,6 +4,7 @@ use App\Http\Controllers\Cron\CommonCron;
 use App\Http\Controllers\TestController;
 use App\Http\Livewire\Frontend\ShowPage;
 use App\Http\Livewire\Frontend\ShowPost;
+use App\Mail\AddUpdateSportEvent;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+//Route::get('/email/', function(){
+//    return new AddUpdateSportEvent();
+//});
 
 Route::get('/cron-scheduler/' . config('site-config.cron_url_key'), function () {
     Artisan::call('schedule:run');

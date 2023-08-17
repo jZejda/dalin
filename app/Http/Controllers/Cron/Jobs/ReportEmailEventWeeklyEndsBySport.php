@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron\Jobs;
 
+use DB;
 use App\Mail\EventWeeklyEndsBySport;
-use App\Models\SportEvent;
 use App\Models\User;
 use App\Shared\Helpers\AppHelper;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 
 class ReportEmailEventWeeklyEndsBySport implements CommonCronJobs
@@ -20,19 +19,34 @@ class ReportEmailEventWeeklyEndsBySport implements CommonCronJobs
 
         /** @var User $user */
         foreach ($users as $user) {
-            if (isset($user->getUserOptions()['week_report_by_sport'])) {
-
-                /** @var Collection $mailContent */
-                $mailContent = SportEvent::wherein('sport_id', $user->getUserOptions()['week_report_by_sport'])
+            if (isset($user->getUserOptions()['week_report_by_sport']) && $user->getUserOptions()['week_report_by_sport'][0] === '1') {
+                $eventFirstDateEnd = DB::table('sport_events')
+                    ->wherein('sport_id', $user->getUserOptions()['week_report_by_sport'])
                     ->whereNotNull('entry_date_1')
                     ->where('entry_date_1', '>=', Carbon::now()->addDay()->format(AppHelper::DB_DATE_TIME) . ' 00:00:00')
-                    ->where('entry_date_1', '<=', Carbon::now()->addDays(7)->format(AppHelper::DB_DATE_TIME) . ' 23:59:59')
+                    ->where('entry_date_1', '<=', Carbon::now()->addDays(8)->format(AppHelper::DB_DATE_TIME) . ' 23:59:59')
                     ->orderBy('entry_date_1', 'asc')
                     ->get();
 
-                if ($mailContent->isNotEmpty()) {
+                $eventSecondDateEnd = DB::table('sport_events')
+                    ->wherein('sport_id', $user->getUserOptions()['week_report_by_sport'])
+                    ->whereNotNull('entry_date_2')
+                    ->where('entry_date_2', '>=', Carbon::now()->addDay()->format(AppHelper::DB_DATE_TIME) . ' 00:00:00')
+                    ->where('entry_date_2', '<=', Carbon::now()->addDays(8)->format(AppHelper::DB_DATE_TIME) . ' 23:59:59')
+                    ->orderBy('entry_date_2', 'asc')
+                    ->get();
+
+                $eventThirdDateEnd = DB::table('sport_events')
+                    ->wherein('sport_id', $user->getUserOptions()['week_report_by_sport'])
+                    ->whereNotNull('entry_date_3')
+                    ->where('entry_date_3', '>=', Carbon::now()->addDay()->format(AppHelper::DB_DATE_TIME) . ' 00:00:00')
+                    ->where('entry_date_3', '<=', Carbon::now()->addDays(8)->format(AppHelper::DB_DATE_TIME) . ' 23:59:59')
+                    ->orderBy('entry_date_3', 'asc')
+                    ->get();
+
+                if ($eventFirstDateEnd->isNotEmpty()) {
                     Mail::to($user)
-                        ->queue(new EventWeeklyEndsBySport($mailContent));
+                        ->send(new EventWeeklyEndsBySport($eventFirstDateEnd, $eventSecondDateEnd, $eventThirdDateEnd));
                 }
             }
         }

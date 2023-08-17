@@ -12,9 +12,4 @@ Něco nového na stránkách :-).
 ***
 @endforeach
 
-Mějte se fajn a jezděte na závody - ABM
-
-@component('mail::subcopy')
-    Odhlášení ze zasílání těchto zpráv můžete upravit přímo v klientské sekci v nastavení.
-@endcomponent
 </x-mail::message>
