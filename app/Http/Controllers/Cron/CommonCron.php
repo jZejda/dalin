@@ -16,47 +16,54 @@ class CommonCron extends Controller
 {
     public function runHourly(): void
     {
-        // Wather updaterun at 08 and 17 hours
-        $updateForecastActive = config('site-config.cron_hourly.weather_forecast.active');
-        $updateForecastHours = config('site-config.cron_hourly.weather_forecast.hours');
-        if ($updateForecastActive && in_array($this->getActualHour(), $updateForecastHours)) {
-            Log::channel('app')->info('Start run weather cron at ' . $this->getActualHour());
-            (new UpdateEventWeather())->run();
-            Log::channel('app')->info('Stop run weather cron at ' . $this->getActualHour());
+        /** @description Wather updaterun at 08 and 17 hours */
+        try {
+            if ($this->runJob('weather_forecast')) {
+                Log::channel('app')->info('Start run WeatherForecast cron at ' . $this->getActualHour());
+                (new UpdateEventWeather())->run();
+                Log::channel('app')->info('Stop run WeatherForecast cron at ' . $this->getActualHour());
+            }
+        } catch (\Exception $e) {
+            Log::channel('app')->warning('ErrorMessage:' . $e->getMessage());
         }
 
-        // Update Events
-        $updateEventActive = config('site-config.cron_hourly.event_update.active');
-        $updateEventHours = config('site-config.cron_hourly.event_update.hours');
-        if ($updateEventActive && in_array($this->getActualHour(), $updateEventHours)) {
-            (new UpdateEvent())->run();
+
+        /** @description Update Events */
+        try {
+            if ($this->runJob('event_update')) {
+                Log::channel('app')->info('Start run EventUpdates cron at ' . $this->getActualHour());
+                (new UpdateEvent())->run();
+                Log::channel('app')->info('Stop run EventUpdates cron at ' . $this->getActualHour());
+            }
+        } catch (\Exception $e) {
+            Log::channel('app')->warning('ErrorMessage:' . $e->getMessage());
         }
 
-        // Send Mail monthly user debit report - Firs day in month
-        $emailUserDebitPrefix = 'site-config.cron_hourly.mail_monthly_user_debit_report.';
-        $emailUserDebitStatus = config($emailUserDebitPrefix . 'active');
-        $emailUserDebitCheckRun = $this->checkRunningTime(
-            config($emailUserDebitPrefix . 'hours'),
-            config($emailUserDebitPrefix . 'days_in_month'),
-            config($emailUserDebitPrefix . 'months'),
-            config($emailUserDebitPrefix . 'days_in_week'),
-        );
-        if ($emailUserDebitStatus && $emailUserDebitCheckRun) {
-            (new ReportEmailUserDebit())->run();
+
+        /** @description Send Mail monthly user debit credit */
+        try {
+            if ($this->runJob('mail_monthly_user_debit_report')) {
+                Log::channel('app')->info('Start run MailMonthlyUserDebitReport cron at ' . $this->getActualHour());
+                (new ReportEmailUserDebit())->run();
+                Log::channel('app')->info('Stop run MailMonthlyUserDebitReport cron at ' . $this->getActualHour());
+            }
+        } catch (\Exception $e) {
+            Log::channel('app')->warning('ErrorMessage:' . $e->getMessage());
         }
 
-        // Send Mail weekly sport event summary
-        $emailUserWeeklyReportPrefix = 'site-config.cron_hourly.mail_weekly_user_event_summary.';
-        $emailUserWeeklyReportStatus = config($emailUserWeeklyReportPrefix . 'active');
-        $emailUserWeeklyReportCheckRun = $this->checkRunningTime(
-            config($emailUserWeeklyReportPrefix . 'hours'),
-            config($emailUserWeeklyReportPrefix . 'days_in_month'),
-            config($emailUserWeeklyReportPrefix . 'months'),
-            config($emailUserWeeklyReportPrefix . 'days_in_week'),
-        );
-        if ($emailUserWeeklyReportStatus && $emailUserWeeklyReportCheckRun) {
-            (new ReportEmailEventWeeklyEndsBySport())->run();
+
+        /** @description  Send Mail weekly sport event summary */
+        try {
+
+            if ($this->runJob('mail_weekly_user_event_summary')) {
+                Log::channel('app')->info('Start run MailWeeklyUserEventSummary cron at ' . $this->getActualHour());
+                (new ReportEmailEventWeeklyEndsBySport())->run();
+                Log::channel('app')->info('Stop run MailWeeklyUserEventSummary cron at ' . $this->getActualHour());
+            }
+        } catch (\Exception $e) {
+            Log::channel('app')->warning('ErrorMessage:' . $e->getMessage());
         }
+
     }
 
     private function getActualHour(): string
@@ -74,6 +81,23 @@ class CommonCron extends Controller
         );
 
         return $check->jobRunner();
+    }
+
+    private function runJob(string $jobTitle): bool
+    {
+        $runningJobPrefix = 'site-config.cron_hourly.' . $jobTitle . '.';
+        $jobStatus = config($runningJobPrefix . 'active');
+        $jobCheckRun = $this->checkRunningTime(
+            config($runningJobPrefix . 'hours'),
+            config($runningJobPrefix . 'days_in_month'),
+            config($runningJobPrefix . 'months'),
+            config($runningJobPrefix . 'days_in_week'),
+        );
+
+        if ($jobStatus && $jobCheckRun) {
+            return true;
+        }
+        return false;
     }
 
 }

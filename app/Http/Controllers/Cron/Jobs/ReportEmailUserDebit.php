@@ -17,6 +17,7 @@ class ReportEmailUserDebit implements CommonCronJobs
         $users = User::role(AppRoles::BillingSpecialist->value)->get();
         foreach ($users as $user) {
             Mail::to($user)->send(new UsersInDebit());
+            Log::channel('app')->info('MailMonthlyUserDebitReport mail for user: ' . $user->email . ' - ' . $user->name);
         }
         Log::channel('site')->info('Report User Debit was send');
     }
