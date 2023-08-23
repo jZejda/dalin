@@ -10,8 +10,9 @@
 .env.backup
 .phpunit.result.cache
 .phpstorm.meta.php
-_ide_helper.php
-_ide_helper_models.php
+/storage/idea/_ide_helper.php
+/storage/idea/_ide_helper_models.php
+/storage/idea/.phpstorm.meta.php
 deploy.sh
 Homestead.json
 Homestead.yaml
