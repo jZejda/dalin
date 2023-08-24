@@ -27,14 +27,14 @@ Commands:
 case "$1" in
 
     up)
-        echo "${BOLD}Run PHPStan ...${NORMAL}"
+        echo "${BOLD}Run Docker Laravel Sail ...${NORMAL}"
         vendor/bin/sail up -d
         ;;
     down)
-        echo "${BOLD}Run PHPStan ...${NORMAL}"
+        echo "${BOLD}Stop Docker Laravel Sail ...${NORMAL}"
         vendor/bin/sail down
         ;;
-    ideahelper)
+    idehelper)
         echo "${BOLD}Regenerate IdeaHelper ...${NORMAL}"
         mkdir -p storage/idea
         vendor/bin/sail artisan ide-helper:generate
@@ -57,11 +57,6 @@ case "$1" in
         echo "${BOLD}Run Linter PINT${NORMAL}"
         ./vendor/bin/pint
         ;;
-    idehelper)
-        echo "${BOLD}Run IDE helper generate file...${NORMAL}"
-        php artisan ide-helper:generate
-        php artisan ide-helper:model
-    ;;
     deploy)
         echo "${BOLD}Run Deploy to product server...${NORMAL}"
         php artisan config:cache
