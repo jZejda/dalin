@@ -6,6 +6,7 @@ namespace App\Filament\Resources\SportEventResource\Pages;
 
 use App\Enums\AppRoles;
 use App\Filament\Resources\SportEventResource\Pages\Actions\EntrySendMail;
+use App\Filament\Resources\SportEventResource\Pages\Actions\EntryUpdateEvent;
 use App\Http\Components\Oris\Response\CreateEntry;
 use App\Models\SportClassDefinition;
 use App\Models\UserSetting;
@@ -97,14 +98,20 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
     protected function getActions(): array
     {
-        $defaultActions = [$this->getOrisEvent()];
-        $registerAnyone = Auth::user()->hasRole([AppRoles::EventMaster->value]) ? $this->getOrisEvent(true) : null;
-
         $sendMailModal = new EntrySendMail($this->record);
-
+        $updateEvent = new EntryUpdateEvent($this->record);
+        $registerAnyone = Auth::user()->hasRole([AppRoles::EventMaster->value]) ? $this->getOrisEvent(true) : null;
         $sendEmail = Auth::user()->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
             ? $sendMailModal->sendNotification()
             : null;
+
+        $defaultActions = [
+           $this->getOrisEvent(),
+        ];
+
+        if (!is_null($this->record->oris_id)) {
+            $defaultActions[] = $updateEvent->showUpdateEventFromOris();
+        }
 
         if (!is_null($registerAnyone)) {
             $defaultActions[] = $registerAnyone;

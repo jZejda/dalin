@@ -11,6 +11,9 @@ help () {
 Usage: run.sh COMMAND
 
 Commands:
+    up                      Run Sail UP as demon
+    down                    Stop Sail
+    ideahelper              Generate IdeaHelper files
     phpstan                 Run PHPStan - LaraStan
     phpstan-baseline        Update PHPStan baseline
     phpstan-clear           Clear PHPStan baseline
@@ -23,6 +26,21 @@ Commands:
 
 case "$1" in
 
+    up)
+        echo "${BOLD}Run Docker Laravel Sail ...${NORMAL}"
+        vendor/bin/sail up -d
+        ;;
+    down)
+        echo "${BOLD}Stop Docker Laravel Sail ...${NORMAL}"
+        vendor/bin/sail down
+        ;;
+    idehelper)
+        echo "${BOLD}Regenerate IdeaHelper ...${NORMAL}"
+        mkdir -p storage/idea
+        vendor/bin/sail artisan ide-helper:generate
+        vendor/bin/sail artisan ide-helper:models
+        vendor/bin/sail artisan ide-helper:meta
+        ;;
     phpstan)
         echo "${BOLD}Run PHPStan ...${NORMAL}"
         vendor/bin/phpstan analyse --memory-limit=2G
@@ -39,11 +57,6 @@ case "$1" in
         echo "${BOLD}Run Linter PINT${NORMAL}"
         ./vendor/bin/pint
         ;;
-    idehelper)
-        echo "${BOLD}Run IDE helper generate file...${NORMAL}"
-        php artisan ide-helper:generate
-        php artisan ide-helper:model
-    ;;
     deploy)
         echo "${BOLD}Run Deploy to product server...${NORMAL}"
         php artisan config:cache

@@ -64,7 +64,7 @@ class MapOverview extends MapWidget
         /** @var SportEvent[]|Collection $markers */
         $markers = $this->getAppropriateEvents();
 
-       // dd($markers);
+        // dd($markers);
 
         $eventMarkers = [];
         foreach ($markers as $marker) {

@@ -1,10 +1,10 @@
 # DaLin
 DaLin makes it easy to manage orienteering club operations. 
-The system uses an external API from the ORIS system to automatically process members' race entries, download payments, etc.
+The system uses an external API from the [ORIS](https://oris.orientacnisporty.cz/) system to automatically process members' race entries, download payments, etc.
 
 ## Installation Steps
 
-Follow this instructions to install the project:
+Follow this instructions to install the project for local development:
 
 1. Clone this repo.
     ```bash
@@ -21,9 +21,12 @@ Follow this instructions to install the project:
 8. `$ php artisan shield:install` -> yes and yes
 8. `$ npm install` - install frontend dependencies
 9. `$ npm run dev` - compile the assets
-10. `$ php artisan serve` - start development server
-11. Open `https://localhost:8000` with browser.
-12. Login into application under `http://127.0.0.1:8000/admin/login` with credentilas from `database/seeders/UserTableSeeder.php`
+10. `$ ./vendor/bin/sail up -d` - start development Sail in docker container
+11. Open `https://localhost:8080` with browser.
+12. Open `https://localhost:8084` You can manage MySQL database in phpMyAdmin tool.
+13. Login into application under `http://localhost:8080/admin/login` with credentilas from `database/seeders/UserTableSeeder.php`
+
+I recommend use `./run.sh` bash tool in root of project.
 
 ### Show Demo
 
@@ -31,7 +34,7 @@ This project is presented in [ABM Brno](https://abmbrno.cz/) orienteering club.
 
 ## Based on
 
-- PHP v8.1
+- PHP v8.2
 - MySql 8* and Up
 - [Laravel](https://laravel.com/) - PHP framework acctualy in version 10.x
 - [Filamentphp](https://filamentphp.com/) - in version 2.x

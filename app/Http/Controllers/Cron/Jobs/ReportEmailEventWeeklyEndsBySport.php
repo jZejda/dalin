@@ -9,6 +9,7 @@ use App\Mail\EventWeeklyEndsBySport;
 use App\Models\User;
 use App\Shared\Helpers\AppHelper;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class ReportEmailEventWeeklyEndsBySport implements CommonCronJobs
@@ -45,11 +46,12 @@ class ReportEmailEventWeeklyEndsBySport implements CommonCronJobs
                     ->get();
 
                 if ($eventFirstDateEnd->isNotEmpty()) {
+
                     Mail::to($user)
-                        ->send(new EventWeeklyEndsBySport($eventFirstDateEnd, $eventSecondDateEnd, $eventThirdDateEnd));
+                        ->queue(new EventWeeklyEndsBySport($eventFirstDateEnd, $eventSecondDateEnd, $eventThirdDateEnd));
+                    Log::channel('app')->info('MailWeeklyUserEventSummary mail for user: ' . $user->email . ' - ' . $user->name);
                 }
             }
         }
-        //Log::channel('site')->info(sprintf('E-mail notifikace SportEvent v %d hodin', $hour));
     }
 }
