@@ -16,7 +16,7 @@ class PagePolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         return $user->can('view_any_page');
     }
@@ -28,7 +28,7 @@ class PagePolicy
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Page $page)
+    public function view(User $user, Page $page): bool
     {
         return $user->can('view_page');
     }
@@ -39,7 +39,7 @@ class PagePolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         return $user->can('create_page');
     }
@@ -51,7 +51,7 @@ class PagePolicy
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Page $page)
+    public function update(User $user, Page $page): bool
     {
         return $user->can('update_page');
     }
@@ -63,7 +63,7 @@ class PagePolicy
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Page $page)
+    public function delete(User $user, Page $page): bool
     {
         return $user->can('delete_page');
     }
@@ -74,7 +74,7 @@ class PagePolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function deleteAny(User $user)
+    public function deleteAny(User $user): bool
     {
         return $user->can('delete_any_page');
     }
@@ -86,7 +86,7 @@ class PagePolicy
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Page $page)
+    public function forceDelete(User $user, Page $page): bool
     {
         return $user->can('force_delete_page');
     }
@@ -97,7 +97,7 @@ class PagePolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDeleteAny(User $user)
+    public function forceDeleteAny(User $user): bool
     {
         return $user->can('force_delete_any_page');
     }
@@ -109,7 +109,7 @@ class PagePolicy
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Page $page)
+    public function restore(User $user, Page $page): bool
     {
         return $user->can('restore_page');
     }
@@ -120,7 +120,7 @@ class PagePolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restoreAny(User $user)
+    public function restoreAny(User $user): bool
     {
         return $user->can('restore_any_page');
     }
@@ -132,7 +132,7 @@ class PagePolicy
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function replicate(User $user, Page $page)
+    public function replicate(User $user, Page $page): bool
     {
         return $user->can('replicate_page');
     }
@@ -143,7 +143,7 @@ class PagePolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function reorder(User $user)
+    public function reorder(User $user): bool
     {
         return $user->can('reorder_page');
     }

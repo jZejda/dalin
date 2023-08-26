@@ -16,7 +16,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         return $user->can('view_any_sport::class::definition');
     }
@@ -28,7 +28,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\SportClassDefinition  $sportClassDefinition
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, SportClassDefinition $sportClassDefinition)
+    public function view(User $user, SportClassDefinition $sportClassDefinition): bool
     {
         return $user->can('view_sport::class::definition');
     }
@@ -39,7 +39,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         return $user->can('create_sport::class::definition');
     }
@@ -51,7 +51,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\SportClassDefinition  $sportClassDefinition
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, SportClassDefinition $sportClassDefinition)
+    public function update(User $user, SportClassDefinition $sportClassDefinition): bool
     {
         return $user->can('update_sport::class::definition');
     }
@@ -63,7 +63,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\SportClassDefinition  $sportClassDefinition
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, SportClassDefinition $sportClassDefinition)
+    public function delete(User $user, SportClassDefinition $sportClassDefinition): bool
     {
         return $user->can('delete_sport::class::definition');
     }
@@ -74,7 +74,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function deleteAny(User $user)
+    public function deleteAny(User $user): bool
     {
         return $user->can('delete_any_sport::class::definition');
     }
@@ -86,7 +86,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\SportClassDefinition  $sportClassDefinition
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, SportClassDefinition $sportClassDefinition)
+    public function forceDelete(User $user, SportClassDefinition $sportClassDefinition): bool
     {
         return $user->can('force_delete_sport::class::definition');
     }
@@ -97,7 +97,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDeleteAny(User $user)
+    public function forceDeleteAny(User $user): bool
     {
         return $user->can('force_delete_any_sport::class::definition');
     }
@@ -109,7 +109,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\SportClassDefinition  $sportClassDefinition
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, SportClassDefinition $sportClassDefinition)
+    public function restore(User $user, SportClassDefinition $sportClassDefinition): bool
     {
         return $user->can('restore_sport::class::definition');
     }
@@ -120,7 +120,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restoreAny(User $user)
+    public function restoreAny(User $user): bool
     {
         return $user->can('restore_any_sport::class::definition');
     }
@@ -132,7 +132,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\SportClassDefinition  $sportClassDefinition
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function replicate(User $user, SportClassDefinition $sportClassDefinition)
+    public function replicate(User $user, SportClassDefinition $sportClassDefinition): bool
     {
         return $user->can('replicate_sport::class::definition');
     }
@@ -143,7 +143,7 @@ class SportClassDefinitionPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function reorder(User $user)
+    public function reorder(User $user): bool
     {
         return $user->can('reorder_sport::class::definition');
     }

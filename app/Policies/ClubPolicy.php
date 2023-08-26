@@ -16,7 +16,7 @@ class ClubPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         return $user->can('view_any_club');
     }
@@ -28,7 +28,7 @@ class ClubPolicy
      * @param  \App\Models\Club  $club
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Club $club)
+    public function view(User $user, Club $club): bool
     {
         return $user->can('view_club');
     }
@@ -39,7 +39,7 @@ class ClubPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         return $user->can('create_club');
     }
@@ -51,7 +51,7 @@ class ClubPolicy
      * @param  \App\Models\Club  $club
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Club $club)
+    public function update(User $user, Club $club): bool
     {
         return $user->can('update_club');
     }
@@ -63,7 +63,7 @@ class ClubPolicy
      * @param  \App\Models\Club  $club
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Club $club)
+    public function delete(User $user, Club $club): bool
     {
         return $user->can('delete_club');
     }
@@ -74,7 +74,7 @@ class ClubPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function deleteAny(User $user)
+    public function deleteAny(User $user): bool
     {
         return $user->can('delete_any_club');
     }
@@ -86,7 +86,7 @@ class ClubPolicy
      * @param  \App\Models\Club  $club
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Club $club)
+    public function forceDelete(User $user, Club $club): bool
     {
         return $user->can('force_delete_club');
     }
@@ -97,7 +97,7 @@ class ClubPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDeleteAny(User $user)
+    public function forceDeleteAny(User $user): bool
     {
         return $user->can('force_delete_any_club');
     }
@@ -109,7 +109,7 @@ class ClubPolicy
      * @param  \App\Models\Club  $club
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Club $club)
+    public function restore(User $user, Club $club): bool
     {
         return $user->can('restore_club');
     }
@@ -120,7 +120,7 @@ class ClubPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restoreAny(User $user)
+    public function restoreAny(User $user): bool
     {
         return $user->can('restore_any_club');
     }
@@ -132,7 +132,7 @@ class ClubPolicy
      * @param  \App\Models\Club  $club
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function replicate(User $user, Club $club)
+    public function replicate(User $user, Club $club): bool
     {
         return $user->can('replicate_club');
     }
@@ -143,7 +143,7 @@ class ClubPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function reorder(User $user)
+    public function reorder(User $user): bool
     {
         return $user->can('reorder_club');
     }

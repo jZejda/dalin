@@ -34,6 +34,10 @@ case "$1" in
         echo "${BOLD}Stop Docker Laravel Sail ...${NORMAL}"
         vendor/bin/sail down
         ;;
+    bash)
+        echo "${BOLD}Bash Docker Laravel Sail ...${NORMAL}"
+        vendor/bin/sail bash
+        ;;
     idehelper)
         echo "${BOLD}Regenerate IdeaHelper ...${NORMAL}"
         mkdir -p storage/idea

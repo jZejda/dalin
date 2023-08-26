@@ -16,7 +16,7 @@ class UserCreditPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         return $user->can('view_any_user::credit');
     }
@@ -28,7 +28,7 @@ class UserCreditPolicy
      * @param  \App\Models\UserCredit  $userCredit
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, UserCredit $userCredit)
+    public function view(User $user, UserCredit $userCredit): bool
     {
         return $user->can('view_user::credit');
     }
@@ -39,7 +39,7 @@ class UserCreditPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         return $user->can('create_user::credit');
     }
@@ -51,7 +51,7 @@ class UserCreditPolicy
      * @param  \App\Models\UserCredit  $userCredit
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, UserCredit $userCredit)
+    public function update(User $user, UserCredit $userCredit): bool
     {
         return $user->can('update_user::credit');
     }
@@ -63,7 +63,7 @@ class UserCreditPolicy
      * @param  \App\Models\UserCredit  $userCredit
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, UserCredit $userCredit)
+    public function delete(User $user, UserCredit $userCredit): bool
     {
         return $user->can('delete_user::credit');
     }
@@ -74,7 +74,7 @@ class UserCreditPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function deleteAny(User $user)
+    public function deleteAny(User $user): bool
     {
         return $user->can('delete_any_user::credit');
     }
@@ -86,7 +86,7 @@ class UserCreditPolicy
      * @param  \App\Models\UserCredit  $userCredit
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, UserCredit $userCredit)
+    public function forceDelete(User $user, UserCredit $userCredit): bool
     {
         return $user->can('force_delete_user::credit');
     }
@@ -97,7 +97,7 @@ class UserCreditPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDeleteAny(User $user)
+    public function forceDeleteAny(User $user): bool
     {
         return $user->can('force_delete_any_user::credit');
     }
@@ -109,7 +109,7 @@ class UserCreditPolicy
      * @param  \App\Models\UserCredit  $userCredit
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, UserCredit $userCredit)
+    public function restore(User $user, UserCredit $userCredit): bool
     {
         return $user->can('restore_user::credit');
     }
@@ -120,7 +120,7 @@ class UserCreditPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restoreAny(User $user)
+    public function restoreAny(User $user): bool
     {
         return $user->can('restore_any_user::credit');
     }
@@ -132,7 +132,7 @@ class UserCreditPolicy
      * @param  \App\Models\UserCredit  $userCredit
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function replicate(User $user, UserCredit $userCredit)
+    public function replicate(User $user, UserCredit $userCredit): bool
     {
         return $user->can('replicate_user::credit');
     }
@@ -143,7 +143,7 @@ class UserCreditPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function reorder(User $user)
+    public function reorder(User $user): bool
     {
         return $user->can('reorder_user::credit');
     }
