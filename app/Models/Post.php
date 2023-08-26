@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -15,7 +16,7 @@ use Illuminate\Support\Carbon;
  * @property string $title
  * @property string $content
  * @property string $img_url
- * @property string $editorial
+ * @property string|null $editorial
  * @property bool $private
  * @property int $user_id
  * @property int $content_mode
@@ -26,6 +27,8 @@ use Illuminate\Support\Carbon;
  */
 class Post extends Model
 {
+    use SoftDeletes;
+
     public const POST_PUBLIC = 0;
     public const POST_PRIVATE = 1;
 

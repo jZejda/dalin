@@ -17,12 +17,14 @@ return new class () extends Migration {
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('title', 255);
-            $table->string('editorial', 255);
+            $table->string('editorial', 255)->nullable();
             $table->string('img_url', 255)->nullable();
-            $table->longText('content')->nullable();
+            $table->longText('content');
             $table->tinyInteger('content_mode')->default(1);
             $table->tinyInteger('private')->nullable();
             $table->timestamps();
+
+            $table->softDeletes();
 
             $table->index(['title']);
         });

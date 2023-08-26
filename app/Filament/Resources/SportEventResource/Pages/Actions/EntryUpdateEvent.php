@@ -68,7 +68,7 @@ class EntryUpdateEvent
         }
 
         $lastUpdate = Carbon::createFromFormat(AppHelper::MYSQL_DATE_TIME, $this->sportEvent->last_update);
-        if(Carbon::now()->gt($lastUpdate->addHours(12))) {
+        if($lastUpdate != false && Carbon::now()->gt($lastUpdate->addHours(12))) {
             return false;
         } else {
             return true;
