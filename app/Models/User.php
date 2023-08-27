@@ -32,7 +32,6 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read string $user_identification
- *
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read Collection<int, Permission> $permissions
@@ -46,7 +45,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read Collection<int, UserRaceProfile> $userRaceProfiles
  * @property-read int|null $user_race_profiles_count
  * @property-read UserSetting|null $userSetting
-
+ * @mixin IdeHelperUser
  */
 
 class User extends Authenticatable

@@ -42,7 +42,7 @@ case "$1" in
         echo "${BOLD}Regenerate IdeaHelper ...${NORMAL}"
         mkdir -p storage/idea
         vendor/bin/sail artisan ide-helper:generate
-        vendor/bin/sail artisan ide-helper:models
+        vendor/bin/sail artisan ide-helper:models -M
         vendor/bin/sail artisan ide-helper:meta
         ;;
     phpstan)

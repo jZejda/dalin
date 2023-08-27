@@ -30,10 +30,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $entry_created
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read SportClassDefinition|null $sportClassDefinition
  * @property-read SportEvent|null $sportEvent
  * @property-read UserRaceProfile|null $userRaceProfile
+ * @mixin IdeHelperUserEntry
  */
 class UserEntry extends Model
 {

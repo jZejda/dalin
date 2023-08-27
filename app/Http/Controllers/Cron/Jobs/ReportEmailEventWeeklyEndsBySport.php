@@ -45,7 +45,7 @@ class ReportEmailEventWeeklyEndsBySport implements CommonCronJobs
                     ->orderBy('entry_date_3', 'asc')
                     ->get();
 
-                if ($eventFirstDateEnd->isNotEmpty()) {
+                if ($eventFirstDateEnd->isNotEmpty() || $eventSecondDateEnd->isNotEmpty() || $eventThirdDateEnd->isNotEmpty()) {
 
                     Mail::to($user)
                         ->queue(new EventWeeklyEndsBySport($eventFirstDateEnd, $eventSecondDateEnd, $eventThirdDateEnd));

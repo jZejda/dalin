@@ -23,8 +23,8 @@ use Illuminate\Support\Carbon;
  * @property int|null $qty_remaining
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read SportEvent|null $sportEvent
+ * @mixin IdeHelperSportService
  */
 class SportService extends Model
 {

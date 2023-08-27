@@ -24,8 +24,8 @@ use Illuminate\Support\Carbon;
  * @property SportEventMarkerType|null $type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read SportEvent|null $sportEvent
+ * @mixin IdeHelperSportEventMarker
  */
 class SportEventMarker extends Model
 {

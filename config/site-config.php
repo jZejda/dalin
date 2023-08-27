@@ -73,7 +73,7 @@ return [
     | hours in format m ['08', '22']
     | days in month ['01', '05', '22']
     | months ['01', '12']
-    | day in week ['1', '5'] 1 = monday
+    | day in week ['0', '1', '5'] 0 = sunday, 1 = monday
     |
     */
 
@@ -105,7 +105,7 @@ return [
             'hours' => ['08'],
             'days_in_month' => ['*'],
             'months' => ['*'],
-            'days_in_week' => ['7'],
+            'days_in_week' => ['0'],
         ],
     ],
 

@@ -19,10 +19,10 @@ use Illuminate\Support\Carbon;
  * @property array|null $params
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read User|null $user
  * @property-read UserCredit|null $userCredit
  * @property-read User|null $userNoteMade
+ * @mixin IdeHelperUserCreditNote
  */
 class UserCreditNote extends Model
 {

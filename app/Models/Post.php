@@ -23,8 +23,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $deleted_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read User|null $user
+ * @mixin IdeHelperPost
  */
 class Post extends Model
 {

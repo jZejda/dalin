@@ -57,6 +57,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserRaceProfile whereZip($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperUserRaceProfile
  */
 class UserRaceProfile extends Model
 {

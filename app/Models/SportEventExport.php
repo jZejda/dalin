@@ -17,9 +17,9 @@ use Illuminate\Support\Carbon;
  * @property int|null $sport_event_leg_id
  * @property string $file_type
  * @property string $result_path
- *
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @mixin IdeHelperSportEventExport
  */
 class SportEventExport extends Model
 {

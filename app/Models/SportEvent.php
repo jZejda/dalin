@@ -105,6 +105,7 @@ use Illuminate\Support\Carbon;
  * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereUseOrisForEntries($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereWeather($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperSportEvent
  */
 
 class SportEvent extends Model

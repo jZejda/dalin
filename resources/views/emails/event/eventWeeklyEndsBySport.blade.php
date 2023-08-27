@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
 Blíží ze konec přihlášek na závody vypasané níže. Závody mají konec přihlášek prvního termínu v rámci příštího týdne
 od **{{ Carbon::now()->addDay()->format('d.m.Y') }}** do **{{ Carbon::now()->addDays(8)->format('d.m.Y') }}**.
 
+@if(!is_null($eventFirstDateEnd))
 @component('mail::divider')
 ## 1 termín přihlášek
 
@@ -29,6 +30,7 @@ Závody u kterých končí **první termín** přihlášek.
         | {{ Carbon::parse($firstDate->entry_date_1)->format('d.m.Y - H:i') }}  | {{$firstDate->name }} | @if($firstDate->oris_id !== null)[{{$firstDate->oris_id }}](https://oris.orientacnisporty.cz/Zavod?id={{$firstDate->oris_id}})@endif  |
     @endforeach
 @endcomponent
+@endif
 
 @if(!is_null($eventSecondDateEnd))
 

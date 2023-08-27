@@ -30,7 +30,6 @@ use Illuminate\Support\Carbon;
  * @property string $credit_type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read User|null $sourceUser
  * @property-read SportEvent|null $sportEvent
  * @property-read SportService|null $sportService
@@ -38,6 +37,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, UserCreditNote> $userCreditNotes
  * @property-read int|null $user_credit_notes_count
  * @property-read UserRaceProfile|null $userRaceProfile
+ * @mixin IdeHelperUserCredit
  */
 
 class UserCredit extends Model

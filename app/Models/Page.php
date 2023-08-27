@@ -24,9 +24,9 @@ use Illuminate\Support\Carbon;
  * @property bool $page_menu
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
  * @property-read ContentCategory|null $content_category
  * @property-read User|null $user
+ * @mixin IdeHelperPage
  */
 
 class Page extends Model

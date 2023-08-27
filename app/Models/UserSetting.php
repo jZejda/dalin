@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|UserSetting whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserSetting whereUserId($value)
  * @mixin \Eloquent
+ * @mixin IdeHelperUserSetting
  */
 class UserSetting extends Model
 {
