@@ -63,14 +63,16 @@ case "$1" in
         ;;
     deploy)
         echo "${BOLD}Run Deploy to product server...${NORMAL}"
-        vendor/bin/sail artisan config:cache
-        vendor/bin/sail artisan event:cache
-        vendor/bin/sail artisan route:cache
-        vendor/bin/sail artisan view:cache
-        vendor/bin/sail npm run build
+        ./vendor/bin/sail artisan optimize:clear
+        ./vendor/bin/sail artisan config:cache
+        ./vendor/bin/sail artisan event:cache
+        ./vendor/bin/sail artisan route:cache
+        ./vendor/bin/sail artisan view:cache
+        ./vendor/bin/sail npm run build
     ;;
     postdeploy)
         echo "${BOLD}Run PostDeploy on product server...${NORMAL}"
+        php8.1 artisan optimize:clear
         php8.1 artisan config:cache
         php8.1 artisan event:cache
         php8.1 artisan route:cache

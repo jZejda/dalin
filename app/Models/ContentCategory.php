@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
@@ -14,11 +15,11 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $title
  * @property string $description
- * @property string $slug
+ * @property string|null $slug
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
- * @property-read Page $page
+ * @property-read Collection<int, Page> $page
  */
 
 class ContentCategory extends Model

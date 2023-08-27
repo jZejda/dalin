@@ -14,27 +14,26 @@ use Illuminate\Support\Carbon;
  * App\Models\UserEntry
  *
  * @property int $id
- * @property ?int $oris_entry_id
+ * @property int|null $oris_entry_id
  * @property int $sport_event_id
  * @property int $class_definition_id
  * @property int $user_race_profile_id
  * @property string|null $class_name
  * @property string|null $note
  * @property string|null $club_note
- * @property int|null $requested_start
+ * @property string|null $requested_start
  * @property int|null $si
  * @property bool $rent_si
- * @property int $stage_x
- * @property Carbon|null $entry_created
+ * @property int|null $stage_x
  * @property EntryStatus $entry_status
  * @property bool $entry_lock
- *
+ * @property Carbon|null $entry_created
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
- * @property-read SportEvent $sportEvent
- * @property-read SportClassDefinition $sportClassDefinition
- * @property-read UserRaceProfile $userRaceProfile
+ * @property-read SportClassDefinition|null $sportClassDefinition
+ * @property-read SportEvent|null $sportEvent
+ * @property-read UserRaceProfile|null $userRaceProfile
  */
 class UserEntry extends Model
 {

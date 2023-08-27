@@ -13,17 +13,18 @@ use Illuminate\Support\Carbon;
  * App\Models\Post
  *
  * @property int $id
- * @property string $title
- * @property string $content
- * @property string $img_url
- * @property string|null $editorial
- * @property bool $private
  * @property int $user_id
+ * @property string $title
+ * @property string|null $editorial
+ * @property string|null $img_url
+ * @property string $content
  * @property int $content_mode
+ * @property bool|null $private
+ * @property Carbon|null $deleted_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
-
- * @property-read User $user
+ *
+ * @property-read User|null $user
  */
 class Post extends Model
 {

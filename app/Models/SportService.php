@@ -7,24 +7,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\SportService
  *
  * @property int $id
  * @property int $sport_event_id
- * @property ?int $oris_service_id
- * @property string $service_name_cz
- * @property ?string $last_booking_date_time
+ * @property int|null $oris_service_id
+ * @property string|null $service_name_cz
+ * @property string $last_booking_date_time
  * @property float $unit_price
- * @property int $qty_available
- * @property int $qty_already_ordered
- * @property int $qty_remaining
- * @property string|null $created_at
- * @property string|null $updated_at
+ * @property int|null $qty_available
+ * @property int|null $qty_already_ordered
+ * @property int|null $qty_remaining
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  *
- * @property-read  SportEvent $sportEvent;
- *
+ * @property-read SportEvent|null $sportEvent
  */
 class SportService extends Model
 {

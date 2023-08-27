@@ -10,19 +10,18 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
- *
  * App\Models\Club
  *
+ * @property int $id
  * @property string $abbr
- * @property ?string $name
- * @property ?string $region_id
- * @property ?int $oris_id
- * @property ?int $oris_number
+ * @property string|null $name
+ * @property int $region_id
+ * @property string|null $oris_id
+ * @property string|null $oris_number
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
- * @property-read SportRegion $region
- *
+ * @property-read SportRegion|null $region
  */
 class Club extends Model
 {

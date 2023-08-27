@@ -18,12 +18,12 @@ use Illuminate\Support\Carbon;
  * @property int $age_from
  * @property int $age_to
  * @property string|null $gender
- * @property string $name
+ * @property string|null $name
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
- * @property-read SportList $sport
  * @property-read string $class_definition_full_label
+ * @property-read SportList|null $sport
  */
 class SportClassDefinition extends Model
 {

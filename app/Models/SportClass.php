@@ -24,7 +24,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  *
- * @property-read SportClassDefinition $classDefinition
+ * @property-read SportClassDefinition|null $classDefinition
+ * @property-read SportEvent|null $sportEvent
  */
 
 class SportClass extends Model

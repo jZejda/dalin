@@ -9,14 +9,23 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 /**
  * App\Models\UserSetting
  *
- * @property integer $id
- * @property integer $user_id
- * @property ?string $type
- * @property ?array $options
- * @property string|null $created_at
- * @property string|null $updated_at
- *
- * @property-read User $user
+ * @property int $id
+ * @property int $user_id
+ * @property string $type
+ * @property array|null $options
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|UserSetting newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserSetting newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserSetting query()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserSetting whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserSetting whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserSetting whereOptions($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserSetting whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserSetting whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserSetting whereUserId($value)
+ * @mixin \Eloquent
  */
 class UserSetting extends Model
 {

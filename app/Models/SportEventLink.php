@@ -6,23 +6,26 @@ use App\Enums\SportEventLinkType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
- * App\Models\SportEventMarker
+ * App\Models\SportEventLink
  *
  * @property int $id
- * @property ?int $external_key
  * @property int $sport_event_id
+ * @property int|null $external_key
  * @property bool $internal
  * @property string|null $source_path
  * @property string|null $source_url
- * @property string $source_type
+ * @property SportEventLinkType $source_type
  * @property string|null $name_cz
  * @property string|null $name_en
  * @property string|null $description_cz
  * @property string|null $description_en
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  *
- * @property-read SportEvent $sportEvent
+ * @property-read SportEvent|null $sportEvent
  */
 class SportEventLink extends Model
 {

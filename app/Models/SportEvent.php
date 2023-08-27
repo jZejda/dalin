@@ -21,48 +21,90 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property string|null $alt_name
  * @property int|null $oris_id
- * @property string $date
+ * @property Carbon|null $date
  * @property string|null $place
- * @property array|null $region
  * @property array|null $organization
+ * @property array|null $region
  * @property string|null $entry_desc
  * @property string|null $event_info
  * @property string|null $event_warning
- * @property int|null $sport_id
+ * @property int $sport_id
  * @property int|null $discipline_id
  * @property int|null $level_id
+ * @property SportEventType|null $event_type
  * @property bool $use_oris_for_entries
  * @property bool|null $ranking
  * @property float|null $ranking_coefficient
- * @property string|null $event_type
  * @property Carbon|null $entry_date_1
  * @property Carbon|null $entry_date_2
  * @property Carbon|null $entry_date_3
+ * @property Carbon|null $last_update
+ * @property Carbon|null $last_calculate_cost
  * @property string|null $start_time
  * @property string|null $gps_lat
  * @property string|null $gps_lon
  * @property array|null $weather
  * @property int|null $parent_id
- * @property bool $dont_update_excluded
- * @property bool $cancelled
- * @property string|null $cancelled_reason
  * @property int|null $stages
  * @property int|null $multi_events
- * @property string|null $last_update
- * @property string|null $last_calculate_cost
- * @property string|null $created_at
- * @property string|null $updated_at
- *
- * @property-read Carbon|null $lastEntryDate
- *
- * @property-read string $sport_event_oris_title
+ * @property bool $cancelled
+ * @property string|null $cancelled_reason
+ * @property bool $dont_update_excluded
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property-read string $sport_event_last_cost_calculate
- * @property-read SportDiscipline|null $sportDiscipline
- * @property-read SportService|null $sportServices
- * @property-read SportLevel|null $sportLevel
- * @property-read UserEntry $userEntry
- * @property-read SportEventLink $sportEventLink
- * @property-read SportEventMarker $sportEventMarkers
+ * @property-read string $sport_event_oris_title
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SportClass> $sportClasses
+ * @property-read int|null $sport_classes_count
+ * @property-read \App\Models\SportDiscipline|null $sportDiscipline
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SportEventLink> $sportEventLinks
+ * @property-read int|null $sport_event_links_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SportEventMarker> $sportEventMarkers
+ * @property-read int|null $sport_event_markers_count
+ * @property-read \App\Models\SportLevel|null $sportLevel
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SportService> $sportServices
+ * @property-read int|null $sport_services_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\UserEntry> $userEntry
+ * @property-read int|null $user_entry_count
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereAltName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereCancelled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereCancelledReason($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereDisciplineId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereDontUpdateExcluded($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereEntryDate1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereEntryDate2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereEntryDate3($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereEntryDesc($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereEventInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereEventType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereEventWarning($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereGpsLat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereGpsLon($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereLastCalculateCost($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereLastUpdate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereLevelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereMultiEvents($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereOrganization($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereOrisId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent wherePlace($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereRanking($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereRankingCoefficient($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereRegion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereSportId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereStages($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereStartTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereUseOrisForEntries($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SportEvent whereWeather($value)
+ * @mixin \Eloquent
  */
 
 class SportEvent extends Model
