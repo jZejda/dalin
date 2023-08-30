@@ -131,7 +131,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     protected function getTableColumns(): array
     {
         return [
-            TextColumn::make('sportClassDefinition.name')
+            TextColumn::make('class_name')
                 ->label('Kategorie')
                 ->searchable()
                 ->sortable(),
