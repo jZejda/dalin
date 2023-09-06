@@ -60,9 +60,9 @@ class UserCreditResource extends Resource
                                 ->label(__('user-credit.user_profile'))
                                 ->options(UserRaceProfile::all()->pluck('reg_number', 'id'))
                                 ->searchable(),
-                            Select::make('sport_event_id')
+                            Select::make('sportEventId')
                                 ->label(__('user-credit.event_name'))
-                                ->options(SportEvent::all()->pluck('name', 'id'))
+                                ->options(SportEvent::all()->sortBy('date')->pluck('sport_event_last_cost_calculate', 'id'))
                                 ->searchable(),
                             Select::make('source')
                                 ->label(__('user-credit.form.source_title'))
