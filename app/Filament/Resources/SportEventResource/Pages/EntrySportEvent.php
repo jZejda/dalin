@@ -96,6 +96,11 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         'oris_class_id' => 'required|min:3',
     ];
 
+    protected function getTitle(): string
+    {
+        return 'Detail závodu - ' . $this->record->name;
+    }
+
     protected function getActions(): array
     {
         $sendMailModal = new EntrySendMail($this->record);

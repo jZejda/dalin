@@ -37,7 +37,6 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, UserCreditNote> $userCreditNotes
  * @property-read int|null $user_credit_notes_count
  * @property-read UserRaceProfile|null $userRaceProfile
- * @mixin IdeHelperUserCredit
  */
 
 class UserCredit extends Model
