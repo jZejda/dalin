@@ -2,4 +2,5 @@
 
 @section('title', __('Not Found'))
 @section('code', '404')
-@section('message', __('Not Found'))
+@section('picture', URL::asset('/images/404.png'))
+@section('message', __('Nenalezeno'))

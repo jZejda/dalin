@@ -105,8 +105,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     {
         $sendMailModal = new EntrySendMail($this->record);
         $updateEvent = new EntryUpdateEvent($this->record);
-        $registerAnyone = Auth::user()->hasRole([AppRoles::EventMaster->value]) ? $this->getOrisEvent(true) : null;
-        $sendEmail = Auth::user()->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
+        $registerAnyone = Auth::user()?->hasRole([AppRoles::EventMaster->value]) ? $this->getOrisEvent(true) : null;
+        $sendEmail = Auth::user()?->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
             ? $sendMailModal->sendNotification()
             : null;
 

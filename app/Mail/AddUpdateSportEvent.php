@@ -14,8 +14,6 @@ class AddUpdateSportEvent extends Mailable
     use Queueable;
     use SerializesModels;
 
-
-
     public function envelope(): Envelope
     {
         return new Envelope(

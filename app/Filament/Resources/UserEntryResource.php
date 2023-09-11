@@ -37,8 +37,9 @@ class UserEntryResource extends Resource
             return UserEntry::query()
                 ->from('user_entries', 'ue')
                 ->leftJoin('user_race_profiles AS urp', 'urp.id', '=', 'ue.user_race_profile_id')
+                ->leftJoin('sport_events AS se', 'se.id', '=', 'ue.sport_event_id')
                 ->where('urp.user_id', '=', Auth::user()->id)
-                ->orderByDesc('ue.created_at');
+                ->orderByDesc('se.date');
         }
     }
 
@@ -57,20 +58,21 @@ class UserEntryResource extends Resource
                 TextColumn::make('sportEvent.name')
                     ->description(fn (UserEntry $record): string => $record->sportEvent->alt_name ?? '')
                     ->label('Závod')
-                    ->url(fn (UserEntry $record): string => route('filament.resources.sport-events.entry', ['record' => $record->sport_event_id]))
-                    ->searchable()
-                    ->sortable(),
+                    ->url(fn (UserEntry $record): string => route('filament.resources.sport-events.entry', ['record' => $record->sport_event_id])),
+//                    ->sortable(query: function(Builder $query, string $direction): Builder {
+//                        return $query
+//                            ->orderBy('se.name', $direction)
+//                            ->orderBy('se.name', $direction);
+//                    }),
                 TextColumn::make('class_name')
                     ->label('Kategorie')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 TextColumn::make('userRaceProfile.UserRaceFullName')
                     ->label('Registrace'),
                 TextColumn::make('sportEvent.date')
                     ->label('Konání')
                     ->dateTime('d. m. Y')
-                    ->searchable()
-                    ->sortable(),
+                    ->searchable(),
                 TextColumn::make('note')
                     ->label('Poznámka'),
                 TextColumn::make('club_note')

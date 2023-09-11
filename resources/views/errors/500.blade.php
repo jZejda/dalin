@@ -2,4 +2,5 @@
 
 @section('title', __('Server Error'))
 @section('code', '500')
-@section('message', __('Server Error'))
+@section('picture', URL::asset('/images/500.png'))
+@section('message', __('Asi se něco nepovedlo'))
