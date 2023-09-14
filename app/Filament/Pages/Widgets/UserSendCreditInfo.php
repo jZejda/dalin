@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Pages\Widgets;
 
 use App\Models\Post;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
@@ -8,11 +8,11 @@ use Filament\Widgets\Widget;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\DB;
 
-class UserCreditBalance extends Widget
+class UserSendCreditInfo extends Widget
 {
     use HasWidgetShield;
 
-    protected static string $view = 'filament.pages.widgets.user-credit-balance';
+    protected static string $view = 'filament.pages.widgets.user-send-credit-info';
 
     public function render(): View
     {

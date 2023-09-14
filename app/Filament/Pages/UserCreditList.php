@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\UserCreditBalance;
-use App\Filament\Widgets\UserSendCreditInfo;
+use App\Filament\Pages\Widgets\UserCreditBalance;
+use App\Filament\Pages\Widgets\UserSendCreditInfo;
 use App\Models\SportEvent;
 use App\Models\UserCredit;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
