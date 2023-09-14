@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\UserCreditBalance;
+use App\Filament\Widgets\UserSendCreditInfo;
 use App\Models\SportEvent;
 use App\Models\UserCredit;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
@@ -37,12 +39,20 @@ class UserCreditList extends Page implements HasForms, HasTable
 
     public function mount(): void
     {
-        $this->userId = auth()->user()->id;
+        $this->userId = auth()->user()?->id;
     }
 
     protected function getTableQuery(): Builder
     {
         return UserCredit::where('user_id', '=', $this->userId);
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            UserCreditBalance::class,
+            UserSendCreditInfo::class,
+        ];
     }
 
     protected function getTableColumns(): array
@@ -51,11 +61,19 @@ class UserCreditList extends Page implements HasForms, HasTable
             TextColumn::make('created_at')
                 ->label(__('user-credit.table.created_at_title'))
                 ->dateTime('d.m.Y')
+                ->description(function (UserCredit $record): string {
+                    return 'id: '. $record->id;
+                })
                 ->sortable(),
             TextColumn::make('sportEvent.name')
                 ->label(__('user-credit.table.sport_event_title'))
-                ->url(fn (UserCredit $record): string => route('filament.resources.user-credits.view', ['record' => $record->id]))
-                ->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name != null ? $record->sportEvent?->alt_name : 'nepřiřazeno k závodu')
+                ->url(function (UserCredit $record): ?string {
+                    if (!is_null($record->sport_event_id)) {
+                        return route('filament.resources.sport-events.entry', ['record' => $record->sport_event_id]);
+                    }
+                    return null;
+                })
+                ->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name !== null ? $record->sportEvent?->alt_name : 'nemá vazbu na akci/závod')
                 ->sortable()
                 ->searchable(),
             TextColumn::make('userRaceProfile.reg_number')

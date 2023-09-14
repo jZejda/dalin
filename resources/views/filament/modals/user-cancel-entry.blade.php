@@ -1,5 +1,5 @@
 <div>
-    <p>TODO tady vysvětlení co se bude dít dál</p>
-    <p>A jaké jsou další možnosti</p>
+    <p>Odhlášení proběheně z ORISu a našeho systému závorveň.</p>
+    <p>Kontrolu správnosti odhlášení prosím ještě prověď přím na stránkách ORISu.</p>
 </div>
 

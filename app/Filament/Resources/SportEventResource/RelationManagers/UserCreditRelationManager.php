@@ -19,7 +19,7 @@ class UserCreditRelationManager extends RelationManager
     protected static ?string $title = 'Startovné';
 
 
-    public array $data_list= [
+    public array $data_list = [
         'calc_columns' => [
             'amount',
         ],

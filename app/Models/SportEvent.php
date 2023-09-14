@@ -167,6 +167,21 @@ class SportEvent extends Model
         return $this->HasMany(SportEventMarker::class, 'sport_event_id', 'id');
     }
 
+
+    public function getSportEventOrisCompactTitleAttribute(): string
+    {
+        $stringDelimiter = ' | ';
+        $date = null;
+        if (!is_null($this->date)) {
+            $date = $this->date->format(AppHelper::DATE_FORMAT);
+        }
+
+        return ($date !== null ? $date : '') .
+            ((count($this->organization) > 0) ? $stringDelimiter . Arr::join($this->organization, ', ') : '') .
+            $stringDelimiter . $this->name .
+            ($this->oris_id !== null ? $stringDelimiter . 'ORIS ID: ' . $this->oris_id : '');
+    }
+
     public function getSportEventOrisTitleAttribute(): string
     {
         return ($this->alt_name !== null ? $this->alt_name . ' | ' : '') .

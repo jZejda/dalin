@@ -28,6 +28,8 @@ case "$1" in
 
     up)
         echo "${BOLD}Run Docker Laravel Sail ...${NORMAL}"
+        echo "visit: ${BOLD}localhost:8080${NORMAL} for web"
+        echo "visit: ${BOLD}localhost:8084${NORMAL} manage the database via phpMyAdmin"
         vendor/bin/sail up -d
         ;;
     down)

@@ -18,7 +18,7 @@
         <p class="text-sm tracking-tight
             @if ((Carbon::createFromFormat('Y-m-d H:i:s', $getRecord()->entry_date_2)->subDays(5) <= Carbon::now()) && ( Carbon::now() <= $getRecord()->entry_date_2))
                text-warning-600
-            @elseif(Carbon::now() > $getRecord()->entry_date_1)
+            @elseif(Carbon::now() > $getRecord()->entry_date_2)
                text-danger-600
             @endif
         ">{{ $getRecord()->entry_date_2?->format(AppHelper::DATE_TIME_FORMAT ?? '') }}</p>
@@ -28,7 +28,7 @@
         <p class="text-sm tracking-tight
             @if ((Carbon::createFromFormat('Y-m-d H:i:s', $getRecord()->entry_date_3)->subDays(5) <= Carbon::now()) && ( Carbon::now() <= $getRecord()->entry_date_3))
                 text-warning-600
-            @elseif(Carbon::now() > $getRecord()->entry_date_1)
+            @elseif(Carbon::now() > $getRecord()->entry_date_3)
                 text-danger-600
             @endif
         ">{{ $getRecord()->entry_date_3?->format(AppHelper::DATE_TIME_FORMAT) ?? '' }}</p>

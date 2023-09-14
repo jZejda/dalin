@@ -438,7 +438,7 @@ final class OrisApiService
     public function updateUserClubId(): bool
     {
 
-        $userRaceProfiles= DB::table('user_race_profiles')
+        $userRaceProfiles = DB::table('user_race_profiles')
                 ->whereNotNull('oris_id')
                 ->get();
 

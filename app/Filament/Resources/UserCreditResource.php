@@ -12,6 +12,8 @@ use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserCredit;
 use App\Models\UserRaceProfile;
+use App\Shared\Helpers\AppHelper;
+use Carbon\Carbon;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
@@ -60,10 +62,14 @@ class UserCreditResource extends Resource
                                 ->label(__('user-credit.user_profile'))
                                 ->options(UserRaceProfile::all()->pluck('reg_number', 'id'))
                                 ->searchable(),
-                            Select::make('sportEventId')
+                            Select::make('sport_event_id')
                                 ->label(__('user-credit.event_name'))
-                                ->options(SportEvent::all()->sortBy('date')->pluck('sport_event_last_cost_calculate', 'id'))
-                                ->searchable(),
+                                ->options(
+                                    SportEvent::all()
+                                        ->where('date', '>', Carbon::now()->subMonths(12)->format(AppHelper::MYSQL_DATE_TIME))
+                                        ->sortByDesc('date')
+                                        ->pluck('sport_event_oris_compact_title', 'id')
+                                )->searchable(),
                             Select::make('source')
                                 ->label(__('user-credit.form.source_title'))
                                 ->options([
@@ -133,10 +139,25 @@ class UserCreditResource extends Resource
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
-                    ->dateTime('d.m.Y'),
+                    ->description(function (UserCredit $record): string {
+                        return 'id: '. $record->id;
+                    })
+                    ->dateTime(AppHelper::DATE_FORMAT)
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('sportEvent.name')
-                    ->label(__('user-credit.table.sport_event_title')),
-//                    ->description(fn (UserCredit $record): string => $record->sportEvent->alt_name != null ? $record->sportEvent->alt_name : 'záznam ID: ' . (string)$record->sportEvent->id),
+                    ->label(__('user-credit.table.sport_event_title'))
+                    ->description(function (UserCredit $record): string {
+                        $description = '';
+                        if (!is_null($record->sportEvent?->alt_name)) {
+                            $description = $record->sportEvent->alt_name;
+                        } else {
+                            if (!is_null($record->sportEvent?->id)) {
+                                $description = 'interní id závodu: ' . $record->sportEvent->id;
+                            }
+                        }
+                        return $description;
+                    }),
                 TextColumn::make('user.name')
                     ->label('Uživatel')
                     ->searchable(),
@@ -172,7 +193,7 @@ class UserCreditResource extends Resource
                 Filter::make('user_id')
                     ->label('Nená přiřazeno závodníka')
                     ->query(fn (Builder $query): Builder => $query->where('user_id', '=', null))
-                    ->default(true),
+                    ->default(false),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
