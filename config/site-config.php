@@ -102,7 +102,7 @@ return [
         ],
         'mail_weekly_user_event_summary' => [
             'active' => true,
-            'hours' => ['08'],
+            'hours' => ['08','22'],
             'days_in_month' => ['*'],
             'months' => ['*'],
             'days_in_week' => ['0'],

@@ -20,7 +20,10 @@ class ReportEmailEventWeeklyEndsBySport implements CommonCronJobs
 
         /** @var User $user */
         foreach ($users as $user) {
-            if (isset($user->getUserOptions()['week_report_by_sport']) && $user->getUserOptions()['week_report_by_sport'][0] === '1') {
+            if (
+                isset($user->getUserOptions()['week_report_by_sport'][0]) &&
+                $user->getUserOptions()['week_report_by_sport'][0] === '1'
+            ) {
                 $eventFirstDateEnd = DB::table('sport_events')
                     ->wherein('sport_id', $user->getUserOptions()['week_report_by_sport'])
                     ->whereNotNull('entry_date_1')
@@ -49,7 +52,7 @@ class ReportEmailEventWeeklyEndsBySport implements CommonCronJobs
 
                     Mail::to($user)
                         ->queue(new EventWeeklyEndsBySport($eventFirstDateEnd, $eventSecondDateEnd, $eventThirdDateEnd));
-                    Log::channel('app')->info('MailWeeklyUserEventSummary mail for user: ' . $user->email . ' - ' . $user->name);
+                    Log::channel('site')->info('MailWeeklyUserEventSummary mail for user: ' . $user->email . ' - ' . $user->name);
                 }
             }
         }

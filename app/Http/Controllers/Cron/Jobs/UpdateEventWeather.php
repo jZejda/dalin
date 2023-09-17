@@ -51,7 +51,7 @@ final class UpdateEventWeather implements CommonCronJobs
                     if ($weatherForecast['dt'] > $eventStartTimeStamp && !$findForecast) {
                         $findForecast = true;
                         $event->update(['weather' => $weatherForecast]);
-                        Log::channel('app')->info('Weather update at event ID: ' . $event->id . ' id.');
+                        Log::channel('site')->info('Weather update at event ID: ' . $event->id);
                     }
                 }
             }

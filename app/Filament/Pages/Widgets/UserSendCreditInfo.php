@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserSendCreditInfo extends Widget
 {
-    use HasWidgetShield;
+    //use HasWidgetShield;
 
     protected static string $view = 'filament.pages.widgets.user-send-credit-info';
 
