@@ -13,9 +13,9 @@
                 <h4 class="card-title">
                     <a href="{{ url('/novinka', $post->id) }}">{{$post->title}}</a>
                 </h4>
-                @if($post->content_mode === 1)
+                @if($post->content_mode === 1 && !is_null($post->editorial))
                     <p>{!! $post->editorial !!}</p>
-                @elseif($post->content_mode === 2)
+                @elseif($post->content_mode === 2 && !is_null($post->editorial))
                     <p>{{ Markdown::parse($post->editorial) }}</p>
                 @endif
 

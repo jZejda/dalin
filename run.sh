@@ -28,17 +28,23 @@ case "$1" in
 
     up)
         echo "${BOLD}Run Docker Laravel Sail ...${NORMAL}"
+        echo "visit: ${BOLD}localhost:8080${NORMAL} for web"
+        echo "visit: ${BOLD}localhost:8084${NORMAL} manage the database via phpMyAdmin"
         vendor/bin/sail up -d
         ;;
     down)
         echo "${BOLD}Stop Docker Laravel Sail ...${NORMAL}"
         vendor/bin/sail down
         ;;
+    bash)
+        echo "${BOLD}Bash Docker Laravel Sail ...${NORMAL}"
+        vendor/bin/sail bash
+        ;;
     idehelper)
         echo "${BOLD}Regenerate IdeaHelper ...${NORMAL}"
         mkdir -p storage/idea
         vendor/bin/sail artisan ide-helper:generate
-        vendor/bin/sail artisan ide-helper:models
+        vendor/bin/sail artisan ide-helper:models -M
         vendor/bin/sail artisan ide-helper:meta
         ;;
     phpstan)
@@ -59,13 +65,16 @@ case "$1" in
         ;;
     deploy)
         echo "${BOLD}Run Deploy to product server...${NORMAL}"
-        php artisan config:cache
-        php artisan event:cache
-        php artisan route:cache
-        php artisan view:cache
+        ./vendor/bin/sail artisan optimize:clear
+        ./vendor/bin/sail artisan config:cache
+        ./vendor/bin/sail artisan event:cache
+        ./vendor/bin/sail artisan route:cache
+        ./vendor/bin/sail artisan view:cache
+        ./vendor/bin/sail npm run build
     ;;
     postdeploy)
         echo "${BOLD}Run PostDeploy on product server...${NORMAL}"
+        php8.1 artisan optimize:clear
         php8.1 artisan config:cache
         php8.1 artisan event:cache
         php8.1 artisan route:cache

@@ -11,18 +11,18 @@ use Illuminate\Support\Carbon;
  * App\Models\UserCreditNote
  *
  * @property int $id
- * @property ?int $user_id
- * @property ?int $user_credit_id
+ * @property int|null $user_id
+ * @property int|null $user_credit_id
  * @property int $note_user_id
- * @property ?string $note
- * @property ?array $params
+ * @property string|null $note
  * @property bool $internal
+ * @property array|null $params
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
- * @property-read User $user
- * @property-read User $userNoteMade
- * @property-read string $user_identification
+ * @property-read User|null $user
+ * @property-read UserCredit|null $userCredit
+ * @property-read User|null $userNoteMade
+ * @mixin IdeHelperUserCreditNote
  */
 class UserCreditNote extends Model
 {

@@ -29,7 +29,7 @@ class UserCreditRelationManager extends RelationManager
 
     protected static ?string $title = 'Finance';
 
-    public array $data_list= [
+    public array $data_list = [
         'calc_columns' => [
             'amount',
         ],
@@ -57,11 +57,25 @@ class UserCreditRelationManager extends RelationManager
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
                     ->dateTime('d.m.Y')
+                    ->description(function (UserCredit $record): string {
+                        return 'id: '. $record->id;
+                    })
                     ->sortable(),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
                     ->url(fn (UserCredit $record): string => route('filament.resources.user-credits.view', ['record' => $record->id]))
-                    ->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name != null ? $record->sportEvent?->alt_name : 'nepřiřazeno k závodu')
+                    //->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name != null ? $record->sportEvent?->alt_name : 'nepřiřazeno k závodu')
+                    ->description(function (UserCredit $record): string {
+                        $description = '';
+                        if (!is_null($record->sportEvent?->alt_name)) {
+                            $description = $record->sportEvent->alt_name;
+                        } else {
+                            if (!is_null($record->sportEvent?->id)) {
+                                $description = 'interní id závodu: ' . $record->sportEvent->id;
+                            }
+                        }
+                        return $description;
+                    })
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')

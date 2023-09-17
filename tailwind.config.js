@@ -7,6 +7,7 @@ module.exports = {
         './resources/**/*.blade.php',
        './resources/**/**/*.blade.php',
        './vendor/filament/**/*.blade.php',
+       './vendor/errors/minimal.blade.php',
        './node_modules/flowbite/**/*.js',
     ],
     theme: {

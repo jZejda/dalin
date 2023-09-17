@@ -54,7 +54,7 @@ class ListUserRaceProfiles extends ListRecords
             ->modalHeading('Aktualizovat ID členů v ORISu')
             ->modalSubheading('Provede hromadnou aktualizaci ID členů oproti ORISU, potřebné pro přihlášky na závod.')
             ->modalButton('Aktualizovat')
-            ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
+            ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value]))
             ->form([
             ]);
     }

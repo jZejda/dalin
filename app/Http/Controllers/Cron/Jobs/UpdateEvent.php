@@ -23,7 +23,6 @@ final class UpdateEvent implements CommonCronJobs
             ->get();
 
         foreach ($sportEvents as $sportEvent) {
-            //var_dump($sportEvent->id);
             $service = new OrisApiService();
             $service->updateEvent($sportEvent->oris_id, true);
             Log::channel('site')->info('Update Event ID: ' . $sportEvent->id . ' name: ' . $sportEvent->name);

@@ -96,12 +96,17 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         'oris_class_id' => 'required|min:3',
     ];
 
+    protected function getTitle(): string
+    {
+        return 'Detail závodu - ' . $this->record->name;
+    }
+
     protected function getActions(): array
     {
         $sendMailModal = new EntrySendMail($this->record);
         $updateEvent = new EntryUpdateEvent($this->record);
-        $registerAnyone = Auth::user()->hasRole([AppRoles::EventMaster->value]) ? $this->getOrisEvent(true) : null;
-        $sendEmail = Auth::user()->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
+        $registerAnyone = Auth::user()?->hasRole([AppRoles::EventMaster->value]) ? $this->getOrisEvent(true) : null;
+        $sendEmail = Auth::user()?->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
             ? $sendMailModal->sendNotification()
             : null;
 
@@ -131,7 +136,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     protected function getTableColumns(): array
     {
         return [
-            TextColumn::make('sportClassDefinition.name')
+            TextColumn::make('class_name')
                 ->label('Kategorie')
                 ->searchable()
                 ->sortable(),

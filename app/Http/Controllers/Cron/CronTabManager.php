@@ -39,6 +39,7 @@ final class CronTabManager
     private function checkHour(): bool
     {
         $actualHour = Carbon::now()->format('H');
+
         return $this->isInArray($this->hours, $actualHour);
     }
 

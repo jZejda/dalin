@@ -63,15 +63,15 @@ class EntryUpdateEvent
             return false;
         }
 
-        if (!is_null($this->sportEvent->oris_id)) {
+        if (is_null($this->sportEvent->oris_id)) {
             return true;
         }
 
         $lastUpdate = Carbon::createFromFormat(AppHelper::MYSQL_DATE_TIME, $this->sportEvent->last_update);
-        if(Carbon::now()->addHours(12)->gt($lastUpdate)) {
-            return true;
-        } else {
+        if($lastUpdate != false && Carbon::now()->gt($lastUpdate->addHours(12))) {
             return false;
+        } else {
+            return true;
         }
     }
 }

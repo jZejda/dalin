@@ -21,48 +21,37 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property string|null $alt_name
  * @property int|null $oris_id
- * @property string $date
+ * @property Carbon|null $date
  * @property string|null $place
- * @property array|null $region
  * @property array|null $organization
+ * @property array|null $region
  * @property string|null $entry_desc
  * @property string|null $event_info
  * @property string|null $event_warning
- * @property int|null $sport_id
+ * @property int $sport_id
  * @property int|null $discipline_id
  * @property int|null $level_id
+ * @property SportEventType|null $event_type
  * @property bool $use_oris_for_entries
  * @property bool|null $ranking
  * @property float|null $ranking_coefficient
- * @property string|null $event_type
  * @property Carbon|null $entry_date_1
  * @property Carbon|null $entry_date_2
  * @property Carbon|null $entry_date_3
+ * @property Carbon|null $last_update
+ * @property Carbon|null $last_calculate_cost
  * @property string|null $start_time
  * @property string|null $gps_lat
  * @property string|null $gps_lon
  * @property array|null $weather
  * @property int|null $parent_id
- * @property bool $dont_update_excluded
- * @property bool $cancelled
- * @property string|null $cancelled_reason
  * @property int|null $stages
  * @property int|null $multi_events
- * @property string|null $last_update
- * @property string|null $last_calculate_cost
- * @property string|null $created_at
- * @property string|null $updated_at
- *
- * @property-read Carbon|null $lastEntryDate
- *
- * @property-read string $sport_event_oris_title
- * @property-read string $sport_event_last_cost_calculate
- * @property-read SportDiscipline|null $sportDiscipline
- * @property-read SportService|null $sportServices
- * @property-read SportLevel|null $sportLevel
- * @property-read UserEntry $userEntry
- * @property-read SportEventLink $sportEventLink
- * @property-read SportEventMarker $sportEventMarkers
+ * @property bool $cancelled
+ * @property string|null $cancelled_reason
+ * @property bool $dont_update_excluded
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 
 class SportEvent extends Model
@@ -158,6 +147,11 @@ class SportEvent extends Model
         return $this->HasMany(UserEntry::class, 'sport_event_id', 'id');
     }
 
+    public function userCredit(): HasMany
+    {
+        return $this->HasMany(UserCredit::class, 'sport_event_id', 'id');
+    }
+
     public function userEntryActive(): int
     {
         return $this->HasMany(UserEntry::class, 'sport_event_id', 'id')->whereIn('entry_status', [EntryStatus::Create, EntryStatus::Edit])->count();
@@ -171,6 +165,21 @@ class SportEvent extends Model
     public function sportEventMarkers(): HasMany
     {
         return $this->HasMany(SportEventMarker::class, 'sport_event_id', 'id');
+    }
+
+
+    public function getSportEventOrisCompactTitleAttribute(): string
+    {
+        $stringDelimiter = ' | ';
+        $date = null;
+        if (!is_null($this->date)) {
+            $date = $this->date->format(AppHelper::DATE_FORMAT);
+        }
+
+        return ($date !== null ? $date : '') .
+            ((count($this->organization) > 0) ? $stringDelimiter . Arr::join($this->organization, ', ') : '') .
+            $stringDelimiter . $this->name .
+            ($this->oris_id !== null ? $stringDelimiter . 'ORIS ID: ' . $this->oris_id : '');
     }
 
     public function getSportEventOrisTitleAttribute(): string
@@ -188,7 +197,7 @@ class SportEvent extends Model
             ($this->alt_name !== null ? $this->alt_name . ' | ' : '') .
             $this->name . ' | ' .
             ($this->oris_id !== null ? '(ORIS ID: ' . $this->oris_id . ')' : '') .
-            ($this->last_calculate_cost !== null ? ' | (Náklady naposled : ' . Carbon::createFromFormat('Y-m-d H:i:s', $this->last_calculate_cost)->format('d.h.Y - H:i') . ')' : '')
+            ($this->last_calculate_cost !== null ? ' | (Náklady naposled : ' . Carbon::createFromFormat('Y-m-d H:i:s', $this->last_calculate_cost)->format('d.m.Y - H:i') . ')' : '')
         ;
     }
 

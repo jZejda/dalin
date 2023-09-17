@@ -16,7 +16,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         return $user->can('view_any_content::category');
     }
@@ -28,7 +28,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\ContentCategory  $contentCategory
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, ContentCategory $contentCategory)
+    public function view(User $user, ContentCategory $contentCategory): bool
     {
         return $user->can('view_content::category');
     }
@@ -39,7 +39,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         return $user->can('create_content::category');
     }
@@ -51,7 +51,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\ContentCategory  $contentCategory
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, ContentCategory $contentCategory)
+    public function update(User $user, ContentCategory $contentCategory): bool
     {
         return $user->can('update_content::category');
     }
@@ -63,7 +63,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\ContentCategory  $contentCategory
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, ContentCategory $contentCategory)
+    public function delete(User $user, ContentCategory $contentCategory): bool
     {
         return $user->can('delete_content::category');
     }
@@ -74,7 +74,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function deleteAny(User $user)
+    public function deleteAny(User $user): bool
     {
         return $user->can('delete_any_content::category');
     }
@@ -86,7 +86,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\ContentCategory  $contentCategory
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, ContentCategory $contentCategory)
+    public function forceDelete(User $user, ContentCategory $contentCategory): bool
     {
         return $user->can('force_delete_content::category');
     }
@@ -97,7 +97,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDeleteAny(User $user)
+    public function forceDeleteAny(User $user): bool
     {
         return $user->can('force_delete_any_content::category');
     }
@@ -109,7 +109,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\ContentCategory  $contentCategory
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, ContentCategory $contentCategory)
+    public function restore(User $user, ContentCategory $contentCategory): bool
     {
         return $user->can('restore_content::category');
     }
@@ -120,7 +120,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restoreAny(User $user)
+    public function restoreAny(User $user): bool
     {
         return $user->can('restore_any_content::category');
     }
@@ -132,7 +132,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\ContentCategory  $contentCategory
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function replicate(User $user, ContentCategory $contentCategory)
+    public function replicate(User $user, ContentCategory $contentCategory): bool
     {
         return $user->can('replicate_content::category');
     }
@@ -143,7 +143,7 @@ class ContentCategoryPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function reorder(User $user)
+    public function reorder(User $user): bool
     {
         return $user->can('reorder_content::category');
     }

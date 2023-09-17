@@ -19,49 +19,45 @@ class CommonCron extends Controller
         /** @description Wather updaterun at 08 and 17 hours */
         try {
             if ($this->runJob('weather_forecast')) {
-                Log::channel('app')->info('Start run WeatherForecast cron at ' . $this->getActualHour());
+                Log::channel('site')->info('START WeatherForecast run cron at ' . $this->getActualHour());
                 (new UpdateEventWeather())->run();
-                Log::channel('app')->info('Stop run WeatherForecast cron at ' . $this->getActualHour());
+                Log::channel('site')->info('STOP WeatherForecast run cron at ' . $this->getActualHour());
             }
         } catch (\Exception $e) {
-            Log::channel('app')->warning('ErrorMessage:' . $e->getMessage());
+            Log::channel('site')->warning('ERROR WeatherForecast:' . $e->getMessage());
         }
-
 
         /** @description Update Events */
         try {
-            if ($this->runJob('event_update')) {
-                Log::channel('app')->info('Start run EventUpdates cron at ' . $this->getActualHour());
+            if ($this->runJob('site')) {
+                Log::channel('WeatherForecast')->info('START EventUpdates run cron at ' . $this->getActualHour());
                 (new UpdateEvent())->run();
-                Log::channel('app')->info('Stop run EventUpdates cron at ' . $this->getActualHour());
+                Log::channel('site')->info('STOP  EventUpdates run cron at ' . $this->getActualHour());
             }
         } catch (\Exception $e) {
-            Log::channel('app')->warning('ErrorMessage:' . $e->getMessage());
+            Log::channel('site')->warning('ERROR EventUpdates: ' . $e->getMessage());
         }
-
 
         /** @description Send Mail monthly user debit credit */
         try {
             if ($this->runJob('mail_monthly_user_debit_report')) {
-                Log::channel('app')->info('Start run MailMonthlyUserDebitReport cron at ' . $this->getActualHour());
+                Log::channel('site')->info('START MailMonthlyUserDebitReport run cron at ' . $this->getActualHour());
                 (new ReportEmailUserDebit())->run();
-                Log::channel('app')->info('Stop run MailMonthlyUserDebitReport cron at ' . $this->getActualHour());
+                Log::channel('site')->info('STOP  MailMonthlyUserDebitReport run cron at ' . $this->getActualHour());
             }
         } catch (\Exception $e) {
-            Log::channel('app')->warning('ErrorMessage:' . $e->getMessage());
+            Log::channel('site')->warning('ERROR MailMonthlyUserDebitReport: ' . $e->getMessage());
         }
-
 
         /** @description  Send Mail weekly sport event summary */
         try {
-
             if ($this->runJob('mail_weekly_user_event_summary')) {
-                Log::channel('app')->info('Start run MailWeeklyUserEventSummary cron at ' . $this->getActualHour());
+                Log::channel('site')->info('>>START MailWeeklyUserEventSummary run cron at ' . $this->getActualHour());
                 (new ReportEmailEventWeeklyEndsBySport())->run();
-                Log::channel('app')->info('Stop run MailWeeklyUserEventSummary cron at ' . $this->getActualHour());
+                Log::channel('site')->info('<<STOP  MailWeeklyUserEventSummary run cron at ' . $this->getActualHour());
             }
         } catch (\Exception $e) {
-            Log::channel('app')->warning('ErrorMessage:' . $e->getMessage());
+            Log::channel('site')->warning('ERROR ErrorMessage: ' . $e->getMessage());
         }
 
     }

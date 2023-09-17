@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\SportLevel
@@ -14,8 +15,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $oris_id
  * @property string $short_name
  * @property string $long_name
- * @property string|null $created_at
- * @property string|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @mixin IdeHelperSportLevel
  */
 class SportLevel extends Model
 {

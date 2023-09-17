@@ -16,7 +16,7 @@ class SportEventExportPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(User $user): bool
     {
         return $user->can('view_any_sport::event::export');
     }
@@ -28,7 +28,7 @@ class SportEventExportPolicy
      * @param  \App\Models\SportEventExport  $sportEventExport
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, SportEventExport $sportEventExport)
+    public function view(User $user, SportEventExport $sportEventExport): bool
     {
         return $user->can('view_sport::event::export');
     }
@@ -39,7 +39,7 @@ class SportEventExportPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user): bool
     {
         return $user->can('create_sport::event::export');
     }
@@ -51,7 +51,7 @@ class SportEventExportPolicy
      * @param  \App\Models\SportEventExport  $sportEventExport
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, SportEventExport $sportEventExport)
+    public function update(User $user, SportEventExport $sportEventExport): bool
     {
         return $user->can('update_sport::event::export');
     }
@@ -63,7 +63,7 @@ class SportEventExportPolicy
      * @param  \App\Models\SportEventExport  $sportEventExport
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, SportEventExport $sportEventExport)
+    public function delete(User $user, SportEventExport $sportEventExport): bool
     {
         return $user->can('delete_sport::event::export');
     }
@@ -74,7 +74,7 @@ class SportEventExportPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function deleteAny(User $user)
+    public function deleteAny(User $user): bool
     {
         return $user->can('delete_any_sport::event::export');
     }
@@ -86,7 +86,7 @@ class SportEventExportPolicy
      * @param  \App\Models\SportEventExport  $sportEventExport
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, SportEventExport $sportEventExport)
+    public function forceDelete(User $user, SportEventExport $sportEventExport): bool
     {
         return $user->can('force_delete_sport::event::export');
     }
@@ -97,7 +97,7 @@ class SportEventExportPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDeleteAny(User $user)
+    public function forceDeleteAny(User $user): bool
     {
         return $user->can('force_delete_any_sport::event::export');
     }
@@ -109,7 +109,7 @@ class SportEventExportPolicy
      * @param  \App\Models\SportEventExport  $sportEventExport
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, SportEventExport $sportEventExport)
+    public function restore(User $user, SportEventExport $sportEventExport): bool
     {
         return $user->can('restore_sport::event::export');
     }
@@ -120,7 +120,7 @@ class SportEventExportPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restoreAny(User $user)
+    public function restoreAny(User $user): bool
     {
         return $user->can('restore_any_sport::event::export');
     }
@@ -132,7 +132,7 @@ class SportEventExportPolicy
      * @param  \App\Models\SportEventExport  $sportEventExport
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function replicate(User $user, SportEventExport $sportEventExport)
+    public function replicate(User $user, SportEventExport $sportEventExport): bool
     {
         return $user->can('replicate_sport::event::export');
     }
@@ -143,7 +143,7 @@ class SportEventExportPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function reorder(User $user)
+    public function reorder(User $user): bool
     {
         return $user->can('reorder_sport::event::export');
     }

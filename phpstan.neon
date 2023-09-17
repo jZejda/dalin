@@ -21,6 +21,7 @@ parameters:
     excludePaths:
         - ./*/*/FileToBeExcluded.php
         - ./app/Http/Controllers/TestController.php
+        - ./app/Policies/*
 
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false

@@ -39,6 +39,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 final class OrisApiService
 {
@@ -52,6 +53,9 @@ final class OrisApiService
         $this->orisResponse = $orisResponse ?? new OrisResponse();
     }
 
+    /**
+     * @throws Throwable
+     */
     public function updateEvent(int $eventId, bool $updateByCron = false): bool
     {
         $getParams = [
@@ -174,8 +178,17 @@ final class OrisApiService
             // Create|Update Links
             $documents = $event->documents($orisResponse);
             $links = $event->links($orisResponse);
+
+            $activeLinksDocumentsIds = [];
+            foreach ($documents as $document) {
+                $activeLinksDocumentsIds[] = $document->getID();
+            }
+            foreach ($links as $link) {
+                $activeLinksDocumentsIds[] = $link->getID();
+            }
             $this->updateLinksDocuments($documents, $eventModel);
             $this->updateLinksDocuments($links, $eventModel);
+            $this->clearOldLinksDocuments($activeLinksDocumentsIds, $eventModel);
 
 
             // Create|Update locations alias markers
@@ -419,10 +432,13 @@ final class OrisApiService
 
     }
 
+    /**
+     * @throws Throwable
+     */
     public function updateUserClubId(): bool
     {
 
-        $userRaceProfiles= DB::table('user_race_profiles')
+        $userRaceProfiles = DB::table('user_race_profiles')
                 ->whereNotNull('oris_id')
                 ->get();
 
@@ -454,7 +470,7 @@ final class OrisApiService
 
     /**
      * @param Links[] $entities
-     * @param SportEvent $eventModel
+     * @throws Throwable
      */
     private function updateLinksDocuments(array $entities, SportEvent $eventModel): void
     {
@@ -478,11 +494,38 @@ final class OrisApiService
         }
     }
 
+    private function clearOldLinksDocuments(array $actualLinksDocumentsIds, SportEvent $eventModel): void
+    {
+        $oldLinks = SportEventLink::query()
+            ->where('sport_event_id', '=', $eventModel->id)
+            ->whereNotNull('external_key')
+            ->get();
+
+        /** @var array<int> $oldOrisLinkIds */
+        $oldOrisLinkIds = $oldLinks->pluck('external_key')->toArray();
+
+        // ExternalKeys array to be deleted for specific SportEvent
+        /** @var array<int> $deleteLinks */
+        $deleteLinks = [];
+        foreach ($oldOrisLinkIds as $externalKey) {
+            if(!in_array($externalKey, $actualLinksDocumentsIds)) {
+                $deleteLinks[] = $externalKey;
+            }
+        }
+
+        foreach ($deleteLinks as $link) {
+            SportEventLink::where('sport_event_id', '=', $eventModel->id)
+                ->where('external_key', '=', $link)
+                ->delete();
+        }
+    }
+
     /**
      * @param Locations[] $markers
      * @param SportEvent $eventModel
+     * @throws Throwable
      */
-    private function updateMarkers(array $markers, SportEvent $eventModel)
+    private function updateMarkers(array $markers, SportEvent $eventModel): void
     {
         foreach ($markers as $marker) {
             /** @var SportEventMarker $sportEventMarker */

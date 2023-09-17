@@ -36,10 +36,14 @@ final class UpdateEventWeather implements CommonCronJobs
          */
         foreach ($sportEvents as $event) {
             if($event->gps_lon != '0.0' || $event->gps_lat != '0.0') {
-                $weather = $this->openMapService->getWeather((float)$event->gps_lat, (float)$event->gps_lon);
+                $weather = $this->openMapService?->getWeather((float)$event->gps_lat, (float)$event->gps_lon);
 
                 $dateExplode = explode(' ', (string)$event->date);
                 $eventStartTimeStamp = Carbon::createFromFormat(AppHelper::MYSQL_DATE_TIME, $dateExplode[0] . ' ' . (string)$event->start_time)->timestamp;
+
+                if (is_null($weather) || is_null($eventStartTimeStamp)) {
+                    continue;
+                }
 
                 $findForecast = false;
                 /** @var ListResponse $weatherForecast */
@@ -47,7 +51,7 @@ final class UpdateEventWeather implements CommonCronJobs
                     if ($weatherForecast['dt'] > $eventStartTimeStamp && !$findForecast) {
                         $findForecast = true;
                         $event->update(['weather' => $weatherForecast]);
-                        Log::channel('app')->info('Weather update at event ID: ' . $event->id . ' id.');
+                        Log::channel('site')->info('Weather update at event ID: ' . $event->id);
                     }
                 }
             }

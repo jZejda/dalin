@@ -7,6 +7,8 @@ namespace App\Filament\Resources\UserCreditResource\Pages;
 use App\Filament\Resources\UserCreditResource;
 use App\Models\SportEvent;
 use App\Services\OrisApiService;
+use App\Shared\Helpers\AppHelper;
+use Carbon\Carbon;
 use Filament\Pages\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Pages\Actions;
@@ -26,7 +28,7 @@ class ListUserCredits extends ListRecords
         ];
     }
 
-    public array $data_list= [
+    public array $data_list = [
         'calc_columns' => [
             'amount',
         ],
@@ -63,10 +65,16 @@ class ListUserCredits extends ListRecords
                     ->schema([
                         Select::make('sportEventId')
                             ->label('Závod/událost')
-                            ->options(SportEvent::all()->sortBy('date')->pluck('sport_event_last_cost_calculate', 'id'))
+                            ->options(
+                                SportEvent::all()
+                                    ->sortBy('date')
+                                    ->whereNotNull('oris_id')
+                                    ->where('created_at', '>', Carbon::now()->subMonths(12)->format(AppHelper::MYSQL_DATE_TIME))
+                                    ->sortByDesc('date')
+                                    ->pluck('sport_event_last_cost_calculate', 'id')
+                            )
                             ->required()
-                            ->columnSpan(2)
-                            ->searchable(),
+                            ->columnSpan(2),
                     ]),
 
             ]);
@@ -78,5 +86,20 @@ class ListUserCredits extends ListRecords
         $this->tableFilters['date_range']['created_until'] = $until;
 
         $this->getTableFilters();
+    }
+
+    protected function shouldPersistTableSortInSession(): bool
+    {
+        return true;
+    }
+
+    protected function getDefaultTableSortColumn(): ?string
+    {
+        return 'created_at';
+    }
+
+    protected function getDefaultTableSortDirection(): ?string
+    {
+        return 'desc';
     }
 }

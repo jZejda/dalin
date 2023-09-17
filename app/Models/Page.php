@@ -12,21 +12,21 @@ use Illuminate\Support\Carbon;
  * App\Models\Page
  *
  * @property int $id
- * @property string $title
- * @property string $content
- * @property bool $status
- * @property string $slug
  * @property int $user_id
- * @property int $page_menu
- * @property int $content_format
- * @property int $weight
  * @property int|null $content_category_id
+ * @property string $title
+ * @property string|null $slug
+ * @property string $content
+ * @property int $content_format
  * @property string $picture_attachment
+ * @property string $status
+ * @property int $weight
+ * @property bool $page_menu
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- *
- * @property-read User $user
- * @property-read ContentCategory $content_category
+ * @property-read ContentCategory|null $content_category
+ * @property-read User|null $user
+ * @mixin IdeHelperPage
  */
 
 class Page extends Model

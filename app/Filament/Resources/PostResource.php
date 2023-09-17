@@ -57,14 +57,13 @@ class PostResource extends Resource
                                 }),
                             Grid::make()->schema([
                                 MarkdownEditor::make('editorial')
-                                    ->required()
-                                    ->maxLength(255)
-                                    ->lazy(),
+                                    ->maxLength(255),
                             ])->columns(1),
 
                             // Markdown editor
                             Grid::make()->schema([
                                 MarkdownEditor::make('content')
+                                    ->required()
                             ])->columns(1),
                         ])
                         ->columns(1)

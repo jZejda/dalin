@@ -18,7 +18,7 @@ return new class () extends Migration {
             $table->string('region')->nullable();
             $table->longText('entry_desc')->nullable();
             $table->longText('event_info')->nullable();
-            $table->string('event_warning')->nullable();
+            $table->longText('event_warning')->nullable();
             $table->unsignedBigInteger('sport_id')->default(1);
             $table->foreign('sport_id')->references('id')->on('sport_lists');
             $table->unsignedBigInteger('discipline_id')->nullable();

@@ -5,36 +5,38 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\UserCreditStatus;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\UserCredit
  *
  * @property int $id
- * @property ?int $user_id
- * @property ?int $user_race_profile_id
- * @property ?int $sport_event_id
- * @property ?int $sport_service_id
+ * @property int|null $user_id
+ * @property int|null $user_race_profile_id
+ * @property int|null $sport_event_id
+ * @property int|null $sport_service_id
+ * @property int|null $oris_balance_id
+ * @property UserCreditStatus $status
  * @property float $amount
- * @property ?float $balance
+ * @property float|null $balance
  * @property string $currency
  * @property string $source
- * @property UserCreditStatus $status
- * @property ?int $source_user_id
- * @property ?int $oris_balance_id
+ * @property int|null $source_user_id
  * @property string $credit_type
- * @property string|null $created_at
- * @property string|null $updated_at
- *
- * @property-read int $userCreditNoteCount
- * @property-read User $user
- * @property-read User $sourceUser
- * @property-read UserRaceProfile $userRaceProfile
- * @property-read SportService $sportService
- * @property-read UserCreditNote $userCreditNote
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User|null $sourceUser
+ * @property-read SportEvent|null $sportEvent
+ * @property-read SportService|null $sportService
+ * @property-read User|null $user
+ * @property-read Collection<int, UserCreditNote> $userCreditNotes
+ * @property-read int|null $user_credit_notes_count
+ * @property-read UserRaceProfile|null $userRaceProfile
  */
 
 class UserCredit extends Model
