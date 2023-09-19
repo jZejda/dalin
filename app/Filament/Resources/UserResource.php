@@ -44,6 +44,12 @@ class UserResource extends Resource
                                 ->email()
                                 ->required()
                                 ->maxLength(255),
+                            Forms\Components\TextInput::make('payer_variable_symbol')
+                                ->label('Variabilní symbol uživatele')
+                                ->helperText('Mělo by se jednat o první čísla registrace, tedy přesně 4 číslice.')
+                                ->numeric()
+                                ->minLength(4)
+                                ->maxLength(4),
                             Forms\Components\TextInput::make('password')
                                 ->password()
                                 ->required()
