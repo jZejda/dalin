@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron;
 
+use App\Http\Controllers\Cron\Jobs\EntryEndsToPay;
 use App\Http\Controllers\Cron\Jobs\ReportEmailEventWeeklyEndsBySport;
 use App\Http\Controllers\Cron\Jobs\ReportEmailUserDebit;
 use App\Http\Controllers\Cron\Jobs\UpdateEvent;
@@ -52,9 +53,20 @@ class CommonCron extends Controller
         /** @description  Send Mail weekly sport event summary */
         try {
             if ($this->runJob('mail_weekly_user_event_summary')) {
-                Log::channel('site')->info('>>START MailWeeklyUserEventSummary run cron at ' . $this->getActualHour());
+                Log::channel('site')->info('START MailWeeklyUserEventSummary run cron at ' . $this->getActualHour());
                 (new ReportEmailEventWeeklyEndsBySport())->run();
-                Log::channel('site')->info('<<STOP  MailWeeklyUserEventSummary run cron at ' . $this->getActualHour());
+                Log::channel('site')->info('STOP  MailWeeklyUserEventSummary run cron at ' . $this->getActualHour());
+            }
+        } catch (\Exception $e) {
+            Log::channel('site')->warning('ERROR ErrorMessage: ' . $e->getMessage());
+        }
+
+        /** @description Send Mail EntryEndsToPay */
+        try {
+            if ($this->runJob('mail_entry_ends_to_pay')) {
+                Log::channel('site')->info('START MailEntryEndsToPay run cron at ' . $this->getActualHour());
+                (new EntryEndsToPay())->run();
+                Log::channel('site')->info('STOP  MailEntryEndsToPay run cron at ' . $this->getActualHour());
             }
         } catch (\Exception $e) {
             Log::channel('site')->warning('ERROR ErrorMessage: ' . $e->getMessage());

@@ -102,10 +102,17 @@ return [
         ],
         'mail_weekly_user_event_summary' => [
             'active' => true,
-            'hours' => ['08','22'],
+            'hours' => ['08'],
             'days_in_month' => ['*'],
             'months' => ['*'],
             'days_in_week' => ['0'],
+        ],
+        'mail_entry_ends_to_pay' => [
+            'active' => true,
+            'hours' => ['*'],
+            'days_in_month' => ['*'],
+            'months' => ['*'],
+            'days_in_week' => ['*'],
         ],
     ],
 
