@@ -20,6 +20,7 @@
         "livewire/livewire": "2.11.0",
         "pxlrbt/filament-excel": "^1.1",
         "sentry/sentry-laravel": "^3.2",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-markdown": "^2.2",
         "symfony/property-access": "^6.2",
         "symfony/serializer": "^6.2",

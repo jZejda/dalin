@@ -28,6 +28,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
+ * @property int|null $payer_variable_symbol
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -65,6 +66,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'payer_variable_symbol'
     ];
 
     /** @var array<int, string> */
