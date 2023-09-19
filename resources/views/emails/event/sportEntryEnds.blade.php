@@ -6,10 +6,10 @@ Blíží ze konec přihlášek na závody vypasané níže. Do termínu přihlá
 Příhlášení proveď podle pokynů v administraci.
 
 @component('mail::table')
-    | Přihláška do       | Název akce/závodu        |
-    | :----------------- |:------------- |
+    | Přihláška do       | Název akce/závodu        | ORIS ID
+    | :----------------- |:------------- |:------------- |
     @foreach ($sportEventContent as $sportEvent)
-        | {{  \Carbon\Carbon::parse($sportEvent->entry_date_1)->format('d.m.Y - H:i') }}  | {{$sportEvent->name }}  |
+        | {{  \Carbon\Carbon::parse($sportEvent->entry_date_1)->format('d.m.Y - H:i') }}  | {{$sportEvent->name }}  | @if($sportEvent->oris_id !== null)[{{$sportEvent->oris_id }}](https://oris.orientacnisporty.cz/Zavod?id={{$sportEvent->oris_id}})@endif  |
     @endforeach
 @endcomponent
 

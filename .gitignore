@@ -8,6 +8,7 @@
 /vendor
 .env
 .env.backup
+exclude_me.txt
 .phpunit.result.cache
 .phpstorm.meta.php
 _ide_helper_models.php
