@@ -27,7 +27,7 @@
     </head>
 
     <body class="antialiased bg-white dark:bg-gray-900">
-        <div class="flex flex-col h-screen justify-between">
+        <div class="flex flex-col h-screen">
             <header>
                 <livewire:frontend.navbar />
             </header>

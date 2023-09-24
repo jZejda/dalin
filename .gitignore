@@ -6,6 +6,7 @@
 /public/media
 /storage/*.key
 /vendor
+/bootstrap/cache
 .env
 .env.backup
 exclude_me.txt

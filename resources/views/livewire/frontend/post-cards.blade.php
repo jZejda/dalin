@@ -6,7 +6,6 @@
 @endphp
 
 <section class="bg-white dark:bg-gray-900 m-5 app-front-content">
-    <h1>Novinky</h1>
     @foreach($posts as $post)
         <article class="format" style="max-width: max-content;">
 
