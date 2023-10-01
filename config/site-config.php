@@ -13,7 +13,8 @@ return [
 
     'club' => [
         'abbr' => 'ABM',
-        'full_name' => 'Klub orientačního běhu ABM Brno'
+        'full_name' => 'Klub orientačního běhu ABM Brno',
+        'iban' => env('CLUB_IBAN', null),
     ],
 
     /*

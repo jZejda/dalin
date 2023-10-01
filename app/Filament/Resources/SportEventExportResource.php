@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
+use App\Enums\SportEventType;
 use App\Filament\Resources\SportEventExportResource\Pages;
+use App\Models\SportEvent;
 use App\Models\SportEventExport;
-use App\Models\User;
 use Closure;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -19,6 +23,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Sentry\EventType;
 
 class SportEventExportResource extends Resource
 {
@@ -70,6 +75,7 @@ class SportEventExportResource extends Resource
                                 ->label('Typ exportu')
                                 ->options([
                                     SportEventExport::ENTRY_LIST_CATEGORY => 'Startovní listina kategorie',
+                                    SportEventExport::RESULT_LIST_CATEGORY => 'Výsledky kategorie',
                                 ])
                                 ->default(SportEventExport::ENTRY_LIST_CATEGORY)
                                 ->searchable(),
@@ -82,10 +88,16 @@ class SportEventExportResource extends Resource
                                 ->default(SportEventExport::FILE_XML_IOF_V3)
                                 ->disablePlaceholderSelection(),
 
-                            TextInput::make('sport_event_id')
+                            Select::make('sport_event_id')
                                 ->label('ID závodu')
+                                ->options(SportEvent::all()
+                                    ->whereIn('event_type',[SportEventType::Race, SportEventType::Training, SportEventType::TrainingCamp] )
+                                    ->sortBy('date')
+                                    ->pluck('sportEventOrisTitle', 'id')
+                                ),
+                            DateTimePicker::make('start_time')
+                                ->label('Čas 00')
                                 ->nullable(),
-
                             TextInput::make('sport_event_leg_id')
                                 ->label('ID Etapy závodu')
                                 ->nullable()
