@@ -15,7 +15,7 @@
                 <div>
                     <div class="flex justify-end">
                         @if(Auth::user()->payer_variable_symbol !== null)
-                        <div>{!! QrCode::size(120)->generate('SPD*1.0*RN:KLUB ORIENTACNIHO BEHU ALFA BRNO Z.S.*ACC:CZ5806000000000159826453*CC:CZK*X-VS:888' . Auth::user()->payer_variable_symbol . '*MSG:MIMORADNY CLENSKY VKLAD') !!}</div>
+                        <div>{!! QrCode::size(120)->generate('SPD*1.0*RN:KLUB ORIENTACNIHO BEHU ALFA BRNO Z.S.*ACC:' . config('site-config.club.iban') . '*CC:CZK*X-VS:888' . Auth::user()->payer_variable_symbol . '*MSG:MIMORADNY CLENSKY VKLAD') !!}</div>
                         @endif
                     </div>
 

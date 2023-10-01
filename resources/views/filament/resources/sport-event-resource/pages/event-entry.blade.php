@@ -20,14 +20,32 @@
 <x-filament::page>
     <section class="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700">
         <div class="py-4 px-4">
-            <h2 class="mb-2 text-2xl tracking-tight font-extrabold text-gray-900 dark:text-white">{{ $record->name }}
-                @if ($record->cancelled)
-                    <span class="align-top bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Zrušeno</span>
-                @endif
-                @if (EmptyType::intNotEmpty($record->oris_id))
-                <span class="font-thin">| {{ $record->oris_id }}</span>
-                @endif
-            </h2>
+            <div class="flex justify-between content-center">
+                <div>
+                    <h2 class="mb-2 text-2xl tracking-tight font-extrabold text-gray-900 dark:text-white">{{ $record->name }}
+                        @if ($record->cancelled)
+                            <span class="align-top bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Zrušeno</span>
+                        @endif
+                        @if (EmptyType::intNotEmpty($record->oris_id))
+                            <span class="font-thin">| {{ $record->oris_id }}</span>
+                        @endif
+                    </h2>
+                </div>
+                <div>
+                    @if (EmptyType::intNotEmpty($record->oris_id))
+                        <a href="https://oris.orientacnisporty.cz/Zavod?id={{ $record->oris_id }}" target="_blank">
+                            <span class="bg-gray-100 text-gray-800 text-sm font-medium mr-1 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">ORIS</span>
+                        </a>
+                        <a href="https://oris.orientacnisporty.cz/Startovka?id={{ $record->oris_id }}" target="_blank">
+                            <span class="bg-gray-100 text-gray-800 text-sm font-medium mr-1 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">P</span>
+                        </a>
+                        <a href="https://oris.orientacnisporty.cz/Vysledky?id={{ $record->oris_id }}" target="_blank">
+                            <span class="bg-gray-100 text-gray-800 text-sm font-medium mr-1 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">V</span>
+                        </a>
+                    @endif
+                </div>
+            </div>
+
             <p class="mb-2 text-gray-500 dark:text-gray-400">{{ $record->alt_name }}</p>
 
             @if (EmptyType::stringNotEmpty($record->event_info))

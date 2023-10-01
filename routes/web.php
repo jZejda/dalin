@@ -4,6 +4,7 @@ use App\Http\Controllers\Cron\CommonCron;
 use App\Http\Controllers\TestController;
 use App\Http\Livewire\Frontend\ShowPage;
 use App\Http\Livewire\Frontend\ShowPost;
+use App\Http\Livewire\Frontend\StartList;
 use App\Mail\AddUpdateSportEvent;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,7 @@ Route::get('/cron-hourly/' . config('site-config.cron_hourly.url_key'), [CommonC
 
 Route::get('/novinka/{id}', ShowPost::class);
 Route::get('/stranka/{slug}', ShowPage::class);
+Route::get('/startovka/{slug}', StartList::class);
 
 
 Route::get('/dashboard', function () {
