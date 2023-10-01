@@ -13,7 +13,8 @@ return [
 
     'club' => [
         'abbr' => 'ABM',
-        'full_name' => 'Klub orientačního běhu ABM Brno'
+        'full_name' => 'Klub orientačního běhu ABM Brno',
+        'iban' => env('CLUB_IBAN', null),
     ],
 
     /*
@@ -102,10 +103,17 @@ return [
         ],
         'mail_weekly_user_event_summary' => [
             'active' => true,
-            'hours' => ['08','22'],
+            'hours' => ['08'],
             'days_in_month' => ['*'],
             'months' => ['*'],
             'days_in_week' => ['0'],
+        ],
+        'mail_entry_ends_to_pay' => [
+            'active' => true,
+            'hours' => ['*'],
+            'days_in_month' => ['*'],
+            'months' => ['*'],
+            'days_in_week' => ['*'],
         ],
     ],
 

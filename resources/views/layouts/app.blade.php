@@ -12,7 +12,6 @@
         <style>[x-cloak] { display: none !important; }</style>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
-        @livewireScripts
         @stack('scripts')
         <script src="https://cdn.tailwindcss.com"></script>
 
@@ -27,12 +26,13 @@
     </head>
 
     <body class="antialiased bg-white dark:bg-gray-900">
-        <div class="flex flex-col h-screen justify-between">
+        <div class="flex flex-col h-screen">
             <header>
                 <livewire:frontend.navbar />
             </header>
             <main>
                 @yield('content')
+
             </main>
             <footer class="h-10 bg-blue-500">
                 <livewire:frontend.footer />
@@ -41,6 +41,7 @@
             @livewire('notifications')
 
         </div>
+        @livewireScripts
     </body>
 
     <script src="https://unpkg.com/flowbite@1.6.1/dist/flowbite.min.js"></script>

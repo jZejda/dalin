@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
         // Mails
         // $schedule->job(new SendAddUpdateSportEventEmailJob())->dailyAt('7:00');
         $schedule->job(new SendNewPostsEmailJob())->everyThirtyMinutes();
-        $schedule->job(new SendSportEventEntryEndingEmailJob())->everyThirtyMinutes();
+        $schedule->job(new SendSportEventEntryEndingEmailJob())->hourly();
 
 
         // $schedule->job(new SportEventUpdateJob())->dailyAt('22:00');
