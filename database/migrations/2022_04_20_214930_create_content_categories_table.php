@@ -17,6 +17,8 @@ return new class () extends Migration {
             $table->string('title', 255);
             $table->string('description', 255);
             $table->string('slug')->nullable();
+            $table->unsignedBigInteger('sport_event_id')->nullable();
+            $table->foreign('sport_event_id')->references('id')->on('sport_events');
             $table->timestamps();
 
             $table->index(['title']);

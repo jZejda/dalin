@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Components\Iofv3\Entities;
 
-use App\Http\Components\Iofv3\Entities\Organization;
-
 class PersonStart
 {
     private Person $Person;

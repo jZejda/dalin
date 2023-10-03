@@ -2,17 +2,22 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\SportEventType;
 use App\Filament\Resources\ContentCategoryResource\Pages;
 use App\Filament\Resources\ContentCategoryResource\RelationManagers;
 use App\Models\ContentCategory;
+use App\Models\SportEvent;
+use Closure;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class ContentCategoryResource extends Resource
 {
@@ -40,15 +45,35 @@ class ContentCategoryResource extends Resource
                         Například umožní vytvářet stránky jednoho závodu které spolu souvísí.
                         Stránky v jedné kategorii mohou zobrazovat menu osatatních stránek v kategorii.')
                         ->schema([
-                            TextInput::make('title')->required(),
-                            TextInput::make('slug'),
+                            TextInput::make('title')
+                                ->label('Název kategorie')
+                                ->reactive()
+                                ->afterStateUpdated(function (Closure $set, $state, $context) {
+                                    if ($context === 'edit') {
+                                        return;
+                                    }
+
+                                    $set('slug', Str::slug($state));
+                                }),
+                            TextInput::make('slug')
+                                ->required()
+                                ->maxLength(255)
+                                ->rules(['alpha_dash'])
+                                ->unique(ignoreRecord: true),
+                            Select::make('sport_event_id')
+                                ->label('Relace na Závod/Akci')
+                                ->options(SportEvent::all()
+                                    ->whereIn('event_type',[SportEventType::Race, SportEventType::Training, SportEventType::TrainingCamp] )
+                                    ->sortBy('date')
+                                    ->pluck('sportEventOrisTitle', 'id')
+                                ),
                             Grid::make()
                                 ->schema([
                                     TextInput::make('description'),
                                 ])
                                 ->columns(1),
                         ])
-                        ->columns(2)
+                        ->columns(3)
                         ->columnSpan([
                             'sm' => 1,
                             'md' => 12,

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-
-use App\Models\SportEventExport;
 use DB;
+use App\Http\Components\Iofv3\Entities\Attributes;
+use App\Models\SportEventExport;
 use App\Http\Components\Iofv3\StartList;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
@@ -19,6 +19,21 @@ use Symfony\Component\Serializer\Serializer;
 
 final class IofExportsService
 {
+    public function getStartListAttributes (string $xmlContent): Attributes
+    {
+        $xml = simplexml_load_string($xmlContent);
+        $json = json_encode($xml);
+
+        $array = json_decode($json,TRUE);
+        $array['Attributes']=$array['@attributes'];
+        unset($array['@attributes']);
+
+        return $this->getSerializer()->denormalize(
+            $array['Attributes'],
+            'App\Http\Components\Iofv3\Entities\Attributes'
+        );
+    }
+
     public function getStartList(string $xmlContent): StartList
     {
         return $this->getSerializer()->deserialize(

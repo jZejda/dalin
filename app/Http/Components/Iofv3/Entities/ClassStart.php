@@ -14,6 +14,11 @@ final class ClassStart
     /** @var PersonStart[] $PersonStart */
     private array $PersonStart;
 
+    /**
+     * @param SportClass|null $Class
+     * @param Course $Course
+     * @param array $PersonStart
+     */
     public function __construct(?SportClass $Class, Course $Course, array $PersonStart)
     {
         $this->Class = $Class;
@@ -35,4 +40,8 @@ final class ClassStart
     {
         return $this->PersonStart;
     }
+
+
+
+
 }

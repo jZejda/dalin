@@ -49,15 +49,24 @@ class PageResource extends Resource
                             TextInput::make('title')
                                 ->required()
                                 ->reactive()
-                                ->afterStateUpdated(function (Closure $set, $state) {
+                                ->afterStateUpdated(function (Closure $set, $state, $context) {
+                                    if ($context === 'edit') {
+                                        return;
+                                    }
+
                                     $set('slug', Str::slug($state));
                                 }),
                             TextInput::make('slug')
-                                ->required(),
+                                ->required()
+                                ->maxLength(255)
+                                ->rules(['alpha_dash'])
+                                ->unique(ignoreRecord: true),
 
                             // Markdown editor
                             Grid::make()->schema([
                                 MarkdownEditor::make('content')
+                                ->label('Obsah')
+                                ->required()
                             ])->columns(1),
                         ])
                         ->columns(2)
@@ -151,6 +160,7 @@ class PageResource extends Resource
                     ->dateTime('d. m. Y - H:i')
                     ->sortable(),
             ])
+            ->defaultSort('updated_at', 'desc')
             ->filters([
 //                SelectFilter::make('user_id')->relationship('user_id', 'name'),
                 SelectFilter::make('status')

@@ -32,5 +32,4 @@ final class StartList
     {
         return $this->ClassStart;
     }
-
 }
