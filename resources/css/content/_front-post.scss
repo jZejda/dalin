@@ -55,3 +55,8 @@
     max-width: 600px;
     height: auto;
 }
+
+.app-front-content pre {
+    background: #ffffff;
+    @apply text-gray-900 dark:text-black;
+}

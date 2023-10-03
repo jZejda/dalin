@@ -19,6 +19,7 @@ class StartList extends Component
     public string|null $eventName = null;
     public ClassStart|array|null $classStart = null;
     public SportEventExport|null $sportEventExport = null;
+    public array|null $eventAttributes = null;
 
     public function mount(string|null $slug): void
     {
@@ -43,6 +44,10 @@ class StartList extends Component
                 $startList = $iof->getStartList($xmlContent);
                 $this->eventName = $startList->getEvent()->getName();
 
+                $startListAttributes = $iof->getStartListAttributes($xmlContent);
+                $this->eventAttributes[] = $startListAttributes;
+
+
 //                $filterBy = 'D10';
 //
 //                $filteredArray = array_filter($startList->getClassStart(), function ($startList) use ($filterBy) {
@@ -60,6 +65,7 @@ class StartList extends Component
     {
         return view('livewire.frontend.startlist', [
             'eventName' => $this->eventName,
+            'eventAttributes' => $this->eventAttributes,
             'classStart' => $this->classStart,
             'sportEventExport' => $this->sportEventExport,
         ]);

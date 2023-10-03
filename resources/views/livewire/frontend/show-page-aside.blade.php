@@ -1,9 +1,12 @@
 @php
     use Carbon\Carbon;
-    use App\Models\Page
+    use App\Models\Page;
+    use App\Shared\Entities\FrontendLinks;
+    use App\Models\SportEventExport;
 
     /** @var Page $page */
     /** @var Page[] $relatedPages */
+    /** @var FrontendLinks[] $relatedLinks */
 @endphp
 
 @extends('layouts.app')
@@ -25,6 +28,25 @@
                                 </a>
                             </li>
                         @endforeach
+                        @if(count($relatedLinks) > 0)
+                                <div class="relative flex py-5 items-center">
+                                    <div class="flex-grow border-t border-gray-500 border-dashed"></div>
+                                    <span class="flex-shrink mx-4 text-gray-500">odkazy</span>
+                                    <div class="flex-grow border-t border-gray-500 border-dashed"></div>
+                                </div>
+                            @foreach($relatedLinks as $relatedLink)
+                                <li>
+                                    <a href="{{$relatedLink->url}}" class="flex items-center p-2 text-base text-gray-900 rounded-md dark:text-gray-700 hover:bg-yellow-200 dark:hover:bg-gray-700 dark:hover:text-gray-200 group">
+                                        @if($relatedLink->type === SportEventExport::ENTRY_LIST_CATEGORY)
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                                        @elseif($relatedLink->type === SportEventExport::RESULT_LIST_CATEGORY)
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+                                        @endif
+                                        <span class="ml-3 tracking-tight uppercase">{{$relatedLink->title}}</span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        @endif
                     </ul>
                 </div>
             </aside>

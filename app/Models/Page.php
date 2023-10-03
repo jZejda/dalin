@@ -79,7 +79,7 @@ class Page extends Model
      *
      * @return HasOne
      */
-    public function content_category(): HasOne
+    public function contentCategory(): HasOne
     {
         return $this->hasOne(ContentCategory::class, 'id', 'content_category_id');
     }
