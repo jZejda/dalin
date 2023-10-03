@@ -14,6 +14,11 @@ final class ClassResult
     #[SerializedName('Class')]
     private ?SportClass $Class;
 
+    /**
+     * @param Course $Course
+     * @param PersonResult[] $PersonResult
+     * @param SportClass|null $Class
+     */
     public function __construct(Course $Course, array $PersonResult, ?SportClass $Class)
     {
         $this->Course = $Course;

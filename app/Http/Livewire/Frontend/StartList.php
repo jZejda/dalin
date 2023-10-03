@@ -48,13 +48,13 @@ class StartList extends Component
                 $this->eventAttributes[] = $startListAttributes;
 
 
-//                $filterBy = 'D10';
-//
-//                $filteredArray = array_filter($startList->getClassStart(), function ($startList) use ($filterBy) {
-//                    return ($startList->getClass()->getShortName() === $filterBy);
-//                });
-//
-//                $this->classStart = $filteredArray;
+                //                $filterBy = 'D10';
+                //
+                //                $filteredArray = array_filter($startList->getClassStart(), function ($startList) use ($filterBy) {
+                //                    return ($startList->getClass()->getShortName() === $filterBy);
+                //                });
+                //
+                //                $this->classStart = $filteredArray;
 
                 $this->classStart = $startList->getClassStart();
             }

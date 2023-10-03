@@ -10,5 +10,6 @@ readonly class FrontendLinks
         public string $type,
         public string $title,
         public string $url,
-    ) {}
+    ) {
+    }
 }

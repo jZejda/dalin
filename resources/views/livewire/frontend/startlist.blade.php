@@ -17,6 +17,7 @@
 
     <div class="p-4 bg-white dark:bg-gray-900">
         <div class="container mx-auto ">
+        @if(!is_null($classStart) && count($eventAttributes) > 0)
             <div>
                 <a id="title" class="text-4xl font-extrabold mb-4 dark:text-white">{{ $eventName }}</a>
             </div>
@@ -48,7 +49,7 @@
 {{--            <div>Select: @json($search)</div>--}}
 
 
-        @if(!is_null($classStart))
+
             @foreach($classStart as $class)
                 <a href="{{url()->current()}}#{{$class->getClass()->getName()}}" class="text-white bg-[#FF9119] hover:bg-[#FF9119]/80 focus:ring-4 focus:outline-none focus:ring-[#FF9119]/50 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:hover:bg-[#FF9119]/80 dark:focus:ring-[#FF9119]/40 mr-1 mb-1">
                     {{ $class->getClass()->getName() }}
@@ -156,8 +157,11 @@
             @endforeach
 
             @else
+            <section class="app-front-content">
                 <h1>404 Nenalezeno</h1>
                 <p>Zatím zde není žádný obsah. Na startovce se pravděpodobně ještě pracuje. Počkejte na zveřejnění. Předem děkujeme.</p>
+            </section>
+
             @endif
 
         </div>

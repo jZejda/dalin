@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Components\Iofv3\Result;
+use App\Http\Components\Iofv3\ResultList;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -19,14 +18,13 @@ use Symfony\Component\Serializer\Serializer;
 
 class TestController extends Controller
 {
-
     public function testTTT(): void
     {
 
-       //$file = Storage::disk('events')->get('storage/vysledky_iofv3.xml');
-       $file = Storage::disk('events')->get('storage/startovka-kat-iof3-jirka.xml');
+        //$file = Storage::disk('events')->get('storage/vysledky_iofv3.xml');
+        $file = Storage::disk('events')->get('storage/startovka-kat-iof3-jirka.xml');
 
-       // dd($file);
+        // dd($file);
         //(new EntryEndsToPay())->run();
     }
 
@@ -38,11 +36,11 @@ class TestController extends Controller
         $normalizers = [new ArrayDenormalizer(), new ObjectNormalizer(null, null, null, $extractor)];
         //$serializer = new Serializer($normalizer, $encoder);
 
-//        $result = $serializer->deserialize($data,someEntity::class,'json');
-//
-//
-//        $encoders = [new XmlEncoder(), new JsonEncoder()];
-//        $normalizers = [new ObjectNormalizer(), new GetSetMethodNormalizer(), new ArrayDenormalizer()];
+        //        $result = $serializer->deserialize($data,someEntity::class,'json');
+        //
+        //
+        //        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        //        $normalizers = [new ObjectNormalizer(), new GetSetMethodNormalizer(), new ArrayDenormalizer()];
 
         return new Serializer($normalizers, $encoders);
     }
@@ -60,12 +58,12 @@ class TestController extends Controller
 
         // dd($json);
 
-        $array = json_decode($json,TRUE);
+        $array = json_decode($json, true);
 
 
         //dd($json);
         /**
-         * @var Result $data
+         * @var ResultList $data
          */
         $data = $this->getSerializer()->deserialize(
             $data,
@@ -81,7 +79,7 @@ class TestController extends Controller
         }
 
 
-//        dd($data);
+        //        dd($data);
 
     }
 
@@ -89,11 +87,11 @@ class TestController extends Controller
     {
 
         /**
-         * @var Result $data
+         * @var ResultList $data
          */
         $data = $this->getSerializer()->deserialize(
             $data,
-            'App\Http\Components\Iofv3\Result',
+            'App\Http\Components\Iofv3\ResultList',
             'xml'
         );
 
