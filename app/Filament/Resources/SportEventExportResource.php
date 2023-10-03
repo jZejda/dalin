@@ -23,7 +23,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Sentry\EventType;
 
 class SportEventExportResource extends Resource
 {
@@ -90,8 +89,9 @@ class SportEventExportResource extends Resource
 
                             Select::make('sport_event_id')
                                 ->label('ID závodu')
-                                ->options(SportEvent::all()
-                                    ->whereIn('event_type',[SportEventType::Race, SportEventType::Training, SportEventType::TrainingCamp] )
+                                ->options(
+                                    SportEvent::all()
+                                    ->whereIn('event_type', [SportEventType::Race, SportEventType::Training, SportEventType::TrainingCamp])
                                     ->sortBy('date')
                                     ->pluck('sportEventOrisTitle', 'id')
                                 ),
@@ -116,12 +116,27 @@ class SportEventExportResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('title')->searchable()->limit(20),
-                TextColumn::make('slug')->searchable()->label('Cesta')->prefix('/startovka/'),
+                TextColumn::make('slug')
+                    ->searchable()
+                    ->copyable()
+                    ->label('Cesta')
+                    ->prefix(function (SportEventExport $record): string {
+                        if ($record->export_type === SportEventExport::ENTRY_LIST_CATEGORY) {
+                            return '/startovka/';
+                        } else {
+                            return '/vysledky/';
+                        }
+                    }),
                 BadgeColumn::make('export_type')
                     ->enum([
                         SportEventExport::ENTRY_LIST_CATEGORY => 'Startovka kategorie',
-                    ])->label('Typ exportu')
-                    ->colors(['primary']),
+                        SportEventExport::RESULT_LIST_CATEGORY => 'Výsledky kategorie',
+                    ])
+                    ->label('Typ exportu')
+                        ->colors([
+                            'success' => SportEventExport::ENTRY_LIST_CATEGORY,
+                            'warning' => SportEventExport::RESULT_LIST_CATEGORY,
+                        ]),
                 TextColumn::make('result_path')->label('Cesta k souboru'),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label(__('filament-shield::filament-shield.column.updated_at'))

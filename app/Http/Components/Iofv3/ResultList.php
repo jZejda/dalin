@@ -6,14 +6,17 @@ namespace App\Http\Components\Iofv3;
 
 use App\Http\Components\Iofv3\Entities\ClassResult;
 use App\Http\Components\Iofv3\Entities\Event;
-use Symfony\Component\Serializer\Annotation\SerializedName;
 
-final class Result
+final class ResultList
 {
     private Event $Event;
     /** @var ClassResult[] $ClassResult */
     private array $ClassResult;
 
+    /**
+     * @param Event $Event
+     * @param ClassResult[] $ClassResult
+     */
     public function __construct(Event $Event, array $ClassResult)
     {
         $this->Event = $Event;

@@ -68,19 +68,20 @@ class ShowPage extends Component
 
                 $name = match($link->export_type) {
                     SportEventExport::ENTRY_LIST_CATEGORY => 'Startovka',
-                    SportEventExport::RESULT_LIST_CATEGORY=> 'Vysledky',
+                    SportEventExport::RESULT_LIST_CATEGORY => 'Vysledky',
                     default => throw new Exception('Unsupported'),
                 };
 
                 $routeUri = match($link->export_type) {
                     SportEventExport::ENTRY_LIST_CATEGORY => 'startovka',
-                    SportEventExport::RESULT_LIST_CATEGORY=> 'vysledky',
+                    SportEventExport::RESULT_LIST_CATEGORY => 'vysledky',
                     default => throw new Exception('Unsupported'),
                 };
 
                 $exportLinks[] = new FrontendLinks(
                     type: $link->export_type,
-                    title: $name,url: url('/' .$routeUri. '/' . $link->slug)
+                    title: $name,
+                    url: url('/' .$routeUri. '/' . $link->slug)
                 );
             }
         }

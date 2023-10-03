@@ -62,8 +62,9 @@ class ContentCategoryResource extends Resource
                                 ->unique(ignoreRecord: true),
                             Select::make('sport_event_id')
                                 ->label('Relace na Závod/Akci')
-                                ->options(SportEvent::all()
-                                    ->whereIn('event_type',[SportEventType::Race, SportEventType::Training, SportEventType::TrainingCamp] )
+                                ->options(
+                                    SportEvent::all()
+                                    ->whereIn('event_type', [SportEventType::Race, SportEventType::Training, SportEventType::TrainingCamp])
                                     ->sortBy('date')
                                     ->pluck('sportEventOrisTitle', 'id')
                                 ),
