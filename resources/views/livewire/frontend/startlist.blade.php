@@ -101,7 +101,7 @@
                                                 {{\Carbon\Carbon::parse($person->getStart()->getStartTime(), 'Europe/Prague')->format('H:i:s')}}
                                                 {{--                                                {{$person->getStart()->getStartTime()}}--}}
                                             </td>
-                                            <td class="px-4 py-2 text-gray-900 dark:text-white font-extrabold">
+                                            <td class="px-4 py-2 text-gray-900 dark:text-white">
                                                 @php
                                                     $startTime = \Carbon\Carbon::parse($person->getStart()->getStartTime(), 'Europe/Prague');
                                                     $zeroTime = $startTime->diffInMinutes($sportEventExport->start_time);
@@ -122,7 +122,7 @@
                                             <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 <div class="flex items-center">
                                                     @if(\App\Shared\Helpers\EmptyType::arrayNotEmpty($person->getPerson()->getId()))
-                                                        {{--                                                        {{$person->getPerson()->getId()[0]}}--}}
+                                                        {{$person->getPerson()->getId()[0]}}
                                                     @else
                                                         {{$person->getPerson()->getId()}}
                                                     @endif

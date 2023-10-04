@@ -52,7 +52,7 @@
             </aside>
             <main role="main" class="w-full sm:w-2/3 md:w-3/4 px-4 app-front-content">
                 <h1 class="tracking-tight text-4xl font-black dark:text-gray-200">{{$page->title}}</h1>
-                <article class="format">
+                <article>
                     <p class="dark:text-white">{{ Markdown::parse($page->content) }}</p>
                 </article>
             </main>

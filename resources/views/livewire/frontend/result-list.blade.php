@@ -117,7 +117,7 @@
                                                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                         <div class="flex items-center">
                                                             @if(\App\Shared\Helpers\EmptyType::arrayNotEmpty($person->getPerson()->getId()))
-                                                                {{--                                                        {{$person->getPerson()->getId()[0]}}--}}
+                                                                {{$person->getPerson()->getId()[0]}}
                                                             @else
                                                                 {{$person->getPerson()->getId()}}
                                                             @endif
@@ -147,12 +147,11 @@
                                                             <span class="text-lg tracking-tight">
                                                                 {{sprintf("%02d", $minutes)}}:{{sprintf("%02d", $seconds)}}
                                                             </span>
-                                                            @if($minutesBehind !== 0.0 && $secondsBehind !== 0.0)
+                                                            @if((int)$person->getResult()->getTimeBehind() !== 0)
                                                                 <span class="ml-2 text-gray-500 text-xs tracking-tight">
-                                                                +{{sprintf("%02d", $minutesBehind)}}:{{sprintf("%02d", $secondsBehind)}}
-                                                            </span>
+                                                                    +{{sprintf("%02d", $minutesBehind)}}:{{sprintf("%02d", $secondsBehind)}}
+                                                                </span>
                                                             @endif
-
                                                         </div>
                                                     </td>
                                                 </tr>
