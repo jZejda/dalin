@@ -11,13 +11,9 @@ final class ResultList
 {
     private Event $Event;
     /** @var ClassResult[] $ClassResult */
-    private array $ClassResult;
+    private ?array $ClassResult;
 
-    /**
-     * @param Event $Event
-     * @param ClassResult[] $ClassResult
-     */
-    public function __construct(Event $Event, array $ClassResult)
+    public function __construct(Event $Event, ?array $ClassResult)
     {
         $this->Event = $Event;
         $this->ClassResult = $ClassResult;
@@ -28,7 +24,7 @@ final class ResultList
         return $this->Event;
     }
 
-    public function getClassResult(): array
+    public function getClassResult(): ?array
     {
         return $this->ClassResult;
     }

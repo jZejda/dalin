@@ -179,7 +179,19 @@
                 @else
                     <section class="app-front-content">
                         <h1>404 Nenalezeno</h1>
-                        <p>Zatím zde není žádný obsah. Na výsledcích se pravděpodobně ještě pracuje. Počkejte na zveřejnění. Předem děkujeme.</p>
+                        <div
+                            class="mb-4 rounded-lg bg-success-100 px-6 py-5 text-base text-success-700"
+                            role="alert">
+                            <h4 class="mb-2 text-2xl font-medium leading-tight">Oops!</h4>
+                            <p class="mb-4">
+                                Zatím zde není žádný obsah. Výsledky pravděpodobně ještě nejsou dostupné, nebo se na nich usilovně pracuje.
+                                Zkontrolujte zdali se jedná o výsledky zveřejněné k tomuto závodu.
+                            </p>
+                            <hr class="border-success-600 opacity-30" />
+                            <p class="mb-0 mt-4">
+                                Počkejte na zveřejnění. Předem děkujeme.
+                            </p>
+                        </div>
                     </section>
 
                 @endif
