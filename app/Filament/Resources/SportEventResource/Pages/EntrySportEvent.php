@@ -103,11 +103,16 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
     protected function getActions(): array
     {
+        $makeExportModal = new SportEventResource\Pages\Actions\ExportsData($this->record);
         $sendMailModal = new EntrySendMail($this->record);
         $updateEvent = new EntryUpdateEvent($this->record);
         $registerAnyone = Auth::user()?->hasRole([AppRoles::EventMaster->value]) ? $this->getOrisEvent(true) : null;
         $sendEmail = Auth::user()?->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
             ? $sendMailModal->sendNotification()
+            : null;
+
+        $makeExport = Auth::user()?->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
+            ? $makeExportModal->makeExport()
             : null;
 
         $defaultActions = [
@@ -123,6 +128,9 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         }
         if (!is_null($sendEmail)) {
             $defaultActions[] = $sendEmail;
+        }
+        if (!is_null($makeExport)) {
+            $defaultActions[] = $makeExport;
         }
 
         return $defaultActions;
@@ -165,9 +173,12 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             TextColumn::make('note')
                 ->label('Poznámka'),
             TextColumn::make('club_note')
-                ->label('Klubová poznámka'),
+                ->label('Klubová poznámka')
+                ->limit(50),
             TextColumn::make('requested_start')
-                ->label('Start v'),
+                ->label('Start v')
+                ->limit(50)
+                ->tooltip(fn (UserEntry $record): string => $record->requested_start ? $record->requested_start : ''),
             TextColumn::make('rent_si')
                 ->label('Půjčit čip'),
             TextColumn::make('stage_x')

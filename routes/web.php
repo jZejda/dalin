@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Cron\CommonCron;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UserEntryController;
 use App\Http\Livewire\Frontend\ResultList;
 use App\Http\Livewire\Frontend\ShowPage;
 use App\Http\Livewire\Frontend\ShowPost;
@@ -43,6 +44,10 @@ Route::get('/vysledky/{slug}', ResultList::class);
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::prefix('admin')->group(function () {
+    Route::get('/export/event-entry/{eventId}', [UserEntryController::class, 'export']);
+})->middleware(['auth', 'verified']);
 
 
 Route::get('/admin/test', [TestController::class, 'test']);

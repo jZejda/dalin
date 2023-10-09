@@ -12,6 +12,7 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action as ModalAction;
+use Illuminate\Support\Facades\Auth;
 
 class EntrySendMail
 {
@@ -57,7 +58,8 @@ class EntrySendMail
                             ->label('Předmět zprávy')
                             ->required(),
                         TextInput::make('replyTo')
-                            ->label('Adresa pro odpovědi'),
+                            ->label('Adresa pro odpovědi')
+                            ->default(Auth::user()?->email),
                         MarkdownEditor::make('content')
                             ->label('Zpráva')
                             ->required(),

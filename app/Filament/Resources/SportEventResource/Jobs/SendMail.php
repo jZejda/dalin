@@ -28,6 +28,7 @@ class SendMail
     public function send(): void
     {
         $userEntries = DB::table('users as u')
+            ->distinct()
             ->select(['u.id', 'u.email'])
             ->leftJoin('user_race_profiles AS urp', 'urp.user_id', '=', 'u.id')
             ->leftJoin('user_entries AS ue', 'ue.user_race_profile_id', '=', 'urp.id')
@@ -51,5 +52,4 @@ class SendMail
             Log::channel('site')->info('E-mail notifikace');
         }
     }
-
 }
