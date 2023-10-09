@@ -35,7 +35,7 @@ class UsersEntryExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
     {
         return UserEntry::query()
             ->where('sport_event_id', '=', $this->entryId)
-            ->whereIn('entry_status', [EntryStatus::Create, EntryStatus::Edit]);
+            ->whereIn('entry_status', [EntryStatus::Create->value, EntryStatus::Edit->value]);
     }
 
     /**
