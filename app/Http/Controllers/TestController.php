@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Exports\ExportController;
+use App\Exports\UsersExport;
 use App\Http\Components\Iofv3\ResultList;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
@@ -48,38 +50,12 @@ class TestController extends Controller
     public function test()
     {
 
-        //$data = Storage::disk('events')->get('startovka-kat-iof3-jirka.xml');
-        $data = Storage::disk('events')->get('startovka-kat-iof3-jirka.xml');
+        return (new UsersExport)->download('users.xlsx');
 
 
-        $xml = simplexml_load_string($data);
-        $json = json_encode($xml);
+        return (new ExportController())->exportViaConstructorInjection();
 
 
-        // dd($json);
-
-        $array = json_decode($json, true);
-
-
-        //dd($json);
-        /**
-         * @var ResultList $data
-         */
-        $data = $this->getSerializer()->deserialize(
-            $data,
-            'App\Http\Components\Iofv3\StartList',
-            'xml'
-        );
-
-        dd($data);
-
-        foreach ($data->getClassResult() as $result) {
-            echo '<pre>';
-            var_dump($result['Course']);
-        }
-
-
-        //        dd($data);
 
     }
 

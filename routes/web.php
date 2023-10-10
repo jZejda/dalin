@@ -7,7 +7,6 @@ use App\Http\Livewire\Frontend\ResultList;
 use App\Http\Livewire\Frontend\ShowPage;
 use App\Http\Livewire\Frontend\ShowPost;
 use App\Http\Livewire\Frontend\StartList;
-use App\Mail\AddUpdateSportEvent;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,7 +46,10 @@ Route::get('/dashboard', function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('/export/event-entry/{eventId}', [UserEntryController::class, 'export']);
+    Route::get('/export-users',[UserController::class,'exportUsers'])->name('export-users');
 })->middleware(['auth', 'verified']);
+
+
 
 
 Route::get('/admin/test', [TestController::class, 'test']);
