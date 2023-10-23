@@ -8,14 +8,14 @@ final class SportClass
 {
     private ?string $Id;
     private string $Name;
-    private string $ShortName;
+    private ?string $ShortName;
 
     /**
      * @param string|null $Id
      * @param string $Name
      * @param string $ShortName
      */
-    public function __construct(?string $Id, string $Name, string $ShortName)
+    public function __construct(?string $Id, string $Name, ?string $ShortName)
     {
         $this->Id = $Id;
         $this->Name = $Name;
@@ -32,7 +32,7 @@ final class SportClass
         return $this->Name;
     }
 
-    public function getShortName(): string
+    public function getShortName(): ?string
     {
         return $this->ShortName;
     }

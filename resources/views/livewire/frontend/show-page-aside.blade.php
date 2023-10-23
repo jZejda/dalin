@@ -14,6 +14,13 @@
 @section('title', 'Page Title')
 
 @section('content')
+    <div class="py-4 md:py-8 bg-[url(https://abmbrno.cz/images/topography1.svg)] bg-slate-950 text-gray-700 dark:text-gray-300">
+        <div class="container mx-auto">
+            <div class="ml-3 text-2xl md:text-4xl bg-gradient-to-r from-yellow-400 to-amber-200 inline-block text-transparent bg-clip-text font-extrabold">
+                {{$page->title}}
+            </div>
+        </div>
+    </div>
 
     <div class="container p-2 mx-auto">
         <div class="flex flex-row flex-wrap py-4">
@@ -51,8 +58,7 @@
                 </div>
             </aside>
             <main role="main" class="w-full sm:w-2/3 md:w-3/4 px-4 app-front-content">
-                <h1 class="tracking-tight text-4xl font-black dark:text-gray-200">{{$page->title}}</h1>
-                <article>
+                <article class="pt-0">
                     <p class="dark:text-white">{{ Markdown::parse($page->content) }}</p>
                 </article>
             </main>

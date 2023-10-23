@@ -11,9 +11,20 @@
 
 @section('content')
 
+    <div class="py-4 md:py-8 bg-[url(https://abmbrno.cz/images/topography1.svg)] bg-slate-950 text-gray-700 dark:text-gray-300">
+        <div class="container mx-auto">
+            <div class="ml-3 text-2xl md:text-4xl bg-gradient-to-r from-yellow-400 to-amber-200 inline-block text-transparent bg-clip-text font-extrabold">
+                @if($post->content_mode === 1)
+                    {!! $post->title !!}
+                @elseif($post->content_mode === 2)
+                    {{ Markdown::parse($post->title) }}
+                @endif
+            </div>
+        </div>
+    </div>
+
     <div class="p-4 bg-white dark:bg-gray-900">
         <div class="container mx-auto app-front-content mb-10">
-            <h2>{!! $post->title !!}</h2>
             @if($post->content_mode === 1)
                 <p>{!! $post->content !!}</p>
             @elseif($post->content_mode === 2)

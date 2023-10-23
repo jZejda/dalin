@@ -50,7 +50,7 @@ class TestController extends Controller
     public function test()
     {
 
-        return (new UsersExport)->download('users.xlsx');
+        return (new UsersExport())->download('users.xlsx');
 
 
         return (new ExportController())->exportViaConstructorInjection();

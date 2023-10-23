@@ -6,12 +6,12 @@ namespace App\Http\Components\Iofv3\Entities;
 
 final class Organization
 {
-    private string $Id;
+    private ?string $Id;
     private string $Name;
-    private string $ShortName;
+    private ?string $ShortName;
     private string|array|null $Country;
 
-    public function __construct(string $Id, string $Name, string $ShortName, string|array|null $Country)
+    public function __construct(?string $Id, string $Name, ?string $ShortName, string|array|null $Country)
     {
         $this->Id = $Id;
         $this->Name = $Name;
@@ -19,7 +19,7 @@ final class Organization
         $this->Country = $Country;
     }
 
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->Id;
     }
@@ -29,7 +29,7 @@ final class Organization
         return $this->Name;
     }
 
-    public function getShortName(): string
+    public function getShortName(): ?string
     {
         return $this->ShortName;
     }

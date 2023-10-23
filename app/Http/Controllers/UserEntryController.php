@@ -18,7 +18,7 @@ class UserEntryController
         /** @var SportEvent $sportEvent */
         $sportEvent = SportEvent::where('id', '=', $eventId)->first();
 
-        return (new UsersEntryExport)->forEventEntryId($eventId, $sportEvent)
+        return (new UsersEntryExport())->forEventEntryId($eventId, $sportEvent)
             ->download('prihlasky-' . Str::slug($sportEvent->name) . '-' . Carbon::now()->format('Y-m-d') . '.xlsx');
     }
 }

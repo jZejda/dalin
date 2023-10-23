@@ -7,11 +7,11 @@ namespace App\Filament\Widgets;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
-use DB;
 use App\Models\SportEvent;
 use App\Shared\Helpers\EmptyType;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\URL;
 use stdClass;
 use Webbingbrasil\FilamentMaps\Actions;
 use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
@@ -61,27 +61,21 @@ class MapOverview extends MapWidget
 
     public function getMarkers(): array
     {
-        /** @var SportEvent[]|Collection $markers */
         $markers = $this->getAppropriateEvents();
-
-        // dd($markers);
-
         $eventMarkers = [];
         foreach ($markers as $marker) {
             $eventMarkers[] = Marker::make((string)$marker->id)
                 ->lat((float)$marker->gps_lat)
                 ->lng((float)$marker->gps_lon)
-                ->color($this->getMarkerByEventType($marker->event_type))
-//                ->icon(
-//                    'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-//                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-//                    iconSize: [25, 41],
-//                    iconAnchor: [12, 41],
-//                    popupAnchor: [1, -34],
-//                    shadowSize: [41, 41]
-//                )
+                ->icon(
+                    URL::to('/') . '/images/markers/' . $this->getMarkerByEventType($marker) . '.png',
+                    URL::to('/') . '/images/markers/marker-shadow.png',
+                    [32, 36],
+                    [16, 34],
+                    [-3, -38],
+                    [41, 41],
+                )
                 ->popup($this->getMarkerHtmlTooltipData($marker));
-            //->tooltip(EmptyType::stringNotEmpty($marker->alt_name) ? $marker->name .' | ' . $marker->alt_name : $marker->name);
         }
         return $eventMarkers;
     }
@@ -96,7 +90,7 @@ class MapOverview extends MapWidget
 
         return '<a href="admin/sport-events/' . $sportEvent->id . '/entry" target="_blank">' . $sportEvent->name . '</a>' . $eventAltName
             . '<br>'
-            . 'datum: <b>' . Carbon::createFromFormat('Y-m-d', $sportEvent->date)->format(AppHelper::DATE_FORMAT) . '</b>'
+            . 'datum: <b>' . $sportEvent->date->format(AppHelper::DATE_FORMAT) . '</b>'
             . '<br>'
             . 'místo: <b>' . $sportEvent->place . '</b>'
             . '<br>'
@@ -112,28 +106,38 @@ class MapOverview extends MapWidget
                 ->icon('filamentmapsicon-o-square-3-stack-3d')
                 ->callback('setTileLayer(mode === "OpenStreetMap" ? "OpenTopoMap" : "OpenStreetMap")'),
             CenterMapAction::make()->fitBounds($this->getFitBounds()),
-
-
         ];
     }
 
+    /**
+     * @return Collection<SportEvent>
+     */
     private function getAppropriateEvents(): Collection
     {
-        return DB::table('sport_events')
-            ->where('cancelled', '!=', 1)
+        return SportEvent::where('cancelled', '!=', 1)
             ->where('gps_lat', '!=', 0.0)
             ->where('gps_lon', '!=', 0.0)
+            ->where('date', '>', Carbon::now()->subMonths(2))
+            ->whereIn('event_type', [SportEventType::Race, SportEventType::Training, SportEventType::TrainingCamp])
             ->get();
     }
 
-    private function getMarkerByEventType(string $eventType): string
+    private function getMarkerByEventType(SportEvent $sportEvent): string
     {
-        return match ($eventType) {
-            SportEventType::Race->value => Marker::COLOR_GREEN,
-            SportEventType::Training->value => Marker::COLOR_YELLOW,
-            SportEventType::TrainingCamp->value => Marker::COLOR_VIOLET,
-            SportEventType::Other->value => Marker::COLOR_ORANGE,
-            default => Marker::COLOR_BLUE,
-        };
+        if ($sportEvent->sport_id === 1) {
+            if ($sportEvent->event_type === SportEventType::Race) {
+                if ($sportEvent->stages > 2) {
+                    return 'ob-race-stages';
+                } else {
+                    return 'ob-race-simple';
+                }
+            } elseif ($sportEvent->event_type === SportEventType::Training) {
+                return 'training-dot';
+            } elseif ($sportEvent->event_type === SportEventType::TrainingCamp) {
+                return 'training-camp';
+            }
+        }
+
+        return 'ob-race-simple';
     }
 }
