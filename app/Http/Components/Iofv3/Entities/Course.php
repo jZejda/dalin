@@ -6,13 +6,13 @@ namespace App\Http\Components\Iofv3\Entities;
 
 final class Course
 {
-    private string $Id;
+    private ?string $Id;
     private string $Name;
     private string $Length;
     private string $Climb;
     private string $NumberOfControls;
 
-    public function __construct(string $Id, string $Name, string $Length, string $Climb, string $NumberOfControls)
+    public function __construct(?string $Id, string $Name, string $Length, string $Climb, string $NumberOfControls)
     {
         $this->Id = $Id;
         $this->Name = $Name;
@@ -21,7 +21,7 @@ final class Course
         $this->NumberOfControls = $NumberOfControls;
     }
 
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->Id;
     }

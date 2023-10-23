@@ -12,19 +12,29 @@
 
 @section('content')
 
+    <div class="mb-2 md:mb-6 py-4 md:py-8 bg-[url(https://abmbrno.cz/images/topography1.svg)] bg-slate-950 text-gray-700 dark:text-gray-300">
+        <div id="title" class="container mx-auto">
+            @if(!is_null($classStart) && count($eventAttributes) > 0)
+                <div class="ml-3 text-2xl md:text-4xl bg-gradient-to-r from-yellow-400 to-amber-200 text-transparent bg-clip-text font-extrabold">
+                    {{ $eventName }}
+                </div>
+                <div>
+                    <div class="mt-0 pt-0 ml-3">
+                        <span class="text-gray-400 text-md font-normal"> {{\Carbon\Carbon::parse($eventAttributes[0]->getCreateTime(), 'Europe/Prague')->format('d.m.Y - H:i')}} | </span>
+                        <span class="text-gray-400 text-md font-normal">{{$eventAttributes[0]->getCreator()}} </span>
+                    </div>
+                </div>
+            @else
+                <div class="text-2xl md:text-4xl bg-gradient-to-r from-yellow-400 to-amber-200 text-transparent bg-clip-text font-extrabold">
+                    404 Nenalezeno
+                </div>
+            @endif
+        </div>
+    </div>
     <div>
-
-
     <div class="p-4 bg-white dark:bg-gray-900">
         <div class="container mx-auto ">
         @if(!is_null($classStart) && count($eventAttributes) > 0)
-            <div>
-                <a id="title" class="text-4xl font-extrabold mb-4 dark:text-white">{{ $eventName }}</a>
-            </div>
-            <div class="mb-5">
-                <span class="text-gray-600 dark:text-gray-400"> {{\Carbon\Carbon::parse($eventAttributes[0]->getCreateTime(), 'Europe/Prague')->format('d.m.Y - H:i')}} | </span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">{{$eventAttributes[0]->getCreator()}} </span>
-            </div>
 {{--            <h4>{{$search}}</h4>--}}
 
 {{--            <div>--}}
@@ -51,7 +61,7 @@
 
 
             @foreach($classStart as $class)
-                <a href="{{url()->current()}}#{{$class->getClass()->getName()}}" class="text-white bg-[#FF9119] hover:bg-[#FF9119]/80 focus:ring-4 focus:outline-none focus:ring-[#FF9119]/50 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:hover:bg-[#FF9119]/80 dark:focus:ring-[#FF9119]/40 mr-1 mb-1">
+                <a href="{{url()->current()}}#{{$class->getClass()->getName()}}" class="text-gray-800 bg-yellow-300 hover:bg-yellow-400 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:hover:bg-yellow-100 mr-1 mb-1">
                     {{ $class->getClass()->getName() }}
                 </a>
             @endforeach
@@ -59,25 +69,25 @@
                 <section class="app-front-content mt-5 sm:py-5">
                     <div class="mx-auto max-w-screen-2xl">
                         <div class="relative overflow-hidden bg-white shadow-lg dark:bg-gray-800 sm:rounded-lg">
-                            <div class="bg-gradient-to-r bg-orange-400 dark:bg-orange-400 flex flex-col px-4 pb-2 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
+                            <div class="text-gray-800 bg-yellow-300 flex flex-col px-4 pb-2 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
                                 <div class="flex items-center flex-1 space-x-4">
                                     <h5>
-                                        <span class="tracking-tight font-light text-gray-700 dark:text-gray-200">Kategorie</span>
+                                        <span class="tracking-tight font-light text-gray-800">Kategorie</span>
                                         <a id="{{$class->getClass()->getName()}}">
-                                            <span class="underline decoration-orange-400">{{ $class->getClass()->getName() }}</span>
+                                            <span class="text-gray-800 decoration-yellow-300 underline">{{ $class->getClass()->getName() }}</span>
                                         </a>
                                     </h5>
                                     <h5>
-                                        <span class="tracking-tight font-light text-gray-700 dark:text-gray-200">Prevýšení:</span>
-                                        <span>{{ $class->getCourse()->getClimb() }}<span class="font-light"> m</span></span>
+                                        <span class="tracking-tight font-light text-gray-800">Prevýšení:</span>
+                                        <span class="text-gray-800">{{ $class->getCourse()->getClimb() }}<span class="font-light"> m</span></span>
                                     </h5>
                                     <h5>
-                                        <span class="tracking-tight font-light text-gray-700 dark:text-gray-200">Vzdálenost:</span>
-                                        <span>{{ number_format((float)$class->getCourse()->getLength() / 1000, 2, '.', '') }}<span class="font-light"> km</span></span>
+                                        <span class="tracking-tight font-light text-gray-800">Vzdálenost:</span>
+                                        <span class="text-gray-800">{{ number_format((float)$class->getCourse()->getLength() / 1000, 2, '.', '') }}<span class="font-light"> km</span></span>
                                     </h5>
                                     <h5>
-                                        <span class="tracking-tight font-light text-gray-700 dark:text-gray-200">Kontrol:</span>
-                                        <span>{{ $class->getCourse()->getNumberOfControls() }}</span>
+                                        <span class="tracking-tight font-light text-gray-800">Kontrol:</span>
+                                        <span class="text-gray-800">{{ $class->getCourse()->getNumberOfControls() }}</span>
                                     </h5>
                                 </div>
                             </div>
@@ -110,7 +120,7 @@
                                             </td>
                                             <td class="px-4 py-2">
                                                 @if($person->getPerson()->getName()->getFamily() === 'Vakant' || $person->getPerson()->getName()->getGiven() === 'Vakant')
-                                                    <span class="bg-orange-400 text-gray-800 text-xs font-medium px-2 py-0.5 rounded">
+                                                    <span class="bg-yellow-300 text-gray-800 text-xs font-medium px-2 py-0.5 rounded">
                                                     {{$person->getPerson()->getName()->getFamily()}}
                                                 </span>
                                                 @else
