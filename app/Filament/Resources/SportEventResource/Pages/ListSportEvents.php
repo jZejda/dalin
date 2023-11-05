@@ -93,14 +93,18 @@ class ListSportEvents extends ListRecords
                             ])
                             ->required()
                             ->default(0),
-                        Forms\Components\Select::make('region_id')
-                            ->label('Region')
-                            ->options(SportRegion::all()->pluck('long_name', 'short_name'))
-                            ->searchable(),
+                        Grid::make()->schema([
+                            Forms\Components\Select::make('region_id')
+                                ->label('Region')
+                                ->options(SportRegion::all()->pluck('long_name', 'short_name'))
+                                ->searchable(),
+                        ])->columns(1),
                         Forms\Components\DatePicker::make('datefrom')
                             ->label('Datum od')
                             ->default(Carbon::now()->format(AppHelper::DB_DATE_TIME)),
-
+                        Forms\Components\DatePicker::make('dateto')
+                            ->label('Datum do')
+                            ->default(Carbon::now()->addMonths(6)->format(AppHelper::DB_DATE_TIME)),
                         Grid::make()->schema([
                             Select::make('oris_id')
                                 ->label('ORIS ID')
@@ -125,11 +129,13 @@ class ListSportEvents extends ListRecords
                                             try {
 
                                                 $dateFrom = explode(' ', $get('datefrom'));
+                                                $dateTo = explode(' ', $get('dateto'));
 
                                                 $baseUriParams = [
                                                     'format' => 'json',
                                                     'method' => 'getEventList',
                                                     'datefrom' => $dateFrom[0],
+                                                    'dateto' => $dateTo[0],
                                                 ];
 
                                                 $params = [
