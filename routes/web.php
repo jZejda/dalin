@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\Cron\CommonCron;
+use App\Http\Controllers\Frontend\PageController;
+use App\Http\Controllers\Frontend\PostController;
+use App\Http\Controllers\Frontend\ResultListController;
+use App\Http\Controllers\Frontend\StartListController;
 use App\Http\Controllers\TestController;
-use App\Http\Livewire\Frontend\ShowPage;
-use App\Http\Livewire\Frontend\ShowPost;
-use App\Http\Livewire\Frontend\StartList;
-use App\Mail\AddUpdateSportEvent;
+use App\Http\Controllers\UserEntryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,14 +34,21 @@ Route::get('/cron-scheduler/' . config('site-config.cron_url_key'), function () 
 
 Route::get('/cron-hourly/' . config('site-config.cron_hourly.url_key'), [CommonCron::class, 'runHourly']);
 
-Route::get('/novinka/{id}', ShowPost::class);
-Route::get('/stranka/{slug}', ShowPage::class);
-Route::get('/startovka/{slug}', StartList::class);
+Route::get('/novinka/{id}', [PostController::class, 'post']);
+Route::get('/stranka/{slug}', [PageController::class, 'page']);
+Route::get('/startovka/{slug}', [StartListController::class, 'singleStartList']);
+Route::get('/vysledky/{slug}', [ResultListController::class, 'singleResultList']);
 
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::prefix('admin')->group(function () {
+    Route::get('/export/event-entry/{eventId}', [UserEntryController::class, 'export']);
+})->middleware(['auth', 'verified']);
+
+
 
 
 Route::get('/admin/test', [TestController::class, 'test']);

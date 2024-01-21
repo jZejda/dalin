@@ -20,7 +20,7 @@ class ListUserCredits extends ListRecords
 {
     protected static string $resource = UserCreditResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),
@@ -34,10 +34,10 @@ class ListUserCredits extends ListRecords
         ],
     ];
 
-    protected function getTableContentFooter(): ?View
-    {
-        return view('filament.resources.user-credit-resource.tables.footer', $this->data_list);
-    }
+//    protected function getTableContentFooter(): ?View
+//    {
+//        return view('filament.admin.resources.user-credit-resource.tables.footer', $this->data_list);
+//    }
 
     protected function getHeaderWidgets(): array
     {
@@ -54,12 +54,14 @@ class ListUserCredits extends ListRecords
 
                 (new OrisApiService())->getEventBalance($sportEvent);
             })
-            ->color('secondary')
+            ->color('gray')
             ->label('Načti vyúčtování z ORISu')
-            ->icon('heroicon-s-save')
+            ->icon('heroicon-o-arrow-down-tray')
             ->modalHeading('Stáhne vyúčtování z ORIS závodu')
-            ->modalSubheading('Vyber závod a našti vyúčtování. Akti můžeš provést opakovaně.')
-            ->modalButton('Stáhnout vyúčtování')
+            ->modalDescription('Vyber závod a načti vyúčtování. Akci můžeš provést opakovaně.')
+            ->modalSubmitActionLabel('Stáhnout vyúčtování')
+            ->modalIcon('heroicon-o-arrow-down-tray')
+            ->modalIconColor('success')
             ->form([
                 Grid::make(1)
                     ->schema([

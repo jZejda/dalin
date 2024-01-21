@@ -53,6 +53,28 @@ final class OrisApiService
         $this->orisResponse = $orisResponse ?? new OrisResponse();
     }
 
+
+    //getEventStartLists
+    public function updateStartList(int $eventId): bool
+    {
+        $getParams = [
+            'method' => 'getEvent',
+            'id' => $eventId,
+        ];
+
+        $orisResponse = $this->orisGetResponse($getParams);
+
+        $startList = new GetOris();
+
+        if ($startList->checkOrisResponse($orisResponse)) {
+            $orisData = $startList->data($orisResponse);
+        }
+
+        return true;
+
+    }
+
+
     /**
      * @throws Throwable
      */
@@ -67,8 +89,6 @@ final class OrisApiService
         $event = new GetOris();
         if ($event->checkOrisResponse($orisResponse)) {
             $orisData = $event->data($orisResponse);
-
-            //dd(strlen($orisData->getEntryDate1()) !== 0 ? $orisData->getEntryDate1() : null);
 
             // Create|Update Event
             /** @var SportEvent $eventModel */

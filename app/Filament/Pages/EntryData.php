@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Pages;
 
 use App\Enums\UserCreditType;
-use App\Mail\SendSportEventNearestMail;
 use App\Models\SportEvent;
 use App\Models\UserCredit;
-use App\Models\UserRaceProfile;
 use App\Services\OrisApiService;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\Section;
@@ -23,7 +21,6 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\ComponentContainer;
@@ -34,11 +31,10 @@ use Filament\Forms\ComponentContainer;
 
 class EntryData extends Page implements HasForms, HasTable
 {
-    use HasPageShield;
-
     use InteractsWithForms;
     use InteractsWithTable;
 
+    use HasPageShield;
 
     public static ?int $navigationSort = 110;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
@@ -186,7 +182,7 @@ class EntryData extends Page implements HasForms, HasTable
         return static::getUrl();
     }
 
-    protected function getBreadcrumbs(): array
+    public function getBreadcrumbs(): array
     {
         return [
             url()->current() => 'Média',
@@ -224,7 +220,7 @@ class EntryData extends Page implements HasForms, HasTable
         ];
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             ButtonAction::make('settings')->action('openSettingsModal'),

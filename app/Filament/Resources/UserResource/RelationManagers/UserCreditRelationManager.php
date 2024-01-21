@@ -5,9 +5,9 @@ namespace App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\SportEvent;
 use App\Models\UserCredit;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -35,7 +35,7 @@ class UserCreditRelationManager extends RelationManager
         ],
     ];
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -45,12 +45,12 @@ class UserCreditRelationManager extends RelationManager
             ]);
     }
 
-    protected function getTableContentFooter(): ?View
-    {
-        return view('filament.resources.user-resource.tables.user-credit-footer', $this->data_list);
-    }
+//    protected function getTableContentFooter(): ?View
+//    {
+//        return view('filament.resources.user-resource.tables.user-credit-footer', $this->data_list);
+//    }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
             ->columns([
@@ -63,7 +63,7 @@ class UserCreditRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
-                    ->url(fn (UserCredit $record): string => route('filament.resources.user-credits.view', ['record' => $record->id]))
+                    ->url(fn (UserCredit $record): string => route('filament.admin.resources.user-credits.view', ['record' => $record->id]))
                     //->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name != null ? $record->sportEvent?->alt_name : 'nepřiřazeno k závodu')
                     ->description(function (UserCredit $record): string {
                         $description = '';
@@ -84,7 +84,7 @@ class UserCreditRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('amount')
-                    ->icon(fn (UserCredit $record): string => $record->amount >= 0 ? 'heroicon-s-trending-up' : 'heroicon-s-trending-down')
+                    ->icon(fn (UserCredit $record): string => $record->amount >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                     ->color(fn (UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')
                     ->label(__('user-credit.table.amount_title')),
                 ViewColumn::make('user_entry')

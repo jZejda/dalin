@@ -1,0 +1,11 @@
+/*
+* Frontent content
+*/
+@import 'content/_front-post.scss';
+
+/*
+* Backend content
+*/
+@import 'content/_filament_backend.scss';
+@import 'content/_filament_widget.scss';
+

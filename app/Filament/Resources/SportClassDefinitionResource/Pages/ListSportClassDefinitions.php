@@ -6,8 +6,8 @@ use App\Filament\Resources\SportClassDefinitionResource;
 use App\Models\SportList;
 use App\Services\OrisApiService;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions;
-use Filament\Pages\Actions\Action;
+use Filament\Actions\CreateAction;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Forms;
 
@@ -15,10 +15,10 @@ class ListSportClassDefinitions extends ListRecords
 {
     protected static string $resource = SportClassDefinitionResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            CreateAction::make(),
             Action::make('updateSportClassDefinition')
                 ->action(function (array $data): void {
                     // if notifikace na Discord
@@ -42,12 +42,12 @@ class ListSportClassDefinitions extends ListRecords
 
                 })
 
-                ->color('secondary')
+                ->color('gray')
                 ->label('Aktualizovat')
-                ->icon('heroicon-s-refresh')
+                ->icon('heroicon-m-arrow-path')
                 ->modalHeading('Aktualizuj definici kategorií z ORISu')
-                ->modalSubheading('Definice kategorii, podle ORISU. V dialogu zvol pro jaký sport chceš zaktualizovat definice kategorií.')
-                ->modalButton('Aktualizovat')
+                ->modalDescription('Definice kategorii, podle ORISU. V dialogu zvol pro jaký sport chceš zaktualizovat definice kategorií.')
+                ->modalSubmitActionLabel('Aktualizovat')
                 ->form([
                     Forms\Components\Grid::make(2)
                         ->schema([

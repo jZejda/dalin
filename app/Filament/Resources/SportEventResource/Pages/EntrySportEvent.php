@@ -7,10 +7,9 @@ namespace App\Filament\Resources\SportEventResource\Pages;
 use App\Enums\AppRoles;
 use App\Filament\Resources\SportEventResource\Pages\Actions\EntrySendMail;
 use App\Filament\Resources\SportEventResource\Pages\Actions\EntryUpdateEvent;
+use App\Filament\Resources\SportEventResource\Pages\Actions\Helpers\UserRaceProfiles;
 use App\Http\Components\Oris\Response\CreateEntry;
 use App\Models\SportClassDefinition;
-use App\Models\UserSetting;
-use Closure;
 use App\Http\Components\Oris\ManageEntry;
 use App\Models\SportEvent;
 use App\Shared\Helpers\EmptyType;
@@ -20,12 +19,8 @@ use App\Models\SportClass;
 use App\Models\User;
 use App\Models\UserEntry;
 use App\Filament\Resources\SportEventResource;
-use App\Filament\Resources\SportEventResource\Widgets\EventMap;
-use App\Filament\Resources\SportEventResource\Widgets\EventLink;
 use App\Models\UserRaceProfile;
 use App\Shared\Helpers\AppHelper;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
-use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\TextInput;
@@ -35,30 +30,29 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions\Action as ModalAction;
+use Filament\Actions\Action as ActionAction;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Filament\Notifications\Actions\Action as NotificationAction;
+use App\Filament\Resources\SportEventResource\Service\SportEventService;
 
 class EntrySportEvent extends Page implements HasForms, HasTable
 {
-    use HasPageShield;
-
     use InteractsWithForms;
     use InteractsWithTable;
     use InteractsWithRecord;
+
+    public string|int|null|Model $record;
 
     protected static string $resource = SportEventResource::class;
     protected static string $view = 'filament.resources.sport-event-resource.pages.event-entry';
@@ -67,7 +61,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
     public function booted()
     {
-        $this->beforeBooted();
+        //$this->beforeBooted();
 
         // @todo refactor check Filament::user ability.
         if (!Auth::user()?->hasRole(User::ROLE_MEMBER . '|' . User::ROLE_EVENT_MASTER . '|' . User::ROLE_SUPER_ADMIN)) {
@@ -84,7 +78,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             parent::booted();
         }
 
-        $this->afterBooted();
+        //$this->afterBooted();
     }
 
     public function mount($record): void
@@ -96,33 +90,48 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         'oris_class_id' => 'required|min:3',
     ];
 
-    protected function getTitle(): string
+    public function getTitle(): string
     {
-        return 'Detail závodu - ' . $this->record->name;
+        /** @var SportEvent $sportEvent */
+        $sportEvent = $this->record;
+
+        return 'Detail závodu - ' . $sportEvent->name;
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
-        $sendMailModal = new EntrySendMail($this->record);
-        $updateEvent = new EntryUpdateEvent($this->record);
+        /** @var SportEvent $sportEvent */
+        $sportEvent = $this->record;
+
+        $makeExportModal = new SportEventResource\Pages\Actions\ExportsData($sportEvent);
+        $sendMailModal = new EntrySendMail($sportEvent);
+        $updateEvent = new EntryUpdateEvent($sportEvent);
         $registerAnyone = Auth::user()?->hasRole([AppRoles::EventMaster->value]) ? $this->getOrisEvent(true) : null;
         $sendEmail = Auth::user()?->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
             ? $sendMailModal->sendNotification()
+            : null;
+
+        $makeExport = Auth::user()?->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
+            ? $makeExportModal->makeExport()
             : null;
 
         $defaultActions = [
            $this->getOrisEvent(),
         ];
 
-        if (!is_null($this->record->oris_id)) {
+        if (!is_null($sportEvent->oris_id)) {
             $defaultActions[] = $updateEvent->showUpdateEventFromOris();
         }
 
         if (!is_null($registerAnyone)) {
             $defaultActions[] = $registerAnyone;
         }
+
         if (!is_null($sendEmail)) {
             $defaultActions[] = $sendEmail;
+        }
+        if (!is_null($makeExport)) {
+            $defaultActions[] = $makeExport;
         }
 
         return $defaultActions;
@@ -130,8 +139,12 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
     protected function getTableQuery(): Builder
     {
-        return UserEntry::where('sport_event_id', '=', $this->record->id);
+        /** @var SportEvent $sportEvent */
+        $sportEvent = $this->record;
+
+        return UserEntry::where('sport_event_id', '=', $sportEvent->id);
     }
+
 
     protected function getTableColumns(): array
     {
@@ -140,48 +153,67 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->label('Kategorie')
                 ->searchable()
                 ->sortable(),
-            BadgeColumn::make('userRaceProfile.UserRaceFullName')
+            TextColumn::make('userRaceProfile.UserRaceFullName')
                 ->label('Registrace')
+                ->badge()
                 ->color(static function ($state): string {
                     if ($state === 'published') {
                         return 'success';
                     }
-                    return 'secondary';
+                    return 'gray';
                 }),
-            BadgeColumn::make('userRaceProfile.user.name')
+            TextColumn::make('userRaceProfile.user.name')
                 ->label('Uživatel')
+                ->badge()
                 ->color(static function ($state): string {
-                    if ($state === \auth()->user()->name) {
+                    if ($state === auth()->user()?->name) {
                         return 'success';
                     }
-                    return 'secondary';
+                    return 'gray';
                 })
                 ->searchable(),
-            TextColumn::make('sportEvent.date')
-                ->label('Start')
-                ->dateTime('d. m. Y - H:i')
-                ->searchable()
-                ->sortable(),
             TextColumn::make('note')
                 ->label('Poznámka'),
             TextColumn::make('club_note')
-                ->label('Klubová poznámka'),
+                ->label('Klubová poznámka')
+                ->limit(50),
             TextColumn::make('requested_start')
-                ->label('Start v'),
+                ->label('Start v')
+                ->limit(50)
+                ->tooltip(fn (UserEntry $record): string => $record->requested_start ? $record->requested_start : ''),
             TextColumn::make('rent_si')
                 ->label('Půjčit čip'),
-            TextColumn::make('stage_x')
-                ->label('Etapa'),
-            BadgeColumn::make('entry_status')
-                ->label('Stav')
-                ->enum(EntryStatus::enumArray())
-                ->colors([
-                    'success' => EntryStatus::Create->value,
-                    'secondary' => EntryStatus::Edit->value,
-                    'danger' => EntryStatus::Cancel->value,
-                ])
+            TextColumn::make('entry_stages')
+                ->badge()
+                ->separator(',')
+                ->label('Etapy')
+                ->formatStateUsing(fn (string $state): string => str_replace('stage', 'E', $state))
+                ->searchable(),
+            TextColumn::make('entry_status')
+                ->label('Stav přihlášky')
+                ->badge()
+                ->searchable(),
+            TextColumn::make('created_at')
+                ->label('Vytvořeno')
+                ->dateTime('d. m. Y - H:i')
                 ->searchable()
+                ->sortable(),
         ];
+    }
+
+    public function getTableRecordsPerPage(): ?int
+    {
+        return 50;
+    }
+
+    protected function getDefaultTableSortColumn(): ?string
+    {
+        return 'created_at';
+    }
+
+    protected function getDefaultTableSortDirection(): ?string
+    {
+        return 'asc';
     }
 
     protected function getTableFilters(): array
@@ -192,7 +224,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->default([EntryStatus::Create->value, EntryStatus::Edit->value]),
         ];
     }
-
 
     protected function getTableActions(): array
     {
@@ -269,17 +300,23 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                 ->modalHeading(fn (UserEntry $record): string => $record->userRaceProfile->user_race_full_name . ' - odhlášení ze závodu')
                 ->modalContent(view('filament.modals.user-cancel-entry'))
-                ->modalSubheading('Odhlšení proběhne pokud.')
-                ->modalButton('Odhlásit'),
+                ->modalDescription('Odhlšení proběhne pokud.')
+                ->modalSubmitActionLabel('Odhlásit'),
         ];
     }
 
-    private function getOrisEvent(bool $registerAll = false): ModalAction
+    private function getOrisEvent(bool $registerAll = false): ActionAction
     {
-        return ModalAction::make($registerAll ? 'createEventEntryFull' : 'createEventEntry')
+        /** @var SportEvent $sportEvent */
+        $sportEvent = $this->record;
+
+        return ActionAction::make($registerAll ? 'createEventEntryFull' : 'createEventEntry')
             ->action(function (array $data): void {
 
-                if ($this->record->oris_id !== null && $this->record->use_oris_for_entries) {
+                /** @var SportEvent $sportEvent */
+                $sportEvent = $this->record;
+
+                if ($sportEvent->oris_id !== null && $sportEvent->use_oris_for_entries) {
                     /**
                      * ORIS entry
                      * Part of ORIS enty
@@ -287,15 +324,15 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     $userRaceProfile = UserRaceProfile::where('oris_id', '=', $data['raceProfileId'])->first();
                     $sportClass = SportClass::where('oris_id', '=', $data['classId'])->first();
 
-                    $orisResponse = $this->orisCreateEntry($data, $userRaceProfile);
+                    $orisResponse = $this->orisCreateEntry($data, $userRaceProfile, $sportEvent);
 
                     if ($orisResponse->getStatus() === 'OK') {
 
-                        $storeResult = $this->storeUserEntry(true, $this->record, $userRaceProfile, $sportClass, $data, $orisResponse);
+                        $storeResult = $this->storeUserEntry(true, $sportEvent, $userRaceProfile, $sportClass, $data, $orisResponse);
 
                         if ($storeResult) {
                             Notification::make()
-                                ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $sportClass?->name ?? 'N/A')
+                                ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name . ' do kategorie: ' . $sportClass?->name)
                                 ->body('Prihlášku si zkontroluj na stránkách závodu přímo v ORISu.')
                                 ->success()
                                 ->actions([
@@ -303,7 +340,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                         ->label('Přejít na url závodu')
                                         ->button()
                                         ->openUrlInNewTab()
-                                        ->url('https://oris.orientacnisporty.cz/PrehledPrihlasenych?id=' . $this->record->oris_id),
+                                        ->url('https://oris.orientacnisporty.cz/PrehledPrihlasenych?id=' . $sportEvent->oris_id),
                                 ])
                                 ->seconds(15)
                                 ->send();
@@ -311,7 +348,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                     } else {
                         Notification::make()
-                            ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $sportClass?->name ?? 'N/A')
+                            ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name . ' do kategorie: ' . $sportClass?->name)
                             ->body('Nebyla provedena. ORIS vrátil zprávu: ' . $orisResponse->getStatus())
                             ->warning()
                             ->seconds(8)
@@ -325,11 +362,11 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     $userRaceProfile = UserRaceProfile::where('id', '=', $data['raceProfileId'])->first();
                     $sportClass = SportClass::where('id', '=', $data['classId'])->first();
 
-                    $storeResult = $this->storeUserEntry(false, $this->record, $userRaceProfile, $sportClass, $data);
+                    $storeResult = $this->storeUserEntry(false, $sportEvent, $userRaceProfile, $sportClass, $data);
 
                     if ($storeResult) {
                         Notification::make()
-                            ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name ?? 'N/A'  . ' do kategorie: ' . $sportClass?->name ?? 'N/A')
+                            ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name . ' do kategorie: ' . $sportClass?->name)
                             ->body('Prihlášku byla provedena pouze v interním systému')
                             ->success()
                             ->seconds(8)
@@ -337,30 +374,34 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     }
                 }
             })
-            ->color($registerAll ? 'secondary' : 'primary')
+            ->color($registerAll ? 'gray' : 'primary')
             ->label($registerAll ? 'Přihlásit kohokoliv' : 'Přihlásit na závod')
-            ->disabled(EmptyType::arrayEmpty($this->getUserRaceProfiles()->toArray()) || $this->record->cancelled)
+            ->disabled(EmptyType::arrayEmpty((new UserRaceProfiles())->getUserRaceProfiles($this->record)->toArray()) || $sportEvent->cancelled)
             ->icon($registerAll ? 'heroicon-o-users' : 'heroicon-o-plus-circle')
             ->modalHeading('Přihlášení na závod')
-            ->modalSubheading('Vyber závodní profil, vyhledej vhodné kategorie a přihlas se.')
-            ->modalButton('Přihlásit')
+            ->modalDescription('Vyber závodní profil, vyhledej vhodné kategorie a přihlas se.')
+            ->modalSubmitActionLabel('Přihlásit')
             ->form([
                 Select::make('raceProfileId')
                     ->label('Vyberte závodní profil')
-                    ->options($registerAll ? $this->getUserRaceProfiles(true) : $this->getUserRaceProfiles())
-                    ->disablePlaceholderSelection()
+                    ->options($registerAll ? (new UserRaceProfiles())->getUserRaceProfiles($this->record, true) : (new UserRaceProfiles())->getUserRaceProfiles($this->record))
+                    ->selectablePlaceholder()
                     ->searchable()
                     ->required()
                     ->reactive()
                     ->suffixAction(
-                        fn ($state, Closure $set) =>
+                        fn ($state, \Filament\Forms\Set $set) =>
                         Action::make('search_oris_category_by_oris_id')
-                            ->icon('heroicon-o-search')
+                            ->icon('heroicon-o-magnifying-glass')
                             ->visible($this->record->oris_id !== null && $this->record->use_oris_for_entries)
                             ->action(function () use ($state, $set) {
 
+                                /** @var SportEvent $sportEvent */
+                                $sportEvent = $this->record;
                                 if (blank($state)) {
-                                    Filament::notify('danger', 'Zvol závodní profil.');
+                                    Notification::make()
+                                        ->title('Zvol závodní profil.')
+                                        ->warning();
                                     return;
                                 }
 
@@ -371,7 +412,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                         'format' => 'json',
                                         'method' => 'getValidClasses',
                                         'clubuser' => $userProfile->club_user_id,
-                                        'comp' => $this->record->oris_id,
+                                        'comp' => $sportEvent->oris_id,
                                     ];
 
                                     $orisResponse = Http::get('https://oris.orientacnisporty.cz/API', $params)
@@ -396,12 +437,17 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                     }
 
                                 } catch (RequestException $e) {
-                                    Filament::notify('danger', 'Nepodařilo se načíst data.');
+                                    Notification::make()
+                                        ->title('Nepodařilo se načíst data.')
+                                        ->danger()
+                                        ->duration(8);
                                     return;
                                 }
-                                Filament::notify('success', 'ORIS v pořádku vrátil požadovaná data.');
+                                Notification::make()
+                                    ->title('ORIS v pořádku vrátil požadovaná data.')
+                                    ->success();
 
-                                $set('specific_response_class_id', $selectData ?? []);
+                                $set('specific_response_class_id', $selectData);
                                 $set('si', $userProfile?->si);
                             })
                     ),
@@ -419,7 +465,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 $classDefinitionName = SportClassDefinition::where('id', '=', $eventClass->class_definition_id)->first();
                                 $classes[$eventClass->id] = $classDefinitionName->classDefinitionFullLabel;
                             }
-
                             return $classes;
                         }
                     })
@@ -439,101 +484,56 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     TextInput::make('si')
                         ->label('Číslo SI čipu')
                         ->numeric(),
+                ])->columns(2),
+
+                Grid::make()->schema([
+                    Select::make('entry_stages')
+                        ->label('Zvol etapy')
+                        ->options(function () {
+                            /** @var SportEvent $sportEvent */
+                            $sportEvent = $this->record;
+                            $options = [];
+                            if ($sportEvent->stages !== null && $sportEvent->sport_id >= 1) {
+                                $options = (new SportEventService())->getMultiEventStagesOptions($sportEvent);
+                            }
+                            return $options;
+                        })
+                        ->multiple()
+                        ->default(function () {
+                            /** @var SportEvent $sportEvent */
+                            $sportEvent = $this->record;
+                            return (new SportEventService())->getMultiEventDefaultOptions($sportEvent);
+                        })
+                        ->minItems(function () {
+                            /** @var SportEvent $sportEvent */
+                            $sportEvent = $this->record;
+                            return ($sportEvent->stages === null || $sportEvent->stages === 0) ? 0 : 1;
+                        })
+                        ->required(function () {
+                            /** @var SportEvent $sportEvent */
+                            $sportEvent = $this->record;
+                            return !($sportEvent->stages === null || $sportEvent->stages === 0);
+                        })
+                        ->visible(function () {
+                            /** @var SportEvent $sportEvent */
+                            $sportEvent = $this->record;
+                            return !($sportEvent->stages === null || $sportEvent->stages === 0);
+                        }),
+                ])->columns(1),
+
+                Grid::make()->schema([
                     Toggle::make('rent_si')
                         ->extraAttributes(['class' => 'mt-4'])
                         ->label('Půjčit čip')
                         ->onIcon('heroicon-s-check')
-                        ->offIcon('heroicon-s-x')
+                        ->offIcon('heroicon-m-x-mark')
                         ->default(false),
                 ])->columns(2),
-            ]);
+
+        ]);
     }
 
-    public function getUserRaceProfiles(bool $registerAnyone = false): Collection
-    {
-        /** @var SportEvent $sportEvent */
-        $sportEvent = $this->record;
-        $relevantUserRaceProfile = new Collection();
-
-        if (AppHelper::allowModifyUserEntry($sportEvent)) {
-            return new Collection();
-        }
-
-        if ((!is_null($sportEvent->oris_id) && $sportEvent->use_oris_for_entries)) {
-
-            //vyselektuje relevatni profily pro uzivatel
-            $relevantUserRaceProfile = UserRaceProfile::all();
-            if (!$registerAnyone) {
-                $relevantUserRaceProfile = $relevantUserRaceProfile->where('user_id', '=', auth()->user()->id);
-            }
-
-            // Add AllowingAnotherUserRaceProfile
-            $allowRegisterUserProfile = UserSetting::where('user_id', '=', auth()->user()->id)
-                ->where('type', '=', 'allowRegisterUserProfile')
-                ->first();
-
-            if (isset($allowRegisterUserProfile->options['profileIds'])) {
-                foreach ($allowRegisterUserProfile->options['profileIds'] as $profileId) {
-                    $userProfile = UserRaceProfile::where('id', '=', $profileId)->first();
-                    $relevantUserRaceProfile->add($userProfile);
-                }
-            }
-
-            $relevantUserRaceProfile = $relevantUserRaceProfile->whereNotNull('oris_id')
-                ->pluck('user_race_full_name', 'oris_id');
-
-            // zjisti id profil; ktere jsou uz v zavode pro uzivatele
-            $entries = DB::table('user_race_profiles as urp')
-                ->select(['urp.oris_id'])
-                ->leftJoin('user_entries AS ue', 'ue.user_race_profile_id', '=', 'urp.id')
-                ->where('ue.sport_event_id', '=', $sportEvent->id)
-                //->where('urp.user_id', '=', auth()->user()->id)
-                ->whereNotIn('ue.entry_status', [EntryStatus::Cancel])
-                ->get();
-
-            // unsetne z pole relevatnich profil;
-            foreach ($entries as $entry) {
-                $relevantUserRaceProfile->forget((int)$entry->oris_id);
-            }
-        } else {
-            //Non ORIS race
-            $relevantUserRaceProfile = UserRaceProfile::all();
-            if (!$registerAnyone) {
-                $relevantUserRaceProfile = $relevantUserRaceProfile->where('user_id', '=', auth()->user()->id);
-            }
-
-            // Add AllowingAnotherUserRaceProfile
-            $allowRegisterUserProfile = UserSetting::where('user_id', '=', auth()->user()->id)
-                ->where('type', '=', 'allowRegisterUserProfile')
-                ->first();
-            //
-            if (isset($allowRegisterUserProfile->options['profileIds'])) {
-                foreach ($allowRegisterUserProfile->options['profileIds'] as $profileId) {
-                    $userProfile = UserRaceProfile::where('id', '=', $profileId)->first();
-                    $relevantUserRaceProfile->add($userProfile);
-                }
-            }
-
-            $relevantUserRaceProfile = $relevantUserRaceProfile->pluck('user_race_full_name', 'id');
-
-            // Has allready signed
-            $entries = DB::table('user_race_profiles as urp')
-                ->select(['urp.id'])
-                ->leftJoin('user_entries AS ue', 'ue.user_race_profile_id', '=', 'urp.id')
-                ->where('ue.sport_event_id', '=', $sportEvent->id)
-                //->where('urp.user_id', '=', auth()->user()->id)
-                ->whereNotIn('ue.entry_status', [EntryStatus::Cancel])
-                ->get();
-
-            // Unset from field
-            foreach ($entries as $entry) {
-                $relevantUserRaceProfile->forget((int)$entry->id);
-            }
-        }
-        return $relevantUserRaceProfile;
-    }
-
-    protected function getHeaderWidgetsColumns(): int|array
+    public function getHeaderWidgetsColumns(): int|array
     {
         return 3;
     }
@@ -541,12 +541,12 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     protected function getHeaderWidgets(): array
     {
         return [
-            EventMap::class,
-            EventLink::class,
+            //EventMap::make(['model' => $this->record]),
+            //EventLinks::make(['model' => $this->record]),
         ];
     }
 
-    private function orisCreateEntry(array $entryData, UserRaceProfile $userProfile): CreateEntry
+    private function orisCreateEntry(array $entryData, UserRaceProfile $userProfile, SportEvent $sportEvent): CreateEntry
     {
         $requiredParams = [
             'clubuser' => $userProfile->club_user_id,
@@ -560,6 +560,21 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             'rent_si' => $entryData['rent_si'],
             'requested_start' => $entryData['requested_start'],
         ];
+
+        if (isset($entryData['entry_stages'])) {
+            for ($stage = 1; $stage <= $sportEvent->stages; $stage++) {
+                if(in_array('stage' . $stage, $entryData['entry_stages'])) {
+                    $allOptionalParams['stage' . $stage] = '1';
+                }
+
+                /**
+                 * @description
+                 * else block is not necessary For ORIS is important if you send stageX with any value 1 or.
+                 * the result is the same
+                 * $allOptionalParams['stage' . $stage] = '0';
+                 */
+            }
+        }
 
         $optionalParams = [];
         foreach ($allOptionalParams as $key => $value) {
@@ -602,6 +617,9 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         return false;
     }
 
+    /**
+     * @throws \Throwable
+     */
     private function storeUserEntry(
         bool $isOrisEvent,
         SportEvent $sportEvent,
@@ -610,23 +628,24 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         array $data,
         CreateEntry $orisResponse = null
     ): bool {
-
         $entry = new UserEntry();
         if ($isOrisEvent) {
             $entry->oris_entry_id = $orisResponse->getData()?->getEntry()->getID();
         }
         $entry->sport_event_id = $sportEvent->id;
         $entry->user_race_profile_id = $userRaceProfile->id;
-        $entry->class_definition_id = $sportClass?->classDefinition->id;
+        $entry->class_definition_id = $sportClass->classDefinition?->id;
         $entry->class_name = $sportClass->name ?? 'N/A';
         $entry->note = $data['note'];
         $entry->club_note = $data['club_note'];
         $entry->requested_start = $data['requested_start'];
         $entry->si = $data['si'];
         $entry->rent_si = $data['rent_si'] ?? 0;
-        $entry->stage_x = null;
-        $entry->entry_created = Carbon::now()->toDateTimeString();
+        $entry->entry_created = Carbon::now();
         $entry->entry_status = EntryStatus::Create;
+        if (isset($data['entry_stages'])) {
+            $entry->entry_stages = $data['entry_stages'];
+        }
 
         if ($entry->saveOrFail()) {
             return true;

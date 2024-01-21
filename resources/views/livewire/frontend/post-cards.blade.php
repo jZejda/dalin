@@ -1,20 +1,21 @@
 @php
     use Carbon\Carbon;
-    use App\Models\Post
+    use App\Models\Post;
+    use App\Enums\ContentFormat;
 
     /** @var Post $post */
 @endphp
 
-<section class="bg-white dark:bg-gray-900 m-5 app-front-content">
+<section class="bg-white dark:bg-gray-900 m-5">
     @foreach($posts as $post)
         <article class="format" style="max-width: max-content;">
 
                 <h4 class="card-title">
                     <a href="{{ url('/novinka', $post->id) }}">{{$post->title}}</a>
                 </h4>
-                @if($post->content_mode === 1 && !is_null($post->editorial))
+                @if($post->content_mode === ContentFormat::Html && !is_null($post->editorial))
                     <p>{!! $post->editorial !!}</p>
-                @elseif($post->content_mode === 2 && !is_null($post->editorial))
+                @elseif($post->content_mode === ContentFormat::Markdown && !is_null($post->editorial))
                     <p>{{ Markdown::parse($post->editorial) }}</p>
                 @endif
 

@@ -6,13 +6,12 @@ namespace App\Filament\Resources;
 
 use App\Enums\AppRoles;
 use App\Enums\SportEventType;
+use App\Filament\Resources\SportEventResource\RelationManagers\SportEventLinkRelationManager;
 use App\Filament\Resources\SportEventResource\RelationManagers\SportMarkersRelationManager;
 use App\Filament\Resources\SportEventResource\RelationManagers\UserCreditRelationManager;
-use Closure;
 use App\Filament\Resources\SportEventResource\RelationManagers\UserEntryRelationManager;
 use App\Shared\Helpers\AppHelper;
 use App\Shared\Helpers\EmptyType;
-use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use App\Filament\Resources\SportEventResource\Pages;
 use App\Filament\Resources\SportEventResource\RelationManagers\SportClassesRelationManager;
 use App\Filament\Resources\SportEventResource\RelationManagers\SportServicesRelationManager;
@@ -33,9 +32,10 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Support\Enums\Alignment;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -52,7 +52,7 @@ use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use pxlrbt\FilamentExcel\Columns\Column;
 
-class SportEventResource extends Resource implements HasShieldPermissions
+class SportEventResource extends Resource
 {
     protected static ?string $model = SportEvent::class;
 
@@ -77,11 +77,11 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                     TextInput::make('oris_id')
                                         ->label('ORIS ID')
                                         ->hint('unikátní ID závodu na ORIS stránkách')
-                                        ->hintIcon('heroicon-s-exclamation')
+                                        ->hintIcon('heroicon-m-exclamation-triangle')
                                         ->suffixAction(
-                                            fn ($state, Closure $set, callable $get) =>
+                                            fn ($state, \Filament\Forms\Set $set, callable $get) =>
                                             Action::make('hledej-podle-oris-id')
-                                                ->icon('heroicon-o-search')
+                                                ->icon('heroicon-o-magnifying-glass')
                                                 ->action(function () use ($state, $set, $get) {
                                                     if (blank($state)) {
                                                         Filament::notify('danger', 'Vyplň prosím ORIS ID závodu.');
@@ -248,19 +248,19 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                             ->label('Používá ORIS?')
                                             ->inline(false)
                                             ->onIcon('heroicon-s-check')
-                                            ->offIcon('heroicon-s-x'),
+                                            ->offIcon('heroicon-m-x-mark'),
 
                                         Toggle::make('dont_update_excluded')
                                             ->label('Neaktualizovat')
                                             ->inline(false)
                                             ->onIcon('heroicon-s-check')
-                                            ->offIcon('heroicon-s-x')
+                                            ->offIcon('heroicon-m-x-mark')
                                             ->default(true),
                                         Toggle::make('cancelled')
                                             ->label('Zrušeno')
                                             ->inline(false)
                                             ->onIcon('heroicon-s-check')
-                                            ->offIcon('heroicon-s-x')
+                                            ->offIcon('heroicon-m-x-mark')
                                             ->onColor('danger')
                                             ->default(false),
                                     ])->columns(3),
@@ -280,21 +280,30 @@ class SportEventResource extends Resource implements HasShieldPermissions
             ->columns([
                 ViewColumn::make('entry_type')
                     ->label('Typ')
-                    ->view('filament.tables.columns.entryType'),
+                    ->view('filament.tables.columns.entryType')
+                    ->alignment(Alignment::Center)
+                    ->visibleFrom('md'),
 
-                TextColumn::make('name')
+//                TextColumn::make('name')
+//                    ->searchable()
+//                    ->label('Název')
+//                    ->sortable()
+//                    ->tooltip(fn (SportEvent $record): string => $record->last_update ? 'Poslední hromadná aktualizace: ' . $record->last_update->format('m.d.Y - H:i') : '')
+//                    ->weight('medium')
+//                    ->alignLeft()
+//                    ->limit(35)
+//                    ->color(fn (SportEvent $record): string => $record->cancelled === true ? 'danger' : '')
+//                    ->icon(fn (SportEvent $record): string => $record->cancelled === true ? 'heroicon-s-x-circle' : '')
+//                    ->iconPosition('before') // `before` or `after`
+//                    //->description(fn (SportEvent $record): string => $record->oris_id ? 'ORIS ID: ' . $record->oris_id : ''),
+//                    ->description(fn (SportEvent $record): string => $record->alt_name ? $record->alt_name : ''),
+
+                ViewColumn::make('name')
                     ->searchable()
-                    ->label('Název')
                     ->sortable()
                     ->tooltip(fn (SportEvent $record): string => $record->last_update ? 'Poslední hromadná aktualizace: ' . $record->last_update->format('m.d.Y - H:i') : '')
-                    ->weight('medium')
-                    ->alignLeft()
-                    ->limit(35)
-                    ->color(fn (SportEvent $record): string => $record->cancelled === true ? 'danger' : '')
-                    ->icon(fn (SportEvent $record): string => $record->cancelled === true ? 'heroicon-s-x-circle' : '')
-                    ->iconPosition('before') // `before` or `after`
-                    //->description(fn (SportEvent $record): string => $record->oris_id ? 'ORIS ID: ' . $record->oris_id : ''),
-                    ->description(fn (SportEvent $record): string => $record->alt_name ? $record->alt_name : ''),
+                    ->label('Název')
+                    ->view('filament.tables.columns.entry-name'),
 
                 TextColumn::make('date')
                     ->icon('heroicon-o-calendar')
@@ -314,7 +323,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                 TextColumn::make('place')
                     ->searchable()
                     ->sortable()
-                    ->color('secondary')
+                    ->color('gray')
                     ->label('Místo')
                     ->limit(25, '...')
                     ->alignLeft(),
@@ -330,7 +339,8 @@ class SportEventResource extends Resource implements HasShieldPermissions
 
                 TextColumn::make('region')->label('Region'),
 
-                BadgeColumn::make('oris_id')
+                TextColumn::make('oris_id')
+                    ->badge()
                     ->label('ORIS ID')
                     ->tooltip(
                         fn (SportEvent $record): string => EmptyType::intNotEmpty($record->oris_id) && $record->use_oris_for_entries
@@ -345,8 +355,10 @@ class SportEventResource extends Resource implements HasShieldPermissions
 //                        return 'secondary';
 //                    })
                     ->sortable(),
-            ])->defaultSort('date')
-
+            ])
+            ->defaultSort('date')
+            ->persistSortInSession()
+            ->defaultPaginationPageOption(25)
             ->filters([
                 SelectFilter::make('event_type')
                     ->label(__('sport-event.event_type'), )
@@ -366,7 +378,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                 fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
                             );
                     })->indicateUsing(function (array $data): ?string {
-                        if (! $data['date']) {
+                        if (!$data['date']) {
                             return null;
                         }
                         return 'Závody novější: ' . Carbon::parse($data['date'])->format('d.m.Y');
@@ -388,7 +400,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
 //                    Tables\Actions\Action::make('registr_entry')
 //                        ->icon('heroicon-o-ticket')
 //                        ->label('Přihlásit na závod.')
-//                        ->url(fn (SportEvent $record): string => route('filament.resources.sport-events.entry', $record))
+//                        ->url(fn (SportEvent $record): string => route('filament.admin.resources.sport-events.entry', $record))
 //                        ->openUrlInNewTab(),
 //                        ExportAction::make()
 //                        ->exports([
@@ -414,6 +426,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
             SportClassesRelationManager::class,
             SportServicesRelationManager::class,
             SportMarkersRelationManager::class,
+            SportEventLinkRelationManager::class,
             UserCreditRelationManager::class,
         ];
     }
@@ -449,9 +462,9 @@ class SportEventResource extends Resource implements HasShieldPermissions
         ];
     }
 
-    protected static function getNavigationBadge(): ?string
+    public static function getNavigationBadge(): ?string
     {
-        return (string)static::$model::where('cancelled', 0)->count();
+        return (string)static::$model::where('cancelled', 0)->where('date', '>', Carbon::now()->startOfYear())->count();
     }
 
     public static function getPermissionPrefixes(): array

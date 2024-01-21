@@ -8,13 +8,14 @@ use App\Enums\SportEventType;
 use App\Models\SportEvent;
 use App\Models\SportEventMarker;
 use App\Shared\Helpers\EmptyType;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
-use Webbingbrasil\FilamentMaps\Actions;
-use Webbingbrasil\FilamentMaps\Marker;
-use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
 
-class EventMap extends MapWidget
+//use Webbingbrasil\FilamentMaps\Actions;
+//use Webbingbrasil\FilamentMaps\Marker;
+//use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
+
+class EventMap
 {
     protected int | string | array $columnSpan = 2;
 

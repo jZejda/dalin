@@ -12,7 +12,7 @@ class EditUserEntry extends EditRecord
 {
     protected static string $resource = UserEntryResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),

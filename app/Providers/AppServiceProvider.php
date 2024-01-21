@@ -5,7 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Vite;
-use Awcodes\Curator\Facades\Curator;
+use Filament\Support\Assets\Css;
+use Filament\Support\Facades\FilamentAsset;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,10 @@ class AppServiceProvider extends ServiceProvider
         // setting for older version db
         // Schema::defaultStringLength(191);
 
+        //        FilamentAsset::register([
+        //            //Css::make('custom-stylesheet', __DIR__ . '/../../resources/css/custom.css'),
+        //            Css::make('custom-stylesheet', __DIR__ . '/../../resources/css/custom.css'),
+        //        ]);
         Filament::serving(function () {
             // Using Vite
             Filament::registerTheme(

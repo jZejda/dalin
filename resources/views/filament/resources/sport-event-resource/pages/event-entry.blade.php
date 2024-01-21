@@ -18,6 +18,18 @@
 {{--@vite(['resources/css/app.css'])--}}
 
 <x-filament::page>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="z-0 md:col-span-2 border border-gray-300 dark:border-gray-700">
+            <div>
+                @livewire(\App\Livewire\Shared\Maps\LeafletMap::class, ['sportEvent' => $record])
+            </div>
+        </div>
+        <div class="md:col-span-1 p-6 border border-gray-300 rounded-lg dark:border-gray-700">
+            @include('partials.backend.sport-event-links', ['sportEventLinks' => $record->sportEventLinks()->get()])
+        </div>
+    </div>
+
     <section class="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700">
         <div class="py-4 px-4">
             <div class="flex justify-between content-center">
@@ -218,7 +230,7 @@
 
 
 
-    <form wire:submit.prevent="submit" class="space-y-6">
+    <form wire:submit="submit" class="space-y-6">
         {{ $this->form }}
 
 {{--        <div class="flex flex-wrap items-center gap-4 justify-start">--}}

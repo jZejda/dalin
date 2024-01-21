@@ -8,9 +8,9 @@ use App\Models\SportList;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 
 class SportClassDefinitionResource extends Resource
@@ -18,7 +18,7 @@ class SportClassDefinitionResource extends Resource
     protected static ?string $model = SportClassDefinition::class;
 
     protected static ?int $navigationSort = 100;
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = 'Správa';
     protected static ?string $label = 'Definice kategorie';
     protected static ?string $pluralLabel = 'Definice kategorií';
@@ -92,6 +92,7 @@ class SportClassDefinitionResource extends Resource
                 Tables\Columns\TextColumn::make('oris_id')
                     ->label('ORIS ID'),
             ])
+            ->defaultPaginationPageOption(25)
             ->filters([
                 //
             ])

@@ -11,7 +11,7 @@ class ListSportEventExports extends ListRecords
     protected static string $resource = SportEventExportResource::class;
 
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),

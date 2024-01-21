@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use App\Enums\SportEventExportsType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -12,7 +15,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $title
  * @property string $slug
- * @property string $export_type
+ * @property SportEventExportsType $export_type
  * @property Carbon|null $start_time
  * @property int|null $sport_event_id
  * @property int|null $sport_event_leg_id
@@ -20,7 +23,6 @@ use Illuminate\Support\Carbon;
  * @property string $result_path
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @mixin IdeHelperSportEventExport
  */
 class SportEventExport extends Model
 {
@@ -43,6 +45,7 @@ class SportEventExport extends Model
     ];
 
     protected $casts = [
+        'export_type' => SportEventExportsType::class,
         'start_time' => 'datetime:Y-m-d H:i:s',
         ];
 }

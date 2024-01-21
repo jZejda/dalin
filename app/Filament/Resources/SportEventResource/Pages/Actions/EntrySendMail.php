@@ -12,6 +12,7 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions\Action as ModalAction;
+use Illuminate\Support\Facades\Auth;
 
 class EntrySendMail
 {
@@ -43,12 +44,12 @@ class EntrySendMail
                     ->seconds(8)
                     ->send();
             })
-            ->color('secondary')
+            ->color('gray')
             ->label('Pošli e-mail')
             ->icon('heroicon-s-paper-airplane')
             ->modalHeading('Pošle e-mailovou zprávu k závodu/akci')
-            ->modalSubheading('E-mail je odesílán z fronty každý 5 minut.')
-            ->modalButton('Odeslat')
+            ->modalDescription('E-mail je odesílán z fronty každý 5 minut.')
+            ->modalSubmitActionLabel('Odeslat')
             ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
             ->form([
                 Grid::make(1)
@@ -57,7 +58,8 @@ class EntrySendMail
                             ->label('Předmět zprávy')
                             ->required(),
                         TextInput::make('replyTo')
-                            ->label('Adresa pro odpovědi'),
+                            ->label('Adresa pro odpovědi')
+                            ->default(Auth::user()?->email),
                         MarkdownEditor::make('content')
                             ->label('Zpráva')
                             ->required(),

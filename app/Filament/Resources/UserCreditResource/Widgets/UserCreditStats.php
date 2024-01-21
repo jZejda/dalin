@@ -4,7 +4,7 @@ namespace App\Filament\Resources\UserCreditResource\Widgets;
 
 use App\Enums\UserCreditStatus;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
-use Filament\Widgets\StatsOverviewWidget\Card;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,9 +15,9 @@ class UserCreditStats extends BaseWidget
     protected function getCards(): array
     {
         return [
-            Card::make('Nepřiřazené transakce Kč', $this->getSumUnAssignCredit()),
-            Card::make('Počet nepřiřazených', $this->getCountUnAssignCredit()),
-            Card::make('Pokus', $this->record),
+            Stat::make('Nepřiřazené transakce Kč', $this->getSumUnAssignCredit()),
+            Stat::make('Počet nepřiřazených', $this->getCountUnAssignCredit()),
+            Stat::make('Pokus', $this->record),
         ];
     }
 

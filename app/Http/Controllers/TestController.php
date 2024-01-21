@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Components\Iofv3\Result;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Components\Iofv3\ResultList;
+use App\Http\Components\Oris\GetOris;
+use App\Services\OrisApiService;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -19,15 +21,27 @@ use Symfony\Component\Serializer\Serializer;
 
 class TestController extends Controller
 {
-
-    public function testTTT(): void
+    public function test(): void
     {
 
-       //$file = Storage::disk('events')->get('storage/vysledky_iofv3.xml');
-       $file = Storage::disk('events')->get('storage/startovka-kat-iof3-jirka.xml');
+        $getParams = [
+            'method' => 'getEventStartLists',
+            'eventid' => 7586,
+            'clubid' => 1,
+        ];
 
-       // dd($file);
-        //(new EntryEndsToPay())->run();
+        $orisResponse = $this->orisGetResponse($getParams);
+
+        $startList = new GetOris();
+
+        if ($startList->checkOrisResponse($orisResponse)) {
+            $orisData = $startList->startList($orisResponse);
+
+
+            dd($orisData);
+        }
+
+
     }
 
 
@@ -38,50 +52,24 @@ class TestController extends Controller
         $normalizers = [new ArrayDenormalizer(), new ObjectNormalizer(null, null, null, $extractor)];
         //$serializer = new Serializer($normalizer, $encoder);
 
-//        $result = $serializer->deserialize($data,someEntity::class,'json');
-//
-//
-//        $encoders = [new XmlEncoder(), new JsonEncoder()];
-//        $normalizers = [new ObjectNormalizer(), new GetSetMethodNormalizer(), new ArrayDenormalizer()];
+        //        $result = $serializer->deserialize($data,someEntity::class,'json');
+        //
+        //
+        //        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        //        $normalizers = [new ObjectNormalizer(), new GetSetMethodNormalizer(), new ArrayDenormalizer()];
 
         return new Serializer($normalizers, $encoders);
     }
 
-    public function test()
+    public function testTTT()
     {
 
-        //$data = Storage::disk('events')->get('startovka-kat-iof3-jirka.xml');
-        $data = Storage::disk('events')->get('startovka-kat-iof3-jirka.xml');
+        return (new UsersExport())->download('users.xlsx');
 
 
-        $xml = simplexml_load_string($data);
-        $json = json_encode($xml);
+        return (new ExportController())->exportViaConstructorInjection();
 
 
-        // dd($json);
-
-        $array = json_decode($json,TRUE);
-
-
-        //dd($json);
-        /**
-         * @var Result $data
-         */
-        $data = $this->getSerializer()->deserialize(
-            $data,
-            'App\Http\Components\Iofv3\StartList',
-            'xml'
-        );
-
-        dd($data);
-
-        foreach ($data->getClassResult() as $result) {
-            echo '<pre>';
-            var_dump($result['Course']);
-        }
-
-
-//        dd($data);
 
     }
 
@@ -89,15 +77,22 @@ class TestController extends Controller
     {
 
         /**
-         * @var Result $data
+         * @var ResultList $data
          */
         $data = $this->getSerializer()->deserialize(
             $data,
-            'App\Http\Components\Iofv3\Result',
+            'App\Http\Components\Iofv3\ResultList',
             'xml'
         );
 
 
+    }
+
+    private function orisGetResponse(array $getParams): Response
+    {
+        $params = array_merge_recursive(['format' => OrisApiService::ORIS_API_DEFAULT_FORMAT], $getParams);
+
+        return Http::get(OrisApiService::ORIS_API_URL, $params)->throw();
     }
 
 }

@@ -46,13 +46,13 @@ class EntryUpdateEvent
                 }
             })
 
-            ->color('secondary')
+            ->color('gray')
             ->label('Aktualizovat závod')
             ->disabled($this->disabledButton())
-            ->icon('heroicon-s-refresh')
+            ->icon('heroicon-m-arrow-path')
             ->modalHeading('Aktualizovat závod z ORISu')
-            ->modalSubheading('Provede aktualizaci závodu s aktuálními daty v ORISu')
-            ->modalButton('Aktualizovat')
+            ->modalDescription('Provede aktualizaci závodu s aktuálními daty v ORISu')
+            ->modalSubmitActionLabel('Aktualizovat')
             ->form([
             ]);
     }

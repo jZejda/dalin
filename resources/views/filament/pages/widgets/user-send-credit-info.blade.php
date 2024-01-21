@@ -1,4 +1,3 @@
-@vite(['resources/css/app.css'])
 <x-filament::widget>
     <x-filament::card>
         {{-- Widget content --}}

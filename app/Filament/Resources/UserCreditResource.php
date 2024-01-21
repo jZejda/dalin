@@ -18,12 +18,11 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Forms;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -37,7 +36,7 @@ class UserCreditResource extends Resource
 
     protected static ?int $navigationSort = 40;
     protected static ?string $navigationGroup = 'Správa Financí';
-    protected static ?string $navigationIcon = 'heroicon-o-cash';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     protected static ?string $navigationLabel = 'Vyúčtování akcí';
     protected static ?string $label = 'Vyúčtování akcí';
     protected static ?string $pluralLabel = 'Vyúčtování akcí';
@@ -137,11 +136,12 @@ class UserCreditResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label(__('user-credit.id'))
+                    ->searchable()
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
-                    ->description(function (UserCredit $record): string {
-                        return 'id: '. $record->id;
-                    })
                     ->dateTime(AppHelper::DATE_FORMAT)
                     ->sortable()
                     ->searchable(),
@@ -162,7 +162,7 @@ class UserCreditResource extends Resource
                     ->label('Uživatel')
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
-                    ->label('RegNumber')
+                    ->label('Registrace')
                     ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? ''),
                 TextColumn::make('amount')
                     ->label(__('user-credit.table.amount_title')),
@@ -171,18 +171,18 @@ class UserCreditResource extends Resource
                 TextColumn::make('user_credit_notes_count')
                     ->label('Komentářů')
                     ->counts('userCreditNotes'),
-                BadgeColumn::make('status')
+                TextColumn::make('status')
                     ->label('Status')
-                    ->enum(self::getUserCreditStatuses())
-                    ->colors([
-                        'success' => UserCreditStatus::Done->value,
-                        'secondary' => UserCreditStatus::Open->value,
-                        'danger' => UserCreditStatus::UnAssign->value,
-                    ])
+                    ->badge()
+                    ->formatStateUsing(fn (UserCreditStatus $state): string => __("sport-event.type_enum_credit_status.{$state->value}"))
+                    ->colors(self::getUserCreditStatuses())
                     ->searchable(),
                 TextColumn::make('sourceUser.name')
                     ->label(__('user-credit.table.source_user_title')),
             ])
+            ->defaultPaginationPageOption(25)
+            ->persistSortInSession()
+            ->defaultSort('updated_at', 'desc')
             ->filters([
                 SelectFilter::make('sport_event_id')
                     ->label('Závod')

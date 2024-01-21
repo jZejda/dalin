@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -16,10 +17,11 @@ use Illuminate\Support\Carbon;
  * @property string $title
  * @property string $description
  * @property string|null $slug
+ * @property int|null $sport_event_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<int, Page> $page
- * @mixin IdeHelperContentCategory
+ * @property-read SportEvent|null $sportEvent
  */
 
 class ContentCategory extends Model
@@ -33,6 +35,7 @@ class ContentCategory extends Model
         'title',
         'description',
         'slug',
+        'sport_event_id',
     ];
 
 
@@ -44,5 +47,10 @@ class ContentCategory extends Model
     public function page(): HasMany
     {
         return $this->hasMany(Page::class, 'content_category_id', 'id');
+    }
+
+    public function sportEvent(): HasOne
+    {
+        return $this->hasOne(SportEvent::class, 'id', 'sport_event_id');
     }
 }

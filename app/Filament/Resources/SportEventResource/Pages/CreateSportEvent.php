@@ -14,7 +14,7 @@ class CreateSportEvent extends CreateRecord
     protected static string $resource = SportEventResource::class;
 
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Action::make('settings')->action('openSettingsModal'),
@@ -23,7 +23,7 @@ class CreateSportEvent extends CreateRecord
 
     public function openSettingsModal(): void
     {
-        $this->dispatchBrowserEvent('open-settings-modal');
+        $this->dispatch('open-settings-modal');
     }
 
     protected function afterCreate(): void

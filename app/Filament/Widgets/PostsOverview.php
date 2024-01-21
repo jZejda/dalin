@@ -20,7 +20,11 @@ class PostsOverview extends Widget
         /**
          * @var Post $lastPost
          */
-        $lastPost = DB::table('posts')->where('private', '=', 1)->limit(1)->first();
+        $lastPost = DB::table('posts')
+            ->where('private', '=', 1)
+            ->limit(1)
+            ->orderByDesc('created_at')
+            ->first();
 
         return view(static::$view, [
             'content_mode' => $lastPost->content_mode ?? 1,
@@ -31,6 +35,6 @@ class PostsOverview extends Widget
 
     public function getColumnSpan(): int | string | array
     {
-        return 2;
+        return 3;
     }
 }

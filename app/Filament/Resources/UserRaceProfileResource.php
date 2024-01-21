@@ -8,14 +8,13 @@ use App\Enums\AppRoles;
 use App\Filament\Resources\UserRaceProfileResource\Pages;
 use App\Models\User;
 use App\Models\UserRaceProfile;
-use Closure;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
@@ -57,9 +56,9 @@ class UserRaceProfileResource extends Resource
                                     ->unique(ignoreRecord: true)
                                     ->required()
                                     ->suffixAction(
-                                        fn ($state, Closure $set) =>
+                                        fn ($state, \Filament\Forms\Set $set) =>
                                         Forms\Components\Actions\Action::make('search_oris_id_by_reg_num')
-                                            ->icon('heroicon-o-search')
+                                            ->icon('heroicon-o-magnifying-glass')
                                             ->action(function () use ($state, $set) {
                                                 if (blank($state)) {
                                                     Filament::notify('danger', 'Vyplň prosím Registracni cislo.');

@@ -7,20 +7,20 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PostResource\Pages;
 use App\Models\Post;
 use App\Models\User;
-use Awcodes\Curator\Facades\Curator;
-use Awcodes\Curator\Generators\DatePathGenerator;
-use Closure;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
-use Filament\Tables;
-use Filament\Tables\Columns\BadgeColumn;
+use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Table;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
@@ -46,13 +46,13 @@ class PostResource extends Resource
                     'md' => 12,
                 ])->schema([
                     // Main column
-                    Card::make()
+                    Section::make()
                         ->schema([
 
                             TextInput::make('title')
                                 ->required()
                                 ->reactive()
-                                ->afterStateUpdated(function (Closure $set, $state) {
+                                ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
                                     $set('slug', Str::slug($state));
                                 }),
                             Grid::make()->schema([
@@ -74,10 +74,10 @@ class PostResource extends Resource
 
 
                     // Right Column
-                    Card::make()
+                    Section::make()
                         ->schema([
                             Toggle::make('private')->inline()
-                                ->onIcon('heroicon-s-lightning-bolt')
+                                ->onIcon('heroicon-m-bolt')
                                 ->offIcon('heroicon-s-user'),
                             Select::make('user_id')
                                 ->label('Author')
@@ -109,44 +109,41 @@ class PostResource extends Resource
 
         return $table
             ->columns([
-                TextColumn::make('title'),
+                TextColumn::make('title')
+                    ->size(TextColumn\TextColumnSize::Large)
+                    ->weight(FontWeight::Medium),
                 TextColumn::make('user.name')
                     ->label('Autor')
                     ->searchable()
                     ->sortable(),
-                BadgeColumn::make('content_mode')
+                TextColumn::make('content_mode')
                     ->label('Formát obsahu')
-                    ->enum([
-                        1 => 'HTML',
-                        2 => 'Markdown',
-                    ])
-                    ->colors([
-                        'secondary' => 1,
-                        'success' => 2,
-                    ])
+                    ->badge()
                     ->sortable(),
                 IconColumn::make('private')
                     ->boolean()
-                    ->trueIcon('heroicon-o-badge-check')
+                    ->trueIcon('heroicon-o-check-badge')
                     ->falseIcon('heroicon-o-x-circle'),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->label(__('filament-shield::filament-shield.column.updated_at'))
                     ->dateTime('d. m. Y - H:i')
                     ->sortable(),
-                BadgeColumn::make('private')
-                    ->enum([
-                        0 => 'veřejná',
-                        1 => 'neveřejná',
-                    ])
-                    ->colors([
-                        0 => 'warning',
-                        1 => 'primary',
-                    ]),
-
+                TextColumn::make('private')
+                    ->badge()
             ])
+            ->defaultPaginationPageOption(25)
             ->defaultSort('updated_at', 'desc')
             ->filters([
                 //
+            ])
+            ->actions([
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ])
+                    ->icon('heroicon-m-ellipsis-horizontal')
+                    ->tooltip(__('app.tables.actions_tooltip')),
             ]);
     }
 
@@ -165,7 +162,7 @@ class PostResource extends Resource
     {
         /** @var Post $record */
         return [
-            'Autor' => $record->user->user_identification,
+            'Autor' => $record->user?->user_identification ?? 'N/A',
             'Stav' => ($record->private === true) ? 'Neveřejná' : 'Veřejná',
         ];
     }
@@ -185,11 +182,6 @@ class PostResource extends Resource
             'edit' => Pages\EditPost::route('/{record}/edit'),
             'view' => Pages\ViewPost::route('/{record}'),
         ];
-    }
-
-    public function register()
-    {
-        Curator::pathGenerator(DatePathGenerator::class);
     }
 
 }

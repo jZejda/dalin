@@ -2,16 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\AppRoles;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
-use Filament\Forms;
+use App\Shared\Helpers\AppHelper;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
-use Filament\Resources\Form;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextColumn\TextColumnSize;
+use Filament\Tables\Table;
 use Filament\Tables;
 use Illuminate\Support\Facades\Hash;
 use Filament\Pages\Page;
@@ -34,23 +38,22 @@ class UserResource extends Resource
                     'md' => 12,
                 ])->schema([
                     // Main column
-                    Card::make()
+                    Section::make()
                         ->schema([
-
-                            Forms\Components\TextInput::make('name')
+                            TextInput::make('name')
                                 ->required()
                                 ->maxLength(255),
-                            Forms\Components\TextInput::make('email')
+                            TextInput::make('email')
                                 ->email()
                                 ->required()
                                 ->maxLength(255),
-                            Forms\Components\TextInput::make('payer_variable_symbol')
+                            TextInput::make('payer_variable_symbol')
                                 ->label('Variabilní symbol uživatele')
                                 ->helperText('Mělo by se jednat o první čísla registrace, tedy přesně 4 číslice.')
                                 ->numeric()
                                 ->minLength(4)
                                 ->maxLength(4),
-                            Forms\Components\TextInput::make('password')
+                            TextInput::make('password')
                                 ->password()
                                 ->required()
                                 ->maxLength(255)
@@ -71,17 +74,16 @@ class UserResource extends Resource
                             'md' => 8
                         ]),
 
-
                     // Right Column
                     Card::make()
                         ->schema([
-                            Forms\Components\Select::make('roles')
+                            Select::make('roles')
                                 ->label('Role')
                                 ->multiple()
                                 ->searchable()
                                 ->relationship('roles', 'name')
                                 ->preload(),
-                            Forms\Components\Select::make('permissions')
+                            Select::make('permissions')
                                 ->label('Oprávnění')
                                 ->multiple()
                                 ->searchable()
@@ -101,23 +103,28 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Jméno')
+                    ->size(TextColumnSize::Large)
                     ->searchable()
                     ->sortable(),
-
-                Tables\Columns\BadgeColumn::make('roles.name')
+                TextColumn::make('email')
+                    ->label('E-mail')
+                    ->size(TextColumnSize::Large)
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('roles.name')
+                    ->badge()
+                    ->separator(',')
                     ->label('Role')
-                    ->enum(AppRoles::enumArray())
-                    ->colors(['primary'])
+                    ->formatStateUsing(fn (string $state): string => __("app-role.app_role_enum.{$state}"))
                     ->searchable(),
-
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->label('Vytvořeno')
-                    ->dateTime(),
-                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime(AppHelper::DATE_FORMAT),
+                TextColumn::make('updated_at')
                     ->label('Upraveno')
-                    ->dateTime(),
+                    ->dateTime(AppHelper::DATE_FORMAT),
             ])
             ->filters([
                 //
@@ -127,7 +134,9 @@ class UserResource extends Resource
             ])
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),
-            ]);
+            ])
+            ->defaultPaginationPageOption(25)
+            ->defaultSort('name');
     }
 
     public static function getRelations(): array

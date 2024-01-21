@@ -21,7 +21,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read SportRegion|null $region
- * @mixin IdeHelperClub
  */
 class Club extends Model
 {
