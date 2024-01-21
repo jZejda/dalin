@@ -16,7 +16,7 @@ class ListUserRaceProfiles extends ListRecords
 {
     protected static string $resource = UserRaceProfileResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),
@@ -48,12 +48,12 @@ class ListUserRaceProfiles extends ListRecords
                 }
             })
 
-            ->color('secondary')
+            ->color('gray')
             ->label('Aktualizovat ID členů v ORISu')
-            ->icon('heroicon-s-refresh')
+            ->icon('heroicon-m-arrow-path')
             ->modalHeading('Aktualizovat ID členů v ORISu')
-            ->modalSubheading('Provede hromadnou aktualizaci ID členů oproti ORISU, potřebné pro přihlášky na závod.')
-            ->modalButton('Aktualizovat')
+            ->modalDescription('Provede hromadnou aktualizaci ID členů oproti ORISU, potřebné pro přihlášky na závod.')
+            ->modalSubmitActionLabel('Aktualizovat')
             ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value]))
             ->form([
             ]);

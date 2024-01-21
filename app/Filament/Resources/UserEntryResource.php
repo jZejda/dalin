@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Enums\EntryStatus;
+use App\Filament\Resources\UserEntryResource\Infolists\UserEntryOverview;
 use App\Filament\Resources\UserEntryResource\Pages;
 use App\Models\SportEvent;
 use App\Models\UserEntry;
 use Carbon\Carbon;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
-use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
@@ -35,11 +36,10 @@ class UserEntryResource extends Resource
             return UserEntry::query();
         } else {
             return UserEntry::query()
-                ->from('user_entries', 'ue')
-                ->leftJoin('user_race_profiles AS urp', 'urp.id', '=', 'ue.user_race_profile_id')
-                ->leftJoin('sport_events AS se', 'se.id', '=', 'ue.sport_event_id')
-                ->where('urp.user_id', '=', Auth::user()->id)
-                ->orderByDesc('se.date');
+                ->from('user_entries')
+                ->leftJoin('user_race_profiles', 'user_race_profiles.id', '=', 'user_entries.user_race_profile_id')
+                ->leftJoin('sport_events', 'sport_events.id', '=', 'user_entries.sport_event_id')
+                ->where('user_race_profiles.user_id', '=', Auth::user()?->id);
         }
     }
 
@@ -58,21 +58,22 @@ class UserEntryResource extends Resource
                 TextColumn::make('sportEvent.name')
                     ->description(fn (UserEntry $record): string => $record->sportEvent->alt_name ?? '')
                     ->label('Závod')
-                    ->url(fn (UserEntry $record): string => route('filament.resources.sport-events.entry', ['record' => $record->sport_event_id])),
-//                    ->sortable(query: function(Builder $query, string $direction): Builder {
-//                        return $query
-//                            ->orderBy('se.name', $direction)
-//                            ->orderBy('se.name', $direction);
-//                    }),
+                    ->url(fn (UserEntry $record): string => route('filament.admin.resources.sport-events.entry', ['record' => $record->sport_event_id]))
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query
+                            ->orderBy('sport_events.name', $direction);
+                    }),
                 TextColumn::make('class_name')
                     ->label('Kategorie')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('userRaceProfile.UserRaceFullName')
                     ->label('Registrace'),
                 TextColumn::make('sportEvent.date')
-                    ->label('Konání')
+                    ->label('Datum')
                     ->dateTime('d. m. Y')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('note')
                     ->label('Poznámka'),
                 TextColumn::make('club_note')
@@ -81,17 +82,25 @@ class UserEntryResource extends Resource
                     ->label('Start v'),
                 TextColumn::make('rent_si')
                     ->label('Půjčit čip'),
-                TextColumn::make('stage_x')
-                    ->label('Etapa'),
-                BadgeColumn::make('entry_status')
-                    ->label('Stav')
-                    ->enum(EntryStatus::enumArray())
-                    ->colors([
-                        'success' => EntryStatus::Create->value,
-                        'secondary' => EntryStatus::Edit->value,
-                        'danger' => EntryStatus::Cancel->value,
-                    ])
+                TextColumn::make('entry_stages')
+                    ->badge()
+                    ->separator(',')
+                    ->label('Etapy')
+                    ->formatStateUsing(fn (string $state): string => str_replace('stage', 'E', $state))
                     ->searchable(),
+                TextColumn::make('entry_status')
+                    ->label('Stav přihlášky')
+                    ->badge()
+                    ->searchable(),
+//                BadgeColumn::make('entry_status')
+//                    ->label('Stav')
+//                    ->enum(EntryStatus::enumArray())
+//                    ->colors([
+//                        'success' => EntryStatus::Create->value,
+//                        'secondary' => EntryStatus::Edit->value,
+//                        'danger' => EntryStatus::Cancel->value,
+//                    ])
+//                    ->searchable(),
             ])
             ->filters([
                 SelectFilter::make('sport_event_id')
@@ -102,10 +111,15 @@ class UserEntryResource extends Resource
                     )
                     ->searchable(),
                 SelectFilter::make('entry_status')
+                    ->label('Stav přihlášky')
                     ->options(EntryStatus::enumArray())->multiple()
                     ->default([EntryStatus::Create->value, EntryStatus::Edit->value]),
             ])
             ->actions([
+//                Action::make('View Information')
+//                    ->label('Info')
+//                    ->infolist(UserEntryOverview::getOverview())
+//                    ->slideOver(),
 //                Tables\Actions\RestoreAction::make(),
 //                DeleteAction::make()
 //                    ->before(function (DeleteAction $action) {
@@ -118,7 +132,9 @@ class UserEntryResource extends Resource
             ])
             ->bulkActions([
                 //
-            ]);
+            ])
+            ->persistSortInSession()
+            ->defaultSort('sportEvent.date', 'desc');
     }
 
     public static function getRelations(): array

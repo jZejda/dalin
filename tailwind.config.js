@@ -1,29 +1,22 @@
-const colors = require('tailwindcss/colors')
+import preset from './vendor/filament/support/tailwind.config.preset'
 
-module.exports = {
+export default {
+    presets: [preset],
     mode: 'jit',
     darkMode: 'class',
     content: [
+        './app/Filament/**/*.php',
         './resources/**/*.blade.php',
-       './resources/**/**/*.blade.php',
-       './vendor/filament/**/*.blade.php',
-       './vendor/errors/minimal.blade.php',
-       './node_modules/flowbite/**/*.js',
+        './resources/**/*.js',
+        './resources/**/*.vue',
+        './resources/views/filament/**/*.blade.php',
+        './vendor/filament/**/*.blade.php',
+        './node_modules/flowbite/**/*.js',
     ],
     theme: {
-        extend: {
-            colors: {
-                danger: colors.rose,
-                primary: colors.blue,
-                success: colors.green,
-                warning: colors.yellow,
-            },
-        },
+        extend: {},
     },
     plugins: [
-        require('@tailwindcss/forms'),
-        require('@tailwindcss/typography'),
-        require('flowbite/plugin'),
-        require('flowbite-typography'),
+        require('flowbite/plugin')
     ],
 }

@@ -1,23 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Pages;
 
-use App\Services\OrisApiService;
-use Closure;
 use App\Models\UserRaceProfile;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
-use Filament\Facades\Filament;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Filament\Resources\Form;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class UserCreateEntry extends Page implements HasForms, HasTable
@@ -96,12 +94,17 @@ class UserCreateEntry extends Page implements HasForms, HasTable
                         ->required()
                         ->reactive()
                         ->suffixAction(
-                            fn ($state, Closure $set) =>
+                            fn ($state, \Filament\Forms\Set $set) =>
                         Action::make('search_oris_category_by_oris_id')
-                            ->icon('heroicon-o-search')
+                            ->icon('heroicon-o-magnifying-glass')
                             ->action(function () use ($state, $set) {
                                 if (blank($state)) {
-                                    Filament::notify('danger', 'Zvol závodní profil.');
+                                    Notification::make()
+                                        ->title('Chyby ve formuláři')
+                                        ->body('Zvol závodní profil.')
+                                        ->danger()
+                                        ->seconds(10)
+                                        ->send();
                                     return;
                                 }
 
@@ -130,10 +133,19 @@ class UserCreateEntry extends Page implements HasForms, HasTable
                                     }
 
                                 } catch (RequestException $e) {
-                                    Filament::notify('danger', 'Nepodařilo se načíst data.');
+                                    Notification::make()
+                                        ->title('ORIS - Error')
+                                        ->body('Nepodařilo se načíst data z ORISu.')
+                                        ->danger()
+                                        ->seconds(10)
+                                        ->send();
                                     return;
                                 }
-                                Filament::notify('success', 'ORIS v pořádku vrátil požadovaná data.');
+                                Notification::make()
+                                    ->title('ORIS - OK')
+                                    ->body('ORIS v pořádku vrátil požadovaná data.')
+                                    ->success()
+                                    ->send();
 
                                 $set('oris_response_class_id', $selectData);
                             })

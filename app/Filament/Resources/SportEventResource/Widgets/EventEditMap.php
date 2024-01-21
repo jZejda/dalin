@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEventResource\Widgets;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\EmptyType;
 use App\Models\SportEvent;
 use Illuminate\Support\Collection;
-use Webbingbrasil\FilamentMaps\Actions;
-use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
-use Webbingbrasil\FilamentMaps\Marker;
-use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
 
-class EventEditMap extends MapWidget
+//use Webbingbrasil\FilamentMaps\Actions;
+//use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
+//use Webbingbrasil\FilamentMaps\Marker;
+//use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
+
+class EventEditMap
 {
     protected int | string | array $columnSpan = 2;
 

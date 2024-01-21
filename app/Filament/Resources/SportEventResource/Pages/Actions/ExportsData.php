@@ -43,12 +43,12 @@ class ExportsData
                     return null;
                 }
             })
-            ->color('secondary')
+            ->color('gray')
             ->label('Export')
-            ->icon('heroicon-o-document-download')
+            ->icon('heroicon-o-document-arrow-down')
             ->modalHeading('Vytvoří export podle zadání')
-            ->modalSubheading('Zvol požadovaný export.')
-            ->modalButton('Exportovat')
+            ->modalDescription('Zvol požadovaný export.')
+            ->modalSubmitActionLabel('Exportovat')
             ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
             ->form([
                 Grid::make(1)

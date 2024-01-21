@@ -10,7 +10,7 @@ class EditSportClassDefinition extends EditRecord
 {
     protected static string $resource = SportClassDefinitionResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),

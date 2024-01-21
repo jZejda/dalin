@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ContentFormat;
+use App\Enums\PageStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
@@ -26,7 +28,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read ContentCategory|null $content_category
  * @property-read User|null $user
- * @mixin IdeHelperPage
  */
 
 class Page extends Model
@@ -36,20 +37,13 @@ class Page extends Model
     public const STATUS_DRAFT = 'draft';
     public const STATUS_ARCHIVE = 'archive';
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
     protected $casts = [
         'page_menu' => 'boolean',
+        'status' => PageStatus::class,
+        'content_format' => ContentFormat::class,
     ];
 
-    /**
-     * Fillable fields.
-     *
-     * @var array<string>
-     **/
+
     protected $fillable = [
         'title',
         'content_category_id',
@@ -63,22 +57,11 @@ class Page extends Model
         'weight',
     ];
 
-
-    /**
-     * Returns User object for single Page
-     *
-     * @return HasOne
-     */
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    /**
-     * Returns ContentCategory object
-     *
-     * @return HasOne
-     */
     public function contentCategory(): HasOne
     {
         return $this->hasOne(ContentCategory::class, 'id', 'content_category_id');

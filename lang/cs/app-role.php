@@ -21,6 +21,7 @@ return [
         AppRoles::Member->value => 'Člen',
         AppRoles::BillingSpecialist->value => 'Správce financí',
         AppRoles::EventMaster->value => 'Správce závodů',
+        AppRoles::EventOrganizer->value => 'Organizátor závodů',
     ],
 
 ];

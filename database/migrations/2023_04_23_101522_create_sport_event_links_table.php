@@ -16,8 +16,8 @@ return new class () extends Migration {
             $table->foreign('sport_event_id')->references('id')->on('sport_events');
             $table->unsignedMediumInteger('external_key')->nullable();
             $table->boolean('internal')->default(true);
-            $table->string('source_path')->nullable();
-            $table->string('source_url')->nullable();
+            $table->string('source_path', 512)->nullable();
+            $table->string('source_url', 512)->nullable();
             $table->string('source_type');
             $table->string('name_cz')->nullable();
             $table->string('name_en')->nullable();

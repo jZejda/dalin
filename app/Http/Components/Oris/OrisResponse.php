@@ -6,6 +6,9 @@ namespace App\Http\Components\Oris;
 
 use App\Http\Components\Oris\Shared\BaseResponse;
 use Illuminate\Http\Client\Response;
+use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
@@ -28,6 +31,11 @@ class OrisResponse
 
     public function getSerializer(): Serializer
     {
+        $jsonEncoder = new JsonEncoder();
+        $csvEncoder = new CsvEncoder();
+        $reflectionExtractor = new ReflectionExtractor();
+        $phpDocExtractor = new PhpDocExtractor();
+
         $encoders = [new XmlEncoder(), new JsonEncoder()];
         $normalizers = [new ObjectNormalizer()];
 

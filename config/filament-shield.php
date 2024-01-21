@@ -2,11 +2,14 @@
 
 return [
     'shield_resource' => [
+        'should_register_navigation' => true,
         'slug' => 'shield/roles',
         'navigation_sort' => -1,
         'navigation_badge' => true,
         'navigation_group' => true,
         'is_globally_searchable' => false,
+        'show_model_path' => true,
+        'is_scoped_to_tenant' => true,
     ],
 
     'auth_provider_model' => [
@@ -20,9 +23,9 @@ return [
         'intercept_gate' => 'before', // after
     ],
 
-    'filament_user' => [
-        'enabled' => false,
-        'name' => 'filament_user',
+    'panel_user' => [
+        'enabled' => true,
+        'name' => 'panel_user',
     ],
 
     'permission_prefixes' => [
@@ -70,7 +73,14 @@ return [
         'resources' => [],
     ],
 
+    'discovery' => [
+        'discover_all_resources' => false,
+        'discover_all_widgets' => false,
+        'discover_all_pages' => false,
+    ],
+
     'register_role_policy' => [
         'enabled' => true,
     ],
+
 ];

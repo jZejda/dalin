@@ -22,7 +22,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, Page> $page
  * @property-read SportEvent|null $sportEvent
- * @mixin IdeHelperContentCategory
  */
 
 class ContentCategory extends Model

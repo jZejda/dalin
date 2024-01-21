@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\SportEventLinkType;
@@ -25,7 +27,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read SportEvent|null $sportEvent
- * @mixin IdeHelperSportEventLink
  */
 class SportEventLink extends Model
 {

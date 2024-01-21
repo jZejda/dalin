@@ -44,12 +44,12 @@ class EntrySendMail
                     ->seconds(8)
                     ->send();
             })
-            ->color('secondary')
+            ->color('gray')
             ->label('Pošli e-mail')
             ->icon('heroicon-s-paper-airplane')
             ->modalHeading('Pošle e-mailovou zprávu k závodu/akci')
-            ->modalSubheading('E-mail je odesílán z fronty každý 5 minut.')
-            ->modalButton('Odeslat')
+            ->modalDescription('E-mail je odesílán z fronty každý 5 minut.')
+            ->modalSubmitActionLabel('Odeslat')
             ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
             ->form([
                 Grid::make(1)

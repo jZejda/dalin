@@ -5,174 +5,71 @@ declare(strict_types=1);
 namespace App\Filament\Resources\SportEventResource\Pages;
 
 use App\Enums\AppRoles;
-use App\Shared\Helpers\AppHelper;
-use Carbon\Carbon;
+use App\Enums\SportEventType;
 use Closure;
 use Filament\Forms;
 use App\Filament\Resources\SportEventResource;
+use App\Filament\Resources\SportEventResource\Pages\Actions\AddOrisEventModal;
 use App\Http\Controllers\Discord\DiscordWebhookHelper;
 use App\Http\Controllers\Discord\RaceEventAddedNotification;
 use App\Models\SportEvent;
-use App\Models\SportList;
-use App\Models\SportRegion;
-use App\Services\OrisApiService;
-use Filament\Facades\Filament;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Pages\Actions;
 use Filament\Pages\Actions\Action;
+use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Client\RequestException;
-use Illuminate\Support\Facades\Http;
 
 class ListSportEvents extends ListRecords
 {
     protected static string $resource = SportEventResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),
-            $this->getOrisEvent(),
+            (new AddOrisEventModal())->getAction(),
             $this->getNotifiAction()->tooltip('Umožní poslat ručně notifikaci na vybraný kanál.'),
+        ];
+    }
+
+    public function getTabs(): array
+    {
+        return [
+            'all' => Tab::make()
+                ->label('Vše'),
+            'race' => Tab::make()
+                ->label('Závody')
+                ->badgeColor('success')
+                ->icon('heroicon-m-flag')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Race)),
+            'traing' => Tab::make()
+                ->label('Trénink')
+                ->badgeColor('success')
+                ->icon('heroicon-m-clock')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Training)),
+            'trainingCamp' => Tab::make()
+                ->label('Soustředění')
+                ->badgeColor('success')
+                ->icon('heroicon-m-calendar-days')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::TrainingCamp)),
+            'other' => Tab::make()
+                ->label('Ostatní')
+                ->badgeColor('success')
+                ->icon('heroicon-m-exclamation-circle')
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Other)),
         ];
     }
 
     protected function getTableRecordUrlUsing(): ?Closure
     {
-        return fn (Model $record): string => route('filament.resources.sport-events.entry', ['record' => $record]);
+        return fn (Model $record): string => route('filament.admin.resources.sport-events.entry', ['record' => $record]);
     }
 
     public function openSettingsModal(): void
     {
-        $this->dispatchBrowserEvent('open-settings-modal');
-    }
-
-    private function getOrisEvent(): Action
-    {
-
-        return Action::make('orisEvent')
-            ->action(function (array $data): void {
-
-
-                // dd($data['oris_id']));
-
-                $event = (new OrisApiService())->updateEvent(intval($data['oris_id']));
-                if ($event) {
-                    Notification::make()
-                        ->title('Závod ID ' . intval($data['oris_id']) . ' byl vytvořen')
-                        ->body('V systému byl založen nový závod s kategoriemi a dostupnými službami. Data jsou aktuální oproti ORISu.')
-                        ->success()
-                        ->seconds(8)
-                        ->send();
-                }
-            })
-            ->color('secondary')
-            ->label('Přidej závod z ORISU')
-            ->icon('heroicon-o-plus-circle')
-            ->modalHeading('Přidej závod z ORISU')
-            ->modalSubheading('Přidá do systému zvolený závod s daty které aktuálně poskytuje ORIS')
-            ->modalButton('Přidej závod')
-            ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
-            ->form([
-                Forms\Components\Grid::make(2)
-                    ->schema([
-                        Forms\Components\Select::make('sport_id')
-                            ->label('Vyber typ sportu')
-                            ->options(SportList::all()->pluck('short_name', 'id'))
-                            ->required()
-                            ->default(1)
-                            ->searchable(),
-                        Forms\Components\Select::make('oris_all')
-                            ->label('Zobrazit i neoficiální závody')
-                            ->options([
-                                0 => 'Pouze oficiální',
-                                1 => 'Všechny'
-                            ])
-                            ->required()
-                            ->default(0),
-                        Grid::make()->schema([
-                            Forms\Components\Select::make('region_id')
-                                ->label('Region')
-                                ->options(SportRegion::all()->pluck('long_name', 'short_name'))
-                                ->searchable(),
-                        ])->columns(1),
-                        Forms\Components\DatePicker::make('datefrom')
-                            ->label('Datum od')
-                            ->default(Carbon::now()->format(AppHelper::DB_DATE_TIME)),
-                        Forms\Components\DatePicker::make('dateto')
-                            ->label('Datum do')
-                            ->default(Carbon::now()->addMonths(6)->format(AppHelper::DB_DATE_TIME)),
-                        Grid::make()->schema([
-                            Select::make('oris_id')
-                                ->label('ORIS ID')
-                                ->hint('Hledej podle kritérí na ORISu')
-                                ->hintIcon('heroicon-s-exclamation')
-                                ->required()
-                                ->searchable()
-                                ->options(function (callable $get) {
-                                    return $get('oris_event_id');
-                                })
-                                ->suffixAction(
-                                    action: fn ($state, Closure $set, callable $get) =>
-                                    \Filament\Forms\Components\Actions\Action::make('get_event')
-                                        ->icon('heroicon-o-search')
-                                        ->action(function () use ($state, $set, $get) {
-                                            //                                        if (blank($state))
-                                            //                                        {
-                                            //                                            Filament::notify('danger', 'Zvol konkrétní závod.');
-                                            //                                            return;
-                                            //                                        }
-
-                                            try {
-
-                                                $dateFrom = explode(' ', $get('datefrom'));
-                                                $dateTo = explode(' ', $get('dateto'));
-
-                                                $baseUriParams = [
-                                                    'format' => 'json',
-                                                    'method' => 'getEventList',
-                                                    'datefrom' => $dateFrom[0],
-                                                    'dateto' => $dateTo[0],
-                                                ];
-
-                                                $params = [
-                                                    'all' => $get('oris_all'),
-                                                    'sport' => $get('sport_id'),
-                                                    'rg' => $get('region_id'),
-                                                ];
-
-                                                foreach ($params as $key => $value) {
-                                                    if (!is_null($value)) {
-                                                        $baseUriParams[$key] = $value;
-                                                    }
-                                                }
-
-                                                $orisResponse = Http::get('https://oris.orientacnisporty.cz/API', $baseUriParams)
-                                                    ->throw()
-                                                    ->json('Data');
-
-
-                                            } catch (RequestException $e) {
-                                                Filament::notify('danger', 'Nepodařilo se načíst data.');
-                                                return;
-                                            }
-
-                                            $orisEventData = [];
-                                            foreach ($orisResponse as $event) {
-                                                $date = Carbon::parse($event['Date'])->format(AppHelper::DATE_FORMAT);
-                                                $orisEventData[$event['ID']] = $event['ID'] . ' - ' . $date . ' - ' . $event['Org1']['Abbr'] . ' - ' . $event['Name'] . ' - ' . $event['Discipline']['NameCZ'];
-                                            }
-
-                                            $set('oris_event_id', $orisEventData);
-
-                                        })
-                                ),
-                        ])->columns(1),
-                    ]),
-            ]);
+        $this->dispatch('open-settings-modal');
     }
 
     private function getNotifiAction(): Action
@@ -190,12 +87,12 @@ class ListSportEvents extends ListRecords
                         ->seconds(8)
                         ->send();
                 })
-                ->color('secondary')
+                ->color('gray')
                 ->label('Pošli notifikaci')
                 ->icon('heroicon-s-paper-airplane')
                 ->modalHeading('Pošli notifikaci k závodu/akci')
-                ->modalSubheading('Notifikace je možná poslat do různých kanálů na objekty, jakékoliv objekty v listu')
-                ->modalButton('Ano poslat notifikaci')
+                ->modalDescription('Notifikace je možná poslat do různých kanálů na objekty, jakékoliv objekty v listu')
+                ->modalSubmitActionLabel('Ano poslat notifikaci')
                 ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
                 ->form([
                     Forms\Components\Grid::make(2)

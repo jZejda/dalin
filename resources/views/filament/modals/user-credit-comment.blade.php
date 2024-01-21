@@ -1,5 +1,11 @@
+@php
+    use App\Models\UserCredit;
 
-    <div>
-        @php(var_dump($data))
+    /**
+     * @var UserCredit $record
+     */
+@endphp
 
-    </div>
+<div>
+    @include('partials.backend.user-credit-notes', ['notes' => $record->userCreditNotes->all()])
+</div>

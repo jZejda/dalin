@@ -18,7 +18,7 @@ class EditSportEvent extends EditRecord
 {
     protected static string $resource = SportEventResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             $this->addEventMarker(),
@@ -27,7 +27,7 @@ class EditSportEvent extends EditRecord
         ];
     }
 
-    protected function getHeaderWidgetsColumns(): int | array
+    public function getHeaderWidgetsColumns(): int | array
     {
         return 1;
     }
@@ -35,7 +35,7 @@ class EditSportEvent extends EditRecord
     protected function getHeaderWidgets(): array
     {
         return [
-            EventEditMap::class,
+            // EventEditMap::class,
         ];
     }
 
@@ -62,12 +62,12 @@ class EditSportEvent extends EditRecord
             })
 
 
-            ->color('secondary')
+            ->color('gray')
             ->label('Přidat bod')
-            ->icon('heroicon-s-location-marker')
+            ->icon('heroicon-m-map-pin')
             ->modalHeading('Přidání bodu zájmu')
-            ->modalSubheading('Přidá k události další bod zájmu. Zobrazí se na mapě detailu závodu.')
-            ->modalButton('Přidat')
+            ->modalDescription('Přidá k události další bod zájmu. Zobrazí se na mapě detailu závodu.')
+            ->modalSubmitActionLabel('Přidat')
             ->visible(auth()->user()->hasRole(['super_admin', 'event_master']))
             ->form([
                 TextInput::make('name')
@@ -115,13 +115,13 @@ class EditSportEvent extends EditRecord
                 }
             })
 
-            ->color('secondary')
+            ->color('gray')
             ->label('Aktualizovat závod')
             ->disabled((!$this->data['use_oris_for_entries'] && is_null($this->data['oris_id'])))
-            ->icon('heroicon-s-refresh')
+            ->icon('heroicon-m-arrow-path')
             ->modalHeading('Aktualizovat závod z ORISu')
-            ->modalSubheading('Provede aktualizaci závodu s aktuálními daty v ORISu')
-            ->modalButton('Aktualizovat')
+            ->modalDescription('Provede aktualizaci závodu s aktuálními daty v ORISu')
+            ->modalSubmitActionLabel('Aktualizovat')
             ->visible(auth()->user()->hasRole(['super_admin', 'event_master']))
             ->form([
             ]);

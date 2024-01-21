@@ -14,6 +14,7 @@ return [
     |
     */
 
+    'id' => '#ID',
     'user' => 'Přidat uživateli',
     'user_profile' => 'Závodní profil',
     'user_source_id' => 'Založil/Změnil',

@@ -9,3 +9,5 @@
 @import 'content/_filament_backend.scss';
 @import 'content/_filament_widget.scss';
 
+@import '/node_modules/cropperjs/dist/cropper.css';
+

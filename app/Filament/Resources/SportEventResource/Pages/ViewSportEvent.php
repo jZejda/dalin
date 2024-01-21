@@ -15,7 +15,7 @@ class ViewSportEvent extends ViewRecord
 {
     protected static string $resource = SportEventResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\EditAction::make(),
@@ -46,13 +46,13 @@ class ViewSportEvent extends ViewRecord
                 }
             })
 
-            ->color('secondary')
+            ->color('gray')
             ->label('Aktualizovat závod')
             ->disabled(!$this->data['use_oris_for_entries'])
-            ->icon('heroicon-s-refresh')
+            ->icon('heroicon-m-arrow-path')
             ->modalHeading('Aktualizovat závod z ORISu')
-            ->modalSubheading('Provede aktualizaci závodu s aktuálními daty v ORISu')
-            ->modalButton('Aktualizovat')
+            ->modalDescription('Provede aktualizaci závodu s aktuálními daty v ORISu')
+            ->modalSubmitActionLabel('Aktualizovat')
             ->visible(auth()->user()->hasRole(['super_admin', 'event_master']))
             ->form([
             ]);

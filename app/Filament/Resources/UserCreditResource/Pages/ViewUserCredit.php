@@ -11,15 +11,15 @@ use App\Models\User;
 use App\Models\UserCreditNote;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions\Action;
 use Filament\Pages\Actions;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewUserCredit extends ViewRecord
 {
     protected static string $resource = UserCreditResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\EditAction::make(),
@@ -27,7 +27,7 @@ class ViewUserCredit extends ViewRecord
         ];
     }
 
-    protected function getHeaderWidgetsColumns(): int | array
+    public function getHeaderWidgetsColumns(): int | array
     {
         return 1;
     }
@@ -68,12 +68,13 @@ class ViewUserCredit extends ViewRecord
                 }
             })
 
-            ->color('secondary')
+            ->color('gray')
             ->label('Poznámka')
-            ->icon('heroicon-s-pencil-alt')
+            ->icon('heroicon-m-pencil-square')
             ->modalHeading('Poznámka k platbě')
-            ->modalSubheading('Pokud není něco v pořádků, sem prosím napiš důvody jak to je jinak. Prosím stručně a věcně.')
-            ->modalButton('Uložit poznámku')
+            ->modalDescription('Pokud není něco v pořádků, sem prosím napiš důvody jak to je jinak. Prosím stručně a věcně.')
+            ->modalSubmitActionLabel('Uložit poznámku')
+            ->modalContentFooter(view('filament.modals.user-add-credit-admin'))
             //->visible(auth()->user()->hasRole(['super_admin', 'event_master']))
             ->form([
                 MarkdownEditor::make('user_note')

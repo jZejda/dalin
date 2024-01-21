@@ -15,7 +15,7 @@ class ListClubs extends ListRecords
 {
     protected static string $resource = ClubResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\CreateAction::make(),
@@ -45,12 +45,12 @@ class ListClubs extends ListRecords
                     }
                 })
 
-                ->color('secondary')
+                ->color('gray')
                 ->label('Aktualizovat')
-                ->icon('heroicon-s-refresh')
+                ->icon('heroicon-m-arrow-path')
                 ->modalHeading('Aktualizuj Kluby z ORISu')
-                ->modalSubheading('Načte a uloží/aktualizuje kluby z ORISu.')
-                ->modalButton('Aktualizovat')
+                ->modalDescription('Načte a uloží/aktualizuje kluby z ORISu.')
+                ->modalSubmitActionLabel('Aktualizovat')
                 ->form([
                 ])
         ];

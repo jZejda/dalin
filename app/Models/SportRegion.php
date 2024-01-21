@@ -16,7 +16,6 @@ use Illuminate\Support\Carbon;
  * @property string $long_name
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * @mixin IdeHelperSportRegion
  */
 class SportRegion extends Model
 {
