@@ -39,18 +39,18 @@
 
 {{--            <div>--}}
 {{--                <label>Label</label>--}}
-{{--                <input wire:model="message" type="text" name="message" value="Hello">--}}
+{{--                <input wire:model.live="message" type="text" name="message" value="Hello">--}}
 {{--            </div>--}}
 {{--            <div>{{$message}}</div>--}}
 {{--            <div>@json($message)</div>--}}
 
-{{--            <label for="search"></label><select id="search" wire:model="search">--}}
+{{--            <label for="search"></label><select id="search" wire:model.live="search">--}}
 {{--                <option value="D10">D10</option>--}}
 {{--                <option value="D12">D12</option>--}}
 {{--            </select>--}}
 
 {{--            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>--}}
-{{--            <select wire:model="search" id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">--}}
+{{--            <select wire:model.live="search" id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">--}}
 {{--                <option selected>Choose a country</option>--}}
 {{--                <option value="D10">D10</option>--}}
 {{--                <option value="D12">D12</option>--}}

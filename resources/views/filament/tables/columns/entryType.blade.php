@@ -4,7 +4,7 @@
 
 <div>
     @if ($getRecord()->event_type->value === SportEventType::Race->value)
-        <div class="ml-4">
+        <div>
            <span class="bg-green-100 text-green-800 text-sm font-semibold inline-flex items-center p-1.5 rounded-full dark:bg-green-800 dark:text-green-300">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-run" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -18,7 +18,7 @@
        </div>
 
     @elseif($getRecord()->event_type->value === SportEventType::Training->value)
-    <div class="ml-4">
+    <div>
         <span class="bg-yellow-100 text-yellow-800 text-sm font-semibold inline-flex items-center p-1.5 rounded-full dark:bg-yellow-800 dark:text-yellow-300">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock-pin" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -31,7 +31,7 @@
         </span>
     </div>
     @elseif($getRecord()->event_type->value === SportEventType::TrainingCamp->value)
-        <div class="ml-4">
+        <div>
             <span class="bg-blue-100 text-blue-800 text-sm font-semibold inline-flex items-center p-1.5 rounded-full dark:bg-blue-800 dark:text-blue-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trees" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -47,7 +47,7 @@
         </div>
 
     @elseif($getRecord()->event_type->value === SportEventType::Other->value)
-        <div class="ml-4">
+        <div>
             <span class="bg-purple-100 text-purple-800 text-sm font-semibold inline-flex items-center p-1.5 rounded-full dark:bg-purple-800 dark:text-purple-300">
                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-help-hexagon" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>

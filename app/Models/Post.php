@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\ContentFormat;
+use App\Enums\PostStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,7 +26,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User|null $user
- * @mixin IdeHelperPost
  */
 class Post extends Model
 {
@@ -34,7 +35,8 @@ class Post extends Model
     public const POST_PRIVATE = 1;
 
     protected $casts = [
-        'private' => 'boolean',
+        'private' => PostStatus::class,
+        'content_mode' => ContentFormat::class,
     ];
 
     /* @var array<string> */

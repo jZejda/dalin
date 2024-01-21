@@ -12,7 +12,7 @@ class EditUserCredit extends EditRecord
 {
     protected static string $resource = UserCreditResource::class;
 
-    protected function getHeaderWidgetsColumns(): int | array
+    public function getHeaderWidgetsColumns(): int | array
     {
         return 1;
     }
@@ -24,14 +24,14 @@ class EditUserCredit extends EditRecord
         ];
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),
         ];
     }
 
-    protected function getFooterWidgetsColumns(): int | array
+    public function getFooterWidgetsColumns(): int | array
     {
         return 1;
     }

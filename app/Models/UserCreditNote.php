@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +24,6 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $user
  * @property-read UserCredit|null $userCredit
  * @property-read User|null $userNoteMade
- * @mixin IdeHelperUserCreditNote
  */
 class UserCreditNote extends Model
 {

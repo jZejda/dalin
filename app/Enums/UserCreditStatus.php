@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum UserCreditStatus: string
+use Filament\Support\Contracts\HasColor;
+
+enum UserCreditStatus: string implements HasColor
 {
     case Done = 'done';
     case UnAssign = 'unAssign';
@@ -17,5 +19,14 @@ enum UserCreditStatus: string
             'unAssign'  => __('sport-event.type_enum_credit_status.' . self::UnAssign->value),
             'open'      => __('sport-event.type_enum_credit_status.' . self::Open->value),
         ];
+    }
+
+    public function getColor(): string | array | null
+    {
+        return match ($this) {
+            self::Done => 'success',
+            self::UnAssign => 'danger',
+            self::Open => 'warning',
+        };
     }
 }

@@ -6,7 +6,7 @@ namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
 use App\Models\UserCredit;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Contracts\View\View;
 
@@ -25,12 +25,12 @@ class UserCreditRelationManager extends RelationManager
         ],
     ];
 
-    protected function getTableContentFooter(): ?View
-    {
-        return view('filament.resources.sport-event-resource.tables.user-credit-footer', $this->data_list);
-    }
+//    protected function getTableContentFooter(): ?View
+//    {
+//        return view('filament.admin.resources.sport-event-resource.tables.user-credit-footer', $this->data_list);
+//    }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         //var_dump(\Route::current());
 
@@ -47,7 +47,7 @@ class UserCreditRelationManager extends RelationManager
                 TextColumn::make('user.userIdentification')
                     ->label('Uživatel'),
                 TextColumn::make('amount')
-                    ->icon(fn (UserCredit $record): string => $record->amount >= 0 ? 'heroicon-s-trending-up' : 'heroicon-s-trending-down')
+                    ->icon(fn (UserCredit $record): string => $record->amount >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                     ->color(fn (UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')
                     ->label(__('user-credit.table.amount_title')),
             ])

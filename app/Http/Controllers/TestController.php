@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Exports\ExportController;
-use App\Exports\UsersExport;
 use App\Http\Components\Iofv3\ResultList;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Components\Oris\GetOris;
+use App\Services\OrisApiService;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
@@ -20,14 +21,27 @@ use Symfony\Component\Serializer\Serializer;
 
 class TestController extends Controller
 {
-    public function testTTT(): void
+    public function test(): void
     {
 
-        //$file = Storage::disk('events')->get('storage/vysledky_iofv3.xml');
-        $file = Storage::disk('events')->get('storage/startovka-kat-iof3-jirka.xml');
+        $getParams = [
+            'method' => 'getEventStartLists',
+            'eventid' => 7586,
+            'clubid' => 1,
+        ];
 
-        // dd($file);
-        //(new EntryEndsToPay())->run();
+        $orisResponse = $this->orisGetResponse($getParams);
+
+        $startList = new GetOris();
+
+        if ($startList->checkOrisResponse($orisResponse)) {
+            $orisData = $startList->startList($orisResponse);
+
+
+            dd($orisData);
+        }
+
+
     }
 
 
@@ -47,7 +61,7 @@ class TestController extends Controller
         return new Serializer($normalizers, $encoders);
     }
 
-    public function test()
+    public function testTTT()
     {
 
         return (new UsersExport())->download('users.xlsx');
@@ -72,6 +86,13 @@ class TestController extends Controller
         );
 
 
+    }
+
+    private function orisGetResponse(array $getParams): Response
+    {
+        $params = array_merge_recursive(['format' => OrisApiService::ORIS_API_DEFAULT_FORMAT], $getParams);
+
+        return Http::get(OrisApiService::ORIS_API_URL, $params)->throw();
     }
 
 }

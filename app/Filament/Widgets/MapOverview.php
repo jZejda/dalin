@@ -13,14 +13,15 @@ use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
 use stdClass;
-use Webbingbrasil\FilamentMaps\Actions;
-use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
-use Webbingbrasil\FilamentMaps\Marker;
-use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
 
-class MapOverview extends MapWidget
+//use Webbingbrasil\FilamentMaps\Actions;
+//use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
+//use Webbingbrasil\FilamentMaps\Marker;
+//use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
+
+class MapOverview
 {
-    use HasWidgetShield;
+    // use HasWidgetShield;
     //    use HasDarkModeTiles;
 
     protected int | string | array $columnSpan = 2;

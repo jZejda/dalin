@@ -6,6 +6,12 @@ namespace App\Enums;
 
 enum SportEventMarkerType: string
 {
+    case DefaultMarker = 'defaultMarker';
+
+    case RaceSimple = 'raceSimple';
+    case RaceDot = 'raceDot';
+    case RaceStages = 'raceStages';
+
     case StageStart = 'stageStart';
     case Parking = 'parking';
     case Other = 'other';
@@ -13,6 +19,8 @@ enum SportEventMarkerType: string
     public static function enumArray(): array
     {
         return [
+            'defaultMarker' => __('sport-event.type_enum_markers.' . self::StageStart->value),
+            'raceSimple' => __('sport-event.type_enum_markers.' . self::StageStart->value),
             'stageStart' => __('sport-event.type_enum_markers.' . self::StageStart->value),
             'parking' => __('sport-event.type_enum_markers.' . self::Parking->value),
             'other' => __('sport-event.type_enum_markers.' . self::Other->value),

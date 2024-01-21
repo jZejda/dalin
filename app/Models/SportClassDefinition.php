@@ -23,7 +23,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read string $class_definition_full_label
  * @property-read SportList|null $sport
- * @mixin IdeHelperSportClassDefinition
  */
 class SportClassDefinition extends Model
 {

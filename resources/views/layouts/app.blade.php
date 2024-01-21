@@ -7,11 +7,11 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{ config('app.name') }}</title>
+        <title>{{ config('app.name') }} | @yield('title')</title>
 
         <style>[x-cloak] { display: none !important; }</style>
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @livewireStyles
+        @filamentStyles
+        @vite('resources/css/app.css')
         @stack('scripts')
         <script src="https://cdn.tailwindcss.com"></script>
 
@@ -41,10 +41,12 @@
             @livewire('notifications')
 
         </div>
-        @livewireScripts
+        @filamentScripts
+        @vite('resources/js/app.js')
     </body>
 
-    <script src="https://unpkg.com/flowbite@1.6.1/dist/flowbite.min.js"></script>
+{{--    <script src="https://unpkg.com/flowbite@1.6.1/dist/flowbite.min.js"></script>--}}
+    <script src="./node_modules/preline/dist/preline.js"></script>
 
     <script>
         var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
@@ -85,10 +87,6 @@
                     localStorage.setItem('color-theme', 'dark');
                 }
             }
-
         });
-
     </script>
-
-
 </html>

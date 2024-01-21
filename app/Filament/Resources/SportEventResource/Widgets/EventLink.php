@@ -12,5 +12,5 @@ class EventLink extends Widget
     public ?Model $record = null;
 
     // protected static string $view = 'filament.resources.user-credit-resource.widgets.user-credit-overview';
-    protected static string $view = 'filament.resources.sport-event-resource.widgets.event-links';
+    protected static string $view = 'filament.admin.resources.sport-event-resource.widgets.event-links';
 }

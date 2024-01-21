@@ -1,5 +1,5 @@
-<x-filament::page>
+<x-filament-panels::page>
     <div>
-        {{ $this->table }}
+        @livewire(\App\Livewire\UserCredit\UserCreditList::class)
     </div>
-</x-filament::page>
+</x-filament-panels::page>

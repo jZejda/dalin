@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -46,15 +49,15 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read Collection<int, UserRaceProfile> $userRaceProfiles
  * @property-read int|null $user_race_profiles_count
  * @property-read UserSetting|null $userSetting
- * @mixin IdeHelperUser
  */
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
     use HasRoles;
+    //use HasPanelShield;
 
     public const ROLE_SUPER_ADMIN = 'super_admin';
     public const ROLE_EVENT_MASTER = 'event_master';
@@ -110,5 +113,10 @@ class User extends Authenticatable
         } else {
             return [];
         }
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
     }
 }

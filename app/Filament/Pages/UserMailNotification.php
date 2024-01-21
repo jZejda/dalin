@@ -6,26 +6,18 @@ namespace App\Filament\Pages;
 
 use App\Models\SportList;
 use App\Models\UserSetting;
-use BezhanSalleh\FilamentShield\Traits\HasPageShield;
-use Filament\Facades\Filament;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions\ButtonAction;
 use Filament\Pages\Page;
-use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 
-class UserMailNotification extends Page implements HasForms, HasTable
+class UserMailNotification extends Page implements HasForms
 {
-    use HasPageShield;
-
     use InteractsWithForms;
-    use InteractsWithTable;
 
     protected static ?int $navigationSort = 37;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
@@ -49,7 +41,7 @@ class UserMailNotification extends Page implements HasForms, HasTable
     public function mount(): void
     {
 
-        $mailNotification = UserSetting::where('user_id', '=', auth()->user()->id)
+        $mailNotification = UserSetting::where('user_id', '=', auth()->user()?->id)
             ->where('type', '=', 'mail')
             ->first();
         if (!is_null($mailNotification)) {
@@ -68,10 +60,11 @@ class UserMailNotification extends Page implements HasForms, HasTable
     {
         $this->form->getState();
 
-        $mailNotification = UserSetting::where('user_id', '=', auth()->user()->id)
+        $mailNotification = UserSetting::where('user_id', '=', auth()->user()?->id)
             ->where('type', '=', 'mail')
             ->first();
-        if (is_null($mailNotification)) {
+
+        if (is_null($mailNotification) && auth()->user()?->id !== null) {
             $mailNotification = new UserSetting();
             $mailNotification->user_id = auth()->user()->id;
             $mailNotification->type = 'mail';
@@ -87,18 +80,17 @@ class UserMailNotification extends Page implements HasForms, HasTable
 
         $options['week_report_by_sport'] = $this->week_report_by_sport;
 
-        $mailNotification->options = $options;
+        if($mailNotification !== null) {
+            $mailNotification->options = $options;
+            $mailNotification->save();
+        }
 
-        $mailNotification->save();
-
-        $recipient = auth()->user();
 
         Notification::make()
-            ->title('Saved successfully')
-            ->sendToDatabase($recipient);
-
-        Filament::notify('success', 'Data o notifikacích jsme uložili.');
-
+            ->title('Nastavení uloženo')
+            ->success()
+            ->body('Změny v nastavení byly uloženy.')
+            ->send();
     }
 
 
@@ -107,7 +99,7 @@ class UserMailNotification extends Page implements HasForms, HasTable
         return static::getUrl();
     }
 
-    protected function getBreadcrumbs(): array
+    public function getBreadcrumbs(): array
     {
         return [
             url('/admin/users') => 'Uzivatel',
@@ -115,7 +107,7 @@ class UserMailNotification extends Page implements HasForms, HasTable
         ];
     }
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             // ButtonAction::make('settings')->action('openSettingsModal'),

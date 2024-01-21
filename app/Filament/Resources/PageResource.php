@@ -4,21 +4,27 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\ContentFormat;
+use App\Enums\PageStatus;
 use App\Filament\Resources\PageResource\Pages;
 use App\Models\ContentCategory;
 use App\Models\Page;
 use App\Models\User;
-use Closure;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
-use Filament\Tables\Columns\BadgeColumn;
+use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Model;
@@ -43,13 +49,13 @@ class PageResource extends Resource
                     'md' => 12,
                 ])->schema([
                     // Main column
-                    Card::make()
+                    Section::make()
                         ->schema([
 
                             TextInput::make('title')
                                 ->required()
                                 ->reactive()
-                                ->afterStateUpdated(function (Closure $set, $state, $context) {
+                                ->afterStateUpdated(function (Set $set, $state, $context) {
                                     if ($context === 'edit') {
                                         return;
                                     }
@@ -77,7 +83,7 @@ class PageResource extends Resource
 
 
                     // Right Column
-                    Card::make()
+                    Section::make()
                         ->schema([
                             Select::make('user_id')
                                 ->label('Author')
@@ -87,16 +93,14 @@ class PageResource extends Resource
                                 ->required(),
 
                             Select::make('status')
-                                ->options(self::getPageStatuses())
-                                ->default(Page::STATUS_CLOSED)
-                                ->disablePlaceholderSelection(),
+                                ->options(PageStatus::class)
+                                ->default(PageStatus::Closed)
+                                ->selectablePlaceholder(),
 
                             Select::make('content_format')
                                 ->label('Formát')
-                                ->options([
-                                            1 => 'HTML',
-                                            2 => 'Markdown',
-                                        ])->default(2)
+                                ->options(ContentFormat::class)
+                                ->default(ContentFormat::Markdown)
                                 ->disabled(!Auth::user()?->hasRole('super_admin'))
                                 ->required(),
 
@@ -108,7 +112,7 @@ class PageResource extends Resource
                             Toggle::make('page_menu')->inline()
                                 ->label('Zobrazit menu kategorie?')
                                 ->onIcon('heroicon-s-check')
-                                ->offIcon('heroicon-s-x'),
+                                ->offIcon('heroicon-m-x-mark'),
 
                             TextInput::make('weight')
                                 ->label('Váha')
@@ -135,37 +139,42 @@ class PageResource extends Resource
                     ->description(fn (Page $record): string => $record->slug ?? '')
                     ->sortable()
                     ->searchable()
-                    ->copyable(),
-                BadgeColumn::make('status')
-                    ->enum(self::getPageStatuses())
-                    ->colors([
-                        'success' => Page::STATUS_OPEN,
-                        'secondary' => Page::STATUS_DRAFT,
-                        'warning' => Page::STATUS_CLOSED,
-                        'primary' => Page::STATUS_ARCHIVE,
-                    ]),
-                BadgeColumn::make('content_format')
-                    ->label('Formát obsahu')
-                    ->enum([
-                        1 => 'HTML',
-                        2 => 'Markdown',
-                    ])
-                    ->colors([
-                        'secondary' => 1,
-                        'success' => 2,
-                    ])
+                    ->size(TextColumn\TextColumnSize::Large)
+                    ->weight(FontWeight::Medium),
+                TextColumn::make('user.name')
+                    ->label('Autor')
+                    ->searchable()
                     ->sortable(),
-               TextColumn::make('updated_at')
+                TextColumn::make('status')
+                    ->badge(),
+                TextColumn::make('content_format')
+                    ->label('Formát obsahu')
+                    ->badge()
+                    ->sortable(),
+                TextColumn::make('updated_at')
                     ->label(__('filament-shield::filament-shield.column.updated_at'))
                     ->dateTime('d. m. Y - H:i')
                     ->sortable(),
             ])
+            ->defaultPaginationPageOption(25)
             ->defaultSort('updated_at', 'desc')
             ->filters([
 //                SelectFilter::make('user_id')->relationship('user_id', 'name'),
                 SelectFilter::make('status')
-                    ->options(self::getPageStatuses()),
-                    ]);
+                    ->options(PageStatus::class),
+                    ])
+            ->actions([
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ])
+                    ->icon('heroicon-m-ellipsis-horizontal')
+                    ->tooltip(__('app.tables.actions_tooltip')),
+            ])
+            ->recordUrl(
+                fn (Page $record): string => route('filament.admin.resources.pages.edit', ['record' => $record]),
+            );
     }
 
     public static function getRelations(): array
@@ -193,25 +202,15 @@ class PageResource extends Resource
     public static function getGlobalSearchResultTitle(Model $record): string
     {
         /** @var Page $record */
-        return $record->title . ' | ' . $record->updated_at->format('m. Y');
+        return $record->title . ' | ' . $record->updated_at?->format('m. Y');
     }
 
     public static function getGlobalSearchResultDetails(Model $record): array
     {
         /** @var Page $record */
         return [
-            'Autor' => $record->user->user_identification,
-            'Zařazeno' => $record->content_category->title,
-        ];
-    }
-
-    private static function getPageStatuses(): array
-    {
-        return [
-            Page::STATUS_OPEN => 'Zveřejněno',
-            Page::STATUS_CLOSED => 'Neaktivní',
-            Page::STATUS_DRAFT => 'Rozpracováno',
-            Page::STATUS_ARCHIVE => 'Archiv'
+            'Autor' => $record->user?->user_identification,
+            'Zařazeno' => $record->content_category?->title,
         ];
     }
 
