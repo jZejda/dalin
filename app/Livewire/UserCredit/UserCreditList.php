@@ -58,7 +58,7 @@ class UserCreditList extends Component implements HasForms, HasTable
                     ->icon(fn (UserCredit $record): string => $record->amount >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                     ->color(fn (UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')
                     ->label(__('user-credit.table.amount_title'))
-                    ->summarize(Sum::make())->money('CZK'),
+                    ->summarize(Sum::make())->money('CZK')->label('Celkem'),
                 ViewColumn::make('user_entry')
                     ->label('Komentářů')
                     ->view('filament.tables.columns.user-credit-comments-count'),

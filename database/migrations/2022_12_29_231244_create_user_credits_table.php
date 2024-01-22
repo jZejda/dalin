@@ -24,7 +24,7 @@ return new class () extends Migration {
             $table->float('amount');
             $table->float('balance')->nullable();
             $table->string('currency', 5)->default('CZK');
-            $table->string('source', 60);
+            $table->string('source', 60)->default('user');
             $table->unsignedBigInteger('source_user_id')->nullable();
             $table->foreign('source_user_id')->references('id')->on('users');
             $table->string('credit_type', 60);

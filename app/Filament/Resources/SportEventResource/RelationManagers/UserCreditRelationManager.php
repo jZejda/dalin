@@ -25,10 +25,10 @@ class UserCreditRelationManager extends RelationManager
         ],
     ];
 
-//    protected function getTableContentFooter(): ?View
-//    {
-//        return view('filament.admin.resources.sport-event-resource.tables.user-credit-footer', $this->data_list);
-//    }
+    //    protected function getTableContentFooter(): ?View
+    //    {
+    //        return view('filament.admin.resources.sport-event-resource.tables.user-credit-footer', $this->data_list);
+    //    }
 
     public function table(Table $table): Table
     {

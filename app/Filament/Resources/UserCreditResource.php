@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Filament\Resources\UserCreditResource\Pages;
@@ -71,13 +72,9 @@ class UserCreditResource extends Resource
                                 )->searchable(),
                             Select::make('source')
                                 ->label(__('user-credit.form.source_title'))
-                                ->options([
-                                    UserCredit::SOURCE_CRON => __('user-credit.credit_source_enum.' . UserCredit::SOURCE_CRON),
-                                    UserCredit::SOURCE_USER => __('user-credit.credit_source_enum.' . UserCredit::SOURCE_USER),
-                                ])
-                                ->default(UserCredit::SOURCE_USER)
+                                ->default(UserCreditSource::User->value)
+                                ->options(UserCreditSource::enumArray())
                                 ->disabled()
-                                ->searchable()
                                 ->required(),
 
                             // Credit detail

@@ -34,10 +34,10 @@ class ListUserCredits extends ListRecords
         ],
     ];
 
-//    protected function getTableContentFooter(): ?View
-//    {
-//        return view('filament.admin.resources.user-credit-resource.tables.footer', $this->data_list);
-//    }
+    //    protected function getTableContentFooter(): ?View
+    //    {
+    //        return view('filament.admin.resources.user-credit-resource.tables.footer', $this->data_list);
+    //    }
 
     protected function getHeaderWidgets(): array
     {
