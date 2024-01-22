@@ -162,17 +162,26 @@ class SportEventResource extends Resource
                                 ])->columns(3),
 
                                 Grid::make()->schema([
-                                    TextInput::make('alt_name')
-                                        ->label('Alternativní název závodu')
-                                        ->hint('Nebude automaticky aktualizován cronem.'),
-                                ])->columns(1),
+                                    DatePicker::make('date')
+                                        ->label('Datum od')
+                                        ->displayFormat('d.m.Y')
+                                        ->required(),
+                                    DatePicker::make('date_end')
+                                        ->label('Datum do')
+                                        ->displayFormat('d.m.Y')
+                                        ->hint('Použij u vícedenních závodů'),
+                                    TextInput::make('stages')
+                                        ->label('Etap')
+                                        ->hint('Pouze pro etapové závody')
+                                        ->hintIcon('heroicon-m-exclamation-triangle')
+                                        ->hintColor('warning'),
+                                ])->columns(3),
 
+                                TextInput::make('alt_name')
+                                    ->label('Alternativní název závodu')
+                                    ->hint('Nebude automaticky aktualizován cronem.'),
                                 TextInput::make('place')
                                     ->label('Místo'),
-                                DatePicker::make('date')
-                                    ->label('Datum od')
-                                    ->displayFormat('d.m.Y')
-                                    ->required(),
 
                                 TextInput::make('gps_lat')
                                     ->label('GPS Lat')
@@ -309,7 +318,14 @@ class SportEventResource extends Resource
                     ->label('Datum')
                     ->dateTime(AppHelper::DATE_FORMAT)
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->description(function (SportEvent $record) {
+                        $dateEnd = $record->date_end;
+                        if ($dateEnd !== null) {
+                            return $record->date->format('d') . ' - ' . $record->date_end->format('d.m.Y');
+                        }
+                        return '';
+                    }),
 
                 ViewColumn::make('entry_weather')
                     ->label('Předpověď')

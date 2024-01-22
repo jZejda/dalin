@@ -22,6 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $alt_name
  * @property int|null $oris_id
  * @property Carbon|null $date
+ * @property Carbon|null $date_end
  * @property string|null $place
  * @property array|null $organization
  * @property array|null $region
@@ -63,6 +64,7 @@ class SportEvent extends Model
         'alt_name',
         'oris_id',
         'date',
+        'date_end',
         'place',
         'region',
         'organization',
@@ -95,6 +97,7 @@ class SportEvent extends Model
 
     protected $casts = [
         'date' => 'date',
+        'date_end' => 'date',
         'use_oris_for_entries' => 'bool',
         'ranking' => 'bool',
         'region' => 'array',

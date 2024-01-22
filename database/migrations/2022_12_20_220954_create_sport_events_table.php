@@ -13,6 +13,7 @@ return new class () extends Migration {
             $table->string('alt_name', 255)->nullable();
             $table->integer('oris_id')->nullable();
             $table->date('date')->nullable();
+            $table->date('date_end')->nullable();
             $table->string('place')->nullable();
             $table->string('organization')->nullable();
             $table->string('region')->nullable();
