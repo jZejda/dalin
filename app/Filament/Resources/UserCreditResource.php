@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\AppRoles;
 use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
@@ -17,6 +18,7 @@ use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -27,7 +29,6 @@ use Filament\Forms;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -105,14 +106,19 @@ class UserCreditResource extends Resource
                         ]),
 
                     // Right Column
-                    Card::make()
+                    Section::make()
                         ->schema([
                             Select::make('source_user_id')
                                 ->label(__('user-credit.user_source_id'))
-                                ->options(User::all()->pluck('user_identification', 'id'))
-                                ->searchable()
-                                ->default(Auth::id())
-                                ->disabled(),
+                                ->options(function (User $user) {
+                                    $users = User::with('roles')->whereHas("roles", function ($q) {
+                                        $q->whereIn('name', [AppRoles::BillingSpecialist->value, AppRoles::SuperAdmin->value]);
+                                    })->get();
+
+                                    return $users->pluck('user_identification', 'id');
+                                })
+                                ->default(auth()->user()->id)
+                                ->searchable(),
 
                             Select::make('status')
                                 ->label(__('user-credit.status'))
