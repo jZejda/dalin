@@ -11,7 +11,7 @@
 
         <style>[x-cloak] { display: none !important; }</style>
         @filamentStyles
-        @vite('resources/css/app.css')
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('scripts')
         <script src="https://cdn.tailwindcss.com"></script>
 

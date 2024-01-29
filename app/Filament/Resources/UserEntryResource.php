@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -74,14 +75,20 @@ class UserEntryResource extends Resource
                     ->dateTime('d. m. Y')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('note')
-                    ->label('Poznámka'),
-                TextColumn::make('club_note')
-                    ->label('Klubová poznámka'),
                 TextColumn::make('requested_start')
                     ->label('Start v'),
-                TextColumn::make('rent_si')
-                    ->label('Půjčit čip'),
+                IconColumn::make('rent_si')
+                    ->label('SI')
+                    ->icon(fn (int $state): string => match ($state) {
+                        0 => 'heroicon-m-no-symbol',
+                        1 => 'heroicon-o-check',
+                        default => 'heroicon-o-exclamation-circle',
+                    })
+                    ->color(fn (int $state): string => match ($state) {
+                        0 => 'gray',
+                        1 => 'success',
+                        default => 'gray',
+                    }),
                 TextColumn::make('entry_stages')
                     ->badge()
                     ->separator(',')
@@ -116,10 +123,12 @@ class UserEntryResource extends Resource
                     ->default([EntryStatus::Create->value, EntryStatus::Edit->value]),
             ])
             ->actions([
-//                Action::make('View Information')
-//                    ->label('Info')
-//                    ->infolist(UserEntryOverview::getOverview())
-//                    ->slideOver(),
+                Action::make('View Information')
+                    ->label('více')
+                    ->icon('heroicon-m-information-circle')
+                    ->infolist(UserEntryOverview::getOverview())
+                    ->slideOver()
+                    ->modalSubmitAction(false),
 //                Tables\Actions\RestoreAction::make(),
 //                DeleteAction::make()
 //                    ->before(function (DeleteAction $action) {

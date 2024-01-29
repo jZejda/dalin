@@ -309,7 +309,7 @@ class SportEventResource extends Resource
                 ViewColumn::make('name')
                     ->searchable()
                     ->sortable()
-                    ->tooltip(fn (SportEvent $record): string => $record->last_update ? 'Poslední hromadná aktualizace: ' . $record->last_update->format('m.d.Y - H:i') : '')
+                    ->tooltip(fn (SportEvent $record): string => $record->last_update ? 'Poslední hromadná aktualizace: ' . $record->last_update->format('d.m.Y - H:i') : '')
                     ->label('Název')
                     ->view('filament.tables.columns.entry-name'),
 

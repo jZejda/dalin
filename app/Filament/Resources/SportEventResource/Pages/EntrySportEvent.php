@@ -22,9 +22,12 @@ use App\Filament\Resources\SportEventResource;
 use App\Models\UserRaceProfile;
 use App\Shared\Helpers\AppHelper;
 use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Tables\Actions\Action as TableAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -382,74 +385,96 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             ->modalDescription('Vyber závodní profil, vyhledej vhodné kategorie a přihlas se.')
             ->modalSubmitActionLabel('Přihlásit')
             ->form([
+
+                Select::make('type')
+                    ->options([
+                        'employee' => 'Employee',
+                        'freelancer' => 'Freelancer',
+                    ])
+                    ->live()
+                    ->afterStateUpdated(fn (Select $component) => $component
+                        ->getContainer()
+                        ->getComponent('dynamicTypeFields')
+                        ->getChildComponentContainer()
+                        ->fill()),
+
+                    Grid::make(2)
+                        ->schema(fn (Get $get): array => match ($get('type')) {
+                            'employee' => [
+                                TextInput::make('employee_number')
+                                    ->required(),
+                                FileUpload::make('badge')
+                                    ->image()
+                                    ->required(),
+                            ],
+                            'freelancer' => [
+                                TextInput::make('hourly_rate')
+                                    ->numeric()
+                                    ->required()
+                                    ->prefix('€'),
+                                FileUpload::make('contract')
+                                    ->required(),
+                            ],
+                            default => [],
+                        })
+                        ->key('dynamicTypeFields'),
+
                 Select::make('raceProfileId')
                     ->label('Vyberte závodní profil')
                     ->options($registerAll ? (new UserRaceProfiles())->getUserRaceProfiles($this->record, true) : (new UserRaceProfiles())->getUserRaceProfiles($this->record))
-                    ->selectablePlaceholder()
-                    ->searchable()
                     ->required()
-                    ->reactive()
-                    ->suffixAction(
-                        fn ($state, \Filament\Forms\Set $set) =>
-                        Action::make('search_oris_category_by_oris_id')
-                            ->icon('heroicon-o-magnifying-glass')
-                            ->visible($this->record->oris_id !== null && $this->record->use_oris_for_entries)
-                            ->action(function () use ($state, $set) {
+                    ->live()
+                    ->afterStateUpdated(
+                        (function ($state, Set $set) {
 
-                                /** @var SportEvent $sportEvent */
-                                $sportEvent = $this->record;
-                                if (blank($state)) {
+                            /** @var SportEvent $sportEvent*/
+                            $sportEvent = $this->record;
+
+                            try {
+                                $userProfile = UserRaceProfile::where('oris_id', '=', $state)->first();
+
+                                $params = [
+                                    'format' => 'json',
+                                    'method' => 'getValidClasses',
+                                    'clubuser' => $userProfile->club_user_id,
+                                    'comp' => $sportEvent->oris_id,
+                                ];
+
+                                $orisResponse = Http::get('https://oris.orientacnisporty.cz/API', $params)
+                                    ->throw()
+                                    ->json('Data');
+
+                                if ($orisResponse === null) {
                                     Notification::make()
-                                        ->title('Zvol závodní profil.')
-                                        ->warning();
-                                    return;
-                                }
-
-                                try {
-                                    $userProfile = UserRaceProfile::where('oris_id', '=', $state)->first();
-
-                                    $params = [
-                                        'format' => 'json',
-                                        'method' => 'getValidClasses',
-                                        'clubuser' => $userProfile->club_user_id,
-                                        'comp' => $sportEvent->oris_id,
-                                    ];
-
-                                    $orisResponse = Http::get('https://oris.orientacnisporty.cz/API', $params)
-                                        ->throw()
-                                        ->json('Data');
-
-                                    if ($orisResponse === null) {
-                                        Notification::make()
-                                            ->title('Na závod není možné se uvedeným závodním profilem přihlásit')
-                                            ->body('Překontrolujte zdali mát v závodním profilu vyplněno ORISID, dále zkontrolujte platnou registraci na daný tok,
+                                        ->title('Na závod není možné se uvedeným závodním profilem přihlásit')
+                                        ->body('Překontrolujte zdali mát v závodním profilu vyplněno ORISID, dále zkontrolujte platnou registraci na daný tok,
                                             Na některé závody není možné jako neregistrovaný se přihlásit.')
-                                            ->danger()
-                                            ->seconds(10)
-                                            ->send();
-                                    }
-
-                                    $selectData = [];
-                                    if (count($orisResponse) > 0) {
-                                        foreach ($orisResponse as $class) {
-                                            $selectData[$class['ID']] = $class['ClassDesc'];
-                                        }
-                                    }
-
-                                } catch (RequestException $e) {
-                                    Notification::make()
-                                        ->title('Nepodařilo se načíst data.')
                                         ->danger()
-                                        ->duration(8);
-                                    return;
+                                        ->seconds(10)
+                                        ->send();
                                 }
-                                Notification::make()
-                                    ->title('ORIS v pořádku vrátil požadovaná data.')
-                                    ->success();
 
-                                $set('specific_response_class_id', $selectData);
-                                $set('si', $userProfile?->si);
-                            })
+                                $selectData = [];
+                                if (count($orisResponse) > 0) {
+                                    foreach ($orisResponse as $class) {
+                                        $selectData[$class['ID']] = $class['ClassDesc'];
+                                    }
+                                }
+
+                            } catch (RequestException $e) {
+                                Notification::make()
+                                    ->title('Nepodařilo se načíst data.')
+                                    ->danger()
+                                    ->duration(8);
+                                return;
+                            }
+                            Notification::make()
+                                ->title('ORIS v pořádku vrátil požadovaná data.')
+                                ->success();
+
+                            $set('specific_response_class_id', $selectData);
+                            $set('si', $userProfile?->si);
+                        })
                     ),
                 Select::make('classId')
                     ->label('Vyber kategorii orisu')
@@ -469,7 +494,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         }
                     })
                     ->searchable()
-                    ->required(),
+                    ->required()
+                    ->loadingMessage('Loading authors...'),
 
                 Grid::make()->schema([
                     TextInput::make('note')

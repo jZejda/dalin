@@ -27,6 +27,7 @@ class UserCreditRelationManager extends RelationManager
     protected static ?string $recordTitleAttribute = 'amount';
 
     protected static ?string $label = 'Finance';
+    protected static ?string $pluralLabel = 'Finance';
 
     protected static ?string $title = 'Finance';
 

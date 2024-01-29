@@ -26,6 +26,8 @@ class UserCreditList extends Component implements HasForms, HasTable
     use InteractsWithForms;
     use InteractsWithTable;
 
+    public string $activeTab = '';
+
     public function table(Table $table): Table
     {
         return $table
