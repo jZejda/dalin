@@ -45,10 +45,8 @@ class PostResource extends Resource
                     'sm' => 1,
                     'md' => 12,
                 ])->schema([
-                    // Main column
                     Section::make()
                         ->schema([
-
                             TextInput::make('title')
                                 ->required()
                                 ->reactive()
@@ -71,7 +69,6 @@ class PostResource extends Resource
                             'sm' => 1,
                             'md' => 8
                         ]),
-
 
                     // Right Column
                     Section::make()

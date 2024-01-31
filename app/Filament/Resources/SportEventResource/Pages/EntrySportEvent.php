@@ -26,6 +26,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Tables\Actions\Action as TableAction;
@@ -385,40 +386,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             ->modalDescription('Vyber závodní profil, vyhledej vhodné kategorie a přihlas se.')
             ->modalSubmitActionLabel('Přihlásit')
             ->form([
-
-                Select::make('type')
-                    ->options([
-                        'employee' => 'Employee',
-                        'freelancer' => 'Freelancer',
-                    ])
-                    ->live()
-                    ->afterStateUpdated(fn (Select $component) => $component
-                        ->getContainer()
-                        ->getComponent('dynamicTypeFields')
-                        ->getChildComponentContainer()
-                        ->fill()),
-
-                    Grid::make(2)
-                        ->schema(fn (Get $get): array => match ($get('type')) {
-                            'employee' => [
-                                TextInput::make('employee_number')
-                                    ->required(),
-                                FileUpload::make('badge')
-                                    ->image()
-                                    ->required(),
-                            ],
-                            'freelancer' => [
-                                TextInput::make('hourly_rate')
-                                    ->numeric()
-                                    ->required()
-                                    ->prefix('€'),
-                                FileUpload::make('contract')
-                                    ->required(),
-                            ],
-                            default => [],
-                        })
-                        ->key('dynamicTypeFields'),
-
                 Select::make('raceProfileId')
                     ->label('Vyberte závodní profil')
                     ->options($registerAll ? (new UserRaceProfiles())->getUserRaceProfiles($this->record, true) : (new UserRaceProfiles())->getUserRaceProfiles($this->record))
@@ -436,7 +403,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 $params = [
                                     'format' => 'json',
                                     'method' => 'getValidClasses',
-                                    'clubuser' => $userProfile->club_user_id,
+                                    'clubuser' => $userProfile->club_user_id ?? '',
                                     'comp' => $sportEvent->oris_id,
                                 ];
 
@@ -548,12 +515,21 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ])->columns(1),
 
                 Grid::make()->schema([
-                    Toggle::make('rent_si')
-                        ->extraAttributes(['class' => 'mt-4'])
+//                    Toggle::make('rent_si')
+//                        ->extraAttributes(['class' => 'mt-4'])
+//                        ->label('Půjčit čip')
+//                        ->onIcon('heroicon-s-check')
+//                        ->offIcon('heroicon-m-x-mark')
+//                        ->default(false),
+                    ToggleButtons::make('rent_si')
                         ->label('Půjčit čip')
-                        ->onIcon('heroicon-s-check')
-                        ->offIcon('heroicon-m-x-mark')
-                        ->default(false),
+                        ->options([
+                            0 => 'Ne',
+                            1 => 'Ano '
+                        ])
+                        ->default(0)
+                        ->inline()
+                        ->grouped()
                 ])->columns(2),
 
         ]);
@@ -575,7 +551,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     private function orisCreateEntry(array $entryData, UserRaceProfile $userProfile, SportEvent $sportEvent): CreateEntry
     {
         $requiredParams = [
-            'clubuser' => $userProfile->club_user_id,
+            'clubuser' => $userProfile->club_user_id ?? '',
             'class' => $entryData['classId'],
         ];
 

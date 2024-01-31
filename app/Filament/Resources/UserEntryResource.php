@@ -157,7 +157,6 @@ class UserEntryResource extends Resource
     {
         return [
             'index' => Pages\ListUserEntries::route('/'),
-            // 'create' => Pages\CreateUserEntry::route('/create'),
             // 'edit' => Pages\EditUserEntry::route('/{record}/edit'),
         ];
     }
