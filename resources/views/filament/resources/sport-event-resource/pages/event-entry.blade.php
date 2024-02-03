@@ -25,7 +25,7 @@
                 @livewire(\App\Livewire\Shared\Maps\LeafletMap::class, ['sportEvent' => $record])
             </div>
         </div>
-        <div class="md:col-span-1 p-6 border border-gray-300 rounded-lg dark:border-gray-700">
+        <div class="md:col-span-1 p-6 border border-gray-300 rounded-lg dark:border-gray-700 bg-white dark:bg-gray-800">
             @include('partials.backend.sport-event-links', ['sportEventLinks' => $record->sportEventLinks()->get()])
         </div>
     </div>

@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\UserEntryResource\Pages;
 
 use App\Filament\Resources\UserEntryResource;
-use Filament\Pages\Actions;
+use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListUserEntries extends ListRecords
@@ -13,7 +13,7 @@ class ListUserEntries extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            //Actions\CreateAction::make(),
+            Actions\CreateAction::make(),
         ];
     }
 }

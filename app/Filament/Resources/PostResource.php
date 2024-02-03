@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PostResource\Pages;
+use App\Filament\Resources\UserEntryResource\Infolists\UserEntryOverview;
 use App\Models\Post;
 use App\Models\User;
 use Filament\Forms\Components\Grid;
@@ -16,6 +17,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
@@ -38,7 +40,6 @@ class PostResource extends Resource
 
     public static function form(Form $form): Form
     {
-
         return $form
             ->schema([
                 Grid::make([
@@ -48,11 +49,11 @@ class PostResource extends Resource
                     Section::make()
                         ->schema([
                             TextInput::make('title')
-                                ->required()
-                                ->reactive()
-                                ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
-                                    $set('slug', Str::slug($state));
-                                }),
+                                ->required(),
+//                                ->reactive()
+//                                ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+//                                    $set('slug', Str::slug($state));
+//                                }),
                             Grid::make()->schema([
                                 MarkdownEditor::make('editorial')
                                     ->maxLength(255),
@@ -90,7 +91,6 @@ class PostResource extends Resource
                                         2 => 'Markdown',
                                     ]
                                 )->default(2)
-                                ->disabled(!Auth::user()?->hasRole('super_admin'))
                                 ->required(),
                         ])->columnSpan([
                             'sm' => 1,

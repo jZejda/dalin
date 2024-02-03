@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\UserEntryResource\Infolists;
+namespace App\Filament\Resources\UserEntryResource\InfoList;
 
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\Section;
@@ -19,15 +19,15 @@ class UserEntryOverview
                 ->description('Detail přihlášky na zvolený závod nebo akci.')
                 ->schema([
                     TextEntry::make('sportEvent.name')
-                        ->label('Název závodu/akce')
+                        ->label('Název závodu/akce:')
                         ->size(TextEntrySize::Large),
                     TextEntry::make('sportEvent.date')
-                        ->label('Datum konání akce')
+                        ->label('Datum konání akce:')
                         ->icon('heroicon-m-calendar-days')
                         ->dateTime('d.m.Y')
                         ->size(TextEntrySize::Large),
                     TextEntry::make('sportEvent.place')
-                        ->label('Místo')
+                        ->label('Místo:')
                         ->icon('heroicon-m-map-pin')
                         ->size(TextEntrySize::Large),
                 ])
@@ -37,28 +37,28 @@ class UserEntryOverview
                 ->description('Detail přihlášeného závodníka, plus ostatní přihlašovací údaje.')
                 ->schema([
                     TextEntry::make('class_name')
-                        ->label('Kategorie')
+                        ->label('Kategorie:')
                         ->badge()
                         ->color('success')
                         ->size(TextEntrySize::Large),
                     TextEntry::make('userRaceProfile.UserRaceFullName')
-                        ->label('Popis')
+                        ->label('Závodník:')
                         ->size(TextEntrySize::Large),
                     TextEntry::make('note')
-                        ->label('Poznámka')
+                        ->label('Poznámka:')
                         ->placeholder('- nebyla vyplněna -')
                         ->size(TextEntrySize::Large),
                     TextEntry::make('club_note')
                         ->icon('heroicon-m-chevron-right')
-                        ->label('Klubová poznámka')
+                        ->label('Klubová poznámka:')
                         ->size(TextEntrySize::Large)
                         ->placeholder('- nebyla vyplněna -'),
                     TextEntry::make('requested_start')
-                        ->label('Start v')
+                        ->label('Start v:')
                         ->size(TextEntrySize::Large)
                         ->placeholder('- nebyl požadován -'),
                     IconEntry::make('rent_si')
-                        ->label('SI')
+                        ->label('SI:')
                         ->icon(fn (int $state): string => match ($state) {
                             0 => 'heroicon-m-no-symbol',
                             1 => 'heroicon-o-check',
@@ -72,7 +72,7 @@ class UserEntryOverview
                     TextEntry::make('entry_stages')
                         ->badge()
                         ->separator(',')
-                        ->label('Etapy')
+                        ->label('Etapy:')
                         ->formatStateUsing(fn (string $state): string => str_replace('stage', 'E', $state))
                         ->placeholder('- jednoetapový závod -'),
                 ])

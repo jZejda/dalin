@@ -1,23 +1,26 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Filament\Resources;
 
 use App\Enums\EntryStatus;
-use App\Filament\Resources\UserEntryResource\Infolists\UserEntryOverview;
+use App\Filament\Resources\UserEntryResource\Infolist\UserEntryOverview;
 use App\Filament\Resources\UserEntryResource\Pages;
+// use App\Filament\Resources\UserEntryResource\RelationManagers;
 use App\Models\SportEvent;
+use App\Models\User;
 use App\Models\UserEntry;
 use Carbon\Carbon;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
 class UserEntryResource extends Resource
@@ -36,11 +39,8 @@ class UserEntryResource extends Resource
         if (Auth::user()?->hasRole('super_admin')) {
             return UserEntry::query();
         } else {
-            return UserEntry::query()
-                ->from('user_entries')
-                ->leftJoin('user_race_profiles', 'user_race_profiles.id', '=', 'user_entries.user_race_profile_id')
-                ->leftJoin('sport_events', 'sport_events.id', '=', 'user_entries.sport_event_id')
-                ->where('user_race_profiles.user_id', '=', Auth::user()?->id);
+            $userRaceProfilesIds = (new User())->getUserRaceProfilesIds(Auth::user());
+            return UserEntry::query()->whereIn('user_race_profile_id', $userRaceProfilesIds);
         }
     }
 
@@ -99,15 +99,6 @@ class UserEntryResource extends Resource
                     ->label('Stav přihlášky')
                     ->badge()
                     ->searchable(),
-//                BadgeColumn::make('entry_status')
-//                    ->label('Stav')
-//                    ->enum(EntryStatus::enumArray())
-//                    ->colors([
-//                        'success' => EntryStatus::Create->value,
-//                        'secondary' => EntryStatus::Edit->value,
-//                        'danger' => EntryStatus::Cancel->value,
-//                    ])
-//                    ->searchable(),
             ])
             ->filters([
                 SelectFilter::make('sport_event_id')
@@ -124,26 +115,20 @@ class UserEntryResource extends Resource
             ])
             ->actions([
                 Action::make('View Information')
-                    ->label('více')
+                    ->label('info')
                     ->icon('heroicon-m-information-circle')
                     ->infolist(UserEntryOverview::getOverview())
                     ->slideOver()
                     ->modalSubmitAction(false),
-//                Tables\Actions\RestoreAction::make(),
-//                DeleteAction::make()
-//                    ->before(function (DeleteAction $action) {
-//                        if (true) {
-//                            dd('fsdfsf');
-//
-//                            $action->halt();
-//                        }
-//                    })
+                //Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                //
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ])
             ->persistSortInSession()
-            ->defaultSort('sportEvent.date', 'desc');
+           ->defaultSort('sportEvent.date', 'desc');
     }
 
     public static function getRelations(): array
@@ -157,7 +142,6 @@ class UserEntryResource extends Resource
     {
         return [
             'index' => Pages\ListUserEntries::route('/'),
-            // 'edit' => Pages\EditUserEntry::route('/{record}/edit'),
         ];
     }
 }

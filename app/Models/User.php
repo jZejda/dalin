@@ -115,6 +115,13 @@ class User extends Authenticatable implements FilamentUser
         }
     }
 
+    public function getUserRaceProfilesIds(?User $user): \Illuminate\Support\Collection
+    {
+        return UserRaceProfile::query()
+            ->where('user_id', '=', $user->id)
+            ->pluck('id');
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         return true;
