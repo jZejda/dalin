@@ -7,6 +7,7 @@ namespace App\Livewire\Shared\Maps;
 use App\Enums\SportEventMarkerType;
 use App\Models\SportEvent;
 use App\Models\SportEventMarker;
+use Illuminate\Database\Eloquent\Collection;
 
 final class BaseMap
 {
@@ -50,6 +51,29 @@ final class BaseMap
         }
 
         return [];
+    }
+
+    /**
+     * @param Collection|array $sportEvents
+     * @return Marker[]
+     */
+    public function getMarkersFromEvents(Collection|array $sportEvents): array
+    {
+        foreach ($sportEvents as $sportEvent) {
+            if ($this->mapBuilder !== null) {
+                if ($sportEvent->gps_lat !== null && $sportEvent->gps_lon !== null) {
+                    $this->mapBuilder->addMarker(
+                        (float)$sportEvent->gps_lat,
+                        (float)$sportEvent->gps_lon,
+                        $this->getMarkerType($sportEvent->stages),
+                        $sportEvent->name,
+                        $this->sportEvent->alt_name ?? '',
+                    );
+                }
+            }
+        }
+
+        return $this->mapBuilder->getMarkers();
     }
 
     private function getMarkerType(?int $stages): SportEventMarkerType
@@ -99,6 +123,27 @@ final class BaseMap
         foreach ($markers as $marker) {
             $lat += $marker['lat'];
             $lon += $marker['lon'];
+        }
+
+        return ['lat' => $lat / $total, 'lon' => $lon / $total];
+    }
+
+    /**
+     * @param Marker[] $markers
+     */
+    public function getCenterMapCoordsFromMarkers(array $markers): array
+    {
+        $total = count($markers);
+        if ($total === 0) {
+            return ['lat' => 0, 'lon' => 0];
+        }
+
+        $lat = 0;
+        $lon = 0;
+
+        foreach ($markers as $marker) {
+            $lat += $marker->lat;
+            $lon += $marker->lng;
         }
 
         return ['lat' => $lat / $total, 'lon' => $lon / $total];

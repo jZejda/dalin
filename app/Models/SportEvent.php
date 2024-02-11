@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\EntryStatus;
-use Arr;
+use Illuminate\Support\Arr;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\AppHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

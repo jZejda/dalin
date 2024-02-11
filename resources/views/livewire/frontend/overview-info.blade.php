@@ -1,6 +1,5 @@
 <div>
     {{-- To attain knowledge, add things every day; To attain wisdom, subtract things every day. --}}
-
     <div>
         <p>List</p>
         <div class="flex flex-col gap-2">

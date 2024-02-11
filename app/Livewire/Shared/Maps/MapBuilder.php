@@ -8,6 +8,7 @@ use App\Enums\SportEventMarkerType;
 
 final class MapBuilder
 {
+    /** @var Marker[] $markers */
     private array $markers = [];
 
     public function addMarker(
