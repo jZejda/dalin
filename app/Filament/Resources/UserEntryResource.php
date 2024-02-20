@@ -78,7 +78,7 @@ class UserEntryResource extends Resource
                 TextColumn::make('requested_start')
                     ->label('Start v'),
                 IconColumn::make('rent_si')
-                    ->label('SI')
+                    ->label('Půjčít SI')
                     ->icon(fn (int $state): string => match ($state) {
                         0 => 'heroicon-m-no-symbol',
                         1 => 'heroicon-o-check',

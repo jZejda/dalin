@@ -9,6 +9,7 @@ enum UserCreditType: string
     case CacheOut = 'cacheOut';
     case UserDonation = 'userDonation';
     case MembershipFees = 'membershipFees';
+    case TransferCreditBetweenUsers = 'transferCreditBetweenUsers';
 
     public static function enumArray(): array
     {
@@ -17,6 +18,7 @@ enum UserCreditType: string
             'cacheOut'      => __($trKey . self::CacheOut->value),
             'userDonation'  => __($trKey . self::UserDonation->value),
             'membershipFees'  => __($trKey . self::MembershipFees->value),
+            'transferCreditBetweenUsers'  => __($trKey . self::TransferCreditBetweenUsers->value),
         ];
     }
 }

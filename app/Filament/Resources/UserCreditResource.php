@@ -23,6 +23,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Forms;
@@ -168,9 +169,8 @@ class UserCreditResource extends Resource
                     ->label('Registrace')
                     ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? ''),
                 TextColumn::make('amount')
-                    ->label(__('user-credit.table.amount_title')),
-                TextColumn::make('amount')
-                    ->label(__('user-credit.table.amount_title')),
+                    ->label(__('user-credit.table.amount_title'))
+                    ->summarize(Sum::make())->money('CZK')->label('Celkem'),
                 TextColumn::make('user_credit_notes_count')
                     ->label('Komentářů')
                     ->counts('userCreditNotes'),

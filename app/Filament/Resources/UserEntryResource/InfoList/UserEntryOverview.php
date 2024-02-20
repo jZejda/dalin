@@ -58,7 +58,7 @@ class UserEntryOverview
                         ->size(TextEntrySize::Large)
                         ->placeholder('- nebyl požadován -'),
                     IconEntry::make('rent_si')
-                        ->label('SI:')
+                        ->label('Půjčit čip:')
                         ->icon(fn (int $state): string => match ($state) {
                             0 => 'heroicon-m-no-symbol',
                             1 => 'heroicon-o-check',

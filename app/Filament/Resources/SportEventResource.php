@@ -47,9 +47,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms;
 use Illuminate\Database\Eloquent\Builder;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
-use pxlrbt\FilamentExcel\Columns\Column;
+use Filament\Notifications\Notification;
 
 class SportEventResource extends Resource
 {
@@ -83,7 +81,12 @@ class SportEventResource extends Resource
                                                 ->icon('heroicon-o-magnifying-glass')
                                                 ->action(function () use ($state, $set, $get) {
                                                     if (blank($state)) {
-                                                        Filament::notify('danger', 'Vyplň prosím ORIS ID závodu.');
+                                                        Notification::make()
+                                                            ->title('Formlulářová data')
+                                                            ->body('Vyplň prosím ORIS ID závodu.')
+                                                            ->danger()
+                                                            ->seconds(8)
+                                                            ->send();
                                                         return;
                                                     }
 
@@ -102,7 +105,12 @@ class SportEventResource extends Resource
 
 
                                                     } catch (RequestException $e) {
-                                                        Filament::notify('danger', 'Nepodařilo se načíst data.');
+                                                        Notification::make()
+                                                            ->title('ORIS API')
+                                                            ->body('Nepodařilo se načíst data.')
+                                                            ->danger()
+                                                            ->seconds(8)
+                                                            ->send();
                                                         return;
                                                     }
                                                     $set('name', $orisResponse['Name'] ?? null);

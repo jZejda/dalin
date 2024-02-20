@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Filament\Notifications\Notification;
 
 class UserRaceProfileResource extends Resource
 {
@@ -61,7 +62,12 @@ class UserRaceProfileResource extends Resource
                                             ->icon('heroicon-o-magnifying-glass')
                                             ->action(function () use ($state, $set) {
                                                 if (blank($state)) {
-                                                    Filament::notify('danger', 'Vyplň prosím Registracni cislo.');
+                                                    Notification::make()
+                                                        ->title('Formulář vstupy')
+                                                        ->body('Vyplň prosím Registracni cislo.')
+                                                        ->danger()
+                                                        ->seconds(8)
+                                                        ->send();
                                                     return;
                                                 }
 
@@ -81,10 +87,20 @@ class UserRaceProfileResource extends Resource
                                                     //                                            dd($countryData);
 
                                                 } catch (RequestException $e) {
-                                                    Filament::notify('danger', 'Nepodařilo se načíst data.');
+                                                    Notification::make()
+                                                        ->title('ORIS API')
+                                                        ->body('Nepodařilo se načíst data.')
+                                                        ->danger()
+                                                        ->seconds(8)
+                                                        ->send();
                                                     return;
                                                 }
-                                                Filament::notify('success', 'ORIS v pořádku vrátil požadovaná data.');
+                                                Notification::make()
+                                                    ->title('ORIS API')
+                                                    ->body('ORIS v pořádku vrátil požadovaná data.')
+                                                    ->success()
+                                                    ->seconds(8)
+                                                    ->send();
 
                                                 $set('oris_id', $orisResponse['ID'] ?? null);
                                                 $set('first_name', $orisResponse['FirstName'] ?? null);
