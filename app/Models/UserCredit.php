@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\UserCreditStatus;
+use App\Enums\UserCreditType;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property int|null $user_id
+ * @property int|null $related_user_id
  * @property int|null $user_race_profile_id
  * @property int|null $sport_event_id
  * @property int|null $sport_service_id
@@ -27,13 +29,14 @@ use Illuminate\Support\Carbon;
  * @property string $currency
  * @property string $source
  * @property int|null $source_user_id
- * @property string $credit_type
+ * @property UserCreditType $credit_type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User|null $sourceUser
  * @property-read SportEvent|null $sportEvent
  * @property-read SportService|null $sportService
  * @property-read User|null $user
+ * @property-read User|null $relatedUser
  * @property-read Collection<int, UserCreditNote> $userCreditNotes
  * @property-read int|null $user_credit_notes_count
  * @property-read UserRaceProfile|null $userRaceProfile
@@ -43,15 +46,16 @@ class UserCredit extends Model
 {
     use HasFactory;
 
-    public const CURRENCY_CZK = 'CZK';
-    public const CURRENCY_EUR = 'EUR';
+    public const string CURRENCY_CZK = 'CZK';
+    public const string CURRENCY_EUR = 'EUR';
 
-    public const SOURCE_CRON = 'cron';
-    public const SOURCE_USER = 'user';
+    public const string SOURCE_CRON = 'cron';
+    public const string SOURCE_USER = 'user';
 
     /** @var array<int, string> */
     protected $fillable = [
         'user_id',
+        'related_user_id',
         'user_race_profile_id',
         'sport_event_id',
         'sport_service_id',
@@ -67,6 +71,7 @@ class UserCredit extends Model
     /** @var array<string,string|class-string> */
     protected $casts = [
         'status' => UserCreditStatus::class,
+        'credit_type' => UserCreditType::class,
     ];
 
 
@@ -83,6 +88,11 @@ class UserCredit extends Model
     public function sourceUser(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'source_user_id');
+    }
+
+    public function relatedUser(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'related_user_id');
     }
 
     public function sportEvent(): HasOne

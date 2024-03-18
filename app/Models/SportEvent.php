@@ -39,7 +39,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $entry_date_1
  * @property Carbon|null $entry_date_2
  * @property Carbon|null $entry_date_3
- * @property Carbon|null $last_update
+ * @property string|null $increase_entry_fee_2
+ * @property string|null $increase_entry_fee_3
  * @property Carbon|null $last_calculate_cost
  * @property string|null $start_time
  * @property string|null $gps_lat
@@ -51,6 +52,7 @@ use Illuminate\Support\Carbon;
  * @property bool $cancelled
  * @property string|null $cancelled_reason
  * @property bool $dont_update_excluded
+ * @property Carbon|null $last_update
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
@@ -81,6 +83,8 @@ class SportEvent extends Model
         'entry_date_1',
         'entry_date_2',
         'entry_date_3',
+        'increase_entry_fee_2',
+        'increase_entry_fee_3',
         'start_time',
         'gps_lat',
         'gps_lon',
@@ -99,7 +103,7 @@ class SportEvent extends Model
         'date' => 'date',
         'date_end' => 'date',
         'use_oris_for_entries' => 'bool',
-        'ranking' => 'bool',
+        'ranking' => 'boolean',
         'region' => 'array',
         'organization' => 'array',
         'entry_date_1' => 'datetime:Y-m-d H:i:s',
@@ -107,10 +111,10 @@ class SportEvent extends Model
         'entry_date_3' => 'datetime:Y-m-d H:i:s',
         'last_update' => 'datetime:Y-m-d H:i:s',
         'last_calculate_cost' => 'datetime:Y-m-d H:i:s',
-        'cancelled' => 'bool',
+        'cancelled' => 'boolean',
         'meta' => 'array',
         'weather' => 'array',
-        'dont_update_excluded' => 'bool',
+        'dont_update_excluded' => 'boolean',
         'event_type' => SportEventType::class,
     ];
 
@@ -180,7 +184,7 @@ class SportEvent extends Model
         }
 
         return ($date !== null ? $date : '') .
-            ((count($this->organization) > 0) ? $stringDelimiter . Arr::join($this->organization, ', ') : '') .
+            ((count($this->organization ?? []) > 0) ? $stringDelimiter . Arr::join($this->organization, ', ') : '') .
             $stringDelimiter . $this->name .
             ($this->oris_id !== null ? $stringDelimiter . 'ORIS ID: ' . $this->oris_id : '');
     }
@@ -195,12 +199,12 @@ class SportEvent extends Model
     public function getSportEventLastCostCalculateAttribute(): string
     {
         return
-            (Carbon::createFromFormat(AppHelper::MYSQL_DATE_TIME, $this->date)->format(AppHelper::DATE_FORMAT)) . ' | '  .
+            $this->date?->format(AppHelper::DATE_FORMAT) . ' | '  .
             Arr::join($this->organization, ', ') . ' | ' .
             ($this->alt_name !== null ? $this->alt_name . ' | ' : '') .
             $this->name . ' | ' .
             ($this->oris_id !== null ? '(ORIS ID: ' . $this->oris_id . ')' : '') .
-            ($this->last_calculate_cost !== null ? ' | (Náklady naposled : ' . Carbon::createFromFormat('Y-m-d H:i:s', $this->last_calculate_cost)->format('d.m.Y - H:i') . ')' : '')
+            ($this->last_calculate_cost !== null ? ' | (Náklady naposled : ' . $this->last_calculate_cost->format('d.m.Y - H:i') . ')' : '')
         ;
     }
 

@@ -60,8 +60,8 @@ class UserEntry extends Model
     protected $casts = [
         'entry_created' => 'datetime:Y-m-d H:i:s',
         'real_start' => 'datetime:Y-m-d H:i:s',
-        'rent_si' => 'bool',
-        'entry_lock' => 'bool',
+        'rent_si' => 'boolean',
+        'entry_lock' => 'boolean',
         'entry_status' => EntryStatus::class,
         'entry_stages' => 'array',
     ];

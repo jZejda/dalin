@@ -12,13 +12,15 @@ return new class () extends Migration {
      */
     public function up()
     {
-        Schema::create('user_settings', function (Blueprint $table) {
+        Schema::create('user_params', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->text('type');
-            $table->json('options')->nullable();
+            $table->string('type', 32);
+            $table->json('value');
             $table->timestamps();
+
+            $table->index(['user_id', 'type']);
         });
     }
 
@@ -29,6 +31,6 @@ return new class () extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('user_settings');
+        Schema::dropIfExists('user_params');
     }
 };

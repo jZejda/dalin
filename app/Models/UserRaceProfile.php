@@ -30,6 +30,8 @@ use Illuminate\Support\Carbon;
  * @property string|null $licence_ob
  * @property string|null $licence_lob
  * @property string|null $licence_mtbo
+ * @property Carbon|null $active_until
+ * @property bool $active
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read string $user_race_full_name
@@ -56,6 +58,13 @@ class UserRaceProfile extends Model
         'licence_ob',
         'licence_lob',
         'licence_mtbo',
+        'active_until',
+        'active',
+    ];
+
+    protected $casts = [
+        'active_until' => 'date',
+        'active' => 'boolean',
     ];
 
     public function user(): HasOne

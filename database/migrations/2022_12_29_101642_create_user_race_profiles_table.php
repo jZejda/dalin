@@ -37,6 +37,9 @@ return new class () extends Migration {
             $table->string('licence_lob', 3)->nullable();
             $table->string('licence_mtbo', 3)->nullable();
 
+            $table->date('active_until')->nullable();
+            $table->boolean('active')->default(true);
+
             $table->timestamps();
         });
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Shared\Maps;
 
-use App\Enums\SportEventMarkerType;
 use App\Models\SportEvent;
 use App\Models\SportEventMarker;
 use Illuminate\Contracts\View\View;

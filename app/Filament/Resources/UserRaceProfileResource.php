@@ -8,12 +8,12 @@ use App\Enums\AppRoles;
 use App\Filament\Resources\UserRaceProfileResource\Pages;
 use App\Models\User;
 use App\Models\UserRaceProfile;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -30,9 +30,9 @@ class UserRaceProfileResource extends Resource
     protected static ?int $navigationSort = 35;
     protected static ?string $navigationGroup = 'Uživatel';
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
-    protected static ?string $navigationLabel = 'Závodní profil';
-    protected static ?string $label = 'Závodní profil';
-    protected static ?string $pluralLabel = 'Závodní profily';
+    protected static ?string $navigationLabel = 'Moje registrace';
+    protected static ?string $label = 'Moje registrace';
+    protected static ?string $pluralLabel = 'Moje registrace';
 
     public static function getEloquentQuery(): Builder
     {
@@ -212,9 +212,22 @@ class UserRaceProfileResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('reg_number')
-                    ->label('Registrace')
+                    ->label(__('user-race-profile.table.reg_number'))
+                    ->sortable()
                     ->searchable()
-                    ->sortable(),
+                    ->size(TextColumnSize::Large)
+                    ->color(function (UserRaceProfile $model): string {
+                        if(!$model->active) {
+                            return 'danger';
+                        }
+                        return 'default';
+                    })
+                    ->description(function (UserRaceProfile $model): ?string {
+                        if(!$model->active) {
+                            return __('user-race-profile.table.active_until') . ': ' . $model->active_until?->format('d.m.Y');
+                        }
+                        return null;
+                    }),
                 TextColumn::make('si')
                     ->label('SI')
                     ->searchable()
@@ -238,9 +251,16 @@ class UserRaceProfileResource extends Resource
                     ->sortable()
                     ->copyable(),
 
-                Tables\Columns\BadgeColumn::make('user.name')
-                    ->label('Uživatel')
-                    ->colors(['primary'])
+                TextColumn::make('user.name')
+                    ->badge()
+                    ->icon('heroicon-o-user')
+                    ->label(__('user-race-profile.table.user-name'))
+                    ->colors(function (UserRaceProfile $record): array {
+                        if ($record->user?->isActive()) {
+                            return ['success'];
+                        }
+                        return ['danger'];
+                    })
                     ->searchable(),
             ])
             ->filters([
