@@ -37,7 +37,6 @@ use Filament\Resources\Resource;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables\Table;
 use Filament\Tables;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\Filter;
@@ -48,9 +47,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Forms;
 use Illuminate\Database\Eloquent\Builder;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportAction;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
-use pxlrbt\FilamentExcel\Columns\Column;
+use Filament\Notifications\Notification;
 
 class SportEventResource extends Resource
 {
@@ -84,7 +81,12 @@ class SportEventResource extends Resource
                                                 ->icon('heroicon-o-magnifying-glass')
                                                 ->action(function () use ($state, $set, $get) {
                                                     if (blank($state)) {
-                                                        Filament::notify('danger', 'Vyplň prosím ORIS ID závodu.');
+                                                        Notification::make()
+                                                            ->title('Formlulářová data')
+                                                            ->body('Vyplň prosím ORIS ID závodu.')
+                                                            ->danger()
+                                                            ->seconds(8)
+                                                            ->send();
                                                         return;
                                                     }
 
@@ -103,7 +105,12 @@ class SportEventResource extends Resource
 
 
                                                     } catch (RequestException $e) {
-                                                        Filament::notify('danger', 'Nepodařilo se načíst data.');
+                                                        Notification::make()
+                                                            ->title('ORIS API')
+                                                            ->body('Nepodařilo se načíst data.')
+                                                            ->danger()
+                                                            ->seconds(8)
+                                                            ->send();
                                                         return;
                                                     }
                                                     $set('name', $orisResponse['Name'] ?? null);
@@ -163,17 +170,26 @@ class SportEventResource extends Resource
                                 ])->columns(3),
 
                                 Grid::make()->schema([
-                                    TextInput::make('alt_name')
-                                        ->label('Alternativní název závodu')
-                                        ->hint('Nebude automaticky aktualizován cronem.'),
-                                ])->columns(1),
+                                    DatePicker::make('date')
+                                        ->label('Datum od')
+                                        ->displayFormat('d.m.Y')
+                                        ->required(),
+                                    DatePicker::make('date_end')
+                                        ->label('Datum do')
+                                        ->displayFormat('d.m.Y')
+                                        ->hint('Použij u vícedenních závodů'),
+                                    TextInput::make('stages')
+                                        ->label('Etap')
+                                        ->hint('Pouze pro etapové závody')
+                                        ->hintIcon('heroicon-m-exclamation-triangle')
+                                        ->hintColor('warning'),
+                                ])->columns(3),
 
+                                TextInput::make('alt_name')
+                                    ->label('Alternativní název závodu')
+                                    ->hint('Nebude automaticky aktualizován cronem.'),
                                 TextInput::make('place')
                                     ->label('Místo'),
-                                DatePicker::make('date')
-                                    ->label('Datum od')
-                                    ->displayFormat('d.m.Y')
-                                    ->required(),
 
                                 TextInput::make('gps_lat')
                                     ->label('GPS Lat')
@@ -301,7 +317,7 @@ class SportEventResource extends Resource
                 ViewColumn::make('name')
                     ->searchable()
                     ->sortable()
-                    ->tooltip(fn (SportEvent $record): string => $record->last_update ? 'Poslední hromadná aktualizace: ' . $record->last_update->format('m.d.Y - H:i') : '')
+                    ->tooltip(fn (SportEvent $record): string => $record->last_update ? 'Poslední hromadná aktualizace: ' . $record->last_update->format('d.m.Y - H:i') : '')
                     ->label('Název')
                     ->view('filament.tables.columns.entry-name'),
 
@@ -310,7 +326,14 @@ class SportEventResource extends Resource
                     ->label('Datum')
                     ->dateTime(AppHelper::DATE_FORMAT)
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->description(function (SportEvent $record) {
+                        $dateEnd = $record->date_end;
+                        if ($dateEnd !== null) {
+                            return $record->date->format('d') . ' - ' . $record->date_end->format('d.m.Y');
+                        }
+                        return '';
+                    }),
 
                 ViewColumn::make('entry_weather')
                     ->label('Předpověď')

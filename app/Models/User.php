@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserParamType;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -32,6 +33,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon|null $email_verified_at
  * @property string $password
  * @property int|null $payer_variable_symbol
+ * @property bool $active
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -59,17 +61,18 @@ class User extends Authenticatable implements FilamentUser
     use HasRoles;
     //use HasPanelShield;
 
-    public const ROLE_SUPER_ADMIN = 'super_admin';
-    public const ROLE_EVENT_MASTER = 'event_master';
-    public const ROLE_MEMBER = 'member';
-    public const ROLE_REDACTOR = 'redactor';
+    public const string ROLE_SUPER_ADMIN = 'super_admin';
+    public const string ROLE_EVENT_MASTER = 'event_master';
+    public const string ROLE_MEMBER = 'member';
+    public const string ROLE_REDACTOR = 'redactor';
 
     /** @var array<int, string> */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'payer_variable_symbol'
+        'payer_variable_symbol',
+        'active',
     ];
 
     /** @var array<int, string> */
@@ -81,6 +84,7 @@ class User extends Authenticatable implements FilamentUser
     /** @var array<string, string> */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'active' => 'boolean',
     ];
 
     public function userRaceProfiles(): HasMany
@@ -115,8 +119,69 @@ class User extends Authenticatable implements FilamentUser
         }
     }
 
+    public function getUserRaceProfilesIds(?User $user): \Illuminate\Support\Collection
+    {
+        return UserRaceProfile::query()
+            ->where('user_id', '=', $user?->id)
+            ->pluck('id');
+    }
+
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    public function canCreateEntry(): bool
+    {
+        $userCreditLimit = config('site-config.club.user_credit_limit');
+        if ($this->getParam(UserParamType::UserActualBalance) > $userCreditLimit) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        //return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
+        if($this->isActive()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function setParam(UserParamType $paramType, mixed $value): void
+    {
+        $userParam = UserParam::query()
+            ->where('user_id', '=', $this->id)
+            ->where('type', '=', $paramType)
+            ->first();
+
+        if ($userParam === null) {
+            $userParam = new UserParam();
+            $userParam->type = $paramType;
+            $userParam->user_id = $this->id;
+        }
+
+        $userParam->value = $value;
+        $userParam->saveOrFail();
+    }
+
+    public function getParam(UserParamType $paramType): mixed
+    {
+        /** @var UserParam $userParam */
+        $userParam = UserParam::query()
+            ->where('user_id', '=', $this->id)
+            ->where('type', '=', $paramType)
+            ->first();
+
+        if ($userParam !== null) {
+            return match ($userParam->type) {
+                UserParamType::UserActualBalance => floatval($userParam->value),
+            };
+        }
+
+        return null;
     }
 }

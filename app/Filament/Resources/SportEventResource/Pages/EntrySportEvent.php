@@ -25,6 +25,8 @@ use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Forms\Set;
 use Filament\Tables\Actions\Action as TableAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -173,14 +175,17 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 })
                 ->searchable(),
             TextColumn::make('note')
-                ->label('Poznámka'),
+                ->label('Poznámka')
+                ->limit(15)
+                ->tooltip(fn (UserEntry $record): string => $record->note ?? ''),
             TextColumn::make('club_note')
                 ->label('Klubová poznámka')
-                ->limit(50),
+                ->limit(15)
+                ->tooltip(fn (UserEntry $record): string => $record->club_note ?? ''),
             TextColumn::make('requested_start')
                 ->label('Start v')
-                ->limit(50)
-                ->tooltip(fn (UserEntry $record): string => $record->requested_start ? $record->requested_start : ''),
+                ->limit(15)
+                ->tooltip(fn (UserEntry $record): string => $record->requested_start ?? ''),
             TextColumn::make('rent_si')
                 ->label('Půjčit čip'),
             TextColumn::make('entry_stages')
@@ -255,7 +260,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         //                    +ExportCreated: "2023-03-08 23:31:58"
                         //                    +Data: null
 
-                        if ($orisResponse->getStatus() === 'OK') {
+                        if ($orisResponse->Status === 'OK') {
 
                             $record->entry_status = EntryStatus::Cancel;
                             $record->saveOrFail();
@@ -275,7 +280,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         } else {
                             Notification::make()
                                 ->title('Neco se nepovedlo')
-                                ->body('Toto pošli správci: ' .$orisResponse->getStatus())
+                                ->body('Toto pošli správci: ' .$orisResponse->Status)
                                 ->warning()
                                 ->send();
                         }
@@ -326,7 +331,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                     $orisResponse = $this->orisCreateEntry($data, $userRaceProfile, $sportEvent);
 
-                    if ($orisResponse->getStatus() === 'OK') {
+                    if ($orisResponse->Status === 'OK') {
 
                         $storeResult = $this->storeUserEntry(true, $sportEvent, $userRaceProfile, $sportClass, $data, $orisResponse);
 
@@ -349,7 +354,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     } else {
                         Notification::make()
                             ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name . ' do kategorie: ' . $sportClass?->name)
-                            ->body('Nebyla provedena. ORIS vrátil zprávu: ' . $orisResponse->getStatus())
+                            ->body('Nebyla provedena. ORIS vrátil zprávu: ' . $orisResponse->Status)
                             ->warning()
                             ->seconds(8)
                             ->send();
@@ -359,8 +364,10 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                      * Entry to NonORIS Event
                      */
 
-                    $userRaceProfile = UserRaceProfile::where('id', '=', $data['raceProfileId'])->first();
-                    $sportClass = SportClass::where('id', '=', $data['classId'])->first();
+                    /** @var ?UserRaceProfile $userRaceProfile */
+                    $userRaceProfile = UserRaceProfile::query()->where('id', '=', $data['raceProfileId'])->first();
+                    /** @var ?SportClass $sportClass */
+                    $sportClass = SportClass::query()->where('id', '=', $data['classId'])->first();
 
                     $storeResult = $this->storeUserEntry(false, $sportEvent, $userRaceProfile, $sportClass, $data);
 
@@ -374,9 +381,15 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     }
                 }
             })
+
+            ->disabled(
+                EmptyType::arrayEmpty((new UserRaceProfiles())->getUserRaceProfiles($this->record)->toArray())
+                || $sportEvent->cancelled
+                || !Auth::user()?->canCreateEntry()
+            )
+
             ->color($registerAll ? 'gray' : 'primary')
             ->label($registerAll ? 'Přihlásit kohokoliv' : 'Přihlásit na závod')
-            ->disabled(EmptyType::arrayEmpty((new UserRaceProfiles())->getUserRaceProfiles($this->record)->toArray()) || $sportEvent->cancelled)
             ->icon($registerAll ? 'heroicon-o-users' : 'heroicon-o-plus-circle')
             ->modalHeading('Přihlášení na závod')
             ->modalDescription('Vyber závodní profil, vyhledej vhodné kategorie a přihlas se.')
@@ -385,71 +398,59 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 Select::make('raceProfileId')
                     ->label('Vyberte závodní profil')
                     ->options($registerAll ? (new UserRaceProfiles())->getUserRaceProfiles($this->record, true) : (new UserRaceProfiles())->getUserRaceProfiles($this->record))
-                    ->selectablePlaceholder()
-                    ->searchable()
                     ->required()
-                    ->reactive()
-                    ->suffixAction(
-                        fn ($state, \Filament\Forms\Set $set) =>
-                        Action::make('search_oris_category_by_oris_id')
-                            ->icon('heroicon-o-magnifying-glass')
-                            ->visible($this->record->oris_id !== null && $this->record->use_oris_for_entries)
-                            ->action(function () use ($state, $set) {
+                    ->live()
+                    ->afterStateUpdated(
+                        (function ($state, Set $set) {
 
-                                /** @var SportEvent $sportEvent */
-                                $sportEvent = $this->record;
-                                if (blank($state)) {
+                            /** @var SportEvent $sportEvent*/
+                            $sportEvent = $this->record;
+
+                            try {
+                                $userProfile = UserRaceProfile::where('oris_id', '=', $state)->first();
+
+                                $params = [
+                                    'format' => 'json',
+                                    'method' => 'getValidClasses',
+                                    'clubuser' => $userProfile->club_user_id ?? '',
+                                    'comp' => $sportEvent->oris_id,
+                                ];
+
+                                $orisResponse = Http::get('https://oris.orientacnisporty.cz/API', $params)
+                                    ->throw()
+                                    ->json('Data');
+
+                                if ($orisResponse === null) {
                                     Notification::make()
-                                        ->title('Zvol závodní profil.')
-                                        ->warning();
-                                    return;
-                                }
-
-                                try {
-                                    $userProfile = UserRaceProfile::where('oris_id', '=', $state)->first();
-
-                                    $params = [
-                                        'format' => 'json',
-                                        'method' => 'getValidClasses',
-                                        'clubuser' => $userProfile->club_user_id,
-                                        'comp' => $sportEvent->oris_id,
-                                    ];
-
-                                    $orisResponse = Http::get('https://oris.orientacnisporty.cz/API', $params)
-                                        ->throw()
-                                        ->json('Data');
-
-                                    if ($orisResponse === null) {
-                                        Notification::make()
-                                            ->title('Na závod není možné se uvedeným závodním profilem přihlásit')
-                                            ->body('Překontrolujte zdali mát v závodním profilu vyplněno ORISID, dále zkontrolujte platnou registraci na daný tok,
+                                        ->title('Na závod není možné se uvedeným závodním profilem přihlásit')
+                                        ->body('Překontrolujte zdali mát v závodním profilu vyplněno ORISID, dále zkontrolujte platnou registraci na daný tok,
                                             Na některé závody není možné jako neregistrovaný se přihlásit.')
-                                            ->danger()
-                                            ->seconds(10)
-                                            ->send();
-                                    }
-
-                                    $selectData = [];
-                                    if (count($orisResponse) > 0) {
-                                        foreach ($orisResponse as $class) {
-                                            $selectData[$class['ID']] = $class['ClassDesc'];
-                                        }
-                                    }
-
-                                } catch (RequestException $e) {
-                                    Notification::make()
-                                        ->title('Nepodařilo se načíst data.')
                                         ->danger()
-                                        ->duration(8);
-                                    return;
+                                        ->seconds(10)
+                                        ->send();
                                 }
-                                Notification::make()
-                                    ->title('ORIS v pořádku vrátil požadovaná data.')
-                                    ->success();
 
-                                $set('specific_response_class_id', $selectData);
-                                $set('si', $userProfile?->si);
-                            })
+                                $selectData = [];
+                                if (count($orisResponse) > 0) {
+                                    foreach ($orisResponse as $class) {
+                                        $selectData[$class['ID']] = $class['ClassDesc'];
+                                    }
+                                }
+
+                            } catch (RequestException $e) {
+                                Notification::make()
+                                    ->title('Nepodařilo se načíst data.')
+                                    ->danger()
+                                    ->duration(8);
+                                return;
+                            }
+                            Notification::make()
+                                ->title('ORIS v pořádku vrátil požadovaná data.')
+                                ->success();
+
+                            $set('specific_response_class_id', $selectData);
+                            $set('si', $userProfile?->si);
+                        })
                     ),
                 Select::make('classId')
                     ->label('Vyber kategorii orisu')
@@ -469,7 +470,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         }
                     })
                     ->searchable()
-                    ->required(),
+                    ->required()
+                    ->loadingMessage('Loading authors...'),
 
                 Grid::make()->schema([
                     TextInput::make('note')
@@ -522,12 +524,21 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ])->columns(1),
 
                 Grid::make()->schema([
-                    Toggle::make('rent_si')
-                        ->extraAttributes(['class' => 'mt-4'])
+//                    Toggle::make('rent_si')
+//                        ->extraAttributes(['class' => 'mt-4'])
+//                        ->label('Půjčit čip')
+//                        ->onIcon('heroicon-s-check')
+//                        ->offIcon('heroicon-m-x-mark')
+//                        ->default(false),
+                    ToggleButtons::make('rent_si')
                         ->label('Půjčit čip')
-                        ->onIcon('heroicon-s-check')
-                        ->offIcon('heroicon-m-x-mark')
-                        ->default(false),
+                        ->options([
+                            0 => 'Ne',
+                            1 => 'Ano '
+                        ])
+                        ->default(0)
+                        ->inline()
+                        ->grouped()
                 ])->columns(2),
 
         ]);
@@ -549,7 +560,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     private function orisCreateEntry(array $entryData, UserRaceProfile $userProfile, SportEvent $sportEvent): CreateEntry
     {
         $requiredParams = [
-            'clubuser' => $userProfile->club_user_id,
+            'clubuser' => $userProfile->club_user_id ?? '',
             'class' => $entryData['classId'],
         ];
 
@@ -630,7 +641,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     ): bool {
         $entry = new UserEntry();
         if ($isOrisEvent) {
-            $entry->oris_entry_id = $orisResponse->getData()?->getEntry()->getID();
+            $entry->oris_entry_id = $orisResponse->getData()?->Entry->ID;
         }
         $entry->sport_event_id = $sportEvent->id;
         $entry->user_race_profile_id = $userRaceProfile->id;

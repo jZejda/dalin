@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\AppRoles;
+use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Filament\Resources\UserCreditResource\Pages;
@@ -16,19 +18,21 @@ use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Forms;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Get;
 
 class UserCreditResource extends Resource
 {
@@ -53,39 +57,14 @@ class UserCreditResource extends Resource
                     // Main column
                     Card::make()
                         ->schema([
-                            Select::make('user_id')
-                                ->label(__('user-credit.user'))
-                                ->options(User::all()->pluck('user_identification', 'id'))
-                                ->searchable(),
-                            Select::make('user_race_profile_id')
-                                ->label(__('user-credit.user_profile'))
-                                ->options(UserRaceProfile::all()->pluck('reg_number', 'id'))
-                                ->searchable(),
-                            Select::make('sport_event_id')
-                                ->label(__('user-credit.event_name'))
-                                ->options(
-                                    SportEvent::all()
-                                        ->where('date', '>', Carbon::now()->subMonths(12)->format(AppHelper::MYSQL_DATE_TIME))
-                                        ->sortByDesc('date')
-                                        ->pluck('sport_event_oris_compact_title', 'id')
-                                )->searchable(),
-                            Select::make('source')
-                                ->label(__('user-credit.form.source_title'))
-                                ->options([
-                                    UserCredit::SOURCE_CRON => __('user-credit.credit_source_enum.' . UserCredit::SOURCE_CRON),
-                                    UserCredit::SOURCE_USER => __('user-credit.credit_source_enum.' . UserCredit::SOURCE_USER),
-                                ])
-                                ->default(UserCredit::SOURCE_USER)
-                                ->disabled()
-                                ->searchable()
-                                ->required(),
 
                             // Credit detail
                             Grid::make()->schema([
                                 Select::make('credit_type')
                                     ->label(__('user-credit.form.type_title'))
                                     ->options(UserCreditType::enumArray())
-                                    ->required(),
+                                    ->required()
+                                    ->live(),
                                 TextInput::make('amount')
                                     ->label(__('user-credit.form.amount_title'))
                                     ->required(),
@@ -100,6 +79,53 @@ class UserCreditResource extends Resource
                                     ->disabled(),
                             ])->columns(3),
 
+                            // Users
+                            Grid::make()->schema([
+                                Select::make('user_id')
+                                    ->label(__('user-credit.user'))
+                                    ->options(User::all()->pluck('user_identification', 'id'))
+                                    ->required()
+                                    ->searchable(),
+                                Select::make('related_user_id')
+                                    ->label(__('user-credit.related_user_profile'))
+                                    ->options(User::all()->pluck('user_identification', 'id'))
+                                    ->hint('Vyžadováno pokud je vybrán přesun mezi uživateli.')
+                                    ->hintColor('warning')
+                                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Upozornění')
+                                    ->visible(function (Get $get): bool {
+                                        if ($get('credit_type') === UserCreditType::TransferCreditBetweenUsers->value) {
+                                            return true;
+                                        }
+                                        return false;
+                                    })
+                                    ->required(function (Get $get): bool {
+                                        if ($get('credit_type') === UserCreditType::TransferCreditBetweenUsers->value) {
+                                            return true;
+                                        }
+                                        return false;
+                                    })
+                                    ->searchable(),
+                                Select::make('user_race_profile_id')
+                                    ->label(__('user-credit.user_profile'))
+                                    ->options(UserRaceProfile::all()->pluck('user_race_full_name', 'id'))
+                                    ->searchable(),
+                            ])->columns(1),
+
+                            Select::make('sport_event_id')
+                                ->label(__('user-credit.event_name'))
+                                ->options(
+                                    SportEvent::all()
+                                        ->where('date', '>', Carbon::now()->subMonths(12)->format(AppHelper::MYSQL_DATE_TIME))
+                                        ->sortByDesc('date')
+                                        ->pluck('sport_event_oris_compact_title', 'id')
+                                )->searchable(),
+                            Select::make('source')
+                                ->label(__('user-credit.form.source_title'))
+                                ->default(UserCreditSource::User->value)
+                                ->options(UserCreditSource::enumArray())
+                                ->disabled()
+                                ->required(),
+
                         ])
                         ->columns(2)
                         ->columnSpan([
@@ -108,14 +134,19 @@ class UserCreditResource extends Resource
                         ]),
 
                     // Right Column
-                    Card::make()
+                    Section::make()
                         ->schema([
                             Select::make('source_user_id')
                                 ->label(__('user-credit.user_source_id'))
-                                ->options(User::all()->pluck('user_identification', 'id'))
-                                ->searchable()
-                                ->default(Auth::id())
-                                ->disabled(),
+                                ->options(function (User $user) {
+                                    $users = User::with('roles')->whereHas("roles", function ($q) {
+                                        $q->whereIn('name', [AppRoles::BillingSpecialist->value, AppRoles::SuperAdmin->value]);
+                                    })->get();
+
+                                    return $users->pluck('user_identification', 'id');
+                                })
+                                ->default(auth()->user()->id)
+                                ->searchable(),
 
                             Select::make('status')
                                 ->label(__('user-credit.status'))
@@ -145,6 +176,12 @@ class UserCreditResource extends Resource
                     ->dateTime(AppHelper::DATE_FORMAT)
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('sportEvent.date')
+                    ->label(__('user-credit.table.sport_event_date'))
+                    ->icon('heroicon-o-calendar-days')
+                    ->dateTime(AppHelper::DATE_FORMAT)
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
                     ->description(function (UserCredit $record): string {
@@ -159,18 +196,37 @@ class UserCreditResource extends Resource
                         return $description;
                     }),
                 TextColumn::make('user.name')
-                    ->label('Uživatel')
+                    ->badge()
+                    ->icon('heroicon-o-user')
+                    ->label(__('user-race-profile.table.user-name'))
+                    ->colors(function (UserCredit $record): array {
+                        if ($record->user?->isActive()) {
+                            return ['success'];
+                        }
+                        return ['danger'];
+                    })
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label('Registrace')
                     ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? ''),
                 TextColumn::make('amount')
-                    ->label(__('user-credit.table.amount_title')),
-                TextColumn::make('amount')
-                    ->label(__('user-credit.table.amount_title')),
-                TextColumn::make('user_credit_notes_count')
+                    ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
+                    ->color(fn (UserCredit $record): ?string => $record->credit_type->getColor())
+                    ->label(__('user-credit.table.amount_title'))
+                    ->description(function (UserCredit $record): ?string {
+                        if ($record->relatedUser !== null) {
+                            if ($record->amount < 0) {
+                                $amountDirection = __('user-credit.table.for_user');
+                            } else {
+                                $amountDirection = __('user-credit.table.from_user');
+                            }
+                            return $amountDirection . $record->relatedUser->name;
+                        }
+                        return null;
+                    }),
+                ViewColumn::make('user_entry')
                     ->label('Komentářů')
-                    ->counts('userCreditNotes'),
+                    ->view('filament.tables.columns.user-credit-comments-count'),
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()

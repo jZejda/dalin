@@ -38,23 +38,20 @@ class PostResource extends Resource
 
     public static function form(Form $form): Form
     {
-
         return $form
             ->schema([
                 Grid::make([
                     'sm' => 1,
                     'md' => 12,
                 ])->schema([
-                    // Main column
                     Section::make()
                         ->schema([
-
                             TextInput::make('title')
-                                ->required()
-                                ->reactive()
-                                ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
-                                    $set('slug', Str::slug($state));
-                                }),
+                                ->required(),
+//                                ->reactive()
+//                                ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+//                                    $set('slug', Str::slug($state));
+//                                }),
                             Grid::make()->schema([
                                 MarkdownEditor::make('editorial')
                                     ->maxLength(255),
@@ -71,7 +68,6 @@ class PostResource extends Resource
                             'sm' => 1,
                             'md' => 8
                         ]),
-
 
                     // Right Column
                     Section::make()
@@ -93,7 +89,6 @@ class PostResource extends Resource
                                         2 => 'Markdown',
                                     ]
                                 )->default(2)
-                                ->disabled(!Auth::user()?->hasRole('super_admin'))
                                 ->required(),
                         ])->columnSpan([
                             'sm' => 1,

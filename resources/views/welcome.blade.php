@@ -16,6 +16,22 @@
                 <livewire:frontend.post-cards />
             </section>
         </div>
+{{--        TODO MAP--}}
+{{--        <div class="container mx-auto">--}}
+{{--            <div class="grid md:grid-cols-2  gap-4">--}}
+{{--                <div>--}}
+{{--                    <section>--}}
+{{--                        <livewire:frontend.overview-info />--}}
+{{--                    </section>--}}
+{{--                </div>--}}
+{{--                <div>--}}
+{{--                    <section>--}}
+{{--                        <livewire:frontend.post-cards />--}}
+{{--                    </section>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+
+{{--        </div>--}}
     </div>
 @endsection
 

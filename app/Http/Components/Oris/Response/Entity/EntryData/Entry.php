@@ -1,18 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Components\Oris\Response\Entity\EntryData;
 
-class Entry
+readonly class Entry
 {
-    public string $ID;
-
-    public function __construct(string $ID)
-    {
-        $this->ID = $ID;
-    }
-
-    public function getID(): string
-    {
-        return $this->ID;
+    public function __construct(
+        public string $ID,
+    ) {
     }
 }

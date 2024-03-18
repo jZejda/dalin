@@ -13,6 +13,7 @@ return new class () extends Migration {
             $table->string('alt_name', 255)->nullable();
             $table->integer('oris_id')->nullable();
             $table->date('date')->nullable();
+            $table->date('date_end')->nullable();
             $table->string('place')->nullable();
             $table->string('organization')->nullable();
             $table->string('region')->nullable();
@@ -32,6 +33,8 @@ return new class () extends Migration {
             $table->dateTime('entry_date_1')->nullable();
             $table->dateTime('entry_date_2')->nullable();
             $table->dateTime('entry_date_3')->nullable();
+            $table->string('increase_entry_fee_2')->nullable();
+            $table->string('increase_entry_fee_3')->nullable();
             $table->dateTime('last_update')->nullable();
             $table->dateTime('last_calculate_cost')->nullable();
             $table->time('start_time')->nullable();

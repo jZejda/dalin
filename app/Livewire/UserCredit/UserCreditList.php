@@ -6,6 +6,7 @@ use App\Enums\AppRoles;
 use App\Models\User;
 use App\Models\UserCredit;
 use App\Models\UserCreditNote;
+use App\Shared\Helpers\AppHelper;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -26,6 +27,8 @@ class UserCreditList extends Component implements HasForms, HasTable
     use InteractsWithForms;
     use InteractsWithTable;
 
+    public string $activeTab = '';
+
     public function table(Table $table): Table
     {
         return $table
@@ -37,6 +40,12 @@ class UserCreditList extends Component implements HasForms, HasTable
                     ->description(function (UserCredit $record): string {
                         return 'ID:'. $record->id;
                     })
+                    ->sortable(),
+                TextColumn::make('sportEvent.date')
+                    ->label(__('user-credit.table.sport_event_date'))
+                    ->icon('heroicon-o-calendar-days')
+                    ->dateTime(AppHelper::DATE_FORMAT)
+                    ->searchable()
                     ->sortable(),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
@@ -55,15 +64,36 @@ class UserCreditList extends Component implements HasForms, HasTable
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('amount')
-                    ->icon(fn (UserCredit $record): string => $record->amount >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
-                    ->color(fn (UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')
+                    ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
+                    ->color(fn (UserCredit $record): ?string => $record->credit_type->getColor())
+                    ->numeric(decimalPlaces: 0)
                     ->label(__('user-credit.table.amount_title'))
-                    ->summarize(Sum::make())->money('CZK'),
+                    ->money('CZK')
+                    ->description(function (UserCredit $record): ?string {
+                        if ($record->relatedUser !== null) {
+                            if ($record->amount < 0) {
+                                $amountDirection = __('user-credit.table.for_user');
+                            } else {
+                                $amountDirection = __('user-credit.table.from_user');
+                            }
+                            return $amountDirection . $record->relatedUser->name;
+                        }
+                        return null;
+                    })
+                    ->summarize(Sum::make())->money('CZK')->label('Celkem'),
                 ViewColumn::make('user_entry')
                     ->label('Komentářů')
                     ->view('filament.tables.columns.user-credit-comments-count'),
                 TextColumn::make('sourceUser.name')
-                    ->label(__('user-credit.table.source_user_title')),
+                    ->badge()
+                    ->icon('heroicon-o-user')
+                    ->label(__('user-credit.table.source_user_title'))
+                    ->colors(function (UserCredit $record): array {
+                        if ($record->sourceUser?->isActive()) {
+                            return ['gray'];
+                        }
+                        return ['danger'];
+                    }),
             ])
             ->defaultPaginationPageOption(25)
             ->defaultSort('created_at', 'desc')
@@ -76,7 +106,7 @@ class UserCreditList extends Component implements HasForms, HasTable
                     ->action(function (UserCredit $userCredit, array $data): void {
                         $userCreditNote = new UserCreditNote();
                         $userCreditNote->user_credit_id = $userCredit->id;
-                        $userCreditNote->note_user_id = auth()->user()?->id;
+                        $userCreditNote->note_user_id = auth()->user()?->id ?? 1;
                         $userCreditNote->note = $data['user_note'];
 
                         if($userCreditNote->save()) {

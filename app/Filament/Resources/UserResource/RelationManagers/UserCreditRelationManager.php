@@ -7,6 +7,7 @@ use App\Models\UserCredit;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
@@ -26,6 +27,7 @@ class UserCreditRelationManager extends RelationManager
     protected static ?string $recordTitleAttribute = 'amount';
 
     protected static ?string $label = 'Finance';
+    protected static ?string $pluralLabel = 'Finance';
 
     protected static ?string $title = 'Finance';
 
@@ -45,10 +47,10 @@ class UserCreditRelationManager extends RelationManager
             ]);
     }
 
-//    protected function getTableContentFooter(): ?View
-//    {
-//        return view('filament.resources.user-resource.tables.user-credit-footer', $this->data_list);
-//    }
+    //    protected function getTableContentFooter(): ?View
+    //    {
+    //        return view('filament.resources.user-resource.tables.user-credit-footer', $this->data_list);
+    //    }
 
     public function table(Table $table): Table
     {
@@ -86,7 +88,8 @@ class UserCreditRelationManager extends RelationManager
                 TextColumn::make('amount')
                     ->icon(fn (UserCredit $record): string => $record->amount >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                     ->color(fn (UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')
-                    ->label(__('user-credit.table.amount_title')),
+                    ->label(__('user-credit.table.amount_title'))
+                    ->summarize(Sum::make())->money('CZK')->label('Celkem'),
                 ViewColumn::make('user_entry')
                     ->label('Komentářů')
                     ->view('filament.tables.columns.user-credit-comments-count'),
