@@ -71,9 +71,17 @@ class UserRaceProfiles
 
     private function getRelevantRaceProfiles(bool $registerAnyone): Collection
     {
-        $relevantUserRaceProfile = UserRaceProfile::all();
-        if (!$registerAnyone) {
-            $relevantUserRaceProfile = $relevantUserRaceProfile->where('user_id', '=', auth()->user()?->id);
+        $relevantUserRaceProfile = UserRaceProfile::query()
+            ->where('user_id', '=', auth()->user()?->id)
+            ->where('active', '=', '1')
+            ->orderBy('reg_number')
+            ->get();
+
+        if ($registerAnyone) {
+            $relevantUserRaceProfile = UserRaceProfile::query()
+                ->where('active', '=', '1')
+                ->orderBy('reg_number')
+                ->get();
         }
 
         // Add AllowingAnotherUserRaceProfile
@@ -83,7 +91,7 @@ class UserRaceProfiles
 
         if (isset($allowRegisterUserProfile->options['profileIds'])) {
             foreach ($allowRegisterUserProfile->options['profileIds'] as $profileId) {
-                $userProfile = UserRaceProfile::where('id', '=', $profileId)->first();
+                $userProfile = UserRaceProfile::query()->where('id', '=', $profileId)->first();
                 $relevantUserRaceProfile->add($userProfile);
             }
         }

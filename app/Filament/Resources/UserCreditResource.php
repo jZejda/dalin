@@ -23,7 +23,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Forms;
@@ -32,6 +32,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Get;
 
 class UserCreditResource extends Resource
 {
@@ -56,14 +57,60 @@ class UserCreditResource extends Resource
                     // Main column
                     Card::make()
                         ->schema([
-                            Select::make('user_id')
-                                ->label(__('user-credit.user'))
-                                ->options(User::all()->pluck('user_identification', 'id'))
-                                ->searchable(),
-                            Select::make('user_race_profile_id')
-                                ->label(__('user-credit.user_profile'))
-                                ->options(UserRaceProfile::all()->pluck('reg_number', 'id'))
-                                ->searchable(),
+
+                            // Credit detail
+                            Grid::make()->schema([
+                                Select::make('credit_type')
+                                    ->label(__('user-credit.form.type_title'))
+                                    ->options(UserCreditType::enumArray())
+                                    ->required()
+                                    ->live(),
+                                TextInput::make('amount')
+                                    ->label(__('user-credit.form.amount_title'))
+                                    ->required(),
+                                Select::make('currency')
+                                    ->label(__('user-credit.form.currency_title'))
+                                    ->default(UserCredit::CURRENCY_CZK)
+                                    ->options([
+                                        UserCredit::CURRENCY_CZK => UserCredit::CURRENCY_CZK,
+                                        UserCredit::CURRENCY_EUR => UserCredit::CURRENCY_EUR,
+                                    ])
+                                    ->required()
+                                    ->disabled(),
+                            ])->columns(3),
+
+                            // Users
+                            Grid::make()->schema([
+                                Select::make('user_id')
+                                    ->label(__('user-credit.user'))
+                                    ->options(User::all()->pluck('user_identification', 'id'))
+                                    ->required()
+                                    ->searchable(),
+                                Select::make('related_user_id')
+                                    ->label(__('user-credit.related_user_profile'))
+                                    ->options(User::all()->pluck('user_identification', 'id'))
+                                    ->hint('Vyžadováno pokud je vybrán přesun mezi uživateli.')
+                                    ->hintColor('warning')
+                                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Upozornění')
+                                    ->visible(function (Get $get): bool {
+                                        if ($get('credit_type') === UserCreditType::TransferCreditBetweenUsers->value) {
+                                            return true;
+                                        }
+                                        return false;
+                                    })
+                                    ->required(function (Get $get): bool {
+                                        if ($get('credit_type') === UserCreditType::TransferCreditBetweenUsers->value) {
+                                            return true;
+                                        }
+                                        return false;
+                                    })
+                                    ->searchable(),
+                                Select::make('user_race_profile_id')
+                                    ->label(__('user-credit.user_profile'))
+                                    ->options(UserRaceProfile::all()->pluck('user_race_full_name', 'id'))
+                                    ->searchable(),
+                            ])->columns(1),
+
                             Select::make('sport_event_id')
                                 ->label(__('user-credit.event_name'))
                                 ->options(
@@ -78,26 +125,6 @@ class UserCreditResource extends Resource
                                 ->options(UserCreditSource::enumArray())
                                 ->disabled()
                                 ->required(),
-
-                            // Credit detail
-                            Grid::make()->schema([
-                                Select::make('credit_type')
-                                    ->label(__('user-credit.form.type_title'))
-                                    ->options(UserCreditType::enumArray())
-                                    ->required(),
-                                TextInput::make('amount')
-                                    ->label(__('user-credit.form.amount_title'))
-                                    ->required(),
-                                Select::make('currency')
-                                    ->label(__('user-credit.form.currency_title'))
-                                    ->default(UserCredit::CURRENCY_CZK)
-                                    ->options([
-                                        UserCredit::CURRENCY_CZK => UserCredit::CURRENCY_CZK,
-                                        UserCredit::CURRENCY_EUR => UserCredit::CURRENCY_EUR,
-                                    ])
-                                    ->required()
-                                    ->disabled(),
-                            ])->columns(3),
 
                         ])
                         ->columns(2)
@@ -149,6 +176,12 @@ class UserCreditResource extends Resource
                     ->dateTime(AppHelper::DATE_FORMAT)
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('sportEvent.date')
+                    ->label(__('user-credit.table.sport_event_date'))
+                    ->icon('heroicon-o-calendar-days')
+                    ->dateTime(AppHelper::DATE_FORMAT)
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
                     ->description(function (UserCredit $record): string {
@@ -163,17 +196,37 @@ class UserCreditResource extends Resource
                         return $description;
                     }),
                 TextColumn::make('user.name')
-                    ->label('Uživatel')
+                    ->badge()
+                    ->icon('heroicon-o-user')
+                    ->label(__('user-race-profile.table.user-name'))
+                    ->colors(function (UserCredit $record): array {
+                        if ($record->user?->isActive()) {
+                            return ['success'];
+                        }
+                        return ['danger'];
+                    })
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label('Registrace')
                     ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? ''),
                 TextColumn::make('amount')
+                    ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
+                    ->color(fn (UserCredit $record): ?string => $record->credit_type->getColor())
                     ->label(__('user-credit.table.amount_title'))
-                    ->summarize(Sum::make())->money('CZK')->label('Celkem'),
-                TextColumn::make('user_credit_notes_count')
+                    ->description(function (UserCredit $record): ?string {
+                        if ($record->relatedUser !== null) {
+                            if ($record->amount < 0) {
+                                $amountDirection = __('user-credit.table.for_user');
+                            } else {
+                                $amountDirection = __('user-credit.table.from_user');
+                            }
+                            return $amountDirection . $record->relatedUser->name;
+                        }
+                        return null;
+                    }),
+                ViewColumn::make('user_entry')
                     ->label('Komentářů')
-                    ->counts('userCreditNotes'),
+                    ->view('filament.tables.columns.user-credit-comments-count'),
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()

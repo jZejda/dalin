@@ -10,7 +10,6 @@ use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserEntry;
 use Carbon\Carbon;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -20,7 +19,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
 class UserEntryResource extends Resource
@@ -128,7 +126,7 @@ class UserEntryResource extends Resource
                 ]),
             ])
             ->persistSortInSession()
-           ->defaultSort('sportEvent.date', 'desc');
+            ->defaultSort('sportEvent.date', 'desc');
     }
 
     public static function getRelations(): array

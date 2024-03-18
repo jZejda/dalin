@@ -12,6 +12,10 @@ return [
     |
     */
 
+    'common' => [
+        'actions' => 'Akce',
+    ],
+
     // Roles
     'tables' => [
         'actions_tooltip' => 'Další akce',

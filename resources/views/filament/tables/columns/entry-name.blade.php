@@ -15,17 +15,20 @@ $sportEvent = $getRecord();
     @if ($sportEvent !== null)
         <div class="ml-2">
             <p>
-                {{ $sportEvent->name }}
-
+                @if ($sportEvent->cancelled)
+                    <span class="line-through text-red-800">{{ $sportEvent->name }}</span>
+                @else
+                    {{ $sportEvent->name }}
+                @endif
                 @if ($sportEvent->stages > 0)
                     <span class="ml-1 bg-green-100 text-green-800 text-xs font-medium px-1 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">
-                    {{ $sportEvent->stages }}E
-                </span>
+                        {{ $sportEvent->stages }}E
+                    </span>
                 @endif
                 @if (in_array(config('site-config.club.abbr'), $sportEvent->organization))
                     <span class="ml-1 bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-1 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">
-                    Pořádáme
-                </span>
+                        Pořádáme
+                    </span>
                 @endif
             </p>
             <p class="text-sm text-gray-600">{{ $sportEvent->alt_name }}</p>

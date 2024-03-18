@@ -33,7 +33,7 @@ final class BaseMap
                     (float)$sportEvent->gps_lon,
                     $this->getMarkerType($sportEvent->stages),
                     $sportEvent->name,
-                    $this->sportEvent->alt_name ?? '',
+                    $sportEvent->alt_name ?? '',
                 );
             }
 
@@ -47,7 +47,7 @@ final class BaseMap
                 );
             }
 
-            return $this->mapBuilder->getMarkers();
+            return $this->mapBuilder?->getMarkers();
         }
 
         return [];
@@ -67,13 +67,13 @@ final class BaseMap
                         (float)$sportEvent->gps_lon,
                         $this->getMarkerType($sportEvent->stages),
                         $sportEvent->name,
-                        $this->sportEvent->alt_name ?? '',
+                        $sportEvent->alt_name ?? '',
                     );
                 }
             }
         }
 
-        return $this->mapBuilder->getMarkers();
+        return $this->mapBuilder?->getMarkers();
     }
 
     private function getMarkerType(?int $stages): SportEventMarkerType

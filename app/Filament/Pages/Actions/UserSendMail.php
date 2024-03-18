@@ -15,7 +15,7 @@ use Filament\Notifications\Notification;
 use Filament\Actions\Action;
 use Illuminate\Support\Facades\Auth;
 
-class UserSendMail
+final class UserSendMail
 {
     public static function getAction(): Action
     {

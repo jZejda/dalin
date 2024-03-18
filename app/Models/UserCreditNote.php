@@ -39,7 +39,7 @@ class UserCreditNote extends Model
     ];
 
     protected $casts = [
-        'internal' => 'bool',
+        'internal' => 'boolean',
         'params' => 'array',
     ];
 

@@ -46,7 +46,7 @@ class SportEventLink extends Model
     ];
 
     protected $casts = [
-        'internal' => 'bool',
+        'internal' => 'boolean',
         'source_type' => SportEventLinkType::class,
     ];
 

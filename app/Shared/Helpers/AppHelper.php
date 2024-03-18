@@ -57,4 +57,9 @@ final class AppHelper
 
         return false;
     }
+
+    public static function getPageHelpUrl(string $finalUriPage): string
+    {
+        return 'https://jirizejda.cz/dalin/napoveda/' . $finalUriPage;
+    }
 }
