@@ -49,7 +49,7 @@ class ExportsData
             ->modalHeading('Vytvoří export podle zadání')
             ->modalDescription('Zvol požadovaný export.')
             ->modalSubmitActionLabel('Exportovat')
-            ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
+            ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster, AppRoles::EventOrganizer]))
             ->form([
                 Grid::make(1)
                     ->schema([

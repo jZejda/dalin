@@ -108,12 +108,12 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         $makeExportModal = new SportEventResource\Pages\Actions\ExportsData($sportEvent);
         $sendMailModal = new EntrySendMail($sportEvent);
         $updateEvent = new EntryUpdateEvent($sportEvent);
-        $registerAnyone = Auth::user()?->hasRole([AppRoles::EventMaster->value]) ? $this->getOrisEvent(true) : null;
-        $sendEmail = Auth::user()?->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
+        $registerAnyone = Auth::user()?->hasRole([AppRoles::EventMaster, AppRoles::EventOrganizer]) ? $this->getOrisEvent(true) : null;
+        $sendEmail = Auth::user()?->hasRole([AppRoles::EventMaster, AppRoles::SuperAdmin, AppRoles::EventOrganizer])
             ? $sendMailModal->sendNotification()
             : null;
 
-        $makeExport = Auth::user()?->hasRole([AppRoles::EventMaster->value, AppRoles::SuperAdmin->value])
+        $makeExport = Auth::user()?->hasRole([AppRoles::EventMaster, AppRoles::SuperAdmin, AppRoles::EventOrganizer])
             ? $makeExportModal->makeExport()
             : null;
 

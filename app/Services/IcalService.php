@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event;
 use Spatie\IcalendarGenerator\Enums\Classification;
-use Spatie\IcalendarGenerator\Properties\CoordinatesProperty;
 
 final class IcalService
 {
@@ -89,9 +88,6 @@ final class IcalService
             }
 
             $event = Event::create()
-                ->appendProperty(
-                    CoordinatesProperty::create($sportEvent->place ?? 'N/A', (float)$sportEvent->gps_lat, (float)$sportEvent->gps_lon)
-                )
                 ->description(trim($description))
                 ->name($name)
                 ->uniqueIdentifier($sportEvent->oris_id !== null ? (string)$sportEvent->oris_id : (string)$sportEvent->id)
@@ -126,7 +122,7 @@ final class IcalService
             ->get();
     }
 
-    private function addToDescription(?string $item, string $delimiter = ', '): string
+    private function addToDescription(?string $item, string $delimiter = ' - '): string
     {
         if ($item !== null) {
             return $item . $delimiter;

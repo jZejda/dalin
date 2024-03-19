@@ -16,7 +16,6 @@ use App\Models\UserCredit;
 use App\Models\UserRaceProfile;
 use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -55,7 +54,7 @@ class UserCreditResource extends Resource
                     'md' => 12,
                 ])->schema([
                     // Main column
-                    Card::make()
+                    Section::make()
                         ->schema([
 
                             // Credit detail
@@ -272,7 +271,7 @@ class UserCreditResource extends Resource
                         Forms\Components\TextInput::make('stiznost')
                             ->label('stiznost')
                     ])
-                    ->modalFooter(view('filament.modals.user-credit-comment', (['data' => self::$model])))
+                    ->modalContentFooter(view('filament.modals.user-credit-comment', (['data' => self::$model])))
                 ])
 
             ])

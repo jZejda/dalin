@@ -20,12 +20,14 @@ class CalendarController extends Controller
     public function raceCalendar(): Response
     {
         return response($this->icalService->getRaceCalendar()->get())
-            ->header('Content-Type', 'text/calendar; charset=utf-8');
+            ->header('Content-Type', 'text/calendar; charset=utf-8')
+            ->header('Content-Disposition', 'attachment; filename="abm-zavody.ics"');
     }
 
     public function trainingCalendar(): Response
     {
         return response($this->icalService->getTrainingCalendar()->get())
-            ->header('Content-Type', 'text/calendar; charset=utf-8');
+            ->header('Content-Type', 'text/calendar; charset=utf-8')
+            ->header('Content-Disposition', 'attachment; filename="abm-treninky.ics"');
     }
 }
