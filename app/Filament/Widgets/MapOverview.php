@@ -14,12 +14,12 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
 use stdClass;
 
-//use Webbingbrasil\FilamentMaps\Actions;
-//use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
-//use Webbingbrasil\FilamentMaps\Marker;
-//use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
+use Webbingbrasil\FilamentMaps\Actions;
+use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
+use Webbingbrasil\FilamentMaps\Marker;
+use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
 
-class MapOverview
+class MapOverview extends MapWidget
 {
     // use HasWidgetShield;
     //    use HasDarkModeTiles;
@@ -115,7 +115,8 @@ class MapOverview
      */
     private function getAppropriateEvents(): Collection
     {
-        return SportEvent::where('cancelled', '!=', 1)
+        return SportEvent::query()
+            ->where('cancelled', '!=', 1)
             ->where('gps_lat', '!=', 0.0)
             ->where('gps_lon', '!=', 0.0)
             ->where('date', '>', Carbon::now()->subMonths(2))
