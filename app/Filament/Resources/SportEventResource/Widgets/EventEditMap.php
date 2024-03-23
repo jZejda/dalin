@@ -10,12 +10,12 @@ use App\Shared\Helpers\EmptyType;
 use App\Models\SportEvent;
 use Illuminate\Support\Collection;
 
-//use Webbingbrasil\FilamentMaps\Actions;
-//use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
-//use Webbingbrasil\FilamentMaps\Marker;
-//use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
+use Webbingbrasil\FilamentMaps\Actions;
+use Webbingbrasil\FilamentMaps\Actions\CenterMapAction;
+use Webbingbrasil\FilamentMaps\Marker;
+use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
 
-class EventEditMap
+class EventEditMap extends MapWidget
 {
     protected int | string | array $columnSpan = 2;
 

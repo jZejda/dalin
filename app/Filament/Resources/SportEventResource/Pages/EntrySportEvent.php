@@ -552,7 +552,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     protected function getHeaderWidgets(): array
     {
         return [
-            //EventMap::make(['model' => $this->record]),
+            SportEventResource\Widgets\EventMap::make(['model' => $this->record]),
             //EventLinks::make(['model' => $this->record]),
         ];
     }

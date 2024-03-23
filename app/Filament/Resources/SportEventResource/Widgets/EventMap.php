@@ -11,12 +11,14 @@ use App\Shared\Helpers\EmptyType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
-//use Webbingbrasil\FilamentMaps\Actions;
-//use Webbingbrasil\FilamentMaps\Marker;
-//use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
+use Webbingbrasil\FilamentMaps\Actions;
+use Webbingbrasil\FilamentMaps\Marker;
+use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
 
-class EventMap
+class EventMap extends MapWidget
 {
+    public SportEvent $model;
+
     protected int | string | array $columnSpan = 2;
 
     protected bool $hasBorder = false;
@@ -118,7 +120,8 @@ class EventMap
         /** @var SportEvent $event */
         $event = DB::table('sport_events')
             ->where('cancelled', '!=', 1)
-            ->where('id', '=', (int)$uri[3])
+            //->where('id', '=', (int)$uri[3])
+            ->where('id', '=', $this->model->id)
             ->where('gps_lat', '!=', 0.0)
             ->where('gps_lon', '!=', 0.0)
             ->first();
@@ -145,7 +148,8 @@ class EventMap
 
         return DB::table('sport_events')
             ->where('cancelled', '!=', 1)
-            ->where('id', '=', (int)$uri[3])
+//            ->where('id', '=', (int)$uri[3])
+            ->where('id', '=', $this->model->id)
             ->where('gps_lat', '!=', 0.0)
             ->where('gps_lon', '!=', 0.0)
             ->get();
@@ -157,7 +161,7 @@ class EventMap
         $uri = explode('/', $uri);
 
         return DB::table('sport_event_markers')
-            ->where('sport_event_id', '=', (int)$uri[3])
+            ->where('sport_event_id', '=', $this->model->id)
             ->get();
     }
 }
