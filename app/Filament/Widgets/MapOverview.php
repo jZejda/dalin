@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Widgets;
 
 use App\Enums\SportEventType;
+use App\Helpers\LeafLetMapHelpers;
 use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
 use App\Models\SportEvent;
@@ -21,10 +22,10 @@ use Webbingbrasil\FilamentMaps\Widgets\MapWidget;
 
 class MapOverview extends MapWidget
 {
-    // use HasWidgetShield;
-    //    use HasDarkModeTiles;
+    use HasWidgetShield;
+    // use HasDarkModeTiles;
 
-    protected int | string | array $columnSpan = 2;
+    protected int | string | array $columnSpan = 3;
 
     protected bool $hasBorder = false;
 
@@ -46,6 +47,7 @@ class MapOverview extends MapWidget
 
     public function setUp(): void
     {
+        //$this->mapOptions(['center' => [51.505, -0.09], 'zoom' => 13]);
         /** @var SportEvent[] $sportEvents */
         $sportEvents = $this->getAppropriateEvents();
 
@@ -100,13 +102,26 @@ class MapOverview extends MapWidget
 
     public function getActions(): array
     {
+        /** @var SportEvent[] $sportEvents */
+        $sportEvents = $this->getAppropriateEvents();
+
+        $boundCoords = [];
+        foreach($sportEvents as $sportEvent) {
+            $boundCoords[] = [
+                'lat' => $sportEvent->gps_lat,
+                'lng' => $sportEvent->gps_lon,
+            ];
+        }
+
+        $center = LeafLetMapHelpers::getCenterOfCoords($boundCoords);
+
         return [
             Actions\ZoomAction::make(),
-            Actions\CenterMapAction::make()->zoom(2),
+            Actions\CenterMapAction::make()->zoom(7),
             Actions\Action::make('mode')
                 ->icon('filamentmapsicon-o-square-3-stack-3d')
-                ->callback('setTileLayer(mode === "OpenStreetMap" ? "OpenTopoMap" : "OpenStreetMap")'),
-            CenterMapAction::make()->fitBounds($this->getFitBounds()),
+                ->alpineClickHandler('setTileLayer(mode === "OpenStreetMap" ? "OpenTopoMap" : "OpenStreetMap")'),
+            CenterMapAction::make()->fitBounds($center),
         ];
     }
 
@@ -119,6 +134,8 @@ class MapOverview extends MapWidget
             ->where('cancelled', '!=', 1)
             ->where('gps_lat', '!=', 0.0)
             ->where('gps_lon', '!=', 0.0)
+            ->whereNotNull('gps_lat')
+            ->whereNotNull('gps_lon')
             ->where('date', '>', Carbon::now()->subMonths(2))
             ->whereIn('event_type', [SportEventType::Race, SportEventType::Training, SportEventType::TrainingCamp])
             ->get();
