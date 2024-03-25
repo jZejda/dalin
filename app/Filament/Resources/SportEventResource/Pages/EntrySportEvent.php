@@ -641,7 +641,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     ): bool {
         $entry = new UserEntry();
         if ($isOrisEvent) {
-            $entry->oris_entry_id = $orisResponse->getData()?->Entry->ID;
+            $entry->oris_entry_id = $orisResponse->Data?->Entry->ID;
         }
         $entry->sport_event_id = $sportEvent->id;
         $entry->user_race_profile_id = $userRaceProfile->id;
