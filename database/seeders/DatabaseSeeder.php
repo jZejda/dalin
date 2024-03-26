@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             SportRegionsSeeder::class,
             SportLevelSeeder::class,
             UserRolesSeeder::class,
+            TransportOfferSeeder::class,
         ]);
     }
 }
