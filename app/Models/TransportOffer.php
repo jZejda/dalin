@@ -13,6 +13,7 @@ use Illuminate\Support\Carbon;
  * App\Models\TransportOffer
  *
  * @property int $id
+ * @property int $user_id
  * @property int|null $sport_event_id
  * @property TransportOfferDirection $direction
  * @property int $free_seats
@@ -28,6 +29,7 @@ class TransportOffer extends Model
 
     protected $fillable = [
         'sport_event_id',
+        'user_id',
         'direction',
         'free_seats',
         'distance',
