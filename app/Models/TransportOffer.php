@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\TransportOfferDirection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -40,4 +41,14 @@ class TransportOffer extends Model
     protected $casts = [
         'direction' => TransportOfferDirection::class,
         ];
+
+    public function sportEvent(): HasOne
+    {
+        return $this->hasOne(SportEvent::class, 'id', 'sport_event_id');
+    }
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }

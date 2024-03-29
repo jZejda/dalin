@@ -14,6 +14,12 @@ return [
     |
     */
 
+    'free_seats' => 'Volných míst',
+    'credit_type' => 'Cesta typ',
+    'distance' => 'Vzdálenost [km]',
+    'driver' => 'Řidič',
+    'description' => 'Doplňkové informace',
+    'transport_contribution' => 'Spoluúčast [Kč/km]',
 
     'type_enum_directions' => [
         TransportOfferDirection::BothDirection->value => 'Oba směry',

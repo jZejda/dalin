@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Models\SportEvent;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class () extends Migration {
@@ -26,6 +25,7 @@ return new class () extends Migration {
             $table->tinyInteger('distance')->nullable();
             $table->float('transport_contribution')->nullable();
             $table->string('description')->nullable();
+            //$table->uuid('uid')->default(DB::raw('(UUID())'));
 
             $table->timestamps();
         });
@@ -37,10 +37,5 @@ return new class () extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('transport_offers');
-    }
-
-    public function sportEvent(): HasOne
-    {
-        return $this->hasOne(SportEvent::class, 'id', 'sport_event_id');
     }
 };

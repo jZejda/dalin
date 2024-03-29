@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
-use App\Enums\AppRoles;
 use App\Enums\SportEventType;
 use App\Enums\TransportOfferDirection;
 use App\Filament\Resources\TransportOfferResource\Pages;
 use App\Models\SportEvent;
 use App\Models\TransportOffer;
 use App\Models\User;
-use App\Models\UserEntry;
-use App\Models\UserRaceProfile;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Forms\Components\Select;
@@ -20,8 +19,10 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Filament\Infolists\Infolist;
 
@@ -41,9 +42,26 @@ class TransportOfferResource extends Resource
     {
         return $form
             ->schema([
+                Select::make('direction')
+                    ->label(__('transport-offer.credit_type'))
+                    ->options(TransportOfferDirection::class)
+                    ->required(),
+                TextInput::make('free_seats')
+                    ->label(__('transport-offer.free_seats'))
+                    ->integer()
+                    ->minValue(1)
+                    ->required(),
                 Select::make('user_id')
-                    ->label('Author')
-                    ->options(User::all()->pluck('name', 'id'))
+                    ->label(__('transport-offer.driver'))
+                    ->options(
+                        function (): Collection|array {
+                            if (Auth::id() !== 1) {
+                                return ['fsfsf', Auth::id()];
+                            } else {
+                                return User::all()->pluck('name', 'id');
+                            }
+                        }
+                    )
                     ->default(Auth::id())
                     ->searchable()
                     ->required(),
@@ -55,25 +73,20 @@ class TransportOfferResource extends Resource
                             ->sortBy('date')
                             ->pluck('sportEventOrisTitle', 'id')
                     ),
-                Select::make('direction')
-                    ->label(__('transport-offer.credit_type'))
-                    ->options(TransportOfferDirection::class)
-                    ->required(),
-                TextInput::make('free_seats')
-                    ->label(__('transport-offer.free_seats'))
-                    ->integer()
-                    ->minValue(1)
-                    ->required(),
                 TextInput::make('distance')
                     ->label(__('transport-offer.distance'))
                     ->integer()
-                    ->minValue(0),
+                    ->minValue(0)
+                    ->suffix('km'),
                 TextInput::make('transport_contribution')
                      ->label(__('transport-offer.transport_contribution'))
                      ->numeric()
                      ->minValue(0),
-                TextInput::make('description')
-                    ->label(__('transport-offer.description'))
+                Grid::make()->schema([
+                    MarkdownEditor::make('description')
+                        ->label(__('transport-offer.description'))
+                ])->columns(1),
+
             ]);
     }
 
@@ -96,8 +109,26 @@ class TransportOfferResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('sportEvent.name')
-                    ->label('Závod'),
+                TextColumn::make('user.name')
+                    ->label(__('transport-offer.driver'))
+                    ->badge()
+                    ->color(static function ($state): string {
+                        if ($state === auth()->user()?->name) {
+                            return 'success';
+                        }
+                        return 'gray';
+                    })
+                    ->searchable(),
+                TextColumn::make('free_seats')
+                    ->label(__('transport-offer.driver'))
+                    ->label(__('transport-offer.free_seats'))
+            ])
+            ->defaultGroup('sport_event_id')
+            ->groups([
+                Group::make('sport_event_id')
+                    ->label('Podle Akce')
+                    ->getTitleFromRecordUsing(fn (TransportOffer $record): string => ucfirst($record->sportEvent->name ?? ''))
+                    ->getDescriptionFromRecordUsing(fn (TransportOffer $record): string => $record->sportEvent?->alt_name ?? ''),
             ])
             ->filters([
                 //
@@ -105,12 +136,12 @@ class TransportOfferResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                // Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+//                Tables\Actions\BulkActionGroup::make([
+//                    Tables\Actions\DeleteBulkAction::make(),
+//                ]),
             ]);
     }
 
@@ -124,9 +155,9 @@ class TransportOfferResource extends Resource
     public static function getPages(): array
     {
         return [
-//            'index' => Pages\ListTransportOffers::route('/'),
-//            'create' => Pages\CreateTransportOffer::route('/create'),
-//            'edit' => Pages\EditTransportOffer::route('/{record}/edit'),
+            'index' => Pages\ListTransportOffers::route('/'),
+            // 'create' => Pages\CreateTransportOffer::route('/create'),
+            // 'edit' => Pages\EditTransportOffer::route('/{record}/edit'),
         ];
     }
 }
