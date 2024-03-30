@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron\Jobs;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Mail\EventWeeklyEndsBySport;
 use App\Models\User;
 use App\Shared\Helpers\AppHelper;
@@ -16,7 +16,9 @@ class ReportEmailEventWeeklyEndsBySport implements CommonCronJobs
 {
     public function run(): void
     {
-        $users = User::all();
+        $users = User::query()
+            ->where('active', '=', 1)
+            ->get();
 
         /** @var User $user */
         foreach ($users as $user) {

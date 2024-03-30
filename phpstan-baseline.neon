@@ -226,11 +226,6 @@ parameters:
 			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
 
 		-
-			message: "#^Cannot call method getData\\(\\) on App\\\\Http\\\\Components\\\\Oris\\\\Response\\\\CreateEntry\\|null\\.$#"
-			count: 1
-			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
-
-		-
 			message: "#^Method App\\\\Filament\\\\Resources\\\\SportEventResource\\\\Pages\\\\EntrySportEvent\\:\\:booted\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: app/Filament/Resources/SportEventResource/Pages/EntrySportEvent.php
@@ -584,21 +579,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$code of function abort expects Illuminate\\\\Contracts\\\\Support\\\\Responsable\\|int\\|Symfony\\\\Component\\\\HttpFoundation\\\\Response, string given\\.$#"
 			count: 1
 			path: app/Http/Controllers/Frontend/StartListController.php
-
-		-
-			message: "#^Offset 'news' does not exist on array\\|null\\.$#"
-			count: 1
-			path: app/Jobs/SendNewPostsEmailJob.php
-
-		-
-			message: "#^Offset 'days_before_event…' does not exist on array\\|null\\.$#"
-			count: 1
-			path: app/Jobs/SendSportEventEntryEndingEmailJob.php
-
-		-
-			message: "#^Offset 'sport' does not exist on array\\|null\\.$#"
-			count: 1
-			path: app/Jobs/SendSportEventEntryEndingEmailJob.php
 
 		-
 			message: "#^Cannot call method getCenterMapCoordsFromMarkers\\(\\) on App\\\\Livewire\\\\Shared\\\\Maps\\\\BaseMap\\|null\\.$#"

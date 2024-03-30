@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron\Jobs;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Enums\AppRoles;
 use App\Enums\EntryStatus;
 use App\Models\User;
@@ -12,7 +12,7 @@ use App\Shared\Helpers\AppHelper;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 
 class EntryEndsToPay implements CommonCronJobs
 {
@@ -35,7 +35,10 @@ class EntryEndsToPay implements CommonCronJobs
                 ->get();
 
             if (count($sportEvents) >= 1) {
-                $users = User::role(AppRoles::BillingSpecialist->value)->get();
+                $users = User::role(AppRoles::BillingSpecialist->value)
+                    ->where('active', '=', 1)
+                    ->get();
+
                 foreach ($users as $user) {
                     Mail::to($user)->send(new \App\Mail\EntryEndsToPay($sportEvents, $deadline));
                     Log::channel('site')->info('MailEntryEndsToPay mail for user: ' . $user->email . ' - ' . $user->name);

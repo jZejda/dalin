@@ -22,7 +22,7 @@ final class UpdateEventWeather implements CommonCronJobs
 
     public function run(): void
     {
-        $sportEvents = SportEvent::whereNotNull('gps_lat')
+        $sportEvents = SportEvent::query()->whereNotNull('gps_lat')
             ->whereNotNull('gps_lon')
             ->whereNotNull('date')
             ->whereNotNull('start_time')

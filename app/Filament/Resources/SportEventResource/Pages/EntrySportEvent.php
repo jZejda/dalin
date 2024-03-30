@@ -25,7 +25,6 @@ use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Set;
 use Filament\Tables\Actions\Action as TableAction;
@@ -525,8 +524,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         }),
                 ])->columns(1),
 
-                Section::make('Ostatní informace')
-                    ->description('Detailní informace k přihlášce doplň po rozkliknutí.')
+                Section::make('Doplňkové informace')
+                    ->description('Další informace k přihlášce doplň po rozkliknutí.')
                     ->schema([
                         Grid::make()->schema([
                             TextInput::make('note')
@@ -540,7 +539,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 TextInput::make('requested_start')
                                     ->label('Požadovaný start')
                                     ->hint(function (): HtmlString {
-                                        return new HtmlString('<a href="seznam.cz" target="_blank">Prosím čtěte nápovědu.</a>');
+                                        return new HtmlString('<a href="'.AppHelper::getPageHelpUrl('jak-se-prihlasit-na-oris-zavod.html').'" target="_blank">Prosím čtěte nápovědu.</a>');
                                     })
                                     ->hintColor('primary')
                                     ->hintIcon('heroicon-m-question-mark-circle')
@@ -598,7 +597,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         ])->columns(2),
                     ])
                     ->collapsible()
-                    ->persistCollapsed(),
+                    ->persistCollapsed()
+                    ->id('entry_additional_information'),
 
         ]);
     }
@@ -700,7 +700,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     ): bool {
         $entry = new UserEntry();
         if ($isOrisEvent) {
-            $entry->oris_entry_id = $orisResponse->Data?->Entry->ID;
+            $entry->oris_entry_id = $orisResponse->Data->Entry->ID ?? null;
         }
         $entry->sport_event_id = $sportEvent->id;
         $entry->user_race_profile_id = $userRaceProfile->id;

@@ -30,21 +30,28 @@ class SendNewPostsEmailJob implements ShouldQueue
 
         Log::channel('site')->info(sprintf('E-mail notifikace New Post v %d hodin', $hour));
 
-        $mailNotifications = UserSetting::where('options->news_time_trigger', $hour)->get();
+        $mailNotifications = UserSetting::query()
+            ->where('options->news_time_trigger', $hour)
+            ->get();
 
         if ($mailNotifications->isNotEmpty()) {
             /** @var UserSetting $mailNotification */
             foreach ($mailNotifications as $mailNotification) {
-                $user = User::where('id', '=', $mailNotification->user_id)->first();
-                $options = $mailNotification->options['news'];
+                $user = User::query()
+                    ->where('id', '=', $mailNotification->user_id)
+                    ->where('active', '=', 1)
+                    ->first();
 
-                $mailContent = Post::whereIn('private', $options)
-                    ->where('created_at', '>', Carbon::now()->subDays(2))
-                    ->get();
+                if (isset($mailNotification->options['news'])) {
+                    $options = $mailNotification->options['news'];
 
-                if ($mailContent->isNotEmpty()) {
-                    Mail::to($user)
-                        ->queue(new NewPosts($mailContent));
+                    $mailContent = Post::query()->whereIn('private', $options)
+                        ->where('created_at', '>', Carbon::now()->subDays(2))
+                        ->get();
+
+                    if ($mailContent->isNotEmpty()) {
+                        Mail::to($user)->queue(new NewPosts($mailContent));
+                    }
                 }
             }
         }
