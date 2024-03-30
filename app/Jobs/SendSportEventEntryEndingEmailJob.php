@@ -30,23 +30,29 @@ class SendSportEventEntryEndingEmailJob implements ShouldQueue
 
         Log::channel('site')->info(sprintf('E-mail notifikace SportEvent v %d hodin', $hour));
 
-        $mailNotifications = UserSetting::where('options->sport_time_trigger', $hour)->get();
+        $mailNotifications = UserSetting::query()->where('options->sport_time_trigger', $hour)->get();
 
         if ($mailNotifications->isNotEmpty()) {
             /** @var UserSetting $mailNotification */
             foreach ($mailNotifications as $mailNotification) {
-                $user = User::where('id', '=', $mailNotification->user_id)->first();
-                $options = $mailNotification->options['sport'];
-                $daysBefore = $mailNotification->options['days_before_event_entry_ends'];
+                $user = User::query()->where('id', '=', $mailNotification->user_id)->first();
 
-                $mailContent = SportEvent::wherein('sport_id', $options)
-                    ->where('entry_date_1', '>', Carbon::now()->addDays($daysBefore))
-                    ->where('entry_date_1', '<', Carbon::now()->addDays($daysBefore + 1))
-                    ->get();
+                if (
+                    isset($mailNotification->options['sport'])
+                    && isset($mailNotification->options['days_before_event_entry_ends'])
+                ) {
+                    $options = $mailNotification->options['sport'];
+                    $daysBefore = $mailNotification->options['days_before_event_entry_ends'];
 
-                if ($mailContent->isNotEmpty()) {
-                    Mail::to($user)
-                        ->queue(new EventEntryEnds($mailContent, $daysBefore));
+                    $mailContent = SportEvent::query()
+                        ->wherein('sport_id', $options)
+                        ->where('entry_date_1', '>', Carbon::now()->addDays($daysBefore))
+                        ->where('entry_date_1', '<', Carbon::now()->addDays($daysBefore + 1))
+                        ->get();
+
+                    if ($mailContent->isNotEmpty()) {
+                        Mail::to($user)->queue(new EventEntryEnds($mailContent, $daysBefore));
+                    }
                 }
             }
         }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron\Jobs;
 
-use DB;
 use App\Services\OrisApiService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 final class UpdateEvent implements CommonCronJobs
@@ -19,7 +19,7 @@ final class UpdateEvent implements CommonCronJobs
             ->whereNotNull('oris_id')
             ->where('date', '>', Carbon::now()->addDays(4))
             ->orderBy('date', 'asc')
-            ->limit(5)
+            ->limit(10)
             ->get();
 
         foreach ($sportEvents as $sportEvent) {

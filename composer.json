@@ -4,7 +4,7 @@
     "description": "DaLin Orienteering manage software.",
     "keywords": ["laravel", "livewire", "filamentphp", "tailwindcss", "orienteering"],
     "license": "MIT",
-    "version": "10.9",
+    "version": "10.9.1",
     "require": {
         "php": "^8.3",
         "ext-intl": "*",

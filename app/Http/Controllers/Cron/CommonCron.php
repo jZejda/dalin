@@ -30,10 +30,10 @@ class CommonCron extends Controller
 
         /** @description Update Events */
         try {
-            if ($this->runJob('site')) {
-                Log::channel('WeatherForecast')->info('START EventUpdates run cron at ' . $this->getActualHour());
+            if ($this->runJob('event_update')) {
+                Log::channel('site')->info('START EventUpdates run cron at ' . $this->getActualHour());
                 (new UpdateEvent())->run();
-                Log::channel('site')->info('STOP  EventUpdates run cron at ' . $this->getActualHour());
+                Log::channel('site')->info('STOP EventUpdates run cron at ' . $this->getActualHour());
             }
         } catch (\Exception $e) {
             Log::channel('site')->warning('ERROR EventUpdates: ' . $e->getMessage());

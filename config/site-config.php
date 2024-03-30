@@ -90,7 +90,7 @@ return [
         ],
         'event_update' => [
             'active' => true,
-            'hours' => ['22'],
+            'hours' => ['22', '04', '06'],
             'days_in_month' => ['*'],
             'months' => ['*'],
             'days_in_week' => ['*'],

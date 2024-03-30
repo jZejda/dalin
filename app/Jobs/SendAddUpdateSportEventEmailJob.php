@@ -24,7 +24,7 @@ class SendAddUpdateSportEventEmailJob implements ShouldQueue
 
     public function handle(): void
     {
-        $users = User::where('email', '=', 'zejda.jiri@gmail.com')->first();
+        $users = User::query()->where('email', '=', 'zejda.jiri@gmail.com')->first();
         $email = new AddUpdateSportEvent();
         Mail::to([$users])->send($email);
     }

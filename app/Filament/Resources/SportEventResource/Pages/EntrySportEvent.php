@@ -23,8 +23,8 @@ use App\Models\UserRaceProfile;
 use App\Shared\Helpers\AppHelper;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Set;
 use Filament\Tables\Actions\Action as TableAction;
@@ -47,6 +47,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Filament\Notifications\Actions\Action as NotificationAction;
 use App\Filament\Resources\SportEventResource\Service\SportEventService;
+use Illuminate\Support\HtmlString;
 
 class EntrySportEvent extends Page implements HasForms, HasTable
 {
@@ -474,18 +475,18 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     ->loadingMessage('Loading authors...'),
 
                 Grid::make()->schema([
-                    TextInput::make('note')
-                        ->label('Poznámka')
-                        ->hint('Poznámka pořadateli.'),
-                    TextInput::make('club_note')
-                        ->label('Klubová poznámka')
-                        ->hint('Interní poznámka.'),
-                    TextInput::make('requested_start')
-                        ->label('Požadovaný start')
-                        ->hint('Prosím s rozmyslem.'),
                     TextInput::make('si')
                         ->label('Číslo SI čipu')
                         ->numeric(),
+
+                    ToggleButtons::make('rent_si')
+                        ->label('Půjčit čip')
+                        ->options([
+                            0 => 'Ne',
+                            1 => 'Ano '
+                        ])
+                        ->default(0)
+                        ->inline(),
                 ])->columns(2),
 
                 Grid::make()->schema([
@@ -523,23 +524,81 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         }),
                 ])->columns(1),
 
-                Grid::make()->schema([
-//                    Toggle::make('rent_si')
-//                        ->extraAttributes(['class' => 'mt-4'])
-//                        ->label('Půjčit čip')
-//                        ->onIcon('heroicon-s-check')
-//                        ->offIcon('heroicon-m-x-mark')
-//                        ->default(false),
-                    ToggleButtons::make('rent_si')
-                        ->label('Půjčit čip')
-                        ->options([
-                            0 => 'Ne',
-                            1 => 'Ano '
-                        ])
-                        ->default(0)
-                        ->inline()
-                        ->grouped()
-                ])->columns(2),
+                Section::make('Doplňkové informace')
+                    ->description('Další informace k přihlášce doplň po rozkliknutí.')
+                    ->schema([
+                        Grid::make()->schema([
+                            TextInput::make('note')
+                                ->label('Poznámka')
+                                ->hint('Poznámka pořadateli.'),
+                            TextInput::make('club_note')
+                                ->label('Klubová poznámka')
+                                ->hint('Interní poznámka.'),
+
+                            Grid::make()->schema([
+                                TextInput::make('requested_start')
+                                    ->label('Požadovaný start')
+                                    ->hint(function (): HtmlString {
+                                        return new HtmlString('<a href="'.AppHelper::getPageHelpUrl('jak-se-prihlasit-na-oris-zavod.html').'" target="_blank">Prosím čtěte nápovědu.</a>');
+                                    })
+                                    ->hintColor('primary')
+                                    ->hintIcon('heroicon-m-question-mark-circle')
+                                    ->columnSpan([
+                                        'sm' => 6,
+                                        'xl' => 4,
+                                    ]),
+                                Select::make('startListHint')
+                                    ->label('Vzor start požadavku')
+                                    ->options([
+                                        'Jednoetapové' => [
+                                            'E0_early' => 'E0 - Brzy',
+                                            'E0_late' => 'E0 - Pozdě',
+                                            'E0_similarly' => 'E0 - Podobně',
+                                            'E0_variously' => 'E0 - Různě',
+                                            'E0_note' => 'E0 - Poznámka',
+                                        ],
+                                        'Etapové' => [
+                                            'E123_early' => 'E123 - Brzy',
+                                            'E123_late' => 'E123 - Pozdě',
+                                            'E123_similarly' => 'E123 - Podobně',
+                                            'E123_variously' => 'E123 - Různě',
+                                            'E123_note' => 'E123 - Poznámka',
+                                        ]
+
+                                    ])
+                                    ->live()
+                                    ->afterStateUpdated(
+                                        (function ($state, Set $set) {
+
+                                            $pattern = match($state) {
+                                                'E0_early' => '(E0;brzy;)',
+                                                'E0_late' => '(E0;pozde;)',
+                                                'E0_similarly' => '(E0;podobne;REG_CISLO)',
+                                                'E0_variously' => '(E0;ruzne;REG_CISLO)',
+                                                'E0_note' => '(E0;ruzne;POZNAMKA)',
+                                                'E123_early' => '(E123;brzy;)',
+                                                'E123_late' => '(E123;pozde;)',
+                                                'E123_similarly' => '(E123;podobne;REG_CISLO)',
+                                                'E123_variously' => '(E123;ruzne;REG_CISLO)',
+                                                'E123_note' => '(E123;ruzne;POZNAMKA)',
+                                                default => '',
+                                            };
+
+                                            if ($pattern !== '') {
+                                                $set('requested_start', $pattern);
+                                            }
+                                        })
+                                    )->columnSpan([
+                                        'sm' => 6,
+                                        'xl' => 2,
+                                    ]),
+                            ])->columns(6),
+
+                        ])->columns(2),
+                    ])
+                    ->collapsible()
+                    ->persistCollapsed()
+                    ->id('entry_additional_information'),
 
         ]);
     }
@@ -641,7 +700,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     ): bool {
         $entry = new UserEntry();
         if ($isOrisEvent) {
-            $entry->oris_entry_id = $orisResponse->Data?->Entry->ID;
+            $entry->oris_entry_id = $orisResponse->Data->Entry->ID ?? null;
         }
         $entry->sport_event_id = $sportEvent->id;
         $entry->user_race_profile_id = $userRaceProfile->id;
