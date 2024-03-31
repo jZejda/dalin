@@ -27,7 +27,7 @@ class UserEntryResource extends Resource
 
     protected static ?int $navigationSort = 30;
     protected static ?string $navigationGroup = 'Uživatel';
-    protected static ?string $navigationIcon = 'heroicon-o-flag';
+    protected static ?string $navigationIcon = 'heroicon-o-ticket';
     protected static ?string $navigationLabel = 'Přihlášky';
     protected static ?string $label = 'Přihláška na závody';
     protected static ?string $pluralLabel = 'Přihlášky na závody';

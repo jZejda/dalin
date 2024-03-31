@@ -16,24 +16,13 @@ class UserRolesSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::create([
-            'name'  => 'redactor',
-            'guard_name'  => 'web',
-        ]);
+        $roles = ['redactor', 'event_master', 'member', 'billing_specialist', 'event_organizer'];
 
-        Role::create([
-            'name'  => 'event_master',
-            'guard_name'  => 'web',
-        ]);
-
-        Role::create([
-            'name'  => 'member',
-            'guard_name'  => 'web',
-        ]);
-
-        Role::create([
-            'name'  => 'billing_specialist',
-            'guard_name'  => 'web',
-        ]);
+        foreach ($roles as $role) {
+            Role::create([
+                'name'  => $role,
+                'guard_name'  => 'web',
+            ]);
+        }
     }
 }

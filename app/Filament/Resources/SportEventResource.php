@@ -54,7 +54,7 @@ class SportEventResource extends Resource
     protected static ?string $model = SportEvent::class;
 
     protected static ?int $navigationSort = 10;
-    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+    protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
     protected static ?string $navigationGroup = 'Akce/Závody';
     protected static ?string $navigationLabel = 'Závod';
     protected static ?string $label = 'Závod / událost';

@@ -10,6 +10,8 @@ use App\Filament\Resources\TransportOfferResource\Pages;
 use App\Models\SportEvent;
 use App\Models\TransportOffer;
 use App\Models\User;
+use App\Models\UserCredit;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\TextInput;
@@ -19,9 +21,12 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Filament\Infolists\Infolist;
@@ -36,20 +41,23 @@ class TransportOfferResource extends Resource
 
     protected static ?string $model = TransportOffer::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-truck';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Select::make('direction')
-                    ->label(__('transport-offer.credit_type'))
+                    ->label(__('transport-offer.direction'))
                     ->options(TransportOfferDirection::class)
                     ->required(),
                 TextInput::make('free_seats')
                     ->label(__('transport-offer.free_seats'))
                     ->integer()
                     ->minValue(1)
+                    ->required(),
+                DatePicker::make('date')
+                    ->label(__('transport-offer.date'))
                     ->required(),
                 Select::make('user_id')
                     ->label(__('transport-offer.driver'))
@@ -120,8 +128,15 @@ class TransportOfferResource extends Resource
                     })
                     ->searchable(),
                 TextColumn::make('free_seats')
-                    ->label(__('transport-offer.driver'))
-                    ->label(__('transport-offer.free_seats'))
+                    ->label(__('transport-offer.free_seats')),
+                TextColumn::make('direction')
+                    ->icon(fn (TransportOffer $record): ?string => $record->direction->getIcon())
+                    ->color(fn (TransportOffer $record): ?string => $record->direction->getColor())
+                    ->label(__('transport-offer.direction')),
+                TextColumn::make('distance')
+                    ->label(__('transport-offer.distance')),
+                TextColumn::make('description')
+                    ->label(__('transport-offer.description'))
             ])
             ->defaultGroup('sport_event_id')
             ->groups([
@@ -131,7 +146,25 @@ class TransportOfferResource extends Resource
                     ->getDescriptionFromRecordUsing(fn (TransportOffer $record): string => $record->sportEvent?->alt_name ?? ''),
             ])
             ->filters([
-                //
+                SelectFilter::make('sport_event_id')
+                    ->label('Závod')
+                    ->options(SportEvent::all()->sortBy('date')->pluck('sport_event_last_cost_calculate', 'id')),
+                Filter::make('date')
+                    ->form([
+                        DatePicker::make('date')->default(now()->subDays(7)),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['date'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
+                            );
+                    })->indicateUsing(function (array $data): ?string {
+                        if (!$data['date']) {
+                            return null;
+                        }
+                        return 'Nabídka dopravy od: ' . Carbon::parse($data['date'])->format('d.m.Y');
+                    })->default(now()->subDays(7)),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

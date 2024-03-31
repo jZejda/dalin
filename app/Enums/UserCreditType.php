@@ -48,6 +48,4 @@ enum UserCreditType: string implements HasIcon, HasColor
             self::TransferCreditBetweenUsers => 'warning',
         };
     }
-
-
 }

@@ -12,6 +12,6 @@ class TransportOfferSeeder extends Seeder
      */
     public function run(): void
     {
-        TransportOffer::factory()->count(20)->create();
+        TransportOffer::factory()->count(10)->create();
     }
 }

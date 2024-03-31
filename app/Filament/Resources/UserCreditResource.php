@@ -246,7 +246,7 @@ class UserCreditResource extends Resource
                     ->options(self::getUserCreditStatuses())
                     ->default(''),
                 Filter::make('user_id')
-                    ->label('Nená přiřazeno závodníka')
+                    ->label('Nemá přiřazeno závodníka')
                     ->query(fn (Builder $query): Builder => $query->where('user_id', '=', null))
                     ->default(false),
             ])

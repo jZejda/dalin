@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\TransportOfferDirection;
+use App\Enums\TransportType;
 
 return [
 
@@ -15,7 +16,7 @@ return [
     */
 
     'free_seats' => 'Volných míst',
-    'credit_type' => 'Cesta typ',
+    'direction' => 'Typ cesty',
     'distance' => 'Vzdálenost [km]',
     'driver' => 'Řidič',
     'description' => 'Doplňkové informace',
@@ -26,4 +27,9 @@ return [
         TransportOfferDirection::OnlyThere->value => 'Cesta na závod',
         TransportOfferDirection::OnlyBack->value => 'Cesta zpět ze závodu',
     ],
+    'type_enum_type' => [
+        TransportType::Car->value => 'Auto',
+        TransportType::Microbus->value => 'Dodávka',
+        TransportType::Bus->value => 'Autobus',
+    ]
 ];

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\TransportOfferDirection;
+use App\Enums\TransportType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -16,6 +17,8 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property int $user_id
  * @property int|null $sport_event_id
+ * @property string $date
+ * @property TransportType $transport_type
  * @property TransportOfferDirection $direction
  * @property int $free_seats
  * @property int $distance
@@ -31,6 +34,8 @@ class TransportOffer extends Model
     protected $fillable = [
         'sport_event_id',
         'user_id',
+        'date',
+        'transport_type',
         'direction',
         'free_seats',
         'distance',
@@ -39,6 +44,8 @@ class TransportOffer extends Model
     ];
 
     protected $casts = [
+        'date' => 'date',
+        'transport_type' => TransportType::class,
         'direction' => TransportOfferDirection::class,
         ];
 
