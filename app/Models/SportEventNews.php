@@ -14,8 +14,9 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property int $sport_event_id
- * @property int $text
+ * @property string $text
  * @property Carbon $date
+ * @property int|null $external_key
  * @property-read SportEvent|null $sportEvent
  */
 class SportEventNews extends Model
@@ -25,6 +26,7 @@ class SportEventNews extends Model
     protected $fillable = [
         'text',
         'date',
+        'external_key',
     ];
 
     protected $casts = [

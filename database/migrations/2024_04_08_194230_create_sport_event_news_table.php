@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('sport_event_id')->references('id')->on('sport_events');
             $table->text('text');
             $table->date('date');
+            $table->unsignedMediumInteger('external_key')->nullable();
             $table->timestamps();
         });
     }
