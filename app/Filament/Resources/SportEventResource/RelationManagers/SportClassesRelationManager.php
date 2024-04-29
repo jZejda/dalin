@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
 use App\Models\SportClass;
@@ -9,9 +11,9 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class SportClassesRelationManager extends RelationManager
 {
@@ -40,54 +42,24 @@ class SportClassesRelationManager extends RelationManager
                 TextInput::make('distance')
                     ->label('Délka')
                     ->suffix('km')
-                    ->mask(
-                        fn (TextInput\Mask $mask) => $mask
-                        ->numeric()
-                        ->decimalPlaces(2)
-                        ->decimalSeparator('.')
-                        ->mapToDecimalSeparator([','])
-                        ->minValue(0)
-                        ->normalizeZeros()
-                        ->padFractionalZeros()
-                        ->thousandsSeparator(' '),
-                    ),
+                    ->numeric()
+                    ->inputMode('decimal')
+                    ->minValue(0),
                 TextInput::make('climbing')
                     ->label('Převýšení')
                     ->suffix('m')
-                    ->mask(
-                        fn (TextInput\Mask $mask) => $mask
-                        ->numeric()
-                        ->decimalPlaces(2)
-                        ->decimalSeparator('.')
-                        ->mapToDecimalSeparator([','])
-                        ->minValue(0)
-                        ->normalizeZeros()
-                        ->padFractionalZeros()
-                        ->thousandsSeparator(' '),
-                    ),
+                    ->numeric()
+                    ->inputMode('decimal')
+                    ->minValue(0),
                 TextInput::make('controls')
                     ->label('Kontrol')
-                    ->mask(
-                        fn (TextInput\Mask $mask) => $mask
-                        ->numeric()
-                        ->decimalPlaces(0)
-                        ->integer()
-                        ->minValue(0)
-                        ->thousandsSeparator(' ')
-                    ),
+                    ->numeric()
+                    ->minValue(0),
                 TextInput::make('fee')
                     ->label('Poplatek')
-                    ->mask(
-                        fn (TextInput\Mask $mask) => $mask
-                        ->numeric()
-                        ->decimalPlaces(2)
-                        ->decimalSeparator('.')
-                        ->mapToDecimalSeparator([','])
-                        ->minValue(0)
-                        ->normalizeZeros()
-                        ->padFractionalZeros()
-                        ->thousandsSeparator(' '),
-                    ),
+                    ->numeric()
+                    ->inputMode('decimal')
+                    ->minValue(0),
             ]);
     }
 
@@ -97,7 +69,9 @@ class SportClassesRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('name')
                     ->label('Kategorie')
-                    ->description(fn (SportClass $record): string => $record->classDefinition->class_definition_fullLabel ?? '')
+                    ->description(
+                        fn (SportClass $record): string => $record->classDefinition->class_definition_fullLabel ?? ''
+                    )
                     ->searchable(),
                 TextColumn::make('oris_id')->label('ORIS ID'),
                 TextColumn::make('distance')->label('Vzdálenost'),
@@ -118,7 +92,7 @@ class SportClassesRelationManager extends RelationManager
                 ]),
             ])
             ->bulkActions([
-               // Tables\Actions\DeleteBulkAction::make(),
+                // Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 }
