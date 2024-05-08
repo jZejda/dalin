@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
-use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use pxlrbt\FilamentExcel\Columns\Column;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
 class UserEntryRelationManager extends RelationManager
 {
@@ -18,7 +20,6 @@ class UserEntryRelationManager extends RelationManager
     protected static ?string $recordTitleAttribute = 'Přihlášky';
 
     protected static ?string $title = 'Přihlášky';
-
 
     public function form(Form $form): Form
     {
@@ -71,7 +72,7 @@ class UserEntryRelationManager extends RelationManager
                     ->exports([
                         ExcelExport::make()
                             //->modifyQueryUsing(fn ($query, $ownerRecord) => $query->where('sport_event_id', '=', 16)
-                            ->askForFilename(date('Y-m-d') . '_export_prihlasek')
+                            ->askForFilename(date('Y-m-d').'_export_prihlasek')
                             ->askForWriterType()
                             ->withColumns([
                                 Column::make('si')->heading('SI'),
@@ -82,15 +83,12 @@ class UserEntryRelationManager extends RelationManager
                                 Column::make('note')->heading('Poznámka'),
                                 Column::make('club_note')->heading('Klubová poznámka'),
                                 Column::make('requested_start')->heading('Požadavek na start'),
-                                Column::make('rent_si')->heading('Pujčit čip')->formatStateUsing(fn ($state) => str_replace('=TRUE()', 'ANO', $state)),
+                                Column::make('rent_si')->heading('Pujčit čip')->formatStateUsing(
+                                    fn ($state) => str_replace('=TRUE()', 'ANO', $state)
+                                ),
                                 Column::make('stage_x')->heading('Etapa'),
                             ]),
                     ]),
             ]);
-    }
-
-    protected function getModelId()
-    {
-        return $this->id;
     }
 }

@@ -10,8 +10,9 @@ use App\Http\Components\Oris\Response\Entity\Clubs;
 use App\Http\Components\Oris\Response\Entity\ClubUser;
 use App\Http\Components\Oris\Response\Entity\EventEntries;
 use App\Http\Components\Oris\Response\Entity\Links;
-use App\Http\Components\Oris\Response\Entity\Services;
 use App\Http\Components\Oris\Response\Entity\Locations;
+use App\Http\Components\Oris\Response\Entity\News;
+use App\Http\Components\Oris\Response\Entity\Services;
 use App\Http\Components\Oris\Response\Entity\StartList;
 use App\Http\Components\Oris\Response\OrisEvent;
 use App\Http\Components\Oris\Response\OrisUser;
@@ -19,13 +20,10 @@ use Illuminate\Http\Client\Response;
 
 final class OrisMethod extends OrisResponse
 {
-    /**
-     * @param Response $response
-     * @return OrisEvent
-     */
     public function data(Response $response): OrisEvent
     {
         $data = $this->getDataResponseString($response->json(self::ORIS_DEFAULT_DATA));
+
         return $this->getSerializer()->deserialize($data, OrisEvent::class, 'json');
     }
 
@@ -35,7 +33,8 @@ final class OrisMethod extends OrisResponse
     public function startList(Response $response): array
     {
         $data = $this->getResponseArrayPart($response, 'Data');
-        return $this->getSerializer()->deserialize($data, StartList::class . '[]', 'json');
+
+        return $this->getSerializer()->deserialize($data, StartList::class.'[]', 'json');
     }
 
     /**
@@ -44,7 +43,8 @@ final class OrisMethod extends OrisResponse
     public function services(Response $response): array
     {
         $data = $this->getResponseArrayPart($response, 'Data.Services');
-        return $this->getSerializer()->deserialize($data, Services::class . '[]', 'json');
+
+        return $this->getSerializer()->deserialize($data, Services::class.'[]', 'json');
     }
 
     /**
@@ -53,7 +53,8 @@ final class OrisMethod extends OrisResponse
     public function classes(Response $response): array
     {
         $data = $this->getResponseArrayPart($response, 'Data.Classes');
-        return $this->getSerializer()->deserialize($data, Classes::class . '[]', 'json');
+
+        return $this->getSerializer()->deserialize($data, Classes::class.'[]', 'json');
     }
 
     /**
@@ -62,7 +63,8 @@ final class OrisMethod extends OrisResponse
     public function links(Response $response): array
     {
         $data = $this->getResponseArrayPart($response, 'Data.Links');
-        return $this->getSerializer()->deserialize($data, Links::class . '[]', 'json');
+
+        return $this->getSerializer()->deserialize($data, Links::class.'[]', 'json');
     }
 
     /**
@@ -71,7 +73,8 @@ final class OrisMethod extends OrisResponse
     public function documents(Response $response): array
     {
         $data = $this->getResponseArrayPart($response, 'Data.Documents');
-        return $this->getSerializer()->deserialize($data, Links::class . '[]', 'json');
+
+        return $this->getSerializer()->deserialize($data, Links::class.'[]', 'json');
     }
 
     /**
@@ -80,7 +83,8 @@ final class OrisMethod extends OrisResponse
     public function locations(Response $response): array
     {
         $data = $this->getResponseArrayPart($response, 'Data.Locations');
-        return $this->getSerializer()->deserialize($data, Locations::class . '[]', 'json');
+
+        return $this->getSerializer()->deserialize($data, Locations::class.'[]', 'json');
     }
 
     /**
@@ -89,12 +93,14 @@ final class OrisMethod extends OrisResponse
     public function eventEntries(Response $response): array
     {
         $data = $this->getResponseArrayPart($response, 'Data');
-        return $this->getSerializer()->deserialize($data, EventEntries::class . '[]', 'json');
+
+        return $this->getSerializer()->deserialize($data, EventEntries::class.'[]', 'json');
     }
 
     public function users(Response $response): OrisUser
     {
         $data = $this->getDataResponseString($response->json(self::ORIS_DEFAULT_DATA));
+
         return $this->getSerializer()->deserialize($data, OrisUser::class, 'json');
     }
 
@@ -104,7 +110,8 @@ final class OrisMethod extends OrisResponse
     public function clubUsers(Response $response): array
     {
         $data = $this->getResponseArrayPart($response, 'Data');
-        return $this->getSerializer()->deserialize($data, ClubUser::class . '[]', 'json');
+
+        return $this->getSerializer()->deserialize($data, ClubUser::class.'[]', 'json');
     }
 
     /**
@@ -113,7 +120,8 @@ final class OrisMethod extends OrisResponse
     public function clubs(Response $response): array
     {
         $data = $this->getResponseArrayPart($response, 'Data');
-        return $this->getSerializer()->deserialize($data, Clubs::class . '[]', 'json');
+
+        return $this->getSerializer()->deserialize($data, Clubs::class.'[]', 'json');
     }
 
     /**
@@ -123,6 +131,16 @@ final class OrisMethod extends OrisResponse
     {
         $data = $this->getResponseArrayPart($response, 'Data');
 
-        return $this->getSerializer()->deserialize($data, ClassDefinition::class . '[]', 'json');
+        return $this->getSerializer()->deserialize($data, ClassDefinition::class.'[]', 'json');
+    }
+
+    /**
+     * @return News[]
+     */
+    public function news(Response $response): array
+    {
+        $data = $this->getResponseArrayPart($response, 'Data.News');
+
+        return $this->getSerializer()->deserialize($data, News::class.'[]', 'json');
     }
 }

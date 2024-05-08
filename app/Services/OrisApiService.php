@@ -13,12 +13,14 @@ use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\EventEntries;
 use App\Http\Components\Oris\Response\Entity\Links;
 use App\Http\Components\Oris\Response\Entity\Locations;
+use App\Http\Components\Oris\Response\Entity\News;
 use App\Models\Club;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
 use App\Models\SportEvent;
 use App\Models\SportEventLink;
 use App\Models\SportEventMarker;
+use App\Models\SportEventNews;
 use App\Models\SportRegion;
 use App\Models\SportService;
 use App\Models\User;
@@ -143,10 +145,10 @@ final class OrisApiService
             $eventModel->gps_lat = $orisData->GPSLat;
             $eventModel->gps_lon = $orisData->GPSLon;
             $eventModel->event_type = SportEventType::Race->value;
-            $eventModel->stages = EmptyType::stringNotEmpty($orisData->Stages) ? (int)$orisData->Stages : 0;
-            $eventModel->multi_events = EmptyType::stringNotEmpty($orisData->MultiEvents) ? (int)$orisData->MultiEvents : 0;
-            $eventModel->stages = (!is_null($orisData->Stages) || (int)$orisData->Stages != 0) ? (int)$orisData->Stages : null;
-            $eventModel->parent_id = (!is_null($orisData->ParentID) || (int)$orisData->ParentID != 0) ? (int)$orisData->ParentID : null;
+            $eventModel->stages = EmptyType::stringNotEmpty($orisData->Stages) ? (int) $orisData->Stages : 0;
+            $eventModel->multi_events = EmptyType::stringNotEmpty($orisData->MultiEvents) ? (int) $orisData->MultiEvents : 0;
+            $eventModel->stages = (! is_null($orisData->Stages) || (int) $orisData->Stages != 0) ? (int) $orisData->Stages : null;
+            $eventModel->parent_id = (! is_null($orisData->ParentID) || (int) $orisData->ParentID != 0) ? (int) $orisData->ParentID : null;
             if ($updateByCron) {
                 $eventModel->last_update = Carbon::now();
             }
@@ -226,6 +228,12 @@ final class OrisApiService
             // Create|Update locations alias markers
             $markers = $event->locations($orisResponse);
             $this->updateMarkers($markers, $eventModel);
+
+            /**
+             * @description Create|Update SportEventNews
+             */
+            $news = $event->news($orisResponse);
+            $this->updateNews($news, $eventModel);
 
         }
 
@@ -589,9 +597,36 @@ final class OrisApiService
             $sportEventMarker->external_key = (int) $marker->ID;
             $sportEventMarker->letter = $marker->Letter;
             $sportEventMarker->label = $marker->NameCZ;
-            $sportEventMarker->lat = $marker->GPSLat;
-            $sportEventMarker->lon = $marker->GPSLon;
+            $sportEventMarker->lat = (float) $marker->GPSLat;
+            $sportEventMarker->lon = (float) $marker->GPSLon;
             $sportEventMarker->saveOrFail();
+        }
+    }
+
+    /**
+     * @param  News[]  $news
+     *
+     * @throws Throwable
+     */
+    private function updateNews(array $news, SportEvent $eventModel): void
+    {
+        foreach ($news as $newItem) {
+            $newItemDate = Carbon::createFromFormat(AppHelper::DB_DATE_TIME, $newItem->Date);
+
+            $sportEventNewItem = SportEventNews::query()
+                ->where('sport_event_id', '=', $eventModel->id)
+                ->where('external_key', '=', (int) $newItem->ID)
+                ->first();
+
+            if (is_null($sportEventNewItem)) {
+                $sportEventNewItem = new SportEventNews();
+                $sportEventNewItem->sport_event_id = $eventModel->id;
+            }
+            $sportEventNewItem->external_key = (int) $newItem->ID;
+            $sportEventNewItem->text = $newItem->Text;
+            $sportEventNewItem->date = $newItemDate !== false ? $newItemDate : Carbon::now();
+
+            $sportEventNewItem->saveOrFail();
         }
     }
 }

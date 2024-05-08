@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\EntryStatus;
-use Illuminate\Support\Arr;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\AppHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
 /**
@@ -56,7 +56,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-
 class SportEvent extends Model
 {
     use HasFactory;
@@ -120,9 +119,9 @@ class SportEvent extends Model
 
     public function lastEntryDate(): ?Carbon
     {
-        if (!is_null($this->entry_date_3)) {
+        if (! is_null($this->entry_date_3)) {
             return $this->entry_date_3;
-        } elseif (!is_null($this->entry_date_2)) {
+        } elseif (! is_null($this->entry_date_2)) {
             return $this->entry_date_2;
         } else {
             return $this->entry_date_1;
@@ -161,7 +160,10 @@ class SportEvent extends Model
 
     public function userEntryActive(): int
     {
-        return $this->HasMany(UserEntry::class, 'sport_event_id', 'id')->whereIn('entry_status', [EntryStatus::Create, EntryStatus::Edit])->count();
+        return $this->HasMany(UserEntry::class, 'sport_event_id', 'id')->whereIn(
+            'entry_status',
+            [EntryStatus::Create, EntryStatus::Edit]
+        )->count();
     }
 
     public function sportEventLinks(): HasMany
@@ -174,38 +176,42 @@ class SportEvent extends Model
         return $this->HasMany(SportEventMarker::class, 'sport_event_id', 'id');
     }
 
+    public function sportEventNews(): HasMany
+    {
+        return $this->HasMany(SportEventNews::class, 'sport_event_id', 'id');
+    }
 
     public function getSportEventOrisCompactTitleAttribute(): string
     {
         $stringDelimiter = ' | ';
         $date = null;
-        if (!is_null($this->date)) {
+        if (! is_null($this->date)) {
             $date = $this->date->format(AppHelper::DATE_FORMAT);
         }
 
-        return ($date !== null ? $date : '') .
-            ((count($this->organization ?? []) > 0) ? $stringDelimiter . Arr::join($this->organization, ', ') : '') .
-            $stringDelimiter . $this->name .
-            ($this->oris_id !== null ? $stringDelimiter . 'ORIS ID: ' . $this->oris_id : '');
+        return ($date !== null ? $date : '').
+            ((count($this->organization ?? []) > 0) ? $stringDelimiter.Arr::join($this->organization, ', ') : '').
+            $stringDelimiter.$this->name.
+            ($this->oris_id !== null ? $stringDelimiter.'ORIS ID: '.$this->oris_id : '');
     }
 
     public function getSportEventOrisTitleAttribute(): string
     {
-        return ($this->alt_name !== null ? $this->alt_name . ' | ' : '') .
-            $this->name . ' | ' .
-            ($this->oris_id !== null ? '(ORIS ID: ' . $this->oris_id . ')' : '');
+        return ($this->alt_name !== null ? $this->alt_name.' | ' : '').
+            $this->name.' | '.
+            ($this->oris_id !== null ? '(ORIS ID: '.$this->oris_id.')' : '');
     }
 
     public function getSportEventLastCostCalculateAttribute(): string
     {
         return
-            $this->date?->format(AppHelper::DATE_FORMAT) . ' | '  .
-            Arr::join($this->organization, ', ') . ' | ' .
-            ($this->alt_name !== null ? $this->alt_name . ' | ' : '') .
-            $this->name . ' | ' .
-            ($this->oris_id !== null ? '(ORIS ID: ' . $this->oris_id . ')' : '') .
-            ($this->last_calculate_cost !== null ? ' | (Náklady naposled : ' . $this->last_calculate_cost->format('d.m.Y - H:i') . ')' : '')
-        ;
+            $this->date?->format(AppHelper::DATE_FORMAT).' | '.
+            Arr::join($this->organization, ', ').' | '.
+            ($this->alt_name !== null ? $this->alt_name.' | ' : '').
+            $this->name.' | '.
+            ($this->oris_id !== null ? '(ORIS ID: '.$this->oris_id.')' : '').
+            ($this->last_calculate_cost !== null ? ' | (Náklady naposled : '.$this->last_calculate_cost->format(
+                'd.m.Y - H:i'
+            ).')' : '');
     }
-
 }
