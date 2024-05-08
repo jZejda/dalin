@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
 use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -26,27 +26,28 @@ class SportEventNewsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                TextInput::make('text')
-                    ->label('Název odkazu česky')
-                    ->required(),
                 DateTimePicker::make('date')
-                    ->label('Datum novinky')
+                    ->label(__('sport-event.event_news.date'))
                     ->required(),
-            ]);
+                Textarea::make('text')
+                    ->label(__('sport-event.event_news.content'))
+                    ->autosize()
+                    ->required(),
+            ])->columns(1);
     }
 
     public function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('text')
-                    ->label('Odkaz česky')
-                    ->searchable(),
                 TextColumn::make('date')
                     ->icon('heroicon-o-calendar')
-                    ->label('Datum zveřejnění novinky')
+                    ->label(__('sport-event.event_news.date'))
                     ->dateTime('d.m.Y H:i')
                     ->sortable(),
+                TextColumn::make('text')
+                    ->label(__('sport-event.event_news.content'))
+                    ->searchable(),
             ])
             ->filters([
                 //

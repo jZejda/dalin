@@ -14,10 +14,10 @@ enum SportEventType: string
     public static function enumArray(): array
     {
         return [
-            'race' =>  __('sport-event.type_enum.' . self::Race->value),
-            'training' => __('sport-event.type_enum.' . self::Training->value),
-            'trainingCamp' => __('sport-event.type_enum.' . self::TrainingCamp->value),
-            'other' => __('sport-event.type_enum.' . self::Other->value),
+            'race' => __('sport-event.type_enum.'.self::Race->value),
+            'training' => __('sport-event.type_enum.'.self::Training->value),
+            'trainingCamp' => __('sport-event.type_enum.'.self::TrainingCamp->value),
+            'other' => __('sport-event.type_enum.'.self::Other->value),
         ];
     }
 }

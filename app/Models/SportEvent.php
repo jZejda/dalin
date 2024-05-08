@@ -119,9 +119,9 @@ class SportEvent extends Model
 
     public function lastEntryDate(): ?Carbon
     {
-        if (!is_null($this->entry_date_3)) {
+        if (! is_null($this->entry_date_3)) {
             return $this->entry_date_3;
-        } elseif (!is_null($this->entry_date_2)) {
+        } elseif (! is_null($this->entry_date_2)) {
             return $this->entry_date_2;
         } else {
             return $this->entry_date_1;
@@ -185,7 +185,7 @@ class SportEvent extends Model
     {
         $stringDelimiter = ' | ';
         $date = null;
-        if (!is_null($this->date)) {
+        if (! is_null($this->date)) {
             $date = $this->date->format(AppHelper::DATE_FORMAT);
         }
 

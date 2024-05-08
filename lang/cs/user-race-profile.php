@@ -18,6 +18,8 @@ return [
         'first_name' => 'Jméno',
         'last_name' => 'Příjmení',
         'user-name' => 'Uživatel',
+        'oris_id' => 'ID uživatele v ORISu',
+        'si' => 'Číslo čipu',
         'email' => 'E-mail',
         'phone' => 'Telefon',
         'active' => 'Aktivní',
@@ -29,5 +31,5 @@ return [
         'all_registrations' => 'Všechny registrace',
         'active_registrations' => 'Aktivní registrace',
         'disable_registrations' => 'Neaktivní registrace',
-    ]
+    ],
 ];

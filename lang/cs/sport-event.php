@@ -21,6 +21,11 @@ return [
 
     'event_type' => 'Typ akcí',
 
+    'event_news' => [
+        'content' => 'Obsah novinky',
+        'date' => 'Datum novniky',
+    ],
+
 
     'type_enum_credit_status' => [
         UserCreditStatus::Done->value => 'hotovo',
