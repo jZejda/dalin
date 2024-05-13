@@ -10,6 +10,7 @@ use Filament\Support\Contracts\HasLabel;
 enum AppRoles: string implements HasLabel, HasColor
 {
     case SuperAdmin = 'super_admin';
+    case ClubAdmin = 'club_admin';
     case EventMaster = 'event_master';
     case Member = 'member';
     case Racer = 'racer';

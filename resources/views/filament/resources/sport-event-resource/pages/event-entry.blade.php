@@ -263,7 +263,7 @@
                                     </svg>
                                     Rychlé novinky
                                 </h4>
-                                <dl class="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
+                                <dl class="text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
                                     @foreach($record->sportEventNews()->get() as $quickNews)
                                         <div class="flex flex-col pb-2">
                                             <dt class="mb-1 text-gray-500 dark:text-gray-400">{{ Carbon::parse($quickNews->date)->format('d.m.Y - H:i') }}</dt>

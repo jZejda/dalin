@@ -29,7 +29,7 @@ class ContentCategory extends Model
     /**
      * Fillable fields.
      *
-     * @var array<string>
+     * @var array<int, string>
      **/
     protected $fillable = [
         'title',
