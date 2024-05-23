@@ -9,12 +9,15 @@ use Illuminate\Support\Carbon;
 
 final class AppHelper
 {
-    public const DATE_TIME_FORMAT = 'd. m. Y H:i';
-    public const DATE_TIME_FULL_FORMAT = 'd. m. Y H:i:s';
-    public const DATE_FORMAT = 'd. m. Y';
-    public const MYSQL_DATE_TIME = 'Y-m-d H:i:s';
-    public const DB_DATE_TIME = 'Y-m-d';
+    public const string DATE_TIME_FORMAT = 'd. m. Y H:i';
 
+    public const string DATE_TIME_FULL_FORMAT = 'd. m. Y H:i:s';
+
+    public const string DATE_FORMAT = 'd. m. Y';
+
+    public const string MYSQL_DATE_TIME = 'Y-m-d H:i:s';
+
+    public const string DB_DATE_TIME = 'Y-m-d';
 
     public function getDataEntryClassCollor(Carbon $dataTime): string
     {
@@ -30,12 +33,12 @@ final class AppHelper
 
     public static function getWhiteSpaceBeforeString(?string $characters, int $totalLength): string
     {
-        if (EmptyType::stringNotEmpty($characters) && !is_null($characters)) {
+        if (EmptyType::stringNotEmpty($characters) && ! is_null($characters)) {
             $stringLength = mb_strlen($characters);
 
             $string = $characters;
             for ($i = 0; $i < $totalLength - $stringLength; $i++) {
-                $string = $string . '&nbsp;';
+                $string = $string.'&nbsp;';
             }
         } else {
             $string = '';
@@ -60,6 +63,6 @@ final class AppHelper
 
     public static function getPageHelpUrl(string $finalUriPage): string
     {
-        return 'https://jirizejda.cz/dalin/napoveda/' . $finalUriPage;
+        return 'https://jirizejda.cz/dalin/napoveda/'.$finalUriPage;
     }
 }

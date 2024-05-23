@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('name', 64);
             $table->string('code', 32);
             $table->string('currency', 12);
-            $table->string('api_url', 256);
             $table->json('account_credentials')->nullable();
             $table->dateTime('last_synced')->nullable();
             $table->boolean('active');

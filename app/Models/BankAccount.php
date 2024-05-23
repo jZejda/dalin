@@ -8,25 +8,25 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
+/**
+ * App\Models\SportList
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $code
+ * @property string $currency
+ * @property string $api_url
+ * @property array $account_credentials
+ * @property Carbon|null $last_synced
+ * @property bool $active
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ */
 class BankAccount extends Model
 {
     use HasFactory;
 
-    /**
-     * App\Models\SportList
-     *
-     * @property int $id
-     * @property string $name
-     * @property string $code
-     * @property string $currency
-     * @property string $api_url
-     * @property array|null $account_credentials
-     * @property string $last_synced
-     * @property bool $active
-     * @property Carbon|null $created_at
-     * @property Carbon|null $updated_at
-     */
-
+    public const string MONETA_MONEY_BANK = 'monetaMoneyBank';
 
     /** @var array<string, string> */
     protected $casts = [

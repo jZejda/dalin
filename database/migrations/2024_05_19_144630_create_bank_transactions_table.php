@@ -17,16 +17,18 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('bank_account_id');
             $table->foreign('bank_account_id')->references('id')->on('bank_accounts');
-            $table->string('type')->nullable();
-            $table->dateTime('date')->nullable();
-            $table->float('amount')->nullable();
-            $table->string('variable_symbol')->nullable();
-            $table->string('specific_symbol')->nullable();
-            $table->string('constant_symbol')->nullable();
+            $table->string('type');
+            $table->dateTime('date');
+            $table->float('amount');
+            $table->string('currency');
+            $table->string('external_key', 128)->index();
+            $table->string('variable_symbol', 64)->nullable()->index();
+            $table->string('specific_symbol', 64)->nullable();
+            $table->string('constant_symbol', 64)->nullable();
             $table->string('description')->nullable();
             $table->string('note')->nullable();
             $table->string('error')->nullable();
-            $table->string('status')->nullable();
+            $table->string('status', 16)->nullable()->index();
             $table->timestamps();
         });
     }

@@ -7,23 +7,22 @@ use App\Models\SportEvent;
 use Carbon\Carbon;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Collection;
 
 final class RaceEventCronNotification extends Controller
 {
     /**
      * Run one per day
      */
-
     public function notification(): PromiseInterface|Response
     {
         $raceEventsToNotify = $this->getRaceEventData();
 
         $embeds = [];
 
-        if($raceEventsToNotify->isNotEmpty()) {
+        if ($raceEventsToNotify->isNotEmpty()) {
 
             /** @var SportEvent $raceEvent */
             foreach ($raceEventsToNotify as $raceEvent) {
