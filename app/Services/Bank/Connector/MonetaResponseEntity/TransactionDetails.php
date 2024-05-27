@@ -9,6 +9,7 @@ readonly class TransactionDetails
     public function __construct(
         public RemittanceInformation $remittanceInformation,
         public References $references,
+        public RelatedParties $relatedParties,
     ) {
     }
 }

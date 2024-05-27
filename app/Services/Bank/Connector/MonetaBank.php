@@ -6,11 +6,14 @@ namespace App\Services\Bank\Connector;
 
 use App\Models\BankAccount;
 use App\Services\Bank\Connector\MonetaResponseEntity\TransactionResponse;
+use App\Services\Bank\Connector\MonetaResponseEntity\Transactions;
 use App\Services\Bank\Enums\TransactionIndicator;
 use App\Shared\SymfonySerializer;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+
+use Illuminate\Support\Facades\Log;
 use function PHPUnit\Framework\stringStartsWith;
 
 class MonetaBank implements ConnectorInterface
@@ -32,11 +35,12 @@ class MonetaBank implements ConnectorInterface
                     transactionIndicator: $this->getTransactionIndicators($transaction->creditDebitIndicator),
                     dateTime: Carbon::now(),
                     amount: $transaction->amount->value,
+                    currency: $transaction->amount->currency,
                     variable_symbol: $this->extractVariableSymbol($transaction->entryDetails->transactionDetails->remittanceInformation->structured->creditorReferenceInformation->reference),
                     specific_symbol: null,
                     constant_symbol: null,
                     note: $transaction->entryDetails->transactionDetails->references->transactionDescription,
-                    description: null,
+                    description: $this->getDescription($transaction),
                     error: null,
                     status: $transaction->status
                 );
@@ -53,7 +57,25 @@ class MonetaBank implements ConnectorInterface
         } else {
             return TransactionIndicator::CREDIT;
         }
+    }
 
+    private function getDescription(Transactions $transaction): ?string
+    {
+        $identificationRaw = $transaction->entryDetails->transactionDetails->relatedParties->debtorAccount?->identification->other->identification;
+        $identification = explode(' ', $identificationRaw ?? '');
+        $account = $identification[1] ?? null;
+        $debtorName = $transaction->entryDetails->transactionDetails->relatedParties->debtor->name ?? null;
+        $unstructuredDesc = $transaction->entryDetails->transactionDetails->remittanceInformation->unstructured ?? null;
+
+        if ($debtorName === null && $account === null && $unstructuredDesc === null) {
+            return null;
+        }
+
+        $description = ($debtorName !== null) ? $debtorName : '';
+        $description .= ($account !== null) ? ' - '.$account : '';
+        $description .= ($unstructuredDesc !== null) ? ' - '.$unstructuredDesc : '';
+
+        return $description;
     }
 
     private function extractVariableSymbol(string $symbol): string
@@ -84,7 +106,7 @@ class MonetaBank implements ConnectorInterface
 
             return $this->serializer?->getSerializer()->deserialize($response->getBody()->getContents(), TransactionResponse::class, 'json');
         } catch (GuzzleException $e) {
-            //($e->getMessage());
+            Log::channel('site')->error('Bank Account MonetaMoneyBank exception: '.$e->getMessage());
         }
 
         return null;

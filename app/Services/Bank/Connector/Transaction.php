@@ -14,6 +14,7 @@ readonly class Transaction
         public TransactionIndicator $transactionIndicator,
         public Carbon $dateTime,
         public float $amount,
+        public string $currency,
         public ?string $variable_symbol,
         public ?string $specific_symbol,
         public ?string $constant_symbol,

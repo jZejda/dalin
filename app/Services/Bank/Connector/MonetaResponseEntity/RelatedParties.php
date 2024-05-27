@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Services\Bank\Connector\MonetaResponseEntity;
 
-readonly class RemittanceInformation
+readonly class RelatedParties
 {
     public function __construct(
-        public Structured $structured,
-        public ?string $unstructured,
+        public ?Debtor $debtor,
+        public ?DebtorAccount $debtorAccount,
     ) {
     }
 }

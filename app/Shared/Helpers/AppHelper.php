@@ -54,7 +54,7 @@ final class AppHelper
         }
 
         $lastEntryDate = Carbon::createFromFormat(self::MYSQL_DATE_TIME, $sportEvent->lastEntryDate()->format(self::MYSQL_DATE_TIME));
-        if ($lastEntryDate !== false) {
+        if ($lastEntryDate !== false && $lastEntryDate !== null) {
             return $lastEntryDate->lte(Carbon::now());
         }
 
