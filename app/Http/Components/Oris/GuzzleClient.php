@@ -9,9 +9,9 @@ use GuzzleHttp\Client;
 
 class GuzzleClient
 {
-    public const METHOD_CREATE_ENTRY = 'createEntry';
-    public const METHOD_UPDATE_ENTRY = 'updateEntry';
-    public const METHOD_DELETE_ENTRY = 'deleteEntry';
+    public const string METHOD_CREATE_ENTRY = 'createEntry';
+    public const string METHOD_UPDATE_ENTRY = 'updateEntry';
+    public const string METHOD_DELETE_ENTRY = 'deleteEntry';
 
     public function create(): Client
     {

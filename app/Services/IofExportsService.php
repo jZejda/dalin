@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use DB;
 use App\Http\Components\Iofv3\Entities\Attributes;
-use App\Models\SportEventExport;
 use App\Http\Components\Iofv3\ResultList;
 use App\Http\Components\Iofv3\StartList;
+use App\Models\SportEventExport;
+use DB;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;

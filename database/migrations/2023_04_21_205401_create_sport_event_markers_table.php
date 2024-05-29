@@ -18,8 +18,8 @@ return new class () extends Migration {
             $table->string('letter', 1)->nullable();
             $table->string('label', 255);
             $table->longText('desc')->nullable();
-            $table->float('lat', 10, 6);
-            $table->float('lon', 10, 6);
+            $table->float('lat', 10);
+            $table->float('lon', 10);
             $table->string('type', 36)->nullable();
             $table->timestamps();
         });
