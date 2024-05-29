@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('bank_account_id');
             $table->foreign('bank_account_id')->references('id')->on('bank_accounts');
-            $table->string('type');
+            $table->string('transaction_indicator', 64);
             $table->dateTime('date');
             $table->float('amount');
             $table->string('currency');

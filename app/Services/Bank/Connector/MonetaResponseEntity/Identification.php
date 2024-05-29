@@ -7,7 +7,7 @@ namespace App\Services\Bank\Connector\MonetaResponseEntity;
 readonly class Identification
 {
     public function __construct(
-        public Other $other,
+        public ?Other $other,
     ) {
     }
 }

@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\UserCreditType;
+use App\Services\Bank\Enums\TransactionIndicator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 
 /**
  * App\Models\SportList
  *
  * @property int $id
  * @property int $bank_account_id
- * @property string $type
+ * @property TransactionIndicator $transaction_indicator
  * @property Carbon $date
- * @property float $amount
+ * @property int|float $amount
  * @property string $currency
  * @property string $external_key
  * @property string|null $variable_symbol
@@ -37,6 +39,7 @@ class BankTransaction extends Model
     /** @var array<string, string> */
     protected $casts = [
         'date' => 'datetime:Y-m-d H:i:s',
+        'transaction_indicator' => TransactionIndicator::class,
     ];
 
     public function bankAccount(): HasOne

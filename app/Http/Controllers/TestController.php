@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\AppRoles;
+use App\Http\Controllers\Cron\Jobs\UpdateBankTransaction;
 use App\Models\User;
 use App\Services\Bank\BankAccountService;
 use App\Services\Bank\Connector\MonetaBank;
@@ -16,9 +17,10 @@ class TestController extends Controller
     {
 
 
-        $sync = new BankAccountService();
+//        $sync = new BankAccountService();
+        $sync = new UpdateBankTransaction();
 
-        $sync->synchronizeAccount();
+        $sync->run();
 
 
         dd($sync);

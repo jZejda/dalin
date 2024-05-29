@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Cron\Jobs\EntryEndsToPay;
 use App\Http\Controllers\Cron\Jobs\ReportEmailEventWeeklyEndsBySport;
 use App\Http\Controllers\Cron\Jobs\ReportEmailUserDebit;
+use App\Http\Controllers\Cron\Jobs\UpdateBankTransaction;
 use App\Http\Controllers\Cron\Jobs\UpdateEvent;
 use App\Http\Controllers\Cron\Jobs\UpdateEventWeather;
 use Illuminate\Support\Carbon;
@@ -70,6 +71,17 @@ class CommonCron extends Controller
             }
         } catch (\Exception $e) {
             Log::channel('site')->warning('ERROR ErrorMessage: '.$e->getMessage());
+        }
+
+        /** @description Bank Accounts sync */
+        try {
+            if ($this->runJob('bank_transaction_sync')) {
+                Log::channel('site')->info('START Bank transaction at '.$this->getActualHour());
+                (new UpdateBankTransaction())->run();
+                Log::channel('site')->info('STOP Bank transaction at '.$this->getActualHour());
+            }
+        } catch (\Exception $e) {
+            Log::channel('site')->warning('ERROR Bank transaction:'.$e->getMessage());
         }
 
     }

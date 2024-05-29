@@ -8,7 +8,7 @@ readonly class Amount
 {
     public function __construct(
         public string $currency,
-        public int $value,
+        public int|float $value,
     ) {
     }
 }

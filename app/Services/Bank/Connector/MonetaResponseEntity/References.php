@@ -8,7 +8,7 @@ readonly class References
 {
     public function __construct(
         public string $clearingSystemReference,
-        public string $endToEndIdentification,
+        public ?string $endToEndIdentification,
         public string $transactionDescription,
     ) {
     }
