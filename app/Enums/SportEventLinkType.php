@@ -32,35 +32,36 @@ enum SportEventLinkType: string
     public static function enumArray(): array
     {
         $trKey = 'sport-event.type_enum_links.';
-        return [
-            'invitation' => __($trKey . self::Invitation->value),
-            'information' => __($trKey . self::Information->value),
-            'startList' => __($trKey . self::StartList->value),
-            'results' => __($trKey . self::Results->value),
-            'competitionCentreMap' => __($trKey . self::CompetitionCentreMap->value),
-            'splitTimes' => __($trKey . self::SplitTimes->value),
-            'photos' => __($trKey . self::Photos->value),
-            'video' => __($trKey . self::Video->value),
-            'mapSamples' => __($trKey . self::MapSamples->value),
-            'oldMap' => __($trKey . self::OldMap->value),
-            'routeChoices' => __($trKey . self::RouteChoices->value),
-            'clubStartList' => __($trKey . self::ClubStartList->value),
-            'eventWebsite' => __($trKey . self::EventWebsite->value),
-            'resultsForRanking' => __($trKey . self::ResultsForRanking->value),
-            'resultsForCups' => __($trKey . self::ResultsForCups->value),
-            'resultsOfClass' => __($trKey . self::ResultsOfClass->value),
-            'resultsForCupsAB' => __($trKey . self::ResultsForCupsAB->value),
-            'resultsForMastersRanking' => __($trKey . self::ResultsForMastersRanking->value),
 
-            'accommodation' => __($trKey . self::Accommodation->value),
-            'livelox' => __($trKey . self::Livelox->value),
-            'other' => __($trKey . self::Other->value),
+        return [
+            'invitation' => __($trKey.self::Invitation->value),
+            'information' => __($trKey.self::Information->value),
+            'startList' => __($trKey.self::StartList->value),
+            'results' => __($trKey.self::Results->value),
+            'competitionCentreMap' => __($trKey.self::CompetitionCentreMap->value),
+            'splitTimes' => __($trKey.self::SplitTimes->value),
+            'photos' => __($trKey.self::Photos->value),
+            'video' => __($trKey.self::Video->value),
+            'mapSamples' => __($trKey.self::MapSamples->value),
+            'oldMap' => __($trKey.self::OldMap->value),
+            'routeChoices' => __($trKey.self::RouteChoices->value),
+            'clubStartList' => __($trKey.self::ClubStartList->value),
+            'eventWebsite' => __($trKey.self::EventWebsite->value),
+            'resultsForRanking' => __($trKey.self::ResultsForRanking->value),
+            'resultsForCups' => __($trKey.self::ResultsForCups->value),
+            'resultsOfClass' => __($trKey.self::ResultsOfClass->value),
+            'resultsForCupsAB' => __($trKey.self::ResultsForCupsAB->value),
+            'resultsForMastersRanking' => __($trKey.self::ResultsForMastersRanking->value),
+
+            'accommodation' => __($trKey.self::Accommodation->value),
+            'livelox' => __($trKey.self::Livelox->value),
+            'other' => __($trKey.self::Other->value),
         ];
     }
 
     public static function mapOrisIdtoEnum(?int $orisSourceTypeId): string
     {
-        return match($orisSourceTypeId) {
+        return match ($orisSourceTypeId) {
             1 => self::Invitation->value,
             2 => self::Information->value,
             3 => self::StartList->value,

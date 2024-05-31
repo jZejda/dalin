@@ -83,7 +83,6 @@ class CommonCron extends Controller
         } catch (\Exception $e) {
             Log::channel('site')->warning('ERROR Bank transaction:'.$e->getMessage());
         }
-
     }
 
     private function getActualHour(): string

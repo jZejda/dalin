@@ -56,9 +56,9 @@ class MonetaBank implements ConnectorInterface
     private function getTransactionIndicators(string $indicator): TransactionIndicator
     {
         if ($indicator === 'DBIT') {
-            return TransactionIndicator::DEBIT;
+            return TransactionIndicator::Debit;
         } else {
-            return TransactionIndicator::CREDIT;
+            return TransactionIndicator::Credit;
         }
     }
 
@@ -83,7 +83,7 @@ class MonetaBank implements ConnectorInterface
 
     private function extractVariableSymbol(string $symbol): string
     {
-        if (stringStartsWith('VS:', $symbol)) {
+        if (str_starts_with('VS:', $symbol)) {
             return mb_substr($symbol, 3);
         }
 
@@ -94,7 +94,7 @@ class MonetaBank implements ConnectorInterface
     {
         $client = $this->getClient();
         //        $from = Carbon::parse('2024-05-17 00:00:00')->toIso8601String();
-        $from = $bankAccount->last_synced->toIso8601String();
+        $from = $bankAccount->last_synced?->toIso8601String();
 
         $headers = [
             'Authorization' => 'Bearer '.$bankAccount->account_credentials['token'],

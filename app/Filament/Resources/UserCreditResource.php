@@ -16,32 +16,37 @@ use App\Models\UserCredit;
 use App\Models\UserRaceProfile;
 use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
+use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
-use Filament\Tables\Columns\ViewColumn;
-use Filament\Tables\Table;
 use Filament\Tables;
-use Filament\Forms;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Support\Collection;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Get;
+use Illuminate\Support\Collection;
 
 class UserCreditResource extends Resource
 {
     protected static ?string $model = UserCredit::class;
 
     protected static ?int $navigationSort = 40;
+
     protected static ?string $navigationGroup = 'Správa Financí';
+
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+
     protected static ?string $navigationLabel = 'Vyúčtování akcí';
+
     protected static ?string $label = 'Vyúčtování akcí';
+
     protected static ?string $pluralLabel = 'Vyúčtování akcí';
 
     public static function form(Form $form): Form
@@ -95,12 +100,14 @@ class UserCreditResource extends Resource
                                         if ($get('credit_type') === UserCreditType::TransferCreditBetweenUsers->value) {
                                             return true;
                                         }
+
                                         return false;
                                     })
                                     ->required(function (Get $get): bool {
                                         if ($get('credit_type') === UserCreditType::TransferCreditBetweenUsers->value) {
                                             return true;
                                         }
+
                                         return false;
                                     })
                                     ->searchable(),
@@ -129,7 +136,7 @@ class UserCreditResource extends Resource
                         ->columns(2)
                         ->columnSpan([
                             'sm' => 1,
-                            'md' => 8
+                            'md' => 8,
                         ]),
 
                     // Right Column
@@ -138,7 +145,7 @@ class UserCreditResource extends Resource
                             Select::make('source_user_id')
                                 ->label(__('user-credit.user_source_id'))
                                 ->options(function (User $user) {
-                                    $users = User::with('roles')->whereHas("roles", function ($q) {
+                                    $users = User::with('roles')->whereHas('roles', function ($q) {
                                         $q->whereIn('name', [AppRoles::BillingSpecialist->value, AppRoles::SuperAdmin->value]);
                                     })->get();
 
@@ -155,7 +162,7 @@ class UserCreditResource extends Resource
 
                         ])->columnSpan([
                             'sm' => 1,
-                            'md' => 4
+                            'md' => 4,
                         ]),
 
                 ]),
@@ -185,13 +192,14 @@ class UserCreditResource extends Resource
                     ->label(__('user-credit.table.sport_event_title'))
                     ->description(function (UserCredit $record): string {
                         $description = '';
-                        if (!is_null($record->sportEvent?->alt_name)) {
+                        if (! is_null($record->sportEvent?->alt_name)) {
                             $description = $record->sportEvent->alt_name;
                         } else {
-                            if (!is_null($record->sportEvent?->id)) {
-                                $description = 'interní id závodu: ' . $record->sportEvent->id;
+                            if (! is_null($record->sportEvent?->id)) {
+                                $description = 'interní id závodu: '.$record->sportEvent->id;
                             }
                         }
+
                         return $description;
                     }),
                 TextColumn::make('user.name')
@@ -202,6 +210,7 @@ class UserCreditResource extends Resource
                         if ($record->user?->isActive()) {
                             return ['success'];
                         }
+
                         return ['danger'];
                     })
                     ->searchable(),
@@ -219,8 +228,10 @@ class UserCreditResource extends Resource
                             } else {
                                 $amountDirection = __('user-credit.table.from_user');
                             }
-                            return $amountDirection . $record->relatedUser->name;
+
+                            return $amountDirection.$record->relatedUser->name;
                         }
+
                         return null;
                     }),
                 ViewColumn::make('user_entry')
@@ -255,24 +266,23 @@ class UserCreditResource extends Resource
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\Action::make('create_comment')
-                    ->icon('heroicon-o-ticket')
-                    ->label('Přihlásit na závod.')
-                    ->action(function (Collection $records, array $data): void {
+                        ->icon('heroicon-o-ticket')
+                        ->label('Přihlásit na závod.')
+                        ->action(function (Collection $records, array $data): void {
 
-                        dd($data);
+                            dd($data);
 
-
-                    })
-                    ->form([
-                        Forms\Components\Select::make('authorId')
-                            ->label('Author')
-                            ->options(User::query()->pluck('name', 'id'))
-                            ->required(),
-                        Forms\Components\TextInput::make('stiznost')
-                            ->label('stiznost')
-                    ])
-                    ->modalContentFooter(view('filament.modals.user-credit-comment', (['data' => self::$model])))
-                ])
+                        })
+                        ->form([
+                            Forms\Components\Select::make('authorId')
+                                ->label('Author')
+                                ->options(User::query()->pluck('name', 'id'))
+                                ->required(),
+                            Forms\Components\TextInput::make('stiznost')
+                                ->label('stiznost'),
+                        ])
+                        ->modalContentFooter(view('filament.modals.user-credit-comment', (['data' => self::$model]))),
+                ]),
 
             ])
             ->bulkActions([

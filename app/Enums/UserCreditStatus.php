@@ -15,13 +15,13 @@ enum UserCreditStatus: string implements HasColor
     public static function enumArray(): array
     {
         return [
-            'done'      => __('sport-event.type_enum_credit_status.' . self::Done->value),
-            'unAssign'  => __('sport-event.type_enum_credit_status.' . self::UnAssign->value),
-            'open'      => __('sport-event.type_enum_credit_status.' . self::Open->value),
+            'done' => __('sport-event.type_enum_credit_status.'.self::Done->value),
+            'unAssign' => __('sport-event.type_enum_credit_status.'.self::UnAssign->value),
+            'open' => __('sport-event.type_enum_credit_status.'.self::Open->value),
         ];
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::Done => 'success',

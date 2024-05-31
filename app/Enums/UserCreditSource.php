@@ -13,10 +13,11 @@ enum UserCreditSource: string
     public static function enumArray(): array
     {
         $trKey = 'user-credit.credit_source_enum.';
+
         return [
-            'user'      => __($trKey . self::User->value),
-            'system'  => __($trKey . self::System->value),
-            'cron'  => __($trKey . self::Cron->value),
+            'user' => __($trKey.self::User->value),
+            'system' => __($trKey.self::System->value),
+            'cron' => __($trKey.self::Cron->value),
         ];
     }
 }

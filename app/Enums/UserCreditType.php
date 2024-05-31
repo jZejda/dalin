@@ -8,7 +8,7 @@ use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Override;
 
-enum UserCreditType: string implements HasIcon, HasColor
+enum UserCreditType: string implements HasColor, HasIcon
 {
     case CacheOut = 'cacheOut';
     case UserDonation = 'userDonation';
@@ -19,16 +19,18 @@ enum UserCreditType: string implements HasIcon, HasColor
     public static function enumArray(): array
     {
         $trKey = 'sport-event.type_enum_credit_type.';
+
         return [
-            'cacheOut'      => __($trKey . self::CacheOut->value),
-            'userDonation'  => __($trKey . self::UserDonation->value),
-            'membershipFees'  => __($trKey . self::MembershipFees->value),
-            'transferCreditBetweenUsers'  => __($trKey . self::TransferCreditBetweenUsers->value),
-            'initialDeposit'  => __($trKey . self::InitialDeposit->value),
+            'cacheOut' => __($trKey.self::CacheOut->value),
+            'userDonation' => __($trKey.self::UserDonation->value),
+            'membershipFees' => __($trKey.self::MembershipFees->value),
+            'transferCreditBetweenUsers' => __($trKey.self::TransferCreditBetweenUsers->value),
+            'initialDeposit' => __($trKey.self::InitialDeposit->value),
         ];
     }
 
-    #[Override] public function getIcon(): ?string
+    #[Override]
+    public function getIcon(): ?string
     {
         return match ($this) {
             self::CacheOut => 'heroicon-m-arrow-trending-down',
@@ -39,7 +41,8 @@ enum UserCreditType: string implements HasIcon, HasColor
         };
     }
 
-    #[Override] public function getColor(): ?string
+    #[Override]
+    public function getColor(): ?string
     {
         return match ($this) {
             self::CacheOut => 'danger',
@@ -48,6 +51,4 @@ enum UserCreditType: string implements HasIcon, HasColor
             self::TransferCreditBetweenUsers => 'warning',
         };
     }
-
-
 }

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
-use Filament\Support\Contracts\HasColor;
 
-enum SportEventExportsType: string implements HasLabel, HasColor, HasIcon
+enum SportEventExportsType: string implements HasColor, HasIcon, HasLabel
 {
     case EventEntryListCat = 'eventEntryListCat';
     case ResultEntryListCat = 'resultEntryListCat';
@@ -21,7 +21,7 @@ enum SportEventExportsType: string implements HasLabel, HasColor, HasIcon
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::EventEntryListCat => 'success',
@@ -39,7 +39,7 @@ enum SportEventExportsType: string implements HasLabel, HasColor, HasIcon
 
     public function getAsideLinkTitle(?string $title = null): string
     {
-        return match($this) {
+        return match ($this) {
             self::EventEntryListCat => $title === null ? 'Startovka' : $title,
             self::ResultEntryListCat => $title === null ? 'Výsledky' : $title,
         };
@@ -47,7 +47,7 @@ enum SportEventExportsType: string implements HasLabel, HasColor, HasIcon
 
     public function getUrlPart(): string
     {
-        return match($this) {
+        return match ($this) {
             self::EventEntryListCat => 'startovka',
             self::ResultEntryListCat => 'vysledky',
         };
