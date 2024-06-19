@@ -49,6 +49,9 @@ class BankTransactionResource extends Resource
                 TextColumn::make('created_at')
                     ->label(__('bank-transaction.created_at'))
                     ->dateTime(AppHelper::DATE_FORMAT)
+                    ->description(function (BankTransaction $record): string {
+                        return $record->date->format('H:i:s');
+                    })
                     ->icon('heroicon-o-calendar-days')
                     ->sortable()
                     ->searchable(),
@@ -83,9 +86,9 @@ class BankTransactionResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-//                Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
-//                ]),
+                //                Tables\Actions\BulkActionGroup::make([
+                //                    Tables\Actions\DeleteBulkAction::make(),
+                //                ]),
             ]);
     }
 
