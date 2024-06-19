@@ -17,7 +17,7 @@ class TestController extends Controller
     {
 
 
-//        $sync = new BankAccountService();
+        //        $sync = new BankAccountService();
         $sync = new UpdateBankTransaction();
 
         $sync->run();
@@ -26,20 +26,20 @@ class TestController extends Controller
         dd($sync);
 
 
-//
-//        $list = new MonetaBank(1);
-//
-//        $list->getTransactions();
-//
-//
+        //
+        //        $list = new MonetaBank(1);
+        //
+        //        $list->getTransactions();
+        //
+        //
 
 
 
-//        $users = User::role(AppRoles::BillingSpecialist->value)->where('active', '=', 1)->get();
-//
-//        dd($users);
-//
-//        dd(Auth::user()->canCreateEntry());
+        //        $users = User::role(AppRoles::BillingSpecialist->value)->where('active', '=', 1)->get();
+        //
+        //        dd($users);
+        //
+        //        dd(Auth::user()->canCreateEntry());
 
         //        /**@var User $user */
         //        $user = User::query()->findOrFail(4);

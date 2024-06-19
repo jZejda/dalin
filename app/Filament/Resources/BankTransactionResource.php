@@ -103,8 +103,8 @@ class BankTransactionResource extends Resource
     {
         return [
             'index' => Pages\ListBankTransactions::route('/'),
-            //            'create' => Pages\CreateBankTransaction::route('/create'),
-            'edit' => Pages\EditBankTransaction::route('/{record}/edit'),
+            // 'create' => Pages\CreateBankTransaction::route('/create'),
+            // 'edit' => Pages\EditBankTransaction::route('/{record}/edit'),
         ];
     }
 }

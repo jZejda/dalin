@@ -14,8 +14,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 
-use function PHPUnit\Framework\stringStartsWith;
-
 class MonetaBank implements ConnectorInterface
 {
     public function __construct(private ?SymfonySerializer $serializer = null)
@@ -93,8 +91,10 @@ class MonetaBank implements ConnectorInterface
     private function callBank(BankAccount $bankAccount, ?Carbon $fromDate = null): ?TransactionResponse
     {
         $client = $this->getClient();
-        //        $from = Carbon::parse('2024-05-17 00:00:00')->toIso8601String();
         $from = $bankAccount->last_synced?->toIso8601String();
+        if ($fromDate === null) {
+            $from = Carbon::now()->startOfMonth()->startOfDay()->toIso8601String();
+        }
 
         $headers = [
             'Authorization' => 'Bearer '.$bankAccount->account_credentials['token'],

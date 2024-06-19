@@ -20,7 +20,7 @@ return [
     'created_at' => 'Vytvořeno',
     'variable_symbol' => 'Variabilní symbol',
     'note' => 'Poznámka',
-    'amount' => 'Cena',
+    'amount' => 'Částka',
 
     'transaction_indicator' => [
         TransactionIndicator::Debit->value => 'Výdaj',
