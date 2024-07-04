@@ -34,7 +34,7 @@ class MonetaBank implements ConnectorInterface
                 $transactions[] = new Transaction(
                     externalKey: $transaction->entryReference,
                     transactionIndicator: $this->getTransactionIndicators($transaction->creditDebitIndicator),
-                    dateTime: Carbon::now(),
+                    dateTime: Carbon::createFromFormat('Y-m-d', $transaction->valueDate->date)?->setTime(0, 0, 0) ?? Carbon::now(),
                     amount: $transaction->amount->value,
                     currency: $transaction->amount->currency,
                     variable_symbol: $this->extractVariableSymbol($transaction->entryDetails->transactionDetails->remittanceInformation->structured->creditorReferenceInformation->reference),
@@ -72,16 +72,23 @@ class MonetaBank implements ConnectorInterface
             return null;
         }
 
-        $description = ($debtorName !== null) ? $debtorName : '';
-        $description .= ($account !== null) ? ' - '.$account : '';
-        $description .= ($unstructuredDesc !== null) ? ' - '.$unstructuredDesc : '';
+        $description = [];
+        if ($debtorName !== null) {
+            $description[] = $debtorName;
+        }
+        if ($account !== null) {
+            $description[] = $account;
+        }
+        if ($unstructuredDesc !== null) {
+            $description[] = $unstructuredDesc;
+        }
 
-        return $description;
+        return implode(' - ', $description);
     }
 
     private function extractVariableSymbol(string $symbol): string
     {
-        if (str_starts_with('VS:', $symbol)) {
+        if (str_starts_with($symbol, 'VS:')) {
             return mb_substr($symbol, 3);
         }
 

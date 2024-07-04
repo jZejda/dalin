@@ -49,14 +49,18 @@ class BankTransactionResource extends Resource
                 TextColumn::make('created_at')
                     ->label(__('bank-transaction.created_at'))
                     ->dateTime(AppHelper::DATE_FORMAT)
-                    ->description(function (BankTransaction $record): string {
-                        return $record->date->format('H:i:s');
-                    })
+//                    ->description(function (BankTransaction $record): string {
+//                        return $record->date->format('H:i:s');
+//                    })
                     ->icon('heroicon-o-calendar-days')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('variable_symbol')
                     ->label(__('bank-transaction.variable_symbol'))
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('description')
+                    ->label(__('bank-transaction.description'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('note')

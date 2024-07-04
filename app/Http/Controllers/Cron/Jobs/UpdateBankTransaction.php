@@ -8,6 +8,7 @@ use App\Models\BankAccount;
 use App\Models\BankTransaction;
 use App\Services\Bank\Connector\MonetaBank;
 use App\Services\Bank\Connector\Transaction;
+use Carbon\Carbon;
 
 final class UpdateBankTransaction implements CommonCronJobs
 {
@@ -25,6 +26,9 @@ final class UpdateBankTransaction implements CommonCronJobs
             $bankTransactions = (new $class())->getTransactions($bankAccount, $bankAccount->last_synced);
 
             $this->storeTransactions($bankTransactions, $bankAccount->id);
+
+            $bankAccount->last_synced = Carbon::now();
+            $bankAccount->save();
         }
     }
 
@@ -46,6 +50,7 @@ final class UpdateBankTransaction implements CommonCronJobs
             $transaction->amount = $bankTransaction->amount;
             $transaction->currency = $bankTransaction->currency;
             $transaction->variable_symbol = $bankTransaction->variable_symbol;
+            $transaction->description = $bankTransaction->description;
             $transaction->note = $bankTransaction->note;
 
             $transaction->saveOrFail();

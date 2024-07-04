@@ -20,6 +20,7 @@ return [
     'created_at' => 'Vytvořeno',
     'variable_symbol' => 'Variabilní symbol',
     'note' => 'Poznámka',
+    'description' => 'Popis',
     'amount' => 'Částka',
 
     'transaction_indicator' => [

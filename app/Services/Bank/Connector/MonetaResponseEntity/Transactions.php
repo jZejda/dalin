@@ -12,6 +12,7 @@ readonly class Transactions
         public EntryDetails $entryDetails,
         public string $entryReference,
         public string $status,
+        public ValueDate $valueDate,
     ) {
     }
 }
