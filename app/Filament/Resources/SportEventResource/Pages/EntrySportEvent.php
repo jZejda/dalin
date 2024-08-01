@@ -5,36 +5,38 @@ declare(strict_types=1);
 namespace App\Filament\Resources\SportEventResource\Pages;
 
 use App\Enums\AppRoles;
+use App\Enums\EntryStatus;
+use App\Filament\Resources\SportEventResource;
 use App\Filament\Resources\SportEventResource\Pages\Actions\EntrySendMail;
 use App\Filament\Resources\SportEventResource\Pages\Actions\EntryUpdateEvent;
 use App\Filament\Resources\SportEventResource\Pages\Actions\Helpers\UserRaceProfiles;
-use App\Http\Components\Oris\Response\CreateEntry;
-use App\Models\SportClassDefinition;
-use App\Http\Components\Oris\ManageEntry;
-use App\Models\SportEvent;
-use App\Shared\Helpers\EmptyType;
-use App\Enums\EntryStatus;
+use App\Filament\Resources\SportEventResource\Service\SportEventService;
 use App\Http\Components\Oris\GuzzleClient;
+use App\Http\Components\Oris\ManageEntry;
+use App\Http\Components\Oris\Response\CreateEntry;
 use App\Models\SportClass;
+use App\Models\SportClassDefinition;
+use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserEntry;
-use App\Filament\Resources\SportEventResource;
 use App\Models\UserRaceProfile;
 use App\Shared\Helpers\AppHelper;
+use App\Shared\Helpers\EmptyType;
+use Filament\Actions\Action as ActionAction;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Forms\Set;
-use Filament\Tables\Actions\Action as TableAction;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Set;
+use Filament\Notifications\Actions\Action as NotificationAction;
 use Filament\Notifications\Notification;
-use Filament\Actions\Action as ActionAction;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
+use Filament\Tables\Actions\Action as TableAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -45,19 +47,18 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Filament\Notifications\Actions\Action as NotificationAction;
-use App\Filament\Resources\SportEventResource\Service\SportEventService;
 use Illuminate\Support\HtmlString;
 
 class EntrySportEvent extends Page implements HasForms, HasTable
 {
     use InteractsWithForms;
-    use InteractsWithTable;
     use InteractsWithRecord;
+    use InteractsWithTable;
 
     public string|int|null|Model $record;
 
     protected static string $resource = SportEventResource::class;
+
     protected static string $view = 'filament.resources.sport-event-resource.pages.event-entry';
 
     public string $back_button_url = '/admin/sport-events';
@@ -67,7 +68,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         //$this->beforeBooted();
 
         // @todo refactor check Filament::user ability.
-        if (!Auth::user()?->hasRole(User::ROLE_MEMBER . '|' . User::ROLE_EVENT_MASTER . '|' . User::ROLE_SUPER_ADMIN)) {
+        if (! Auth::user()?->hasRole(User::ROLE_MEMBER.'|'.User::ROLE_EVENT_MASTER.'|'.User::ROLE_SUPER_ADMIN)) {
             $this->notify('warning', __('filament-shield::filament-shield.forbidden'));
 
             $this->beforeShieldRedirects();
@@ -98,7 +99,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         /** @var SportEvent $sportEvent */
         $sportEvent = $this->record;
 
-        return 'Detail závodu - ' . $sportEvent->name;
+        return 'Detail závodu - '.$sportEvent->name;
     }
 
     protected function getHeaderActions(): array
@@ -119,21 +120,21 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             : null;
 
         $defaultActions = [
-           $this->getOrisEvent(),
+            $this->getOrisEvent(),
         ];
 
-        if (!is_null($sportEvent->oris_id)) {
+        if (! is_null($sportEvent->oris_id)) {
             $defaultActions[] = $updateEvent->showUpdateEventFromOris();
         }
 
-        if (!is_null($registerAnyone)) {
+        if (! is_null($registerAnyone)) {
             $defaultActions[] = $registerAnyone;
         }
 
-        if (!is_null($sendEmail)) {
+        if (! is_null($sendEmail)) {
             $defaultActions[] = $sendEmail;
         }
-        if (!is_null($makeExport)) {
+        if (! is_null($makeExport)) {
             $defaultActions[] = $makeExport;
         }
 
@@ -147,7 +148,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
         return UserEntry::where('sport_event_id', '=', $sportEvent->id);
     }
-
 
     protected function getTableColumns(): array
     {
@@ -163,6 +163,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     if ($state === 'published') {
                         return 'success';
                     }
+
                     return 'gray';
                 }),
             TextColumn::make('userRaceProfile.user.name')
@@ -172,6 +173,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     if ($state === auth()->user()?->name) {
                         return 'success';
                     }
+
                     return 'gray';
                 })
                 ->searchable(),
@@ -254,7 +256,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         $response = new ManageEntry();
                         $orisResponse = $response->data($clientResponse->getBody()->getContents());
 
-
                         //                    +Method: "deleteEntry"
                         //                    +Format: "json"
                         //                    +Status: "OK"
@@ -267,21 +268,21 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                             $record->saveOrFail();
 
                             Notification::make()
-                                ->title('Úspěšně jsme odhlásili ' . $deletedRaceProfile . 'ze závodu')
+                                ->title('Úspěšně jsme odhlásili '.$deletedRaceProfile.'ze závodu')
                                 ->body('Odhlášku doporučujeme zkontrolovat na ORISu.')
                                 ->actions([
                                     NotificationAction::make('view')
                                         ->label('Přejít na url závodu')
                                         ->button()
                                         ->openUrlInNewTab()
-                                        ->url('https://oris.orientacnisporty.cz/Zavod?id=' . $eventOrisId),
+                                        ->url('https://oris.orientacnisporty.cz/Zavod?id='.$eventOrisId),
                                 ])
                                 ->seconds(15)
                                 ->send();
                         } else {
                             Notification::make()
                                 ->title('Neco se nepovedlo')
-                                ->body('Toto pošli správci: ' .$orisResponse->Status)
+                                ->body('Toto pošli správci: '.$orisResponse->Status)
                                 ->warning()
                                 ->send();
                         }
@@ -291,7 +292,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         $record->saveOrFail();
 
                         Notification::make()
-                            ->title('Úspěšně jsme odhlásili ' . $deletedRaceProfile . 'ze závodu')
+                            ->title('Úspěšně jsme odhlásili '.$deletedRaceProfile.'ze závodu')
                             ->body('Odhlášku proběhlo pouze v našem systému.')
                             ->warning()
                             ->send();
@@ -304,7 +305,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 //->disabled(fn (UserEntry $record) => dd($record))
                 //->modalHidden(fn (UserEntry $record): bool => $record->userRaceProfile->user() === auth()->user())
 
-                ->modalHeading(fn (UserEntry $record): string => $record->userRaceProfile->user_race_full_name . ' - odhlášení ze závodu')
+                ->modalHeading(fn (UserEntry $record): string => $record->userRaceProfile->user_race_full_name.' - odhlášení ze závodu')
                 ->modalContent(view('filament.modals.user-cancel-entry'))
                 ->modalDescription('Odhlšení proběhne pokud.')
                 ->modalSubmitActionLabel('Odhlásit'),
@@ -338,7 +339,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                         if ($storeResult) {
                             Notification::make()
-                                ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name . ' do kategorie: ' . $sportClass?->name)
+                                ->title('Přihláška  '.$userRaceProfile?->user_race_full_name.' do kategorie: '.$sportClass?->name)
                                 ->body('Prihlášku si zkontroluj na stránkách závodu přímo v ORISu.')
                                 ->success()
                                 ->actions([
@@ -346,7 +347,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                         ->label('Přejít na url závodu')
                                         ->button()
                                         ->openUrlInNewTab()
-                                        ->url('https://oris.orientacnisporty.cz/PrehledPrihlasenych?id=' . $sportEvent->oris_id),
+                                        ->url('https://oris.orientacnisporty.cz/PrehledPrihlasenych?id='.$sportEvent->oris_id),
                                 ])
                                 ->seconds(15)
                                 ->send();
@@ -354,8 +355,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                     } else {
                         Notification::make()
-                            ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name . ' do kategorie: ' . $sportClass?->name)
-                            ->body('Nebyla provedena. ORIS vrátil zprávu: ' . $orisResponse->Status)
+                            ->title('Přihláška  '.$userRaceProfile?->user_race_full_name.' do kategorie: '.$sportClass?->name)
+                            ->body('Nebyla provedena. ORIS vrátil zprávu: '.$orisResponse->Status)
                             ->warning()
                             ->seconds(8)
                             ->send();
@@ -374,7 +375,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                     if ($storeResult) {
                         Notification::make()
-                            ->title('Přihláška  ' . $userRaceProfile?->user_race_full_name . ' do kategorie: ' . $sportClass?->name)
+                            ->title('Přihláška  '.$userRaceProfile?->user_race_full_name.' do kategorie: '.$sportClass?->name)
                             ->body('Prihlášku byla provedena pouze v interním systému')
                             ->success()
                             ->seconds(8)
@@ -386,7 +387,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             ->disabled(
                 EmptyType::arrayEmpty((new UserRaceProfiles())->getUserRaceProfiles($this->record)->toArray())
                 || $sportEvent->cancelled
-                || !Auth::user()?->canCreateEntry()
+                || ! Auth::user()?->canCreateEntry()
             )
 
             ->color($registerAll ? 'gray' : 'primary')
@@ -404,7 +405,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     ->afterStateUpdated(
                         (function ($state, Set $set) {
 
-                            /** @var SportEvent $sportEvent*/
+                            /** @var SportEvent $sportEvent */
                             $sportEvent = $this->record;
 
                             try {
@@ -443,6 +444,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                     ->title('Nepodařilo se načíst data.')
                                     ->danger()
                                     ->duration(8);
+
                                 return;
                             }
                             Notification::make()
@@ -467,6 +469,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 $classDefinitionName = SportClassDefinition::where('id', '=', $eventClass->class_definition_id)->first();
                                 $classes[$eventClass->id] = $classDefinitionName->classDefinitionFullLabel;
                             }
+
                             return $classes;
                         }
                     })
@@ -483,7 +486,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         ->label('Půjčit čip')
                         ->options([
                             0 => 'Ne',
-                            1 => 'Ano '
+                            1 => 'Ano ',
                         ])
                         ->default(0)
                         ->inline(),
@@ -499,28 +502,33 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                             if ($sportEvent->stages !== null && $sportEvent->sport_id >= 1) {
                                 $options = (new SportEventService())->getMultiEventStagesOptions($sportEvent);
                             }
+
                             return $options;
                         })
                         ->multiple()
                         ->default(function () {
                             /** @var SportEvent $sportEvent */
                             $sportEvent = $this->record;
+
                             return (new SportEventService())->getMultiEventDefaultOptions($sportEvent);
                         })
                         ->minItems(function () {
                             /** @var SportEvent $sportEvent */
                             $sportEvent = $this->record;
+
                             return ($sportEvent->stages === null || $sportEvent->stages === 0) ? 0 : 1;
                         })
                         ->required(function () {
                             /** @var SportEvent $sportEvent */
                             $sportEvent = $this->record;
-                            return !($sportEvent->stages === null || $sportEvent->stages === 0);
+
+                            return ! ($sportEvent->stages === null || $sportEvent->stages === 0);
                         })
                         ->visible(function () {
                             /** @var SportEvent $sportEvent */
                             $sportEvent = $this->record;
-                            return !($sportEvent->stages === null || $sportEvent->stages === 0);
+
+                            return ! ($sportEvent->stages === null || $sportEvent->stages === 0);
                         }),
                 ])->columns(1),
 
@@ -563,14 +571,14 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                             'E123_similarly' => 'E123 - Podobně',
                                             'E123_variously' => 'E123 - Různě',
                                             'E123_note' => 'E123 - Poznámka',
-                                        ]
+                                        ],
 
                                     ])
                                     ->live()
                                     ->afterStateUpdated(
                                         (function ($state, Set $set) {
 
-                                            $pattern = match($state) {
+                                            $pattern = match ($state) {
                                                 'E0_early' => '(E0;brzy;)',
                                                 'E0_late' => '(E0;pozde;)',
                                                 'E0_similarly' => '(E0;podobne;REG_CISLO)',
@@ -600,7 +608,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     ->persistCollapsed()
                     ->id('entry_additional_information'),
 
-        ]);
+            ]);
     }
 
     public function getHeaderWidgetsColumns(): int|array
@@ -633,8 +641,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
         if (isset($entryData['entry_stages'])) {
             for ($stage = 1; $stage <= $sportEvent->stages; $stage++) {
-                if(in_array('stage' . $stage, $entryData['entry_stages'])) {
-                    $allOptionalParams['stage' . $stage] = '1';
+                if (in_array('stage'.$stage, $entryData['entry_stages'])) {
+                    $allOptionalParams['stage'.$stage] = '1';
                 }
 
                 /**
@@ -648,7 +656,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
         $optionalParams = [];
         foreach ($allOptionalParams as $key => $value) {
-            if (!is_null($value)) {
+            if (! is_null($value)) {
                 $optionalParams[$key] = $value;
             }
         }
@@ -683,7 +691,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
         // TODO skryt kdy6 je po poslednim datu
 
-
         return false;
     }
 
@@ -696,7 +703,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         UserRaceProfile $userRaceProfile,
         SportClass $sportClass,
         array $data,
-        CreateEntry $orisResponse = null
+        ?CreateEntry $orisResponse = null
     ): bool {
         $entry = new UserEntry();
         if ($isOrisEvent) {

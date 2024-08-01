@@ -32,7 +32,7 @@ class ListClubs extends ListRecords
 
                         Notification::make()
                             ->title('Aktualizace klubů')
-                            ->body('Nově přidáno klubů: ' . $newClubs . ' | Aktualizováno klubů: ' . $updateClubs)
+                            ->body('Nově přidáno klubů: '.$newClubs.' | Aktualizováno klubů: '.$updateClubs)
                             ->success()
                             ->seconds(8)
                             ->send();
@@ -52,7 +52,7 @@ class ListClubs extends ListRecords
                 ->modalDescription('Načte a uloží/aktualizuje kluby z ORISu.')
                 ->modalSubmitActionLabel('Aktualizovat')
                 ->form([
-                ])
+                ]),
         ];
     }
 }

@@ -8,6 +8,7 @@ use App\Services\Bank\Enums\TransactionIndicator;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -44,5 +45,10 @@ class BankTransaction extends Model
     public function bankAccount(): HasOne
     {
         return $this->hasOne(BankAccount::class, 'id', 'bank_account_id');
+    }
+
+    public function userCredit(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'credit_user_id', 'id');
     }
 }

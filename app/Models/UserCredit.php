@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $sport_event_id
  * @property int|null $sport_service_id
  * @property int|null $oris_balance_id
+ * @property int|null $bank_transaction_id
  * @property UserCreditStatus $status
  * @property float $amount
  * @property float|null $balance
@@ -41,15 +42,16 @@ use Illuminate\Support\Carbon;
  * @property-read int|null $user_credit_notes_count
  * @property-read UserRaceProfile|null $userRaceProfile
  */
-
 class UserCredit extends Model
 {
     use HasFactory;
 
     public const string CURRENCY_CZK = 'CZK';
+
     public const string CURRENCY_EUR = 'EUR';
 
     public const string SOURCE_CRON = 'cron';
+
     public const string SOURCE_USER = 'user';
 
     /** @var array<int, string> */
@@ -59,6 +61,7 @@ class UserCredit extends Model
         'user_race_profile_id',
         'sport_event_id',
         'sport_service_id',
+        'bank_transaction_id',
         'amount',
         'currency',
         'source',
@@ -73,7 +76,6 @@ class UserCredit extends Model
         'status' => UserCreditStatus::class,
         'credit_type' => UserCreditType::class,
     ];
-
 
     public function user(): HasOne
     {
@@ -103,6 +105,11 @@ class UserCredit extends Model
     public function sportService(): HasOne
     {
         return $this->hasOne(SportService::class, 'id', 'sport_service_id');
+    }
+
+    public function bankTransaction(): HasOne
+    {
+        return $this->hasOne(BankTransaction::class, 'id', 'bank_transaction_id');
     }
 
     public function userCreditNotes(): HasMany
