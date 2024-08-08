@@ -8,13 +8,18 @@ use App\Models\BankTransaction;
 use App\Services\Bank\Enums\TransactionIndicator;
 use App\Shared\Helpers\AppHelper;
 use Filament\Actions\StaticAction;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 
 class BankTransactionResource extends Resource
 {
@@ -32,23 +37,17 @@ class BankTransactionResource extends Resource
 
     protected static ?string $pluralLabel = 'Bankovní výpis';
 
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                //
-            ]);
-    }
+    //    public static function form(Form $form): Form
+    //    {
+    //        return $form
+    //            ->schema([
+    //                //
+    //            ]);
+    //    }
 
     public static function table(Table $table): Table
     {
-
         return $table
-            ->recordClasses(fn (BankTransaction $record) => match ($record->transaction_indicator) {
-                TransactionIndicator::Credit => 'opacity-30',
-                TransactionIndicator::Debit => 'bg-red-100 dark:bg-red-700',
-                default => null,
-            })
             ->columns([
                 TextColumn::make('id')
                     ->label(__('bank-transaction.id'))
@@ -64,6 +63,7 @@ class BankTransactionResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('amount')
+                    ->money('CZK', locale: 'cs')
                     ->icon(fn (BankTransaction $record): ?string => $record->transaction_indicator->getIcon())
                     ->color(fn (BankTransaction $record): ?string => $record->transaction_indicator->getColor())
                     ->label(__('bank-transaction.amount'))
@@ -92,7 +92,27 @@ class BankTransactionResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                //
+                Filter::make('date')
+                    ->form([
+                        DatePicker::make('date')
+                            ->label('Datum transakce od'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['date'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
+                            );
+                    })->indicateUsing(function (array $data): ?string {
+                        if (! $data['date']) {
+                            return null;
+                        }
+
+                        return 'Transakce novější: '.\Illuminate\Support\Carbon::parse($data['date'])->format('d.m.Y');
+                    })->default(now()->subDays(7)),
+                SelectFilter::make('transaction_indicator')
+                    ->label('Typ transakce')
+                    ->options(TransactionIndicator::enumArray()),
             ])
             ->defaultSort('date', 'desc')
             ->striped()
@@ -104,6 +124,8 @@ class BankTransactionResource extends Resource
                 ),
 
             ])
+            ->defaultPaginationPageOption(25)
+            ->paginated([10, 25, 50, 100, 'all'])
             ->bulkActions([
                 //                Tables\Actions\BulkActionGroup::make([
                 //                    Tables\Actions\DeleteBulkAction::make(),
@@ -132,8 +154,11 @@ class BankTransactionResource extends Resource
         return Tables\Actions\Action::make('Popis tranaskce')
             ->icon('heroicon-o-document-text')
             ->color('info')
-            ->modalHeading('fsfsdf')
-            ->modalDescription('fsfsdfsf')
+            ->modalHeading('Upravit označení transakce')
+            ->modalDescription(function (): HtmlString {
+                return new HtmlString('Pro lepší přehlednost můžeš na transkaci změnit <strong>popis</strong> a <strong>poznámku</strong>.</br>
+                Ostatní parametry transakce není možné upravovat. V případě že by to opravdu bylo potřeba, kontaktuj správce účtu klubu.');
+            })
             ->modalIcon('heroicon-o-document-text')
             ->form([
                 TextInput::make('description')
@@ -150,7 +175,7 @@ class BankTransactionResource extends Resource
 
                 Notification::make()
                     ->title('fsfsf')
-                    ->body('fsfsfsdf')
+                    ->body('fsfsfsjbkjdf')
                     ->success()
                     ->send();
             });

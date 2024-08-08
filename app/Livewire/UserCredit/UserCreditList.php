@@ -11,16 +11,16 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
-use Filament\Tables\Actions\Action;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
-use Livewire\Component;
 use Illuminate\Contracts\View\View;
+use Livewire\Component;
 
 class UserCreditList extends Component implements HasForms, HasTable
 {
@@ -38,7 +38,7 @@ class UserCreditList extends Component implements HasForms, HasTable
                     ->label(__('user-credit.table.created_at_title'))
                     ->dateTime('d.m.Y')
                     ->description(function (UserCredit $record): string {
-                        return 'ID:'. $record->id;
+                        return 'ID:'.$record->id;
                     })
                     ->sortable(),
                 TextColumn::make('sportEvent.date')
@@ -50,9 +50,10 @@ class UserCreditList extends Component implements HasForms, HasTable
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
                     ->url(function (UserCredit $record): ?string {
-                        if (!is_null($record->sport_event_id)) {
+                        if (! is_null($record->sport_event_id)) {
                             return route('filament.admin.resources.sport-events.entry', ['record' => $record->sport_event_id]);
                         }
+
                         return null;
                     })
                     ->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name !== null ? $record->sportEvent->alt_name : 'nemá vazbu na akci/závod')
@@ -76,8 +77,10 @@ class UserCreditList extends Component implements HasForms, HasTable
                             } else {
                                 $amountDirection = __('user-credit.table.from_user');
                             }
-                            return $amountDirection . $record->relatedUser->name;
+
+                            return $amountDirection.$record->relatedUser->name;
                         }
+
                         return null;
                     })
                     ->summarize(Sum::make())->money('CZK')->label('Celkem'),
@@ -92,6 +95,7 @@ class UserCreditList extends Component implements HasForms, HasTable
                         if ($record->sourceUser?->isActive()) {
                             return ['gray'];
                         }
+
                         return ['danger'];
                     }),
             ])
@@ -109,7 +113,7 @@ class UserCreditList extends Component implements HasForms, HasTable
                         $userCreditNote->note_user_id = auth()->user()?->id ?? 1;
                         $userCreditNote->note = $data['user_note'];
 
-                        if($userCreditNote->save()) {
+                        if ($userCreditNote->save()) {
                             Notification::make()
                                 ->title('Poznámku jsme uložili')
                                 ->body('Děkujeme za zaslání dotazu k vyúčtování, pokusíme se to vyřešit.')
@@ -117,13 +121,13 @@ class UserCreditList extends Component implements HasForms, HasTable
                                 ->seconds(8)
                                 ->send();
 
-                            $notificationUsers = User::role([AppRoles::BillingSpecialist->value , AppRoles::SuperAdmin->value])->get();
+                            $notificationUsers = User::role([AppRoles::BillingSpecialist->value, AppRoles::SuperAdmin->value])->get();
                             // vytahni si data podle $this->record
                             foreach ($notificationUsers as $recipient) {
                                 Notification::make()
                                     ->title('Poznámka k vyúčtování')
-                                    ->body('Uživatel: ' . auth()->user()?->name . ' | Vyúčtování ID: ' . $userCredit->id
-                                    . ' zaslal zprávu. Prosíme o vyřešení poznámky.')
+                                    ->body('Uživatel: '.auth()->user()?->name.' | Vyúčtování ID: '.$userCredit->id
+                                    .' zaslal zprávu. Prosíme o vyřešení poznámky.')
                                     ->sendToDatabase($recipient);
                             }
                         }
@@ -140,8 +144,8 @@ class UserCreditList extends Component implements HasForms, HasTable
                     ))
                     ->form([
                         MarkdownEditor::make('user_note')
-                            ->label('Poznámka')
-                    ])
+                            ->label('Poznámka'),
+                    ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

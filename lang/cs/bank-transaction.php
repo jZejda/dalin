@@ -24,8 +24,8 @@ return [
     'amount' => 'Částka',
 
     'transaction_indicator' => [
-        TransactionIndicator::Debit->value => 'Výdaj',
-        TransactionIndicator::Credit->value => 'Příjem',
+        TransactionIndicator::Debit->value => 'výdaj',
+        TransactionIndicator::Credit->value => 'příjem',
     ],
 
 ];

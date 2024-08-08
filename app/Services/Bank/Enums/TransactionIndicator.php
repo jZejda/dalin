@@ -26,8 +26,8 @@ enum TransactionIndicator: string implements HasColor, HasIcon, HasLabel
     public function getIcon(): ?string
     {
         return match ($this) {
-            self::Debit => 'heroicon-o-arrow-down-circle',
-            self::Credit => 'heroicon-o-arrow-up-circle',
+            self::Debit => 'heroicon-m-arrow-trending-down',
+            self::Credit => 'heroicon-m-arrow-trending-up',
         };
     }
 
@@ -38,5 +38,15 @@ enum TransactionIndicator: string implements HasColor, HasIcon, HasLabel
             self::Debit => 'danger',
             self::Credit => 'success',
         };
+    }
+
+    public static function enumArray(): array
+    {
+        $trKey = 'bank-transaction.transaction_indicator.';
+
+        return [
+            self::Credit->value => __($trKey.self::Credit->value),
+            self::Debit->value => __($trKey.self::Debit->value),
+        ];
     }
 }

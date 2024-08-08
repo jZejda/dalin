@@ -8,7 +8,7 @@ use App\Filament\Resources\BankTransactionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditBankTransaction extends EditRecord
+class editBankTransaction extends EditRecord
 {
     protected static string $resource = BankTransactionResource::class;
 
