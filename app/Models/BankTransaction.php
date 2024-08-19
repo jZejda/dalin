@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * App\Models\SportList
+ * App\Models\BankTransaction
  *
  * @property int $id
  * @property int $bank_account_id
@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int|float $amount
  * @property string $currency
  * @property string $external_key
+ * @property string|null $bank_account_identifier
  * @property string|null $variable_symbol
  * @property string|null $specific_symbol
  * @property string|null $constant_symbol

@@ -46,10 +46,11 @@ final class UpdateBankTransaction implements CommonCronJobs
             $transaction->bank_account_id = $bankAccountId;
             $transaction->transaction_indicator = $bankTransaction->transactionIndicator;
             $transaction->external_key = $bankTransaction->externalKey;
+            $transaction->bank_account_identifier = $bankTransaction->bankAccountIdentifier;
             $transaction->date = $bankTransaction->dateTime;
             $transaction->amount = $bankTransaction->amount;
             $transaction->currency = $bankTransaction->currency;
-            $transaction->variable_symbol = $bankTransaction->variable_symbol;
+            $transaction->variable_symbol = $bankTransaction->variableSymbol;
             $transaction->description = $bankTransaction->description;
             $transaction->note = $bankTransaction->note;
 

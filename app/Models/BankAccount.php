@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
 /**
- * App\Models\SportList
+ * App\Models\BankAccount
  *
  * @property int $id
  * @property string $name

@@ -10,15 +10,16 @@ use App\Shared\Helpers\AppHelper;
 use Filament\Actions\StaticAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\HtmlString;
 
 class BankTransactionResource extends Resource
@@ -66,17 +67,13 @@ class BankTransactionResource extends Resource
                     ->money('CZK', locale: 'cs')
                     ->icon(fn (BankTransaction $record): ?string => $record->transaction_indicator->getIcon())
                     ->color(fn (BankTransaction $record): ?string => $record->transaction_indicator->getColor())
+                    ->size(TextColumnSize::Large)
                     ->label(__('bank-transaction.amount'))
-                    ->description(function (BankTransaction $record): string {
-
-                        if ($record->transaction_indicator === TransactionIndicator::Debit) {
-                            $amountDirection = __('bank-transaction.transaction_indicator.'.TransactionIndicator::Debit->value);
-                        } else {
-                            $amountDirection = __('bank-transaction.transaction_indicator.'.TransactionIndicator::Credit->value);
+                    ->description(function (BankTransaction $record): ?HtmlString {
+                        if ($record->bank_account_identifier !== null) {
+                            return new HtmlString('<div class="text-sm text-yellow-500 dark:text-yellow-400">' . $record->bank_account_identifier . '</div>');
                         }
-
-                        return $amountDirection;
-
+                        return null;
                     }),
                 TextColumn::make('variable_symbol')
                     ->label(__('bank-transaction.variable_symbol'))
@@ -108,7 +105,7 @@ class BankTransactionResource extends Resource
                             return null;
                         }
 
-                        return 'Transakce novější: '.\Illuminate\Support\Carbon::parse($data['date'])->format('d.m.Y');
+                        return 'Transakce novější: '.Carbon::parse($data['date'])->format('d.m.Y');
                     })->default(now()->subDays(7)),
                 SelectFilter::make('transaction_indicator')
                     ->label('Typ transakce')

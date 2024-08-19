@@ -31,15 +31,17 @@ class MonetaBank implements ConnectorInterface
 
         if ($response !== null) {
             foreach ($response->transactions as $transaction) {
+
                 $transactions[] = new Transaction(
                     externalKey: $transaction->entryReference,
                     transactionIndicator: $this->getTransactionIndicators($transaction->creditDebitIndicator),
                     dateTime: Carbon::createFromFormat('Y-m-d', $transaction->valueDate->date)?->setTime(0, 0, 0) ?? Carbon::now(),
                     amount: $transaction->amount->value,
                     currency: $transaction->amount->currency,
-                    variable_symbol: $this->extractVariableSymbol($transaction->entryDetails->transactionDetails->remittanceInformation->structured->creditorReferenceInformation->reference),
-                    specific_symbol: null,
-                    constant_symbol: null,
+                    bankAccountIdentifier: $this->extractPayerAccount($transaction),
+                    variableSymbol: $this->extractVariableSymbol($transaction->entryDetails->transactionDetails->remittanceInformation->structured->creditorReferenceInformation->reference),
+                    specificSymbol: null,
+                    constantSymbol: null,
                     note: $transaction->entryDetails->transactionDetails->references->transactionDescription,
                     description: $this->getDescription($transaction),
                     error: null,
@@ -93,6 +95,11 @@ class MonetaBank implements ConnectorInterface
         }
 
         return $symbol;
+    }
+
+    private function extractPayerAccount(Transactions $transaction): ?string
+    {
+        return $transaction->entryDetails->transactionDetails->relatedParties->debtorAccount?->identification->other?->identification;
     }
 
     private function callBank(BankAccount $bankAccount, ?Carbon $fromDate = null): ?TransactionResponse

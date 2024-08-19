@@ -16,10 +16,11 @@ return new class () extends Migration {
             $table->id();
             $table->unsignedBigInteger('bank_account_id');
             $table->foreign('bank_account_id')->references('id')->on('bank_accounts');
-            $table->string('transaction_indicator', 64);
+            $table->string('transaction_indicator', 64)->index();
             $table->dateTime('date');
             $table->float('amount');
             $table->string('currency');
+            $table->string('bank_account_identifier', 128)->nullable();
             $table->string('external_key', 128)->index();
             $table->string('variable_symbol', 64)->nullable()->index();
             $table->string('specific_symbol', 64)->nullable();
