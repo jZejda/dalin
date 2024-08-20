@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\BankTransactionResource\Pages\ListBankTransactions;
+use App\Filament\Resources\BankTransactionResource\Pages\CreateBankTransaction;
+use App\Filament\Resources\BankTransactionResource\Pages\EditBankTransaction;
 use App\Models\BankTransaction;
 use App\Services\Bank\Enums\TransactionIndicator;
 use App\Shared\Helpers\AppHelper;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Actions\StaticAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -22,7 +27,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\HtmlString;
 
-class BankTransactionResource extends Resource
+class BankTransactionResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = BankTransaction::class;
 
@@ -38,13 +43,13 @@ class BankTransactionResource extends Resource
 
     protected static ?string $pluralLabel = 'Bankovní výpis';
 
-    //    public static function form(Form $form): Form
-    //    {
-    //        return $form
-    //            ->schema([
-    //                //
-    //            ]);
-    //    }
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                //
+            ]);
+    }
 
     public static function table(Table $table): Table
     {
@@ -71,8 +76,9 @@ class BankTransactionResource extends Resource
                     ->label(__('bank-transaction.amount'))
                     ->description(function (BankTransaction $record): ?HtmlString {
                         if ($record->bank_account_identifier !== null) {
-                            return new HtmlString('<div class="text-sm text-yellow-500 dark:text-yellow-400">' . $record->bank_account_identifier . '</div>');
+                            return new HtmlString('<div class="text-sm text-yellow-500 dark:text-yellow-400">'.$record->bank_account_identifier.'</div>');
                         }
+
                         return null;
                     }),
                 TextColumn::make('variable_symbol')
@@ -130,22 +136,6 @@ class BankTransactionResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            // 'index' => Pages\ListBankTransactions::route('/'),
-            // 'create' => Pages\CreateBankTransaction::route('/create'),
-            // 'edit' => Pages\EditBankTransaction::route('/{record}/edit'),
-        ];
-    }
-
     private static function getTableRowAddNoteAction(): StaticAction
     {
         return Tables\Actions\Action::make('Popis tranaskce')
@@ -171,10 +161,36 @@ class BankTransactionResource extends Resource
                 $bankTransaction->save();
 
                 Notification::make()
-                    ->title('fsfsf')
-                    ->body('fsfsfsjbkjdf')
+                    ->title('Popis transakce')
+                    ->body('Uspěšně jsme změnili popis transakce.')
                     ->success()
                     ->send();
             });
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListBankTransactions::route('/'),
+            'create' => CreateBankTransaction::route('/create'),
+            'edit' => EditBankTransaction::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'create',
+            'update',
+            'delete',
+        ];
     }
 }

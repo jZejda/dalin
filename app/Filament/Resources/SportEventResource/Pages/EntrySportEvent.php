@@ -307,7 +307,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                 ->modalHeading(fn (UserEntry $record): string => $record->userRaceProfile->user_race_full_name.' - odhlášení ze závodu')
                 ->modalContent(view('filament.modals.user-cancel-entry'))
-                ->modalDescription('Odhlšení proběhne pokud.')
+                ->modalDescription('Odhlášení proběhne pokud.')
                 ->modalSubmitActionLabel('Odhlásit'),
         ];
     }
