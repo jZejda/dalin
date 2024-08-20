@@ -8,6 +8,7 @@ use App\Enums\AppRoles;
 use App\Filament\Resources\UserRaceProfileResource\Pages;
 use App\Models\User;
 use App\Models\UserRaceProfile;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -25,7 +26,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
-class UserRaceProfileResource extends Resource
+class UserRaceProfileResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = UserRaceProfile::class;
 
@@ -317,6 +318,17 @@ class UserRaceProfileResource extends Resource
             'index' => Pages\ListUserRaceProfiles::route('/'),
             'create' => Pages\CreateUserRaceProfile::route('/create'),
             'edit' => Pages\EditUserRaceProfile::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
         ];
     }
 }

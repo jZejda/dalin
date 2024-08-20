@@ -9,6 +9,7 @@ use App\Filament\Resources\UserEntryResource\Pages;
 use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserEntry;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Carbon\Carbon;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -21,7 +22,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
-class UserEntryResource extends Resource
+class UserEntryResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = UserEntry::class;
 
@@ -140,6 +141,17 @@ class UserEntryResource extends Resource
     {
         return [
             'index' => Pages\ListUserEntries::route('/'),
+        ];
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
         ];
     }
 }

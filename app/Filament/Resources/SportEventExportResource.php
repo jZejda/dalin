@@ -9,6 +9,7 @@ use App\Enums\SportEventType;
 use App\Filament\Resources\SportEventExportResource\Pages;
 use App\Models\SportEvent;
 use App\Models\SportEventExport;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Grid;
@@ -16,20 +17,24 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class SportEventExportResource extends Resource
+class SportEventExportResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = SportEventExport::class;
 
     public static ?int $navigationSort = 12;
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $navigationGroup = 'Akce/Závody';
+
     protected static ?string $label = 'Výstup pro pořádání';
+
     protected static ?string $pluralLabel = 'Výstupy pro pořádání';
 
     public static function form(Form $form): Form
@@ -56,14 +61,13 @@ class SportEventExportResource extends Resource
                             Grid::make()->schema([
                                 TextInput::make('result_path')
                                     ->required(),
-                            ])->columns(1)
+                            ])->columns(1),
                         ])
                         ->columns(2)
                         ->columnSpan([
                             'sm' => 1,
-                            'md' => 8
+                            'md' => 8,
                         ]),
-
 
                     // Right Column
                     Card::make()
@@ -86,23 +90,23 @@ class SportEventExportResource extends Resource
                                 ->label('ID závodu')
                                 ->options(
                                     SportEvent::all()
-                                    ->whereIn('event_type', [SportEventType::Race, SportEventType::Training, SportEventType::TrainingCamp])
-                                    ->sortBy('date')
-                                    ->pluck('sportEventOrisTitle', 'id')
+                                        ->whereIn('event_type', [SportEventType::Race, SportEventType::Training, SportEventType::TrainingCamp])
+                                        ->sortBy('date')
+                                        ->pluck('sportEventOrisTitle', 'id')
                                 ),
                             DateTimePicker::make('start_time')
                                 ->label('Čas 00')
                                 ->nullable(),
                             TextInput::make('sport_event_leg_id')
                                 ->label('ID Etapy závodu')
-                                ->nullable()
+                                ->nullable(),
 
                         ])->columnSpan([
                             'sm' => 1,
-                            'md' => 4
+                            'md' => 4,
                         ]),
 
-                ])
+                ]),
             ]);
     }
 
@@ -132,7 +136,7 @@ class SportEventExportResource extends Resource
             ])
             ->defaultPaginationPageOption(25)
             ->filters([
-//                SelectFilter::make('user_id')->relationship('user_id', 'name'),
+                //                SelectFilter::make('user_id')->relationship('user_id', 'name'),
                 SelectFilter::make('file_type')
                     ->options([
                         SportEventExport::FILE_XML_IOF_V3 => 'XML IOF v3',
@@ -163,6 +167,16 @@ class SportEventExportResource extends Resource
 
     public static function getGlobalSearchResultTitle(Model $record): string
     {
-        return $record->title . ' | ' . $record->updated_at->format('m. Y');
+        return $record->title.' | '.$record->updated_at->format('m. Y');
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'create',
+            'update',
+            'delete',
+        ];
     }
 }

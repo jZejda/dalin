@@ -188,6 +188,7 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
     {
         return [
             'view',
+            'view_any',
             'create',
             'update',
             'delete',

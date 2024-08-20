@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ClubResource\Pages;
 use App\Models\Club;
 use App\Models\SportRegion;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
@@ -14,7 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
 
-class ClubResource extends Resource
+class ClubResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Club::class;
 
@@ -106,6 +107,17 @@ class ClubResource extends Resource
             'index' => Pages\ListClubs::route('/'),
             'create' => Pages\CreateClub::route('/create'),
             'edit' => Pages\EditClub::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
         ];
     }
 }

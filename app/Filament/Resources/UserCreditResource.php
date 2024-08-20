@@ -15,6 +15,7 @@ use App\Models\User;
 use App\Models\UserCredit;
 use App\Models\UserRaceProfile;
 use App\Shared\Helpers\AppHelper;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
@@ -33,7 +34,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
-class UserCreditResource extends Resource
+class UserCreditResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = UserCredit::class;
 
@@ -322,5 +323,16 @@ class UserCreditResource extends Resource
     private static function getUserCreditStatuses(): array
     {
         return UserCreditStatus::enumArray();
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+        ];
     }
 }

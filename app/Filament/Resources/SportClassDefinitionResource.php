@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SportClassDefinitionResource\Pages;
 use App\Models\SportClassDefinition;
 use App\Models\SportList;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -13,7 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables;
 
-class SportClassDefinitionResource extends Resource
+class SportClassDefinitionResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = SportClassDefinition::class;
 
@@ -117,6 +118,17 @@ class SportClassDefinitionResource extends Resource
             'index' => Pages\ListSportClassDefinitions::route('/'),
             'create' => Pages\CreateSportClassDefinition::route('/create'),
             'edit' => Pages\EditSportClassDefinition::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
         ];
     }
 }

@@ -10,6 +10,7 @@ use App\Filament\Resources\PageResource\Pages;
 use App\Models\ContentCategory;
 use App\Models\Page;
 use App\Models\User;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
@@ -31,7 +32,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
-class PageResource extends Resource
+class PageResource extends Resource implements HasShieldPermissions
 {
     public static ?int $navigationSort = 60;
     protected static ?string $model = Page::class;
@@ -214,4 +215,14 @@ class PageResource extends Resource
         ];
     }
 
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+        ];
+    }
 }

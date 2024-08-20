@@ -22,6 +22,7 @@ use App\Models\SportList;
 use App\Models\SportRegion;
 use App\Shared\Helpers\AppHelper;
 use App\Shared\Helpers\EmptyType;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Actions\Action;
@@ -51,7 +52,7 @@ use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
 
-class SportEventResource extends Resource
+class SportEventResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = SportEvent::class;
 
@@ -529,14 +530,14 @@ class SportEventResource extends Resource
             'view_any',
             'create',
             'update',
-            'restore',
-            'restore_any',
-            'replicate',
-            'reorder',
+//            'restore',
+//            'restore_any',
+//            'replicate',
+//            'reorder',
             'delete',
-            'delete_any',
-            'force_delete',
-            'force_delete_any',
+//            'delete_any',
+//            'force_delete',
+//            'force_delete_any',
             'entry',
         ];
     }
