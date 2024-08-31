@@ -8,7 +8,7 @@ use App\Enums\SportEventMarkerType;
 
 final class MapBuilder
 {
-    /** @var Marker[] $markers */
+    /** @var Marker[] */
     private array $markers = [];
 
     public function addMarker(
@@ -28,5 +28,4 @@ final class MapBuilder
     {
         return $this->markers;
     }
-
 }

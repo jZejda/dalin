@@ -15,7 +15,7 @@ final class BaseMap
 
     public function __construct(?MapBuilder $mapBuilder = null)
     {
-        $this->mapBuilder = $mapBuilder ?? new MapBuilder();
+        $this->mapBuilder = $mapBuilder ?? new MapBuilder;
     }
 
     /**
@@ -29,15 +29,15 @@ final class BaseMap
         if ($this->mapBuilder !== null) {
             if ($sportEvent->gps_lat !== null && $sportEvent->gps_lon !== null) {
                 $this->mapBuilder->addMarker(
-                    (float)$sportEvent->gps_lat,
-                    (float)$sportEvent->gps_lon,
+                    (float) $sportEvent->gps_lat,
+                    (float) $sportEvent->gps_lon,
                     $this->getMarkerType($sportEvent->stages),
                     $sportEvent->name,
                     $sportEvent->alt_name ?? '',
                 );
             }
 
-            foreach($markers as $marker) {
+            foreach ($markers as $marker) {
                 $this->mapBuilder->addMarker(
                     $marker->lat,
                     $marker->lon,
@@ -54,7 +54,6 @@ final class BaseMap
     }
 
     /**
-     * @param Collection|array $sportEvents
      * @return Marker[]
      */
     public function getMarkersFromEvents(Collection|array $sportEvents): array
@@ -63,8 +62,8 @@ final class BaseMap
             if ($this->mapBuilder !== null) {
                 if ($sportEvent->gps_lat !== null && $sportEvent->gps_lon !== null) {
                     $this->mapBuilder->addMarker(
-                        (float)$sportEvent->gps_lat,
-                        (float)$sportEvent->gps_lon,
+                        (float) $sportEvent->gps_lat,
+                        (float) $sportEvent->gps_lon,
                         $this->getMarkerType($sportEvent->stages),
                         $sportEvent->name,
                         $sportEvent->alt_name ?? '',
@@ -85,6 +84,7 @@ final class BaseMap
                 return SportEventMarkerType::RaceSimple;
             }
         }
+
         return SportEventMarkerType::RaceSimple;
     }
 
@@ -93,8 +93,8 @@ final class BaseMap
         $markers = [];
         if ($sportEvent->gps_lat !== null && $sportEvent->gps_lon !== null) {
             $markers[] = [
-                'lat' => (float)$sportEvent->gps_lat,
-                'lon' => (float)$sportEvent->gps_lon,
+                'lat' => (float) $sportEvent->gps_lat,
+                'lon' => (float) $sportEvent->gps_lon,
             ];
         }
 
@@ -129,7 +129,7 @@ final class BaseMap
     }
 
     /**
-     * @param Marker[] $markers
+     * @param  Marker[]  $markers
      */
     public function getCenterMapCoordsFromMarkers(array $markers): array
     {
@@ -148,5 +148,4 @@ final class BaseMap
 
         return ['lat' => $lat / $total, 'lon' => $lon / $total];
     }
-
 }

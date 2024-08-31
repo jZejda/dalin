@@ -73,7 +73,11 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                     ->icon(fn (BankTransaction $record): ?string => $record->transaction_indicator->getIcon())
                     ->color(fn (BankTransaction $record): ?string => $record->transaction_indicator->getColor())
                     ->size(TextColumnSize::Large)
-                    ->label(__('bank-transaction.amount'))
+;                    ->label(__('bank-transaction.amount')),
+                TextColumn::make('variable_symbol')
+                    ->label(__('bank-transaction.variable_symbol'))
+                    ->sortable()
+                    ->searchable()
                     ->description(function (BankTransaction $record): ?HtmlString {
                         if ($record->bank_account_identifier !== null) {
                             return new HtmlString('<div class="text-sm text-yellow-500 dark:text-yellow-400">'.$record->bank_account_identifier.'</div>');
@@ -81,10 +85,6 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
 
                         return null;
                     }),
-                TextColumn::make('variable_symbol')
-                    ->label(__('bank-transaction.variable_symbol'))
-                    ->sortable()
-                    ->searchable(),
                 TextColumn::make('description')
                     ->label(__('bank-transaction.description'))
                     ->sortable()

@@ -14,6 +14,5 @@ final readonly class Marker
         public SportEventMarkerType $markerType,
         public string $label,
         public string $popupContent,
-    ) {
-    }
+    ) {}
 }
