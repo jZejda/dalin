@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BankTransactionResource\Pages\ListBankTransactions;
 use App\Filament\Resources\BankTransactionResource\Pages\CreateBankTransaction;
 use App\Filament\Resources\BankTransactionResource\Pages\EditBankTransaction;
+use App\Filament\Resources\BankTransactionResource\Pages\ListBankTransactions;
 use App\Models\BankTransaction;
 use App\Services\Bank\Enums\TransactionIndicator;
 use App\Shared\Helpers\AppHelper;
@@ -73,7 +73,7 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                     ->icon(fn (BankTransaction $record): ?string => $record->transaction_indicator->getIcon())
                     ->color(fn (BankTransaction $record): ?string => $record->transaction_indicator->getColor())
                     ->size(TextColumnSize::Large)
-;                    ->label(__('bank-transaction.amount')),
+                    ->label(__('bank-transaction.amount')),
                 TextColumn::make('variable_symbol')
                     ->label(__('bank-transaction.variable_symbol'))
                     ->sortable()
