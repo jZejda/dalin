@@ -43,6 +43,12 @@ class UserSettings extends Page
     {
         return [
             PostsOverview::class,
+        ];
+    }
+
+    protected function getFooterWidgets(): array
+    {
+        return [
             StatsOverview::class,
         ];
     }
@@ -91,7 +97,12 @@ class UserSettings extends Page
         ];
     }
 
-    public function getHeaderWidgetsColumns(): int | array
+    public function getHeaderWidgetsColumns(): int|string|array
+    {
+        return 3;
+    }
+
+    public function getFooterWidgetsColumns(): int|string|array
     {
         return 3;
     }

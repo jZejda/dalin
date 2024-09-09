@@ -52,6 +52,8 @@ return [
         SportEventMarkerType::StageStart->value => 'Start etapy',
         SportEventMarkerType::Parking->value => 'Parkování',
         SportEventMarkerType::Other->value => 'Ostatní',
+        SportEventMarkerType::Training->value => 'Trénink',
+        SportEventMarkerType::TrainingCamp->value => 'Soustředění',
     ],
 
     'type_enum_links' => [

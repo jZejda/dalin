@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\EntryStatus;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\AppHelper;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -181,6 +182,13 @@ class SportEvent extends Model
         return $this->HasMany(SportEventNews::class, 'sport_event_id', 'id');
     }
 
+    // Local Scopes
+    public function scopeSport(Builder $query, int $sportId): Builder
+    {
+        return $query->where('sport_id', '=', $sportId);
+    }
+
+    // Attributes
     public function getSportEventOrisCompactTitleAttribute(): string
     {
         $stringDelimiter = ' | ';
