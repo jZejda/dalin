@@ -118,7 +118,7 @@
                 </div>
             @endif
 
-            <div class="grid pt-2 text-left border-t border-gray-200 md:gap-16 dark:border-gray-700 md:grid-cols-2">
+            <div class="grid pt-2 text-left border-t border-gray-200 md:gap-16 dark:border-gray-700 md:grid-cols-3">
                 <div>
                     <div class="mb-10">
                         <h3 class="flex items-center mb-4 text-lg font-medium text-gray-900 dark:text-white">
@@ -249,7 +249,7 @@
                         </div>
                     </div>
                 </div>
-                <div>
+                <div class="col-span-2">
                     <div class="mb-10">
                         <div class="app-front-content">
 

@@ -48,23 +48,26 @@
                     $popupContent .= '<br /> <span class="text-sm text-lime-700 dark:text-lime-700">' . $marker->secondaryLabel .'</span>';
                 }
 
-                if ($marker->date !== null) {
+                if (!$mapData['eventMap']) {
+                    if ($marker->date !== null) {
                     $popupContent .= '<br /><span class="text-sm">Datum konání: ' . $marker->date->format('d.m.Y') .'</span>';
-                }
+                    }
 
-                if ($marker->date !== null && is_array($marker->region)) {
-                    foreach($marker->region as $region) {
-                        $popupContent .= ' | ' . $region . '</span>';
+                    if ($marker->date !== null && is_array($marker->region)) {
+                        foreach($marker->region as $region) {
+                            $popupContent .= ' | ' . $region . '</span>';
+                        }
+                    }
+
+                    if ($marker->eventId !== null) {
+                        $popupContent .= '<br /><a href="sport-events/' . $marker->eventId . '/entry" target="_blank">Zobrazit akci</a>';
+                    }
+
+                    if ($marker->orisId !== null) {
+                        $popupContent .= ' | <a href="https://oris.orientacnisporty.cz/Zavod?id=' . $marker->orisId . '" target="_blank">Zobrazit na ORISu</a>';
                     }
                 }
 
-                if ($marker->eventId !== null) {
-                    $popupContent .= '<br /><a href="sport-events/' . $marker->eventId . '/entry" target="_blank">Zobrazit akci</a>';
-                }
-
-                if ($marker->orisId !== null) {
-                    $popupContent .= ' | <a href="https://oris.orientacnisporty.cz/Zavod?id=' . $marker->orisId . '" target="_blank">Zobrazit na ORISu</a>';
-                }
             @endphp
 
             {{--Importatnt to take space--}}
