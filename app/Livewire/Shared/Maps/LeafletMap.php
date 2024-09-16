@@ -18,6 +18,8 @@ final class LeafletMap extends Component
 
     public ?int $sportType = 1;
 
+    public bool $publicMap = false;
+
     public function __construct(?BaseMap $baseMap = null)
     {
         $this->baseMap = $baseMap ?? new BaseMap();
@@ -33,6 +35,7 @@ final class LeafletMap extends Component
                     'eventMap' => true,
                     'zoomLevel' => 13,
                     'mapHeight' => '400px',
+                    'publicMap' => $this->publicMap,
                 ],
             ]);
         } else {
@@ -43,6 +46,7 @@ final class LeafletMap extends Component
                     'eventMap' => false,
                     'zoomLevel' => 8,
                     'mapHeight' => '500px',
+                    'publicMap' => $this->publicMap,
                 ],
             ]);
         }
@@ -70,7 +74,7 @@ final class LeafletMap extends Component
     private function getSportEvents(): Collection
     {
         return SportEvent::query()
-            ->where('date', '>', Carbon::now()->subMonth())
+            ->where('date', '>', Carbon::now()->subDays(2))
             //->where('sport_id', '=', $this->sportType)
             ->sport($this->sportType)
             ->get();
