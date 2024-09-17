@@ -28,9 +28,11 @@ class EventList extends Component
     private function getSportEvents(): Collection
     {
         return SportEvent::query()
-            ->where('date', '>', Carbon::now()->subMonth())
+            ->where('date', '>', Carbon::now()->subDays(2))
+            ->whereIn('event_type', ['race', 'training', 'trainingCamp'] )
             ->sport(1)
             ->limit(6)
+            ->orderBy('date', 'asc')
             ->get();
     }
 }

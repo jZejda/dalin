@@ -19,6 +19,12 @@
                             @livewire(\App\Livewire\Shared\Maps\LeafletMap::class, ['publicMap' => true])
                         </div>
                     </section>
+                    <div class="relative flex py-5 items-center">
+                        <div class="flex-grow border-t border-gray-500 border-dashed"></div>
+                        <span class="flex-shrink mx-4 text-gray-500">Novinky</span>
+                        <div class="flex-grow border-t border-gray-500 border-dashed"></div>
+                    </div>
+
                     <section>
                         <livewire:frontend.post-cards />
                     </section>
@@ -29,6 +35,14 @@
                         @livewire(\App\Livewire\Frontend\EventList::class)
                         <!-- End Card -->
                     </div>
+
+                    <div class="relative flex py-5 items-center">
+                        <div class="flex-grow border-t border-gray-500 border-dashed"></div>
+                        <span class="flex-shrink mx-4 text-gray-500">Partneři</span>
+                        <div class="flex-grow border-t border-gray-500 border-dashed"></div>
+                    </div>
+
+                    @include('partials.frontend.partner-logos-vertical')
 
                 </div>
             </div>

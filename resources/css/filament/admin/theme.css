@@ -1,3 +1,9 @@
 @import '/vendor/filament/filament/resources/css/theme.css';
 
+/*
+* Frontent content
+*/
+@import '../../content/_front-post.scss';
+
+
 @config 'tailwind.config.js';

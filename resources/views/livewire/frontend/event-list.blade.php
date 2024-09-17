@@ -47,11 +47,11 @@
                 <div class="font-bold text-center text-md tracking-tighter text-gray-600 dark:text-gray-400">
                     @if($event->event_type->value === 'race')
                         Závod
-                    @elseif($event->event_type->value === 'race')
+                    @elseif($event->event_type->value === 'training')
                         Trénink
-                    @elseif($event->event_type->value === 'race')
-                        Soustředění
-                    @elseif($event->event_type->value === 'race')
+                    @elseif($event->event_type->value === 'trainingCamp')
+                        Camp
+                    @elseif($event->event_type->value === 'other')
                         Ostatní
                     @endif
                 </div>

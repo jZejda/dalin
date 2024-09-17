@@ -10,7 +10,7 @@
         "orienteering"
     ],
     "license": "MIT",
-    "version": "11.1",
+    "version": "11.2",
     "require": {
         "php": "^8.3",
         "ext-intl": "*",
@@ -30,11 +30,11 @@
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^v3.4",
         "maatwebsite/excel": "^3.1",
-        "phpdocumentor/reflection-docblock": "^5.3",
+        "phpdocumentor/reflection-docblock": "^5.4",
         "psr/simple-cache": "^2.0",
         "pxlrbt/filament-excel": "^2.3",
         "simplesoftwareio/simple-qrcode": "^4.2",
-        "spatie/icalendar-generator": "^2.6",
+        "spatie/icalendar-generator": "^2.8",
         "spatie/laravel-markdown": "^2.5",
         "symfony/property-access": "^6.4",
         "symfony/property-info": "^6.4",
