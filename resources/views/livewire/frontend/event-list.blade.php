@@ -10,11 +10,10 @@
 
 <div class="terxt-white dark:text-white">
     @foreach($events as $event)
+        @php($ourClub = 'border-gray-300 dark:border-gray-700')
         @foreach($event->organization as $organization)
             @if($organization === 'ABM')
                 @php($ourClub = 'border-yellow-300 dark:border-yellow-300')
-            @else
-                @php($ourClub = 'border-gray-300 dark:border-gray-700')
             @endif
         @endforeach
         <div class="flex border-2 {{$ourClub}} shadow-sm rounded-xl mb-2 hover:shadow-md focus:outline-none focus:shadow-md transition">

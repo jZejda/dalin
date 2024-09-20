@@ -29,7 +29,7 @@ class EventList extends Component
     {
         return SportEvent::query()
             ->where('date', '>', Carbon::now()->subDays(2))
-            ->whereIn('event_type', ['race', 'training', 'trainingCamp'] )
+            ->whereIn('event_type', ['race', 'training', 'trainingCamp'])
             ->sport(1)
             ->limit(6)
             ->orderBy('date', 'asc')

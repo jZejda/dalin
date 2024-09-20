@@ -49,7 +49,7 @@ class ViewUserCredit extends ViewRecord
                 $userCreditNote->note_user_id = auth()->user()->id;
                 $userCreditNote->note = $data['user_note'];
 
-                if($userCreditNote->save()) {
+                if ($userCreditNote->save()) {
                     Notification::make()
                         ->title('Poznámku jsme uložili')
                         ->body('Děkujeme za zaslání dotazu k vyúčtování, pokusíme se to vyřešit.')

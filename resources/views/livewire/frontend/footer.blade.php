@@ -49,7 +49,7 @@
             </div>
             <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
             <div class="sm:flex sm:items-center sm:justify-between">
-            <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="https://abmbrno.cz/" class="hover:underline">{{ config('app.name') }}</a>. Všechna práva vyhrazena. Made with love by <a href="https://github.com/jzejda/dalin" class="hover:underline">dalin</a>
+            <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="https://abmbrno.cz/" class="hover:underline">{{ config('app.name') }}</a>. Všechna práva vyhrazena. Made with love by <a href="https://jirizejda.cz/dalin" class="hover:underline">dalin</a>
             </span>
                 <div class="flex mt-4 space-x-6 sm:justify-center sm:mt-0">
                     <a href=" https://webglobe.cz/?dealer=131151" class="text-gray-500 hover:text-gray-900 dark:hover:text-white">

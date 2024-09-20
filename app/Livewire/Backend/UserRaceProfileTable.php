@@ -41,13 +41,13 @@ class UserRaceProfileTable extends Component implements HasForms, HasTable
                     ->searchable()
                     ->size(TextColumnSize::Large)
                     ->color(function (UserRaceProfile $model): string {
-                        if(!$model->active) {
+                        if (!$model->active) {
                             return 'danger';
                         }
                         return 'default';
                     })
                     ->description(function (UserRaceProfile $model): ?string {
-                        if(!$model->active) {
+                        if (!$model->active) {
                             return __('user-race-profile.table.active_until') . ': ' . $model->active_until?->format('d.m.Y');
                         }
                         return null;

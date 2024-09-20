@@ -80,7 +80,7 @@ class UserMailNotification extends Page implements HasForms
 
         $options['week_report_by_sport'] = $this->week_report_by_sport;
 
-        if($mailNotification !== null) {
+        if ($mailNotification !== null) {
             $mailNotification->options = $options;
             $mailNotification->save();
         }

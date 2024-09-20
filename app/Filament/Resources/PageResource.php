@@ -97,7 +97,6 @@ class PageResource extends Resource implements HasShieldPermissions
                                 ->options(PageStatus::class)
                                 ->default(PageStatus::Closed)
                                 ->selectablePlaceholder(),
-
                             Select::make('content_format')
                                 ->label('Formát')
                                 ->options(ContentFormat::class)

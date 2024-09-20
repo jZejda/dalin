@@ -43,7 +43,7 @@ class EventEditMap
         $sportEvents = $this->getAppropriateEvents();
 
         $boundCoords = [];
-        foreach($sportEvents as $sportEvent) {
+        foreach ($sportEvents as $sportEvent) {
             $boundCoords[] = [
                 $sportEvent->gps_lat,
                 $sportEvent->gps_lon,
