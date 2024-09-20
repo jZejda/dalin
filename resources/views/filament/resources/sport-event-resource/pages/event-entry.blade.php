@@ -1,16 +1,16 @@
 @php
-    use App\Enums\UserParamType;use App\Shared\Helpers\EmptyType;
+    use App\Enums\UserParamType;use App\Models\User;use App\Shared\Helpers\EmptyType;
     use App\Models\SportEvent;
     use App\Models\SportClass;
     use App\Models\SportService;
     use App\Enums\AppRoles;
-    use App\Shared\Helpers\AppHelper;
+    use App\Shared\Helpers\AppHelper;use Carbon\Carbon;
 
     /** @var SportEvent $record */
     $classes = SportClass::query()->where('sport_event_id', '=', $record->id)->get();
     $services = SportService::query()->where('sport_event_id', '=', $record->id)->get();
 
-    /** @var \App\Models\User $user */
+    /** @var User $user */
     $user = auth()->user();
 
 @endphp
@@ -21,12 +21,19 @@
 <x-filament::page>
 
     @if( $user->getParam(UserParamType::UserActualBalance) < -2000)
-        <div class="bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500" role="alert">
-            <span class="font-bold">Upozornění</span> pro nízký stav osobního konta {{ $user->getParam(UserParamType::UserActualBalance) }}Kč se aktuálně není možné přihlásit na závody.
+        <div
+            class="bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500"
+            role="alert">
+            <span class="font-bold">Upozornění</span> pro nízký stav osobního
+            konta {{ $user->getParam(UserParamType::UserActualBalance) }}Kč se aktuálně není možné přihlásit na závody.
         </div>
     @elseif($user->getParam(UserParamType::UserActualBalance) < 0)
-        <div class="bg-yellow-100 border border-yellow-200 text-sm text-yellow-800 rounded-lg p-4 dark:bg-yellow-800/10 dark:border-yellow-900 dark:text-yellow-500" role="alert">
-            <span class="font-bold">Upozornění</span> stav osobního konta je nízky {{ $user->getParam(UserParamType::UserActualBalance) }}Kč. Při poklesu pod hranici se nebude možné přihlásit do závodů.
+        <div
+            class="bg-yellow-100 border border-yellow-200 text-sm text-yellow-800 rounded-lg p-4 dark:bg-yellow-800/10 dark:border-yellow-900 dark:text-yellow-500"
+            role="alert">
+            <span class="font-bold">Upozornění</span> stav osobního konta je
+            nízky {{ $user->getParam(UserParamType::UserActualBalance) }}Kč. Při poklesu pod hranici se nebude možné
+            přihlásit do závodů.
         </div>
 
     @endif
@@ -111,7 +118,7 @@
                 </div>
             @endif
 
-            <div class="grid pt-2 text-left border-t border-gray-200 md:gap-16 dark:border-gray-700 md:grid-cols-2">
+            <div class="grid pt-2 text-left border-t border-gray-200 md:gap-16 dark:border-gray-700 md:grid-cols-3">
                 <div>
                     <div class="mb-10">
                         <h3 class="flex items-center mb-4 text-lg font-medium text-gray-900 dark:text-white">
@@ -242,10 +249,32 @@
                         </div>
                     </div>
                 </div>
-                <div>
+                <div class="col-span-2">
                     <div class="mb-10">
                         <div class="app-front-content">
-                            <h3 class="flex items-center mb-4 text-lg font-medium text-gray-900 dark:text-white">
+
+                            @if(count($record->sportEventNews()->get()) > 0)
+                                <h4 class="flex items-center mb-4 text-lg font-medium text-gray-900 dark:text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="1.5" stroke="currentColor"
+                                         class="mr-2 w-6 h-6 text-gray-500 dark:text-gray-400">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6v-3Z"/>
+                                    </svg>
+                                    Rychlé novinky
+                                </h4>
+                                <dl class="text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
+                                    @foreach($record->sportEventNews()->get() as $quickNews)
+                                        <div class="flex flex-col pb-2">
+                                            <dt class="mb-1 text-gray-500 dark:text-gray-400">{{ Carbon::parse($quickNews->date)->format('d.m.Y - H:i') }}</dt>
+                                            <dd class="font-semibold">{{$quickNews->text}}</dd>
+                                        </div>
+                                    @endforeach
+                                </dl>
+                                <hr>
+                            @endif
+
+                            <h4 class="flex items-center mb-4 text-lg font-medium text-gray-900 dark:text-white">
                                 <svg class="flex-shrink-0 mr-2 w-5 h-5 text-gray-500 dark:text-gray-400"
                                      fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
@@ -253,7 +282,7 @@
                                           clip-rule="evenodd"></path>
                                 </svg>
                                 Popis akce
-                            </h3>
+                            </h4>
                             <p>{{ Markdown::parse($record->entry_desc ?? '') }}</p>
                         </div>
                     </div>

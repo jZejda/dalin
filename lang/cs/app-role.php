@@ -17,6 +17,7 @@ return [
     // Roles
     'app_role_enum' => [
         AppRoles::SuperAdmin->value => 'Administrátor',
+        AppRoles::ClubAdmin->value => 'Admin klubu',
         AppRoles::Redactor->value => 'Redaktor',
         AppRoles::Member->value => 'Člen',
         AppRoles::BillingSpecialist->value => 'Správce financí',

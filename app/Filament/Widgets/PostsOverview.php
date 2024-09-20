@@ -16,7 +16,6 @@ class PostsOverview extends Widget
 
     public function render(): View
     {
-
         /**
          * @var Post $lastPost
          */

@@ -33,6 +33,7 @@ class OrisResponse
         if ($responseData->getStatus() === 'OK') {
             return true;
         }
+
         return false;
     }
 
@@ -62,7 +63,6 @@ class OrisResponse
             DateTimeNormalizer::FORMAT_KEY => AppHelper::MYSQL_DATE_TIME,
         ];
         $dateTimeNormalizer = new DateTimeNormalizer($context);
-
 
         return new Serializer([
             $backedEnumNormalizer,
@@ -99,6 +99,7 @@ class OrisResponse
         if ($dataString !== false) {
             return $dataString;
         }
+
         return '';
     }
 

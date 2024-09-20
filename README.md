@@ -34,10 +34,10 @@ This project is presented in [ABM Brno](https://abmbrno.cz/) orienteering club.
 
 ## Based on
 
-- PHP v8.2
+- PHP v8.3
 - MySql 8* and Up
-- [Laravel](https://laravel.com/) - PHP framework acctualy in version 10.x
-- [Filamentphp](https://filamentphp.com/) - in version 2.x
+- [Laravel](https://laravel.com/) - PHP framework acctualy in version 11.x
+- [Filamentphp](https://filamentphp.com/) - in version 3.x
 - [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework
   - [FLowbite](https://flowbite.com/) - open-source tailwind css library
 - [Livewire](https://laravel-livewire.com/) - Livewire is a full-stack framework for non fronted programmers

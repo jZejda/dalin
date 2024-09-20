@@ -25,16 +25,16 @@ class UserRaceProfileList extends Page
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('edit')
+            Action::make('help')
                 ->label('Nápověda')
                 ->icon('heroicon-o-information-circle')
                 ->color('gray')
                 ->url(AppHelper::getPageHelpUrl('stranka-registrace.html')),
             (Auth::user()?->hasRole([
-                AppRoles::EventMaster->value,
-                AppRoles::EventOrganizer->value,
-                AppRoles::BillingSpecialist->value,
-                AppRoles::SuperAdmin->value,
+                AppRoles::EventMaster,
+                AppRoles::EventOrganizer,
+                AppRoles::BillingSpecialist,
+                AppRoles::SuperAdmin,
             ])) ? $this->getGroupActions() : ActionGroup::make([]),
         ];
     }

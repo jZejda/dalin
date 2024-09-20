@@ -7,8 +7,8 @@ namespace App\Filament\Resources\SportEventResource\Pages;
 use App\Filament\Resources\SportEventResource;
 use App\Services\OrisApiService;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions\Action;
 use Filament\Pages\Actions;
+use Filament\Pages\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewSportEvent extends ViewRecord
@@ -48,7 +48,7 @@ class ViewSportEvent extends ViewRecord
 
             ->color('gray')
             ->label('Aktualizovat závod')
-            ->disabled(!$this->data['use_oris_for_entries'])
+            ->disabled(! $this->data['use_oris_for_entries'])
             ->icon('heroicon-m-arrow-path')
             ->modalHeading('Aktualizovat závod z ORISu')
             ->modalDescription('Provede aktualizaci závodu s aktuálními daty v ORISu')

@@ -1,9 +1,14 @@
 @php
     use App\Enums\AppRoles;
-    use App\Shared\Helpers\AppHelper;
+    use App\Models\SportEvent;use App\Shared\Helpers\AppHelper;
+
+    $record = SportEvent::query()->where('id', '=', 150)->first();
 @endphp
 <x-filament-panels::page>
     <!-- Icon Blocks -->
+    <div class="z-0">
+        @livewire(\App\Livewire\Shared\Maps\LeafletMap::class)
+    </div>
     <div class="lg:py-2 max-w-full">
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 items-center gap-6">
             <!-- Card User -->
@@ -28,8 +33,10 @@
                             @foreach(auth()->user()->getRoleNames() as $role)
 
                                 <div class="inline-flex items-center">
-                                    <span class="w-2 h-2 inline-block bg-blue-600 rounded-full me-2 dark:bg-blue-500"></span>
-                                    <span class="text-gray-600 dark:text-gray-400">{{ AppRoles::tryFrom($role)->getLabel() }}</span>
+                                    <span
+                                        class="w-2 h-2 inline-block bg-blue-600 rounded-full me-2 dark:bg-blue-500"></span>
+                                    <span
+                                        class="text-gray-600 dark:text-gray-400">{{ AppRoles::tryFrom($role)->getLabel() }}</span>
                                 </div>
                                 <br>
                             @endforeach
@@ -56,18 +63,20 @@
                 <svg class="flex-shrink-0 w-8 h-8 text-gray-800 mt-0.5 me-6 dark:text-gray-200"
                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/>
                 </svg>
 
                 @php
-                   $fullVersion = \Composer\InstalledVersions::getRootPackage()['version'];
-                   $version = explode('.', $fullVersion);
+                    $fullVersion = \Composer\InstalledVersions::getRootPackage()['version'];
+                    $version = explode('.', $fullVersion);
                 @endphp
                 <div>
                     <div>
                         <h3 class="block font-bold text-gray-800 dark:text-white">Aplikace</h3>
                         <p class="text-gray-600 dark:text-gray-400">Aktuální verze aplikace</p>
-                        <p class="mt-4 font-black text-4xl text-gray-600 dark:text-gray-400">{{$version[0]}}.{{$version[1]}}</p>
+                        <p class="mt-4 font-black text-4xl text-gray-600 dark:text-gray-400">{{$version[0]}}
+                            .{{$version[1]}}</p>
                     </div>
 
                     <p class="mt-3 inline-flex items-center gap-x-1 text-sm font-semibold text-gray-800 dark:text-gray-200">

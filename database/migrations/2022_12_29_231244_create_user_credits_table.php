@@ -21,6 +21,8 @@ return new class () extends Migration {
             $table->foreign('sport_event_id')->references('id')->on('sport_events');
             $table->unsignedBigInteger('sport_service_id')->nullable();
             $table->foreign('sport_service_id')->references('id')->on('sport_services');
+            $table->unsignedBigInteger('bank_transaction_id')->nullable();
+            $table->foreign('bank_transaction_id')->references('id')->on('bank_transactions');
             $table->integer('oris_balance_id')->nullable();
             $table->string('status')->default('done');
             $table->float('amount');

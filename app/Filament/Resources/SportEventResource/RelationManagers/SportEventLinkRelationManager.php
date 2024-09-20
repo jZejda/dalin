@@ -10,15 +10,18 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class SportEventLinkRelationManager extends RelationManager
 {
     protected static string $relationship = 'sportEventLinks';
+
     protected static ?string $label = 'Odkazy';
+
     protected static ?string $title = 'Odkazy';
+
     protected static ?string $recordTitleAttribute = 'sport_event_id';
 
     public function form(Form $form): Form
@@ -49,7 +52,7 @@ class SportEventLinkRelationManager extends RelationManager
                     ->label('Odkaz')
                     ->required()
                     ->options([
-                        0 => 'Externí odkaz'
+                        0 => 'Externí odkaz',
                     ])
                     ->default(0)
                     ->disabled(),
@@ -88,6 +91,6 @@ class SportEventLinkRelationManager extends RelationManager
     private static function buttonCreateActionVisibility(): array
     {
         // TODO z recordu nejak vytahnout jestli je oris nebo ne a pak to skryt
-        return [Tables\Actions\CreateAction::make(),];
+        return [Tables\Actions\CreateAction::make()];
     }
 }

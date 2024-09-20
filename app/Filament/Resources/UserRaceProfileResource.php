@@ -8,30 +8,38 @@ use App\Enums\AppRoles;
 use App\Filament\Resources\UserRaceProfileResource\Pages;
 use App\Models\User;
 use App\Models\UserRaceProfile;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
-use Filament\Tables\Columns\TextColumn\TextColumnSize;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\TextColumn\TextColumnSize;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Filament\Notifications\Notification;
 
-class UserRaceProfileResource extends Resource
+class UserRaceProfileResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = UserRaceProfile::class;
 
     protected static ?int $navigationSort = 35;
+
     protected static ?string $navigationGroup = 'Uživatel';
+
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+
     protected static ?string $navigationLabel = 'Moje registrace';
+
     protected static ?string $label = 'Moje registrace';
+
     protected static ?string $pluralLabel = 'Moje registrace';
 
     public static function getEloquentQuery(): Builder
@@ -49,16 +57,17 @@ class UserRaceProfileResource extends Resource
             ->schema([
                 Forms\Components\Group::make()
                     ->schema([
-                        Forms\Components\Card::make()
+                        Forms\Components\Section::make()
                             ->schema([
                                 TextInput::make('reg_number')
                                     ->label('Registrace')
-                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
+                                    ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->unique(ignoreRecord: true)
                                     ->required()
                                     ->suffixAction(
-                                        fn ($state, \Filament\Forms\Set $set) =>
-                                        Forms\Components\Actions\Action::make('search_oris_id_by_reg_num')
+                                        fn ($state, Set $set) => Forms\Components\Actions\Action::make(
+                                            'search_oris_id_by_reg_num'
+                                        )
                                             ->icon('heroicon-o-magnifying-glass')
                                             ->action(function () use ($state, $set) {
                                                 if (blank($state)) {
@@ -68,6 +77,7 @@ class UserRaceProfileResource extends Resource
                                                         ->danger()
                                                         ->seconds(8)
                                                         ->send();
+
                                                     return;
                                                 }
 
@@ -83,7 +93,6 @@ class UserRaceProfileResource extends Resource
                                                         ->throw()
                                                         ->json('Data');
 
-
                                                     //                                            dd($countryData);
 
                                                 } catch (RequestException $e) {
@@ -93,6 +102,7 @@ class UserRaceProfileResource extends Resource
                                                         ->danger()
                                                         ->seconds(8)
                                                         ->send();
+
                                                     return;
                                                 }
                                                 Notification::make()
@@ -114,21 +124,21 @@ class UserRaceProfileResource extends Resource
                                         'H' => 'Muž',
                                         'D' => 'Žena',
                                     ])
-                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
+                                    ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->required(),
 
                                 TextInput::make('first_name')
                                     ->label('Jméno')
-                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
+                                    ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->required(),
                                 TextInput::make('last_name')
                                     ->label('Příjmení')
-                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
+                                    ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->required(),
                             ])
                             ->columns(2),
 
-                        Forms\Components\Section::make('Adresa nepovinné')
+                        Section::make('Adresa nepovinné')
                             ->schema([
                                 TextInput::make('city')
                                     ->label('Město'),
@@ -137,14 +147,13 @@ class UserRaceProfileResource extends Resource
                                 TextInput::make('zip')
                                     ->label('PSČ'),
 
-
                                 TextInput::make('email')
                                     ->label('E-mail'),
                                 TextInput::make('phone')
                                     ->label('Telefon'),
                             ])
                             ->columns(2),
-                        Forms\Components\Section::make('SI')
+                        Section::make('SI')
                             ->schema([
                                 Forms\Components\TextInput::make('si')
                                     ->label('Si čip')
@@ -159,28 +168,29 @@ class UserRaceProfileResource extends Resource
 
                 Forms\Components\Group::make()
                     ->schema([
-                        Forms\Components\Section::make('Uživatel')
+                        Section::make('Uživatel')
                             ->schema([
                                 TextInput::make('oris_id')
                                     ->label('Oris ID')
-                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN)),
+                                    ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN)),
                                 Select::make('user_id')
                                     ->options(function () {
                                         return User::all()->pluck('user_identification', 'id');
                                     })
                                     ->searchable()
-                                    ->disabled(!Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
+                                    ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->default(Auth::id())
                                     ->helperText('Automaticky přiřazeno uživateli')
                                     ->disabled(function () {
                                         if (Auth::id() === 1) {
                                             return false;
                                         }
+
                                         return true;
                                     }),
                             ]),
 
-                        Forms\Components\Section::make('Licence')
+                        Section::make('Licence')
                             ->schema([
                                 Select::make('licence_ob')
                                     ->label('Licence OB')
@@ -207,6 +217,19 @@ class UserRaceProfileResource extends Resource
             ->columns(3);
     }
 
+    private static function getSportLicenceOptions(): array
+    {
+        return [
+            'E' => 'E',
+            'A' => 'A',
+            'B' => 'B',
+            'C' => 'C',
+            'D' => 'D',
+            'R' => 'R',
+            '-' => '-',
+        ];
+    }
+
     public static function table(Table $table): Table
     {
         return $table
@@ -217,15 +240,19 @@ class UserRaceProfileResource extends Resource
                     ->searchable()
                     ->size(TextColumnSize::Large)
                     ->color(function (UserRaceProfile $model): string {
-                        if(!$model->active) {
+                        if (! $model->active) {
                             return 'danger';
                         }
+
                         return 'default';
                     })
                     ->description(function (UserRaceProfile $model): ?string {
-                        if(!$model->active) {
-                            return __('user-race-profile.table.active_until') . ': ' . $model->active_until?->format('d.m.Y');
+                        if (! $model->active) {
+                            return __('user-race-profile.table.active_until').': '.$model->active_until?->format(
+                                'd.m.Y'
+                            );
                         }
+
                         return null;
                     }),
                 TextColumn::make('si')
@@ -259,6 +286,7 @@ class UserRaceProfileResource extends Resource
                         if ($record->user?->isActive()) {
                             return ['success'];
                         }
+
                         return ['danger'];
                     })
                     ->searchable(),
@@ -270,7 +298,7 @@ class UserRaceProfileResource extends Resource
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make()
                         ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value])),
-                ])
+                ]),
             ])
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),
@@ -293,16 +321,14 @@ class UserRaceProfileResource extends Resource
         ];
     }
 
-    private static function getSportLicenceOptions(): array
+    public static function getPermissionPrefixes(): array
     {
         return [
-            'E' => 'E',
-            'A' => 'A',
-            'B' => 'B',
-            'C' => 'C',
-            'D' => 'D',
-            'R' => 'R',
-            '-' => '-',
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
         ];
     }
 }

@@ -5,11 +5,11 @@ namespace App\Filament\Resources\SportClassDefinitionResource\Pages;
 use App\Filament\Resources\SportClassDefinitionResource;
 use App\Models\SportList;
 use App\Services\OrisApiService;
-use Filament\Notifications\Notification;
-use Filament\Actions\CreateAction;
 use Filament\Actions\Action;
-use Filament\Resources\Pages\ListRecords;
+use Filament\Actions\CreateAction;
 use Filament\Forms;
+use Filament\Notifications\Notification;
+use Filament\Resources\Pages\ListRecords;
 
 class ListSportClassDefinitions extends ListRecords
 {
@@ -59,7 +59,7 @@ class ListSportClassDefinitions extends ListRecords
                                 ->searchable(),
                         ]),
 
-                ])
+                ]),
         ];
     }
 }

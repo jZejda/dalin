@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Livewire\Shared\Maps;
 
 use App\Enums\SportEventMarkerType;
+use Illuminate\Support\Carbon;
 
 final class MapBuilder
 {
-    /** @var Marker[] $markers */
+    /** @var Marker[] */
     private array $markers = [];
 
     public function addMarker(
@@ -16,9 +17,23 @@ final class MapBuilder
         float $lng,
         SportEventMarkerType $markerType,
         string $label,
-        string $popupContent,
+        ?string $secondaryLabel,
+        ?Carbon $date,
+        ?array $region,
+        ?int $eventId,
+        ?int $orisId,
     ): void {
-        $this->markers[] = new Marker($lat, $lng, $markerType, $label, $popupContent);
+        $this->markers[] = new Marker(
+            $lat,
+            $lng,
+            $markerType,
+            $label,
+            $secondaryLabel,
+            $date,
+            $region,
+            $eventId,
+            $orisId,
+        );
     }
 
     /**
@@ -28,5 +43,4 @@ final class MapBuilder
     {
         return $this->markers;
     }
-
 }

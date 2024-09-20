@@ -8,27 +8,29 @@ use App\Enums\SportEventLinkType;
 use App\Enums\SportEventType;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
+use App\Http\Components\Oris\OrisMethod;
+use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\EventEntries;
+use App\Http\Components\Oris\Response\Entity\Links;
 use App\Http\Components\Oris\Response\Entity\Locations;
+use App\Http\Components\Oris\Response\Entity\News;
 use App\Models\Club;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
+use App\Models\SportEvent;
 use App\Models\SportEventLink;
 use App\Models\SportEventMarker;
-use App\Models\UserRaceProfile;
-use App\Http\Components\Oris\OrisMethod;
-use App\Http\Components\Oris\Response\Entity\ClassDefinition;
-use App\Http\Components\Oris\Response\Entity\Links;
-use App\Models\SportEvent;
+use App\Models\SportEventNews;
 use App\Models\SportRegion;
 use App\Models\SportService;
 use App\Models\User;
 use App\Models\UserCredit;
 use App\Models\UserCreditNote;
+use App\Models\UserRaceProfile;
 use App\Shared\Helpers\AppHelper;
 use App\Shared\Helpers\EmptyType;
-use Illuminate\Support\Carbon;
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -38,9 +40,11 @@ use Throwable;
 final class OrisApiService
 {
     private OrisResponse $orisResponse;
+
     private OrisMethod $orisMethod;
 
     public const string ORIS_API_URL = 'https://oris.orientacnisporty.cz/API';
+
     public const string ORIS_API_DEFAULT_FORMAT = 'json';
 
     public function __construct(?OrisResponse $orisResponse = null, ?OrisMethod $orisMethod = null)
@@ -99,7 +103,7 @@ final class OrisApiService
             $regions = [];
             if (str_contains(', ', $orisData->Region)) {
                 $orisRegions = explode(', ', $orisData->Region);
-                foreach($orisRegions as $region) {
+                foreach ($orisRegions as $region) {
                     $regions[] = $region;
                 }
             } else {
@@ -110,16 +114,16 @@ final class OrisApiService
             $eventModel->oris_id = $eventId;
             $eventModel->date = $orisData->Date;
             $eventModel->place = $orisData->Place;
-            $eventModel->sport_id = (int)$orisData->Sport->ID;
-            $eventModel->discipline_id = (int)$orisData->Discipline->ID;
-            $eventModel->level_id = (int)$orisData->Level->ID;
+            $eventModel->sport_id = (int) $orisData->Sport->ID;
+            $eventModel->discipline_id = (int) $orisData->Discipline->ID;
+            $eventModel->level_id = (int) $orisData->Level->ID;
 
             $eventModel->start_time = $orisData->StartTime;
 
             $eventModel->entry_date_1 = strlen($orisData->EntryDate1) !== 0 ? $orisData->EntryDate1 : null;
 
             //dd(!$eventModel->dont_update_excluded);
-            if ($newEvent || !$eventModel->dont_update_excluded) {
+            if ($newEvent || ! $eventModel->dont_update_excluded) {
                 $eventModel->entry_date_2 = strlen($orisData->EntryDate2) !== 0 ? $orisData->EntryDate2 : null;
                 $eventModel->entry_date_3 = strlen($orisData->EntryDate3) !== 0 ? $orisData->EntryDate3 : null;
                 $eventModel->use_oris_for_entries = true;
@@ -129,7 +133,7 @@ final class OrisApiService
             $eventModel->increase_entry_fee_3 = strlen($orisData->EntryKoef3 ?? '') !== 0 ? $orisData->EntryKoef3 : null;
 
             $organization = [$orisData->Org1->Abbr];
-            if (!is_null($orisData->Org2?->Abbr)) {
+            if (! is_null($orisData->Org2?->Abbr)) {
                 $organization[] = $orisData->Org2->Abbr;
             }
             $eventModel->organization = $organization;
@@ -141,10 +145,10 @@ final class OrisApiService
             $eventModel->gps_lat = $orisData->GPSLat;
             $eventModel->gps_lon = $orisData->GPSLon;
             $eventModel->event_type = SportEventType::Race->value;
-            $eventModel->stages = EmptyType::stringNotEmpty($orisData->Stages) ? (int)$orisData->Stages : 0;
-            $eventModel->multi_events = EmptyType::stringNotEmpty($orisData->MultiEvents) ? (int)$orisData->MultiEvents : 0;
-            $eventModel->stages = (!is_null($orisData->Stages) || (int)$orisData->Stages != 0) ? (int)$orisData->Stages : null;
-            $eventModel->parent_id = (!is_null($orisData->ParentID) || (int)$orisData->ParentID != 0) ? (int)$orisData->ParentID : null;
+            $eventModel->stages = EmptyType::stringNotEmpty($orisData->Stages) ? (int) $orisData->Stages : 0;
+            $eventModel->multi_events = EmptyType::stringNotEmpty($orisData->MultiEvents) ? (int) $orisData->MultiEvents : 0;
+            $eventModel->stages = (! is_null($orisData->Stages) || (int) $orisData->Stages != 0) ? (int) $orisData->Stages : null;
+            $eventModel->parent_id = (! is_null($orisData->ParentID) || (int) $orisData->ParentID != 0) ? (int) $orisData->ParentID : null;
             if ($updateByCron) {
                 $eventModel->last_update = Carbon::now();
             }
@@ -163,23 +167,23 @@ final class OrisApiService
                     $classModel = new SportClass();
                 }
 
-                /** @var SportClassDefinition $classDefinitionExist */
+                /** @var SportClassDefinition $classDefinitionModel */
                 $classDefinitionModel = SportClassDefinition::query()
                     ->where('oris_id', '=', $class->ClassDefinition->ID)
                     ->first();
 
                 if ($classDefinitionModel === null) {
                     $classDefinitionModel = new SportClassDefinition();
-                    $classDefinitionModel = $this->saveClassDefinitionModel($classDefinitionModel, $class->ClassDefinition, $eventModel->id);
+                    $classDefinitionModel = $this->saveClassDefinitionModel($classDefinitionModel, $class->ClassDefinition, (int) $orisData->Sport->ID);
                 }
 
                 $classModel->sport_event_id = $eventModel->id;
-                $classModel->oris_id = (int)$class->ID;
+                $classModel->oris_id = (int) $class->ID;
                 $classModel->class_definition_id = $classDefinitionModel->id;
                 $classModel->name = $class->Name;
                 $classModel->distance = $class->Distance;
                 $classModel->controls = $class->Controls;
-                $classModel->fee = (float)$class->Fee;
+                $classModel->fee = (float) $class->Fee;
                 $classModel->saveOrFail();
             }
 
@@ -197,7 +201,7 @@ final class OrisApiService
                 }
 
                 $serviceModel->sport_event_id = $eventModel->id;
-                $serviceModel->oris_service_id = (int)$service->ID;
+                $serviceModel->oris_service_id = (int) $service->ID;
                 $serviceModel->service_name_cz = $service->NameCZ;
                 $serviceModel->last_booking_date_time = $service->LastBookingDateTime;
                 $serviceModel->unit_price = floatval($service->UnitPrice);
@@ -221,10 +225,15 @@ final class OrisApiService
             $this->updateLinksDocuments($links, $eventModel);
             $this->clearOldLinksDocuments($activeLinksDocumentsIds, $eventModel);
 
-
             // Create|Update locations alias markers
             $markers = $event->locations($orisResponse);
             $this->updateMarkers($markers, $eventModel);
+
+            /**
+             * @description Create|Update SportEventNews
+             */
+            $news = $event->news($orisResponse);
+            $this->updateNews($news, $eventModel);
 
         }
 
@@ -257,6 +266,7 @@ final class OrisApiService
                 $this->saveClassDefinitionModel($model, $data, $sportId);
             }
         }
+
         return true;
     }
 
@@ -280,40 +290,42 @@ final class OrisApiService
 
                 if (is_null($model)) {
                     $model = new Club();
-                    $this->orisResponse->newItem($data->Abbr . ' | ' . $data->Name);
+                    $this->orisResponse->newItem($data->Abbr.' | '.$data->Name);
                 } else {
-                    $this->orisResponse->updatedItem($data->Abbr . ' | ' . $data->Name);
+                    $this->orisResponse->updatedItem($data->Abbr.' | '.$data->Name);
                 }
                 $model->abbr = $data->Abbr;
                 $model->name = $data->Name;
                 $regionId = SportRegion::query()->where('long_name', '=', $data->Region)->first();
-                $model->region_id = !is_null($regionId) ? $regionId->id : 1;
+                $model->region_id = ! is_null($regionId) ? $regionId->id : 1;
                 $model->oris_id = $data->ID;
                 $model->oris_number = $data->Number;
                 $model->saveOrFail();
             }
 
             $this->orisResponse->setStatus($this->orisMethod->response($orisResponse)->getStatus());
+
             return $this->orisResponse->getItemsInfo();
         }
 
         $this->orisResponse->setStatus($this->orisMethod->response($orisResponse)->getStatus());
+
         return $this->orisResponse->getItemsInfo();
     }
 
     private function saveClassDefinitionModel(SportClassDefinition $model, ClassDefinition $data, int $sportId): SportClassDefinition
     {
-        $model->oris_id = (int)$data->ID;
+        $model->oris_id = (int) $data->ID;
         $model->sport_id = $sportId;
-        $model->age_from = (int)$data->AgeFrom;
-        $model->age_to = (int)$data->AgeTo;
+        $model->age_from = (int) $data->AgeFrom;
+        $model->age_to = (int) $data->AgeTo;
         $model->gender = $data->Gender;
         $model->name = $data->Name;
 
         try {
             if ($model->save() === false) {
                 throw new ApiStoreResponseException(
-                    message: 'Can\'t save SportClassDefinition model OrisId ' . $data->ID,
+                    message: 'Can\'t save SportClassDefinition model OrisId '.$data->ID,
                     model: 'SportClassDefinition',
                     userId: Auth::id(),
                 );
@@ -364,7 +376,7 @@ final class OrisApiService
                     $userCredit->user_id = $userRaceProfile->user_id;
                     $userCredit->user_race_profile_id = $userRaceProfile->id;
                     $userCredit->sport_event_id = $sportEvent->id;
-                    $userCredit->amount = -(float)$entry->Fee;
+                    $userCredit->amount = -(float) $entry->Fee;
                     //$userCredit->balance = $this->getBalance($userRaceProfile->user, -(float)$entry->getFee());
                     //$userCredit->balance = -(float)$entry->getFee();
                     $userCredit->currency = UserCredit::CURRENCY_CZK;
@@ -389,7 +401,7 @@ final class OrisApiService
                     $userCredit->user_id = null;
                     $userCredit->user_race_profile_id = null;
                     $userCredit->sport_event_id = $sportEvent->id;
-                    $userCredit->amount = -(float)$entry->Fee;
+                    $userCredit->amount = -(float) $entry->Fee;
                     $userCredit->currency = UserCredit::CURRENCY_CZK;
                     $userCredit->credit_type = UserCreditType::CacheOut;
                     $userCredit->source = UserCredit::SOURCE_USER;
@@ -399,7 +411,6 @@ final class OrisApiService
 
                     $userCredit->saveOrFail();
                 }
-
 
                 $userCreditNote = UserCreditNote::query()
                     ->where('internal', '=', true)
@@ -427,7 +438,7 @@ final class OrisApiService
             'rentSI' => $entry->RentSI,
             'userID' => $entry->UserID,
             'clubUserID' => $entry->ClubUserID,
-            'fee' => -(float)$entry->Fee,
+            'fee' => -(float) $entry->Fee,
             'note' => $entry->Note,
             'entryStop' => $entry->EntryStop,
             'CreatedDateTime' => $entry->CreatedDateTime,
@@ -445,24 +456,24 @@ final class OrisApiService
         $model->saveOrFail();
     }
 
-
     private function orisGetResponse(array $getParams): Response
     {
         $params = array_merge_recursive(['format' => self::ORIS_API_DEFAULT_FORMAT], $getParams);
+
         return Http::get(self::ORIS_API_URL, $params)->throw();
     }
 
     private function getBalance(User $user, float $amouth): float
     {
 
-        /** @var UserCredit $lastCase*/
+        /** @var UserCredit $lastCase */
         $lastCase = DB::table('user_credits')
             ->where('user_id', '=', $user->id)
             ->whereNotNull('balance')
             ->orderBy('modified_at', 'desc')
             ->first();
 
-        if (!is_null($lastCase)) {
+        if (! is_null($lastCase)) {
             return $amouth;
         }
 
@@ -477,8 +488,8 @@ final class OrisApiService
     {
 
         $userRaceProfiles = DB::table('user_race_profiles')
-                ->whereNotNull('oris_id')
-                ->get();
+            ->whereNotNull('oris_id')
+            ->get();
 
         foreach ($userRaceProfiles as $userRaceProfile) {
             $getParams = [
@@ -497,18 +508,20 @@ final class OrisApiService
                         ->where('oris_id', '=', $userRaceProfile->oris_id)
                         ->first();
 
-                    if (!is_null($model) && $data->RegNo === $model->reg_number) {
+                    if (! is_null($model) && $data->RegNo === $model->reg_number) {
                         $model->club_user_id = $data->ID;
                         $model->saveOrFail();
                     }
                 }
             }
         }
+
         return true;
     }
 
     /**
-     * @param Links[] $entities
+     * @param  Links[]  $entities
+     *
      * @throws Throwable
      */
     private function updateLinksDocuments(array $entities, SportEvent $eventModel): void
@@ -517,17 +530,17 @@ final class OrisApiService
             /** @var SportEventLink $sportEventLink */
             $sportEventLink = SportEventLink::query()
                 ->where('sport_event_id', '=', $eventModel->id)
-                ->where('external_key', '=', (int)$entity->ID)
+                ->where('external_key', '=', (int) $entity->ID)
                 ->first();
             if (is_null($sportEventLink)) {
                 $sportEventLink = new SportEventLink();
                 $sportEventLink->sport_event_id = $eventModel->id;
             }
 
-            $sportEventLink->external_key = (int)$entity->ID;
+            $sportEventLink->external_key = (int) $entity->ID;
             $sportEventLink->internal = false;
             $sportEventLink->source_url = $entity->Url;
-            $sportEventLink->source_type = SportEventLinkType::mapOrisIdtoEnum((int)$entity->SourceType?->ID);
+            $sportEventLink->source_type = SportEventLinkType::mapOrisIdtoEnum((int) $entity->SourceType?->ID);
             $sportEventLink->name_cz = $entity->SourceType?->NameCZ;
             $sportEventLink->name_en = $entity->SourceType?->NameEN;
             $sportEventLink->description_cz = $entity->OtherDescCZ;
@@ -550,7 +563,7 @@ final class OrisApiService
         /** @var array<int> $deleteLinks */
         $deleteLinks = [];
         foreach ($oldOrisLinkIds as $externalKey) {
-            if(!in_array($externalKey, $actualLinksDocumentsIds)) {
+            if (! in_array($externalKey, $actualLinksDocumentsIds)) {
                 $deleteLinks[] = $externalKey;
             }
         }
@@ -564,8 +577,8 @@ final class OrisApiService
     }
 
     /**
-     * @param Locations[] $markers
-     * @param SportEvent $eventModel
+     * @param  Locations[]  $markers
+     *
      * @throws Throwable
      */
     private function updateMarkers(array $markers, SportEvent $eventModel): void
@@ -574,20 +587,46 @@ final class OrisApiService
             /** @var SportEventMarker $sportEventMarker */
             $sportEventMarker = SportEventMarker::query()
                 ->where('sport_event_id', '=', $eventModel->id)
-                ->where('external_key', '=', (int)$marker->ID)
+                ->where('external_key', '=', (int) $marker->ID)
                 ->first();
 
             if (is_null($sportEventMarker)) {
                 $sportEventMarker = new SportEventMarker();
                 $sportEventMarker->sport_event_id = $eventModel->id;
             }
-            $sportEventMarker->external_key = (int)$marker->ID;
+            $sportEventMarker->external_key = (int) $marker->ID;
             $sportEventMarker->letter = $marker->Letter;
             $sportEventMarker->label = $marker->NameCZ;
-            $sportEventMarker->lat = $marker->GPSLat;
-            $sportEventMarker->lon = $marker->GPSLon;
+            $sportEventMarker->lat = (float) $marker->GPSLat;
+            $sportEventMarker->lon = (float) $marker->GPSLon;
             $sportEventMarker->saveOrFail();
         }
     }
 
+    /**
+     * @param  News[]  $news
+     *
+     * @throws Throwable
+     */
+    private function updateNews(array $news, SportEvent $eventModel): void
+    {
+        foreach ($news as $newItem) {
+            $newItemDate = Carbon::createFromFormat(AppHelper::DB_DATE_TIME, $newItem->Date);
+
+            $sportEventNewItem = SportEventNews::query()
+                ->where('sport_event_id', '=', $eventModel->id)
+                ->where('external_key', '=', (int) $newItem->ID)
+                ->first();
+
+            if (is_null($sportEventNewItem)) {
+                $sportEventNewItem = new SportEventNews();
+                $sportEventNewItem->sport_event_id = $eventModel->id;
+            }
+            $sportEventNewItem->external_key = (int) $newItem->ID;
+            $sportEventNewItem->text = $newItem->Text;
+            $sportEventNewItem->date = $newItemDate !== false ? $newItemDate : Carbon::now();
+
+            $sportEventNewItem->saveOrFail();
+        }
+    }
 }

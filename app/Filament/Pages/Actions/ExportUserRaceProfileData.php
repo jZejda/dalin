@@ -46,7 +46,7 @@ final class ExportUserRaceProfileData
                 Nebo pouze <strong>aktivní</strong> případně <strong>neaktní</strong>.');
             })
             ->modalSubmitActionLabel('Exportovat')
-            ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
+            ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster, AppRoles::EventOrganizer, AppRoles::BillingSpecialist]))
             ->form([
                 Grid::make(1)
                     ->schema([

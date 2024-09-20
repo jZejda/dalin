@@ -26,10 +26,10 @@
             }
         });
 
-        const obRaceSimple = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/ob-race-simple.png'});
-        const obRaceDot = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/ob-race-dot.png'});
-        const obRaceStages = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/ob-race-stages.png'});
-        const trainingDot = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/training-dot.png'});
+        const obRaceSimple = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/obRaceSimple.png'});
+        const obRaceDot = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/obRaceDot.png'});
+        const obRaceStages = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/obRaceStages.png'});
+        const trainingDot = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/trainingDot.png'});
 
         @foreach($initialMarkers as $initialMarker)
             L.marker([{{$initialMarker['position']['lat']}}, {{$initialMarker['position']['lng']}}], {icon: {{$initialMarker['marker']}}}).addTo(map).bindPopup("adasdadd");

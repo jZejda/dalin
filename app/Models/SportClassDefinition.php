@@ -34,7 +34,7 @@ class SportClassDefinition extends Model
         'age_from',
         'age_to',
         'gender',
-        'name'
+        'name',
     ];
 
     public function sport(): HasOne
@@ -53,5 +53,4 @@ class SportClassDefinition extends Model
 
         return "{$this->name}  ({$this->age_from}-{$this->age_to}) ($genderName)";
     }
-
 }

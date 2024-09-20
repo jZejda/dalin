@@ -9,6 +9,7 @@ use App\Filament\Resources\ContentCategoryResource\Pages;
 use App\Filament\Resources\ContentCategoryResource\RelationManagers;
 use App\Models\ContentCategory;
 use App\Models\SportEvent;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -21,7 +22,7 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class ContentCategoryResource extends Resource
+class ContentCategoryResource extends Resource implements HasShieldPermissions
 {
     protected static ?int $navigationSort = 69;
     protected static ?string $model = ContentCategory::class;
@@ -136,5 +137,16 @@ class ContentCategoryResource extends Resource
     {
         /** @var ContentCategory $record */
         return $record->title;
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+        ];
     }
 }

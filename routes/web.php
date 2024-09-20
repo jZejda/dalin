@@ -28,11 +28,11 @@ Route::get('/', function () {
 //    return new AddUpdateSportEvent();
 //});
 
-Route::get('/cron-scheduler/' . config('site-config.cron_url_key'), function () {
+Route::get('/cron-scheduler/'.config('site-config.cron_url_key'), function () {
     Artisan::call('schedule:run');
 });
 
-Route::get('/cron-hourly/' . config('site-config.cron_hourly.url_key'), [CommonCron::class, 'runHourly']);
+Route::get('/cron-hourly/'.config('site-config.cron_hourly.url_key'), [CommonCron::class, 'runHourly']);
 
 Route::get('/novinka/{id}', [PostController::class, 'post']);
 Route::get('/stranka/{slug}', [PageController::class, 'page']);
@@ -48,11 +48,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/export/event-entry/{eventId}', [UserEntryController::class, 'export']);
 })->middleware(['auth', 'verified']);
 
-
-
-
 Route::get('/admin/test', [TestController::class, 'test']);
 //Route::get('/admin/webhook', [DiscordRaceEventNotification::class, 'notification']);
-
 
 require __DIR__.'/auth.php';

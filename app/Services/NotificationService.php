@@ -11,8 +11,10 @@ use Filament\Notifications\Notification;
 final class NotificationService
 {
     private string $title;
+
     private string $body;
-    /** @var User[] $recipients */
+
+    /** @var User[] */
     private array $recipients;
 
     public function __construct(string $title, string $body, array $recipients)
@@ -30,10 +32,9 @@ final class NotificationService
         /** @var SportEvent $sportEvent */
         //$sportEvent = $this->record;
 
-
         Notification::make()
             ->title($this->title)
-            ->body('Uživatel: ' . $recipient->name . ' | Název: ' . $sportEvent->name)
+            ->body('Uživatel: '.$recipient->name.' | Název: '.$sportEvent->name)
             ->sendToDatabase($this->recipients);
 
     }

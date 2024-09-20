@@ -7,14 +7,45 @@
         <div class="py-4 md:py-8 bg-[url(https://abmbrno.cz/images/topography1.svg)] bg-slate-950 text-gray-700 dark:text-gray-300">
             <div class="container mx-auto">
                 <div class="ml-3 text-2xl md:text-4xl bg-gradient-to-r from-yellow-400 to-amber-200 inline-block text-transparent bg-clip-text font-extrabold">
-                    Novinky
+                    Nadcházející akce
                 </div>
             </div>
         </div>
         <div class="container mx-auto">
-            <section>
-                <livewire:frontend.post-cards />
-            </section>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="md:col-span-2">
+                    <section>
+                        <div class="z-0 md:mt-8">
+                            @livewire(\App\Livewire\Shared\Maps\LeafletMap::class, ['publicMap' => true])
+                        </div>
+                    </section>
+                    <div class="relative flex py-5 items-center">
+                        <div class="flex-grow border-t border-gray-500 border-dashed"></div>
+                        <span class="flex-shrink mx-4 text-gray-500">Novinky</span>
+                        <div class="flex-grow border-t border-gray-500 border-dashed"></div>
+                    </div>
+
+                    <section>
+                        <livewire:frontend.post-cards />
+                    </section>
+                </div>
+                <div class="md:col-span-1 md:mt-8">
+                    <div class="px-4 py-5 sm:px3 lg:px-4 lg:py-0 mx-auto">
+                        <!-- End Card -->
+                        @livewire(\App\Livewire\Frontend\EventList::class)
+                        <!-- End Card -->
+                    </div>
+
+                    <div class="relative flex py-5 items-center">
+                        <div class="flex-grow border-t border-gray-500 border-dashed"></div>
+                        <span class="flex-shrink mx-4 text-gray-500">Partneři</span>
+                        <div class="flex-grow border-t border-gray-500 border-dashed"></div>
+                    </div>
+
+                    @include('partials.frontend.partner-logos-vertical')
+
+                </div>
+            </div>
         </div>
 {{--        TODO MAP--}}
 {{--        <div class="container mx-auto">--}}

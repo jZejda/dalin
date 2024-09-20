@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 use Spatie\IcalendarGenerator\Components\Calendar;
 use Spatie\IcalendarGenerator\Components\Event;
 use Spatie\IcalendarGenerator\Enums\Classification;
-use Spatie\IcalendarGenerator\Properties\CoordinatesProperty;
 
 final class IcalService
 {
@@ -19,7 +18,7 @@ final class IcalService
     {
         return Calendar::create()
 
-            ->name(config('site-config.club.abbr') . ' - Kalendář závodů')
+            ->name(config('site-config.club.abbr').' - Kalendář závodů')
             ->description('Kalendař závodů na tento a následujici rok.')
             ->event($this->getEvents(SportEventType::Race));
     }
@@ -28,7 +27,7 @@ final class IcalService
     {
         return Calendar::create()
 
-            ->name(config('site-config.club.abbr') . ' - Kalendář tréninků')
+            ->name(config('site-config.club.abbr').' - Kalendář tréninků')
             ->description('Kalendař tréninků na tento a následujici rok.')
             ->event($this->getEvents(SportEventType::Training));
     }
@@ -89,17 +88,14 @@ final class IcalService
             }
 
             $event = Event::create()
-                ->appendProperty(
-                    CoordinatesProperty::create($sportEvent->place ?? 'N/A', (float)$sportEvent->gps_lat, (float)$sportEvent->gps_lon)
-                )
                 ->description(trim($description))
                 ->name($name)
-                ->uniqueIdentifier($sportEvent->oris_id !== null ? (string)$sportEvent->oris_id : (string)$sportEvent->id)
+                ->uniqueIdentifier($sportEvent->oris_id !== null ? (string) $sportEvent->oris_id : (string) $sportEvent->id)
                 ->createdAt($sportEvent->date)
                 ->startsAt($dateFrom)
                 ->endsAt($dateEnd)
                 ->addressName($sportEvent->place ?? 'N/A')
-                ->coordinates((float)$sportEvent->gps_lat, (float)$sportEvent->gps_lon)
+                ->coordinates((float) $sportEvent->gps_lat, (float) $sportEvent->gps_lon)
                 ->classification(Classification::public());
 
             if ($fullDay) {
@@ -112,10 +108,6 @@ final class IcalService
         return $icalEvents;
     }
 
-    /**
-     * @param SportEventType $type
-     * @return Collection
-     */
     private function getEventByType(SportEventType $type): Collection
     {
         return SportEvent::query()
@@ -126,10 +118,10 @@ final class IcalService
             ->get();
     }
 
-    private function addToDescription(?string $item, string $delimiter = ', '): string
+    private function addToDescription(?string $item, string $delimiter = ' - '): string
     {
         if ($item !== null) {
-            return $item . $delimiter;
+            return $item.$delimiter;
         }
 
         return '';

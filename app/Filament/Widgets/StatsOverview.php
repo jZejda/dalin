@@ -81,7 +81,7 @@ class StatsOverview extends BaseWidget
             ->where('private', '=', 1)
             ->first();
 
-        if(!is_null($lastPrivatePost)) {
+        if (!is_null($lastPrivatePost)) {
             return $lastPrivatePost->content;
         } else {
             return '';

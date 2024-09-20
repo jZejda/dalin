@@ -7,9 +7,10 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum AppRoles: string implements HasLabel, HasColor
+enum AppRoles: string implements HasColor, HasLabel
 {
     case SuperAdmin = 'super_admin';
+    case ClubAdmin = 'club_admin';
     case EventMaster = 'event_master';
     case Member = 'member';
     case Racer = 'racer';
@@ -20,7 +21,8 @@ enum AppRoles: string implements HasLabel, HasColor
     public function getLabel(): ?string
     {
         $trKey = 'app-role.app_role_enum.';
-        return __($trKey . $this->value);
+
+        return __($trKey.$this->value);
     }
 
     public function getColor(): string|array|null

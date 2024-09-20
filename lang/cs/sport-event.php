@@ -21,6 +21,11 @@ return [
 
     'event_type' => 'Typ akcí',
 
+    'event_news' => [
+        'content' => 'Obsah novinky',
+        'date' => 'Datum novniky',
+    ],
+
 
     'type_enum_credit_status' => [
         UserCreditStatus::Done->value => 'hotovo',
@@ -47,6 +52,8 @@ return [
         SportEventMarkerType::StageStart->value => 'Start etapy',
         SportEventMarkerType::Parking->value => 'Parkování',
         SportEventMarkerType::Other->value => 'Ostatní',
+        SportEventMarkerType::Training->value => 'Trénink',
+        SportEventMarkerType::TrainingCamp->value => 'Soustředění',
     ],
 
     'type_enum_links' => [

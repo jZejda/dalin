@@ -44,7 +44,7 @@ class EventMap
         $sportEvents = $this->getAppropriateEvents();
 
         $boundCoords = [];
-        foreach($sportEvents as $sportEvent) {
+        foreach ($sportEvents as $sportEvent) {
             $boundCoords[] = [
                 $sportEvent->gps_lat,
                 $sportEvent->gps_lon,
@@ -88,7 +88,7 @@ class EventMap
         }
 
         /** @var SportEventMarker $eventMarker*/
-        foreach($this->getAdditionalMarkers() as $eventMarker) {
+        foreach ($this->getAdditionalMarkers() as $eventMarker) {
             $eventMarkers[] = Marker::make((string)$eventMarker->id)
                 ->lat((float)$eventMarker->lat)
                 ->lng((float)$eventMarker->lon)

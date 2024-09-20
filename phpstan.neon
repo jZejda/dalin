@@ -8,6 +8,8 @@ parameters:
         - app
         - config
         - routes
+        - database
+        - lang
     fileExtensions:
         - php
 

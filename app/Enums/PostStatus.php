@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasLabel;
 
-enum PostStatus: int implements HasLabel, HasColor
+enum PostStatus: int implements HasColor, HasLabel
 {
     case Public = 0;
     case Private = 1;
@@ -20,7 +20,7 @@ enum PostStatus: int implements HasLabel, HasColor
         };
     }
 
-    public function getColor(): string | array | null
+    public function getColor(): string|array|null
     {
         return match ($this) {
             self::Public => 'success',

@@ -10,9 +10,9 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class SportMarkersRelationManager extends RelationManager
 {
@@ -89,6 +89,6 @@ class SportMarkersRelationManager extends RelationManager
     private static function buttonCreateActionVisibility(): array
     {
         // TODO z recordu nejak vytahnout jestli je oris nebo ne a pak to skryt
-        return [Tables\Actions\CreateAction::make(),];
+        return [Tables\Actions\CreateAction::make()];
     }
 }

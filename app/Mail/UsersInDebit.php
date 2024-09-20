@@ -45,7 +45,7 @@ class UsersInDebit extends Mailable
                 ->select(['amount'])
                 ->sum('amount');
 
-            if($usersAmountCount < 0) {
+            if ($usersAmountCount < 0) {
                 $userData[$index]['fullName'] = $user->name;
                 $userData[$index]['email'] = $user->email;
                 $userData[$index]['id'] = $user->id;

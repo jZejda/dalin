@@ -17,21 +17,25 @@ class EventWeeklyEndsBySport extends Mailable
     use SerializesModels;
 
     private Collection $eventFirstDateEnd;
+
     private Collection $eventSecondDateEnd;
+
     private Collection $eventThirdDateEnd;
 
-    public function __construct(Collection $eventFirstDateEnd, Collection $eventSecondDateEnd, Collection $eventThirdDateEnd)
-    {
+    public function __construct(
+        Collection $eventFirstDateEnd,
+        Collection $eventSecondDateEnd,
+        Collection $eventThirdDateEnd
+    ) {
         $this->eventFirstDateEnd = $eventFirstDateEnd;
         $this->eventSecondDateEnd = $eventSecondDateEnd;
         $this->eventThirdDateEnd = $eventThirdDateEnd;
     }
 
-
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name') . ' - Závody u kterých končí první termín přihlášek příští týden',
+            subject: config('app.name').' - Týdenní souhrn termínů příhlášek',
         );
     }
 

@@ -7,7 +7,7 @@ namespace App\Http\Components\Oris\Response\Entity\EntryData;
 readonly class Data
 {
     public function __construct(
-        public Entry $Entry,
+        public ?Entry $Entry,
     ) {
     }
 }

@@ -6,25 +6,29 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use App\Shared\Helpers\AppHelper;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Pages\Page;
 use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Support\Facades\Hash;
-use Filament\Pages\Page;
 
-class UserResource extends Resource
+class UserResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = User::class;
+
     protected static ?string $navigationLabel = 'Uživatelé';
+
     protected static ?string $label = 'Uživatel';
+
     protected static ?string $pluralLabel = 'Uživatelé';
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
@@ -57,21 +61,17 @@ class UserResource extends Resource
                                 ->password()
                                 ->required()
                                 ->maxLength(255)
-                                ->dehydrateStateUsing(static fn (null|string $state): null|string =>
-                                filled($state) ? Hash::make($state) : null)
-                                ->required(static fn (Page $livewire): bool =>
-                                    $livewire instanceof Pages\CreateUser)
-                                ->dehydrated(static fn (null|string $state): bool =>
-                                filled($state))
+                                ->dehydrateStateUsing(static fn (?string $state): ?string => filled($state) ? Hash::make($state) : null)
+                                ->required(static fn (Page $livewire): bool => $livewire instanceof Pages\CreateUser)
+                                ->dehydrated(static fn (?string $state): bool => filled($state))
                                 ->label(
-                                    static fn (Page $livewire): string =>
-                                ($livewire instanceof Pages\EditUser) ? 'Nové heslo' : 'Heslo',
+                                    static fn (Page $livewire): string => ($livewire instanceof Pages\EditUser) ? 'Nové heslo' : 'Heslo',
                                 ),
                         ])
                         ->columns(1)
                         ->columnSpan([
                             'sm' => 1,
-                            'md' => 8
+                            'md' => 8,
                         ]),
 
                     // Right Column
@@ -91,10 +91,10 @@ class UserResource extends Resource
                                 ->preload(),
                         ])->columnSpan([
                             'sm' => 1,
-                            'md' => 4
+                            'md' => 4,
                         ]),
 
-                ])
+                ]),
             ]);
 
     }
@@ -153,6 +153,17 @@ class UserResource extends Resource
             'index' => Pages\ListUsers::route('/'),
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
         ];
     }
 }

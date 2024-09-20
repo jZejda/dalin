@@ -16,6 +16,8 @@ return [
         'full_name' => 'Klub orientačního běhu ABM Brno',
         'iban' => env('CLUB_IBAN', null),
         'user_credit_limit' => env('USER_CREDIT_LIMIT', -2000),
+        'regular_membership_fees_prefix' => 111,
+        'extra_membership_fees_prefix' => 888,
     ],
 
     /*
@@ -31,9 +33,8 @@ return [
         'general' => [
             'username' => env('ORIS_GENERAL_USERNAME', null),
             'password' => env('ORIS_GENERAL_PASSWORD', null),
-        ]
+        ],
     ],
-
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +53,7 @@ return [
         'content' => [
             'webhook_url' => env('DISCORD_CONTENT_NOTIFICATION_WEBHOOK', ''),
             'code' => 'content_notification',
-        ]
+        ],
     ],
 
     /*
@@ -90,7 +91,14 @@ return [
         ],
         'event_update' => [
             'active' => true,
-            'hours' => ['22'],
+            'hours' => ['22', '04', '06'],
+            'days_in_month' => ['*'],
+            'months' => ['*'],
+            'days_in_week' => ['*'],
+        ],
+        'bank_transaction_sync' => [
+            'active' => true,
+            'hours' => ['*'],
             'days_in_month' => ['*'],
             'months' => ['*'],
             'days_in_week' => ['*'],

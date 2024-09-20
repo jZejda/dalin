@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\SportEventResource\RelationManagers;
 
 use Filament\Forms\Components\DateTimePicker;
@@ -7,9 +9,9 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class SportServicesRelationManager extends RelationManager
 {
@@ -36,37 +38,19 @@ class SportServicesRelationManager extends RelationManager
                 TextInput::make('unit_price')
                     ->label('Cena za jednotku')
                     ->required()
-                    ->mask(
-                        fn (TextInput\Mask $mask) => $mask
-                        ->numeric()
-                        ->decimalPlaces(2)
-                        ->decimalSeparator('.')
-                        ->mapToDecimalSeparator([','])
-                        ->minValue(0)
-                        ->normalizeZeros()
-                        ->padFractionalZeros()
-                        ->thousandsSeparator(' '),
-                    ),
+                    ->numeric()
+                    ->inputMode('decimal')
+                    ->minValue(0),
                 TextInput::make('qty_available')
                     ->label('Volných')
-                    ->mask(
-                        fn (TextInput\Mask $mask) => $mask
-                        ->numeric()
-                        ->decimalPlaces(0)
-                        ->integer()
-                        ->minValue(0)
-                        ->thousandsSeparator(' ')
-                    ),
+                    ->numeric()
+                    ->inputMode('decimal')
+                    ->minValue(0),
                 TextInput::make('qty_already_ordered')
                     ->label('Již objednáno')
-                    ->mask(
-                        fn (TextInput\Mask $mask) => $mask
-                        ->numeric()
-                        ->decimalPlaces(0)
-                        ->integer()
-                        ->minValue(0)
-                        ->thousandsSeparator(' ')
-                    ),
+                    ->numeric()
+                    ->inputMode('decimal')
+                    ->minValue(0),
             ]);
     }
 
@@ -104,13 +88,13 @@ class SportServicesRelationManager extends RelationManager
                 ]),
             ])
             ->bulkActions([
-             //   Tables\Actions\DeleteBulkAction::make(),
+                //   Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
     private static function buttonCreateActionVisibility(): array
     {
         // TODO z recordu nejak vytahnout jestli je oris nebo ne a pak to skryt
-        return [Tables\Actions\CreateAction::make(),];
+        return [Tables\Actions\CreateAction::make()];
     }
 }
