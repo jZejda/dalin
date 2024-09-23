@@ -55,7 +55,6 @@ class PostResource extends Resource implements HasShieldPermissions
 //                                }),
                             Grid::make()->schema([
                                 MarkdownEditor::make('editorial')
-                                    ->maxLength(255),
                             ])->columns(1),
 
                             // Markdown editor

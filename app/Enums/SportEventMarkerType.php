@@ -21,15 +21,18 @@ enum SportEventMarkerType: string
 
     public static function enumArray(): array
     {
-        return [
-            'defaultMarker' => __('sport-event.type_enum_markers.'.self::StageStart->value),
-            'raceSimple' => __('sport-event.type_enum_markers.'.self::StageStart->value),
-            'stageStart' => __('sport-event.type_enum_markers.'.self::StageStart->value),
-            'parking' => __('sport-event.type_enum_markers.'.self::Parking->value),
-            'other' => __('sport-event.type_enum_markers.'.self::Other->value),
+        $trKey = 'sport-event.type_enum_markers.';
 
-            'training' => __('sport-event.type_enum_markers.'.self::Training->value),
-            'trainingCamp' => __('sport-event.type_enum_markers.'.self::TrainingCamp->value),
+        return [
+            self::DefaultMarker->value => __($trKey . self::DefaultMarker->value),
+            self::ObRaceSimple->value => __($trKey . self::ObRaceSimple->value),
+            self::ObRaceDot->value => __($trKey . self::ObRaceDot->value),
+            self::ObRaceStages->value => __($trKey . self::ObRaceStages->value),
+            self::StageStart->value => __($trKey . self::StageStart->value),
+            self::Parking->value => __($trKey . self::Parking->value),
+            self::Other->value => __($trKey . self::Other->value),
+            self::Training->value => __($trKey . self::Training->value),
+            self::TrainingCamp->value => __($trKey . self::TrainingCamp->value),
         ];
     }
 }

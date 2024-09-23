@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Shared\Maps;
 
+use App\Enums\SportEventType;
 use App\Models\SportEvent;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
@@ -76,6 +77,12 @@ final class LeafletMap extends Component
         return SportEvent::query()
             ->where('date', '>', Carbon::now()->subDays(2))
             //->where('sport_id', '=', $this->sportType)
+            ->where('cancelled', '=', 0)
+            ->whereIn('event_type', [
+                SportEventType::Race->value,
+                SportEventType::Training->value,
+                SportEventType::TrainingCamp->value,
+            ])
             ->sport($this->sportType)
             ->get();
     }
