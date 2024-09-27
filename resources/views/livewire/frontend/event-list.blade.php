@@ -8,7 +8,7 @@
     /** @var string $ourClub */
 @endphp
 
-<div class="terxt-white dark:text-white">
+<div class="text-black dark:text-white">
     @foreach($events as $event)
         @php($ourClub = 'border-gray-300 dark:border-gray-700')
         @foreach($event->organization as $organization)
@@ -16,7 +16,7 @@
                 @php($ourClub = 'border-yellow-300 dark:border-yellow-300')
             @endif
         @endforeach
-        <div class="flex border-2 {{$ourClub}} shadow-sm rounded-xl mb-2 hover:shadow-md focus:outline-none focus:shadow-md transition">
+        <div class="flex border {{$ourClub}} shadow-sm rounded-xl mb-2 hover:shadow-md focus:outline-none focus:shadow-md transition">
 
             <!-- Left Section -->
             <div class="w-1/5 p-2 border-r-2 border-gray-300 dark:border-gray-700 border-dotted">

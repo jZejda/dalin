@@ -182,7 +182,11 @@ class SportEvent extends Model
         return $this->HasMany(SportEventNews::class, 'sport_event_id', 'id');
     }
 
-    // Local Scopes
+    /**
+     * Scope a query to only include specific SportId.
+     *
+     * @method Builder sport(Builder $query, int $sportId)
+     */
     public function scopeSport(Builder $query, int $sportId): Builder
     {
         return $query->where('sport_id', '=', $sportId);
