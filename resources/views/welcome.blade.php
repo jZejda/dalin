@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Novinky')
+@section('sponsorSectionId', $sponsorSectionId)
 
 @section('content')
     <div class="bg-white dark:bg-gray-900 app-front-content">

@@ -46,6 +46,7 @@ class ResultListController extends Controller
             'eventAttributes' => $eventAttributes ?? null,
             'classResult' => $classResult ?? null,
             'sportEventExport' => $sportEventExport,
+            'sponsorSectionId' => 0,  // logic from model
         ]);
 
     }

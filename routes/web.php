@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', ['sponsorSectionId' => 0]);
 });
 
 //Route::get('/email/', function(){

@@ -1,5 +1,5 @@
 .app-front-content p {
-    @apply pb-2 dark:text-white;
+    @apply pb-4 dark:text-white;
 }
 
 .app-front-content h1 {
@@ -7,15 +7,15 @@
 }
 
 .app-front-content h2 {
-    @apply mt-6 mb-3 text-3xl font-extrabold dark:text-white font-extrabold leading-none tracking-tight;
+    @apply mt-6 mb-4 text-3xl font-extrabold dark:text-white font-extrabold leading-none tracking-tight;
 }
 
 .app-front-content h3 {
-    @apply mt-5 mb-2 text-2xl font-bold dark:text-white;
+    @apply mt-5 mb-3 text-2xl font-bold dark:text-white;
 }
 
 .app-front-content h4 {
-    @apply mt-4 mb-1 text-xl font-bold dark:text-white;
+    @apply mt-4 mb-2 text-xl font-bold dark:text-white;
 }
 
 .app-front-content h5 {
@@ -56,7 +56,22 @@
     height: auto;
 }
 
+.app-front-content hr {
+   @apply py-4;
+}
+
+.app-front-content td {
+    @apply dark:text-white;
+}
+
+.app-front-content table {
+    @apply pb-4;
+}
+
 .app-front-content pre {
-    background: #ffffff;
-    @apply text-gray-900 dark:text-black;
+    @apply text-gray-900 dark:text-gray-100 dark:bg-gray-900 py-4;
+}
+
+.app-front-content text {
+    @apply dark:text-white;
 }

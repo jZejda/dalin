@@ -33,13 +33,15 @@
             <main>
                 @yield('content')
 
+                @if ($sponsorSectionId > 0)
+                    @livewire(\App\Livewire\Frontend\SponsorSection::class, ['sponsorSectionId' => $sponsorSectionId])
+{{--                    <livewire:frontend.sponsor-section />--}}
+                @endif
             </main>
             <footer class="h-10 bg-blue-500">
                 <livewire:frontend.footer />
             </footer>
-
             @livewire('notifications')
-
         </div>
         @filamentScripts
         @vite('resources/js/app.js')

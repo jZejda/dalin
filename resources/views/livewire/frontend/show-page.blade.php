@@ -7,7 +7,7 @@
 
 @extends('layouts.app')
 
-@section('title', 'Page Title')
+@section('title', $page->title)
 
 @section('content')
 
@@ -31,7 +31,7 @@
         @elseif($page->content_format === 2)
             <p>{{ Markdown::parse($page->content) }}</p>
         @endif
-    </div>
+    </div>Na stránkách závodu byly zveřejneny ukázky mapy.
 
     <div class="mt-10 mx-5">
         <figcaption class="flex items-center mt-6 space-x-3">
