@@ -174,9 +174,9 @@ class SportEventExportResource extends Resource implements HasShieldPermissions
     {
         return [
             'view',
+            'view_any',
             'create',
             'update',
-            'delete',
         ];
     }
 }

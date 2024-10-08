@@ -39,6 +39,8 @@ Route::get('/stranka/{slug}', [PageController::class, 'page']);
 Route::get('/startovka/{slug}', [StartListController::class, 'singleStartList']);
 Route::get('/vysledky/{slug}', [ResultListController::class, 'singleResultList']);
 
+// Route::get('/akce/{id}', [ResultListController::class, 'singleResultList']);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

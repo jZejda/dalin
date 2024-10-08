@@ -15,7 +15,7 @@ class ResultListController extends Controller
     public function singleResultList(string|null $slug): View
     {
         if ($slug === null) {
-            abort('404');
+            abort(404);
         }
 
         $xmlContent = null;

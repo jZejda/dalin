@@ -26,7 +26,7 @@
                 </div>
             @else
                 <div class="text-2xl md:text-4xl bg-gradient-to-r from-yellow-400 to-amber-200 text-transparent bg-clip-text font-extrabold">
-                    404 Nenalezeno
+                    404 - Startovka zatím není k nalezení
                 </div>
             @endif
         </div>
@@ -168,7 +168,7 @@
 
             @else
             <section class="app-front-content">
-                <h1>404 Nenalezeno</h1>
+                <h1>Na startovce se usilovně pracuje</h1>
                 <p>Zatím zde není žádný obsah. Na startovce se pravděpodobně ještě pracuje. Počkejte na zveřejnění. Předem děkujeme.</p>
             </section>
 

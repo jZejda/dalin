@@ -1,9 +1,8 @@
 <div>
-
     <section class="pt-5 py-16">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="mb-20 text-center">
-                <h3 class="text-2xl text-gray-900 text-center font-bold">Za podpory</h3>
+                <h3 class="text-2xl text-gray-900 dark:text-gray-100 text-center font-bold">Za podpory pratnerů</h3>
             </div>
             <div class="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
                 <a href="https://www.orientacnisporty.cz/" target="_blank" class="flex justify-center items-center h-24 rounded-2xl">
@@ -87,7 +86,7 @@
                                 transform="translate(175.7642,171.4085)"
                                 id="g12"><path
                                     id="path14"
-                                    style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                                    class="fill-gray-900 dark:fill-gray-50"
                                     d="m 0,0 h 20.926 v -51.751 h 47.319 v -17.01 H 0 Z" /></g><g
                                 id="g16"><g
                                     clip-path="url(#clipPath22)"
@@ -95,17 +94,17 @@
                                         transform="translate(274.2119,152.8528)"
                                         id="g24"><path
                                             id="path26"
-                                            style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                                            class="fill-gray-900 dark:fill-gray-50"
                                             d="m 0,0 c -2.783,-2.166 -3.608,-5.568 -3.608,-15.464 0,-10.103 0.825,-13.814 3.402,-15.979 2.783,-2.268 6.185,-2.68 21.958,-2.68 18.04,0 21.751,0.619 24.122,3.917 1.959,2.475 2.475,5.979 2.475,15.154 C 48.349,2.267 48.04,2.473 22.267,2.473 6.907,2.473 2.68,1.958 0,0 m 51.338,18.246 c 10.619,-1.958 15.773,-7.423 17.216,-18.454 0.412,-2.782 0.619,-8.349 0.619,-16.699 0,-16.597 -1.753,-23.298 -7.629,-28.144 -4.124,-3.505 -9.897,-5.154 -19.896,-5.566 -3.711,-0.206 -12.887,-0.31 -19.587,-0.31 -16.391,0 -24.741,0.31 -28.865,1.134 -7.629,1.341 -12.062,4.227 -14.639,9.278 -2.68,5.052 -3.299,10.103 -3.299,25.154 0,11.546 0.207,14.432 1.444,19.071 1.959,7.319 5.979,11.237 13.711,13.505 5.773,1.649 12.061,2.062 30.205,2.062 19.793,0 25.875,-0.207 30.72,-1.031" /></g><g
                                         transform="translate(357.814,171.4085)"
                                         id="g28"><path
                                             id="path30"
-                                            style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                                            class="fill-gray-900 dark:fill-gray-50"
                                             d="M 0,0 H 33.194 L 58.245,-45.668 83.192,0 h 32.989 V -68.761 H 95.77 l 1.03,53.092 -30.514,-53.092 h -16.7 l -30,53.092 0.619,-53.092 H 0 Z" /></g><g
                                         transform="translate(515.3306,129.2444)"
                                         id="g32"><path
                                             id="path34"
-                                            style="fill:#231f20;fill-opacity:1;fill-rule:nonzero;stroke:none"
+                                            class="fill-gray-900 dark:fill-gray-50"
                                             d="M 0,0 14.639,27.422 29.483,0 Z m 121.849,8.041 32.37,34.123 H 127.313 L 104.839,17.525 82.778,42.164 H 55.15 L 87.623,7.732 61.852,-18.117 28.864,42.164 H 0.825 l -38.659,-68.761 h 23.711 l 6.598,12.268 h 44.328 l 6.803,-12.268 h 9.791 13.095 15.153 l 23.194,24.743 23.092,-24.743 h 28.453 z" /></g><g
                                         transform="translate(137.8335,134.1975)"
                                         id="g36"><path

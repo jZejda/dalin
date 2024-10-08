@@ -30,14 +30,14 @@
             </div>
         @else
             <div class="text-2xl md:text-4xl bg-gradient-to-r from-yellow-400 to-amber-200 text-transparent bg-clip-text font-extrabold">
-                404 Nenalezeno
+                404 - Výsledky nenalezeny
             </div>
         @endif
     </div>
 </div>
 <div>
     <div class="p-4 bg-white dark:bg-gray-900">
-        <div class="container mx-auto ">
+        <div class="container mx-auto">
             @if(!is_null($classResult) && count($eventAttributes) > 0)
                 {{--            <h4>{{$search}}</h4>--}}
 
@@ -192,19 +192,13 @@
 
             @else
                 <section class="app-front-content">
-                    <div
-                        class="mb-4 rounded-lg bg-success-100 px-6 py-5 text-base text-success-700"
-                        role="alert">
-                        <h4 class="mb-2 text-2xl font-medium leading-tight">Oops!</h4>
-                        <p class="mb-4">
-                            Zatím zde není žádný obsah. Výsledky pravděpodobně ještě nejsou dostupné, nebo se na nich usilovně pracuje.
-                            Zkontrolujte zdali se jedná o výsledky zveřejněné k tomuto závodu.
-                        </p>
-                        <hr class="border-success-600 opacity-30" />
-                        <p class="mb-0 mt-4">
-                            Počkejte na zveřejnění. Předem děkujeme.
-                        </p>
-                    </div>
+                    <h1>Výsledky nejsou dostupné</h1>
+                    <p>Zatím zde není žádný obsah. Je možné že:</p>
+                    <ul>
+                        <li>Závod ještě neproběhl.</li>
+                        <li>Výsledky se ještě nezveřejnili.</li>
+                        <li>Nebo se něco pokazilo</li>
+                    </ul>
                 </section>
             @endif
         </div>

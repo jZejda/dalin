@@ -26,7 +26,7 @@
         </div>
         @else
             <div class="text-2xl md:text-4xl bg-gradient-to-r from-yellow-400 to-amber-200 text-transparent bg-clip-text font-extrabold">
-                404 Nenalezeno
+                404 - Výsledky zatím nenalezeny
             </div>
         @endif
     </div>
