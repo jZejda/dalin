@@ -36,9 +36,9 @@
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/icalendar-generator": "^2.8",
         "spatie/laravel-markdown": "^2.5",
-        "symfony/property-access": "^6.4",
-        "symfony/property-info": "^6.4",
-        "symfony/serializer": "^6.4"
+        "symfony/property-access": "^7.1",
+        "symfony/property-info": "^7.1",
+        "symfony/serializer": "^7.1"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^v3.0",
@@ -49,7 +49,8 @@
         "laravel/sail": "^v1.29",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
-        "phpunit/phpunit": "^10.5",
+        "pestphp/pest": "^2.36",
+        "pestphp/pest-plugin-drift": "^2.6",
         "spatie/laravel-ignition": "^2.4"
     },
     "autoload": {

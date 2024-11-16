@@ -152,7 +152,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
 
                                     return $users->pluck('user_identification', 'id');
                                 })
-                                ->default(auth()->user()->id)
+                                ->default(auth()->user()?->id)
                                 ->searchable(),
 
                             Select::make('status')

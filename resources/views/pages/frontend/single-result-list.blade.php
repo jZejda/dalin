@@ -35,6 +35,7 @@
         @endif
     </div>
 </div>
+
 <div>
     <div class="p-4 bg-white dark:bg-gray-900">
         <div class="container mx-auto">
