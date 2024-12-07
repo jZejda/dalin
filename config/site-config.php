@@ -16,8 +16,8 @@ return [
         'full_name' => 'Klub orientačního běhu ABM Brno',
         'iban' => env('CLUB_IBAN', null),
         'user_credit_limit' => env('USER_CREDIT_LIMIT', -2000),
-        'regular_membership_fees_prefix' => 111,
-        'extra_membership_fees_prefix' => 888,
+        'regular_membership_fees_prefix' => '111',
+        'extra_membership_fees_prefix' => '888',
     ],
 
     /*

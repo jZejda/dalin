@@ -186,9 +186,9 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
     private static function assignTransactionToUserAction(): StaticAction
     {
         return Tables\Actions\Action::make('Přiradit transakci uživateli')
-            ->icon('heroicon-o-document-text')
+            ->icon('heroicon-o-user-plus')
             ->color('info')
-            ->modalHeading('Přidání transakce konkrétnímu uživateli')
+            ->modalHeading(function(BankTransaction $bankTransaction): string { return 'Přidání transakce konkrétnímu uživateli s VS: ' . $bankTransaction->variable_symbol ?? '---';})
             ->modalDescription(function (): HtmlString {
                 return new HtmlString('Příchozí transkakce jsou uživateli <strong>pokud je správně uveden variabilní symbol</strong>automaticky přiřazeny.</br>
                 Zde je můžeš priřadit nebo zrušit ručně.');
@@ -197,11 +197,11 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
             ->form([
                 Select::make('user_id')
                     ->label(__('user-credit.user'))
-                    ->options(User::all()->pluck('user_identification', 'id'))
+                    ->options(User::all()->pluck('user_identification_billing', 'id'))
                     ->required()
                     ->searchable(),
             ])
-            ->modalContentFooter(fn (BankTransaction $record): View => view('filament.actions.modal_footer_add_credit_user',['record' => $record]))
+            ->modalContentFooter(fn (BankTransaction $bankTransaction): View => view('filament.actions.modal_footer_add_credit_user',['bankTransaction' => $bankTransaction]))
             ->action(function (BankTransaction $bankTransaction, array $data): void {
 
                 $userCredit = new UserCredit();

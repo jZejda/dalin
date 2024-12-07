@@ -17,22 +17,14 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
+        $envPassword = env('ADMIN_USER_PASSWORD', 'secret');
 
         DB::table('users')->insert([
             'name' => env('ADMIN_USER_NAME', 'Admin'),
             'email' => env('ADMIN_USER_EMAIL', 'admin@example.com'),
-            'password' => bcrypt(env('ADMIN_USER_PASSWORD', 'secret')),
+            'password' => bcrypt(is_string($envPassword) ? $envPassword : 'secret'),
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString(),
         ]);
-
-        //TODO delete
-        //        DB::table('users')->insert([
-        //            'name' => 'Virtualr',
-        //            'email' => 'virtual@example.com',
-        //            'password' => bcrypt(env('VIRTUAL_USER_PASSWORD', 'secret')),
-        //            'created_at' => date_format($date, 'Y-m-d H:i:s'),
-        //            'updated_at' => date_format($date, 'Y-m-d H:i:s'),
-        //        ]);
     }
 }

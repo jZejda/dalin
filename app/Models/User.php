@@ -32,12 +32,13 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $email
  * @property Carbon|null $email_verified_at
  * @property string $password
- * @property int|null $payer_variable_symbol
+ * @property string|null $payer_variable_symbol
  * @property bool $active
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read string $user_identification
+ * @property-read string $user_identification_billing
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read Collection<int, Permission> $permissions
@@ -100,6 +101,12 @@ class User extends Authenticatable implements FilamentUser
     public function getUserIdentificationAttribute(): string
     {
         return "{$this->name}  ({$this->email})";
+    }
+
+    public function getUserIdentificationBillingAttribute(): string
+    {
+        $userVs = $this->payer_variable_symbol ?? '---';
+        return "{$this->name} - VS: {$userVs}  ({$this->email})";
     }
 
     public function userSetting(): HasOne

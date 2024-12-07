@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\SportEventResource\Pages;
 
 use App\Filament\Resources\SportEventResource;
-use App\Filament\Resources\SportEventResource\Widgets\EventEditMap;
 use App\Services\OrisApiService;
-use Filament\Pages\Actions;
-use Filament\Pages\Actions\Action;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Filament\Notifications\Notification;
 
@@ -14,11 +15,14 @@ class EditSportEvent extends EditRecord
 {
     protected static string $resource = SportEventResource::class;
 
+    /**
+     * @return array{Action|null}
+     */
     protected function getHeaderActions(): array
     {
         return [
             $this->showUpdateEventFromOris(),
-            Actions\DeleteAction::make(),
+            DeleteAction::make(),
         ];
     }
 

@@ -2,27 +2,30 @@
     use App\Models\UserCredit;
 
     /**
-     * @var UserCredit $record
+     * @var UserCredit $bankTransaction
      */
 @endphp
 
 <div>
     @php
-        $userCredit = UserCredit::query()
-            ->where('bank_transaction_id' , '=', $record->id)
-            ->first();
+        $userCredits = UserCredit::query()
+            ->where('bank_transaction_id' , '=', $bankTransaction->id)
+            ->get();
     @endphp
 
-    @if($userCredit !== null)
-        <div class="inline-flex items-center">
-            <span class="size-2 inline-block bg-red-500 rounded-full me-2"></span>
-            <span>Pozor tato transakce je již přiřazená k uživateli  <strong>{{ $userCredit->user->name }}</strong></span>
-        </div>
-        <div>
-            <ul class="mt-4 ml-12 list-disc list-inside text-gray-700 dark:text-white">
-                <li>ID transkakce: {{$userCredit->id}}</li>
-                <li>Transakce ze dne: {{$userCredit->created_at}}</li>
-            </ul>
-        </div>
+    @if($userCredits !== null)
+        @foreach($userCredits as $userCredit)
+            <div class="mt-4 inline-flex items-center">
+                <span class="size-2 inline-block bg-red-500 rounded-full me-2"></span>
+                <span>Pozor tato transakce je již přidána uživateli <strong>{{ $userCredit->user->name }}</strong> VS: {{ $userCredit->user->payer_variable_symbol }}</span>
+            </div>
+            <div>
+                <ul class="mt-4 ml-12 list-disc list-inside text-gray-700 dark:text-white">
+                    <li>ID transkakce: {{$userCredit->id}}</li>
+                    <li>Transakce ze dne: {{$userCredit->created_at}}</li>
+                </ul>
+            </div>
+        @endforeach
+
     @endif
 </div>
