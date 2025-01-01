@@ -18,6 +18,7 @@ return [
 
     'id' => 'ID',
     'created_at' => 'Vytvořeno',
+    'user_credit_id' => 'ID transakce uživatele',
     'variable_symbol' => 'Variabilní symbol',
     'note' => 'Poznámka',
     'description' => 'Popis',

@@ -8,7 +8,7 @@ use App\Services\Bank\Enums\TransactionIndicator;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -48,8 +48,8 @@ class BankTransaction extends Model
         return $this->hasOne(BankAccount::class, 'id', 'bank_account_id');
     }
 
-    public function userCredit(): BelongsTo
+    public function userCredit(): HasMany
     {
-        return $this->belongsTo(User::class, 'credit_user_id', 'id');
+        return $this->hasMany(UserCredit::class, 'bank_transaction_id', 'id');
     }
 }

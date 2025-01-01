@@ -17,7 +17,6 @@ use App\Models\UserRaceProfile;
 use App\Shared\Helpers\AppHelper;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Carbon\Carbon;
-use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -266,25 +265,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\Action::make('create_comment')
-                        ->icon('heroicon-o-ticket')
-                        ->label('Přihlásit na závod.')
-                        ->action(function (Collection $records, array $data): void {
-
-                            dd($data);
-
-                        })
-                        ->form([
-                            Forms\Components\Select::make('authorId')
-                                ->label('Author')
-                                ->options(User::query()->pluck('name', 'id'))
-                                ->required(),
-                            Forms\Components\TextInput::make('stiznost')
-                                ->label('stiznost'),
-                        ])
-                        ->modalContentFooter(view('filament.modals.user-credit-comment', (['data' => self::$model]))),
                 ]),
-
             ])
             ->bulkActions([
                 //Tables\Actions\DeleteBulkAction::make(),

@@ -11,16 +11,34 @@ use Illuminate\Support\Facades\Mail;
 
 class UserResetPassword
 {
-    public function runSecure(): void
+    public function resetNewPassword(User $user, string $password = null): void
     {
-        $users = User::query()->whereNotIn('id', [1,2,4,5,6,8,9,10,12,30])->get();
+        if (is_null($password)) {
+            $password = substr(sha1((string)time()), 0, 10);
+        }
+
+        $user->password = Hash::make($password);
+        $user->saveOrFail();
+
+        Mail::to($user)->queue(new UserPasswordReset($password, $user));
+    }
+
+    /**
+     * @param User[] $users
+     */
+    public function massResetPassword(array $users): void
+    {
+        //$users = User::query()->whereNotIn('id', [1,2,4,5,6,8,9,10,12,30])->get();
+
         foreach ($users as $user) {
 
             $password = substr(sha1((string)time()), 0, 10);
             $user->password = Hash::make($password);
             $user->saveOrFail();
 
-            Mail::to($user)->send(new UserPasswordReset($password, $user));
+            Mail::to($user)->queue(new UserPasswordReset($password, $user));
         }
     }
+
+
 }

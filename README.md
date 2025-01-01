@@ -1,36 +1,49 @@
 # DaLin
+
+[![License][license-src]][license-href]
+
 DaLin makes it easy to manage orienteering club operations. 
 The system uses an external API from the [ORIS](https://oris.orientacnisporty.cz/) system to automatically process members' race entries, download payments, etc.
 
-## Installation Steps
+- [📢 &nbsp;Release Notes](https://jirizejda.cz/dalin/changelog/)
+- [✨ &nbsp;Used by AMB orienteering club](https://abmbrno.cz)
+
+## Setup
 
 Follow this instructions to install the project for local development:
 
+> [!NOTE]
+> For local development use 🐳 Docker containter.
+> Just use make file with common commands, using `make` for help
+
 1. Clone this repo.
     ```bash
-    $ git clone git@gitlab.com:jzejda/dalin.git
+    git clone git@gitlab.com:jzejda/dalin.git
     # or
-    $ git clone https://gitlab.com/jzejda/dalin.git
+    git clone https://gitlab.com/jzejda/dalin.git
     ```
-2. `$ cd dalin`
-3. `$ composer install`
-4. `$ cp .env.example .env`
-5. `$ php artisan key:generate`
-6. Set **database config** on `.env` file
-7. `$ php artisan migrate --seed` - run migrations and seeding data
-8. `$ php artisan shield:install` -> yes and yes
-8. `$ npm install` - install frontend dependencies
-9. `$ npm run dev` - compile the assets
-10. `$ ./vendor/bin/sail up -d` - start development Sail in docker container
-11. Open `https://localhost:8080` with browser.
+2. `cd dalin`
+3. `make up`
+4. `make bash`
+5. In container image use `composer install`
+6. `cp .env.example .env`
+7. `php artisan key:generate`
+8. Set **database config** on `.env` file
+9. `php artisan migrate --seed` - run migrations and seeding data
+10. `php artisan shield:install` -> yes and yes
+11. `npm install` - install frontend dependencies
+12. `npm run dev` - compile the assets
+11. Open `https://localhost` with browser.
 12. Open `https://localhost:8084` You can manage MySQL database in phpMyAdmin tool.
-13. Login into application under `http://localhost:8080/admin/login` with credentilas from `database/seeders/UserTableSeeder.php`
+13. Login into application under `http://localhost/admin/login` with credentilas from `database/seeders/UserTableSeeder.php`
 
-I recommend use `./run.sh` bash tool in root of project.
+I recommend use `make` bash tool in root of project.
 
-### Show Demo
+## Show Demo
 
-This project is presented in [ABM Brno](https://abmbrno.cz/) orienteering club.
+⚡ This project is presented in [ABM Brno](https://abmbrno.cz/) orienteering club.
+
+📘 Documentation on this project may show on [project page](https://jirizejda.cz/dalin/).
 
 ## Based on
 

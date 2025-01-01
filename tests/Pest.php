@@ -11,7 +11,7 @@
 |
 */
 
- uses(Tests\TestCase::class)->in('Feature', 'Unit', 'Frontend');
+uses(Tests\TestCase::class)->in('Feature', 'Unit', 'Frontend');
 
 /*
 |--------------------------------------------------------------------------

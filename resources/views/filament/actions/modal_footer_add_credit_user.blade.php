@@ -23,6 +23,7 @@
                 <ul class="mt-4 ml-12 list-disc list-inside text-gray-700 dark:text-white">
                     <li>ID transkakce: {{$userCredit->id}}</li>
                     <li>Transakce ze dne: {{$userCredit->created_at}}</li>
+                    <li>Hodnota připsané transakce: {{$userCredit->amount}},-</li>
                 </ul>
             </div>
         @endforeach

@@ -42,13 +42,13 @@ lint: ## Run the PHP linter
 lint-dirty: ## Run the PHP linter only on uncommited changes
 	@$(PINT) --dirty
 
-lint-repair: ## Run the PHP linter and repair the errors
+lint-fix: ## Run the PHP linter and repair the errors
 	@$(PINT) --repair
 
-php-stan: ## Run the PHPStan static analyzer
+phpstan: ## Run the PHPStan static analyzer
 	@$(PHPSTAN)	analyse --memory-limit=2G
 
-php-stan-baseline: ## Run the PHPStan static analyzer
+phpstan-baseline: ## Run the PHPStan static analyzer
 	@$(PHPSTAN)	analyz --generate-baseline
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————————————————————————————————————————————
