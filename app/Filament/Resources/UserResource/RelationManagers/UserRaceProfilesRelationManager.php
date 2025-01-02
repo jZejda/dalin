@@ -82,6 +82,32 @@ class UserRaceProfilesRelationManager extends RelationManager
 
                                     return;
                                 }
+
+                                try {
+                                    $orisResponseClubUser = Http::get(
+                                        'https://oris.orientacnisporty.cz/API',
+                                        [
+                                            'format' => 'json',
+                                            'method' => 'getClubUsers',
+                                            'user' => $orisResponse['ID'],
+                                        ]
+                                    )
+                                        ->throw()
+                                        ->json('Data');
+
+                                    $firstKeyOfClubUserResponse = array_key_first($orisResponseClubUser);
+
+                                } catch (RequestException $e) {
+                                    Notification::make()
+                                        ->title('ORIS API')
+                                        ->body('Nepodařilo se načíst data o klubovém členství uživatele z ORISU.')
+                                        ->danger()
+                                        ->seconds(8)
+                                        ->send();
+
+                                    return;
+                                }
+
                                 Notification::make()
                                     ->title('ORIS API')
                                     ->body('ORIS v pořádku vrátil požadovaná data.')
@@ -92,7 +118,7 @@ class UserRaceProfilesRelationManager extends RelationManager
                                 $set('oris_id', $orisResponse['ID'] ?? null);
                                 $set('first_name', $orisResponse['FirstName'] ?? null);
                                 $set('last_name', $orisResponse['LastName'] ?? null);
-
+                                $set('club_user_id', $orisResponseClubUser[$firstKeyOfClubUserResponse]['ID'] ?? null);
                             })
                     ),
                 Select::make('gender')
@@ -111,6 +137,8 @@ class UserRaceProfilesRelationManager extends RelationManager
                     ->required(),
                 TextInput::make('oris_id')
                     ->label('ORIS ID'),
+                TextInput::make('club_user_id')
+                    ->label('Club ORIS ID'),
 
                 Section::make('Adresa nepovinné')
                     ->schema([
