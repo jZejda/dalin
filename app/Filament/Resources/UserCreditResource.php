@@ -175,7 +175,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
             ->columns([
                 TextColumn::make('id')
                     ->label(__('user-credit.id'))
-                    ->searchable()
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))

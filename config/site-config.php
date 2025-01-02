@@ -35,6 +35,7 @@ return [
         'general' => [
             'username' => env('ORIS_GENERAL_USERNAME', null),
             'password' => env('ORIS_GENERAL_PASSWORD', null),
+            'clubkey' => env('ORIS_GENERAL_CLUBKEY', null),
         ],
     ],
 
