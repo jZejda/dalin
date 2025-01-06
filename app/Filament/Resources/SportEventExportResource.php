@@ -16,6 +16,7 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -52,7 +53,7 @@ class SportEventExportResource extends Resource implements HasShieldPermissions
                             TextInput::make('title')
                                 ->required()
                                 ->reactive()
-                                ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
+                                ->afterStateUpdated(function (Set $set, $state) {
                                     $set('slug', Str::slug($state));
                                 }),
                             TextInput::make('slug')

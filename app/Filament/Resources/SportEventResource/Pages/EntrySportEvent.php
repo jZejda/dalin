@@ -456,7 +456,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         })
                     ),
                 Select::make('classId')
-                    ->label('Vyber kategorii orisu')
+                    ->label('Vyber kategorii')
                     ->options(function (callable $get) {
                         if ($this->record->oris_id !== null && $this->record->use_oris_for_entries) {
                             return $get('specific_response_class_id');

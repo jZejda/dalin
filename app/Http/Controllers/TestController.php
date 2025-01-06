@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\AppRoles;
+use App\Enums\UserParamType;
 use App\Http\Controllers\Cron\Jobs\UpdateBankTransaction;
 use App\Models\User;
 use App\Services\Bank\BankAccountService;
@@ -16,6 +17,12 @@ class TestController extends Controller
     public function test(): void
     {
 
+        //$user = Auth::user();
+
+        $user = User::query()->findOrFail(4);
+        $result = $user->getParam(UserParamType::UserActualBalance) < -2000;
+
+        dd($result);
 
         //        $sync = new BankAccountService();
         $sync = new UpdateBankTransaction();

@@ -7,6 +7,7 @@ use App\Http\Controllers\Frontend\ResultListController;
 use App\Http\Controllers\Frontend\StartListController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserEntryController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +22,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    //return redirect()->route('filament.admin.auth.login');
     return view('welcome', ['sponsorSectionId' => 0]);
 });
 

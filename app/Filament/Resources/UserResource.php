@@ -4,7 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
-use App\Http\Controllers\Cron\Jobs\UserResetPassword;
+use App\Http\Controllers\Cron\Jobs\UserSendPassword;
+use App\Mail\UserPasswordSend;
 use App\Models\User;
 use App\Shared\Helpers\AppHelper;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -48,6 +49,9 @@ class UserResource extends Resource implements HasShieldPermissions
                 ])->schema([
                     // Main column
                     Section::make()
+                        ->description(function (): HtmlString {
+                            return new HtmlString('Pokud vytváříte nového uživatele, bude tomuto uživateli na jeho e-mail <strong>zasláno heslo k portálu</strong>.');
+                        })
                         ->schema([
                             TextInput::make('name')
                                 ->required()
@@ -66,6 +70,8 @@ class UserResource extends Resource implements HasShieldPermissions
                                 ->password()
                                 ->required()
                                 ->maxLength(255)
+                                ->default(Str::random(10))
+                                ->revealable()
                                 ->dehydrateStateUsing(static fn (?string $state): ?string => filled($state) ? Hash::make($state) : null)
                                 ->required(static fn (Page $livewire): bool => $livewire instanceof Pages\CreateUser)
                                 ->dehydrated(static fn (?string $state): bool => filled($state))
@@ -194,7 +200,7 @@ class UserResource extends Resource implements HasShieldPermissions
 
             ])
             ->action(function (User $user, array $data): void {
-                (new UserResetPassword())->resetNewPassword($user, $data['password']);
+                (new UserSendPassword())->sendNewPassword($user, $data['password'], UserPasswordSend::ACTION_RESET_PASSWORD);
                 Notification::make()
                     ->title('Reset hesla')
                     ->body('Nové heslo bylo resetováno a odesláno uživateli na jeho e-mailovou schránku: ' . $user->email . '.')

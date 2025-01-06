@@ -13,6 +13,9 @@
     /** @var User $user */
     $user = auth()->user();
 
+    /* @var int $userCreditLimit */
+    $userCreditLimit = config('site-config.club.user_credit_limit');
+
 @endphp
 
 {{--<script src="https://cdn.tailwindcss.com"></script>--}}
@@ -20,7 +23,7 @@
 
 <x-filament::page>
 
-    @if( $user->getParam(UserParamType::UserActualBalance) < -2000)
+    @if( $user->getParam(UserParamType::UserActualBalance) < $userCreditLimit)
         <div
             class="bg-red-100 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500"
             role="alert">

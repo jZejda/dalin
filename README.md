@@ -1,7 +1,5 @@
 # DaLin
 
-[![License][license-src]][license-href]
-
 DaLin makes it easy to manage orienteering club operations. 
 The system uses an external API from the [ORIS](https://oris.orientacnisporty.cz/) system to automatically process members' race entries, download payments, etc.
 

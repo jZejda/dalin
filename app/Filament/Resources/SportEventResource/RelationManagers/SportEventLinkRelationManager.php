@@ -22,7 +22,7 @@ class SportEventLinkRelationManager extends RelationManager
 
     protected static ?string $title = 'Odkazy';
 
-    protected static ?string $recordTitleAttribute = 'sport_event_id';
+    protected static ?string $recordTitleAttribute = 'name_cz';
 
     public function form(Form $form): Form
     {

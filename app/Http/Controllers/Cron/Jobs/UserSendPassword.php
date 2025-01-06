@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron\Jobs;
 
-use App\Mail\UserPasswordReset;
+use App\Mail\UserPasswordSend;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
-class UserResetPassword
+class UserSendPassword
 {
-    public function resetNewPassword(User $user, string $password = null): void
+    public function sendNewPassword(User $user, string $password = null, string $type = UserPasswordSend::ACTION_SEND_PASSWORD): void
     {
         if (is_null($password)) {
             $password = substr(sha1((string)time()), 0, 10);
@@ -20,7 +20,7 @@ class UserResetPassword
         $user->password = Hash::make($password);
         $user->saveOrFail();
 
-        Mail::to($user)->queue(new UserPasswordReset($password, $user));
+        Mail::to($user)->queue(new UserPasswordSend($password, $user, $type));
     }
 
     /**
@@ -36,7 +36,7 @@ class UserResetPassword
             $user->password = Hash::make($password);
             $user->saveOrFail();
 
-            Mail::to($user)->queue(new UserPasswordReset($password, $user));
+            Mail::to($user)->queue(new UserPasswordSend($password, $user));
         }
     }
 

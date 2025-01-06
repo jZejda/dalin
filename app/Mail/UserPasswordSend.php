@@ -10,33 +10,45 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 
-class UserPasswordReset extends Mailable
+class UserPasswordSend extends Mailable
 {
     use Queueable;
 
+    public const string ACTION_SEND_PASSWORD = 'sendPassword';
+    public const string ACTION_RESET_PASSWORD = 'resetPassword';
+
     private string $password;
     private User $user;
+    private string $action;
 
-    public function __construct(string $password, User $user)
+    public function __construct(string $password, User $user, string $action = self::ACTION_SEND_PASSWORD)
     {
         $this->password = $password;
         $this->user = $user;
+        $this->action = $action;
     }
 
     public function envelope(): Envelope
     {
+        if ($this->action === self::ACTION_SEND_PASSWORD) {
+            $actionSubject = 'Zaslání hesla k portálu';
+        } else {
+            $actionSubject = 'Reset hesla k portálu';
+        }
+
         return new Envelope(
-            subject: config('app.name') . ' - Reset hesla k portálu',
+            subject: config('app.name') . ' - ' . $actionSubject,
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.user.userResetPassword',
+            markdown: 'emails.user.userSendPassword',
             with: [
                 'newPassword' => $this->password,
                 'user' => $this->user,
+                'action' => $this->action,
             ]
         );
     }

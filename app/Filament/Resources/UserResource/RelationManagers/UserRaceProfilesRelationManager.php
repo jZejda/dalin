@@ -130,22 +130,22 @@ class UserRaceProfilesRelationManager extends RelationManager
                     ->required(),
 
                 TextInput::make('first_name')
-                    ->label('Jméno')
+                    ->label(__('user-race-profile.table.first_name'))
                     ->required(),
                 TextInput::make('last_name')
-                    ->label('Příjmení')
+                    ->label(__('user-race-profile.table.last_name'))
                     ->required(),
                 TextInput::make('oris_id')
-                    ->label('ORIS ID'),
+                    ->label(__('user-race-profile.table.oris_id')),
                 TextInput::make('club_user_id')
-                    ->label('Club ORIS ID'),
+                    ->label('Klub ORIS ID'),
 
                 Section::make('Adresa nepovinné')
                     ->schema([
                         TextInput::make('city')
                             ->label('Město'),
                         TextInput::make('street')
-                            ->label('Ulize číslo domu'),
+                            ->label('Ulice, číslo domu'),
                         TextInput::make('zip')
                             ->label('PSČ'),
 
