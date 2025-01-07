@@ -344,7 +344,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 ->success()
                                 ->actions([
                                     NotificationAction::make('view')
-                                        ->label('Přejít na url závodu')
+                                        ->label('Přejít na stránku závodu')
                                         ->button()
                                         ->openUrlInNewTab()
                                         ->url('https://oris.orientacnisporty.cz/PrehledPrihlasenych?id='.$sportEvent->oris_id),
@@ -400,6 +400,14 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 Select::make('raceProfileId')
                     ->label('Vyberte závodní profil')
                     ->options($registerAll ? (new UserRaceProfiles())->getUserRaceProfiles($this->record, true) : (new UserRaceProfiles())->getUserRaceProfiles($this->record))
+                    ->default(function (SportEvent $sportEvent): ?int {
+                        $userProfileRecords = (new UserRaceProfiles())->getUserRaceProfiles($this->record);
+                        if ($sportEvent->oris_id === null && count($userProfileRecords) === 1) {
+                            return (int) array_key_first($userProfileRecords->toArray());
+                        } else {
+                            return null;
+                        }
+                    })
                     ->required()
                     ->live()
                     ->afterStateUpdated(
@@ -425,7 +433,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 if ($orisResponse === null) {
                                     Notification::make()
                                         ->title('Na závod není možné se uvedeným závodním profilem přihlásit')
-                                        ->body('Překontrolujte zdali mát v závodním profilu vyplněno ORISID, dále zkontrolujte platnou registraci na daný tok,
+                                        ->body('Překontrolujte zdali mát v závodním profilu vyplněno ORISID, dále zkontrolujte platnou registraci na daný rok,
                                             Na některé závody není možné jako neregistrovaný se přihlásit.')
                                         ->danger()
                                         ->seconds(10)
@@ -475,7 +483,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     })
                     ->searchable()
                     ->required()
-                    ->loadingMessage('Loading authors...'),
+                    ->loadingMessage('Nahrávám kategorie...'),
 
                 Grid::make()->schema([
                     TextInput::make('si')
