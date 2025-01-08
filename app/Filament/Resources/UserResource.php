@@ -124,6 +124,10 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->size(TextColumnSize::Large)
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('payer_variable_symbol')
+                    ->label('VS')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('roles.name')
                     ->badge()
                     ->separator(',')

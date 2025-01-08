@@ -32,6 +32,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
 
 class UserCreditResource extends Resource implements HasShieldPermissions
 {
@@ -221,7 +222,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                     ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
                     ->color(fn (UserCredit $record): ?string => $record->credit_type->getColor())
                     ->label(__('user-credit.table.amount_title'))
-                    ->description(function (UserCredit $record): ?string {
+                    ->description(function (UserCredit $record): null|string|HtmlString {
                         if ($record->relatedUser !== null) {
                             if ($record->amount < 0) {
                                 $amountDirection = __('user-credit.table.for_user');
@@ -230,6 +231,10 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                             }
 
                             return $amountDirection.$record->relatedUser->name;
+                        }
+
+                        if ($record->bankTransaction !== null) {
+                            return new HtmlString('<a href="' . route('filament.admin.resources.bank-transactions.index') .'">Transakce: ' . $record->bankTransaction->id . '</a>');
                         }
 
                         return null;
