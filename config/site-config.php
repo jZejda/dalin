@@ -13,7 +13,7 @@ return [
 
     'club' => [
         'abbr' => 'ABM',
-        'full_name' => 'Klub orientačního běhu ABM Brno',
+        'full_name' => 'Klub orientačního běhu ALFA Brno z.s.',
         'primary_bank_account_number' => '159826453/0600',
         'primary_bank_account_name' => 'MONETA Money Bank, a. s.',
         'iban' => env('CLUB_IBAN', null),

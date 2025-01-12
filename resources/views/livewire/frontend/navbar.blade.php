@@ -1,74 +1,93 @@
-<nav class="border-gray-200 px-2 sm:px-4 py-2.5 bg-gray-800">
-    <div class="container flex flex-wrap items-center justify-between mx-auto">
-        <a href="{{ url('/') }}" class="flex items-center">
-{{--            <img src="https://flowbite.com/docs/images/logo.svg" class="h-6 mr-3 sm:h-9" alt="{{ config('app.name') }} Logo" />--}}
-            <span class="self-center text-xl font-semibold whitespace-nowrap text-white">{{ config('app.name') }}</span>
-        </a>
-        <span class="justify-end">
-            <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
-                <span class="sr-only">Open main menu</span>
-                <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
-            </button>
-        </span>
 
-        <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-            <ul class="flex flex-col p-4 mt-4 md:flex-row md:space-x-8 md:mt-0 text-sm md:text-lg md:font-medium md:border-0">
-                <li class="mt-0 md:mt-2">
-                    <a href="{{ url('/stranka/odkazy') }}" class="block py-2 pl-3 pr-4 text-gray-300 rounded hover:bg-gray-600 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        <div class="flex items-center space-x-2">
-                            <span>
-                               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link text-yellow-400" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                               <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                               <path d="M9 15l6 -6"/>
-                               <path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"/>
-                               <path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"/></svg>
-                            </span>
-                            <span>Odkazy</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="mt-0 md:mt-2">
-                    <a href="{{ url('/stranka/o-klubu') }}" class="block py-2 pl-3 pr-4 text-gray-300 rounded hover:bg-gray-600 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        <div class="flex items-center space-x-2">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trees text-yellow-400" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                    <path d="M16 5l3 3l-2 1l4 4l-3 1l4 4h-9"/>
-                                    <path d="M15 21l0 -3"/>
-                                    <path d="M8 13l-2 -2"/>
-                                    <path d="M8 12l2 -2"/>
-                                    <path d="M8 21v-13"/>
-                                    <path d="M5.824 16a3 3 0 0 1 -2.743 -3.69a3 3 0 0 1 .304 -4.833a3 3 0 0 1 4.615 -3.707a3 3 0 0 1 4.614 3.707a3 3 0 0 1 .305 4.833a3 3 0 0 1 -2.919 3.695h-4z"/>
-                                </svg>
-                            </span>
-                            <span>O klubu</span>
-                        </div>
-                    </a>
-                </li>
-                <li class="mt-0 md:mt-2">
-                    <a href="{{ url('/admin') }}" class="block py-2 pl-3 pr-4 text-gray-300 rounded hover:bg-gray-600 md:hover:bg-transparent md:border-0 md:hover:text-white md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                        <div class="flex items-center space-x-2">
-                            <span>
-                               <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users text-yellow-400" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                  <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/>
-                                  <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
-                                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                                  <path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/>
-                                </svg>
-                            </span>
-                            <span>Přihlásit</span>
-                        </div>
-                    </a>
+
+<nav class="bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-900">
+    <div class="container flex flex-wrap justify-between items-center mx-auto p-4">
+        <a href="{{ url('/') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <svg class="flex-shrink-0 w-11 h-11 text-gray-800 dark:text-gray-200"
+                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M 8,4 1,23"/>
+                <path d="m 16,4 7,19"/>
+                <path d="m 8,4 c 0,0 1.0000001,-3 4,-3 2.999999,0 4,3 4,3"/>
+                <path d="M 5,23 11,7"/>
+                <path d="M 19,23 13,7"/>
+                <path d="m 11,7 c 0,0 0.241285,-1 1,-1 0.758714,0 1,1 1,1"/>
+                <path style="fill:#ff0000;fill-opacity:1;stroke:#ff0000;" d="m 10,21 2,-7 2,7 z"/>
+            </svg>
+            <div class="grid grid-cols-1 xl:grid-cols-1">
+                <div>
+                    <span class="self-center text-2xl font-extrabold tracking-tight whitespace-nowrap dark:text-white">{{ config('site-config.club.abbr') }}</span>
+                </div>
+                <div>
+                    <span class="self-center text-sm tracking-tight whitespace-nowrap dark:text-white">{{ config('site-config.club.full_name') }}</span>
+                </div>
+            </div>
+        </a>
+        <button data-collapse-toggle="mega-menu-full" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="mega-menu-full" aria-expanded="false">
+            <span class="sr-only">Otevři hlavní menu</span>
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+            </svg>
+        </button>
+        <div id="mega-menu-full" class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
+            <ul class="flex flex-col mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
                 <li>
-                    <button id="theme-toggle" type="button" class="inline-flex items-center p-2 ml-3 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
+                    <a href="{{ url('/') }}" class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700" aria-current="page">Domů</a>
+                </li>
+                <li>
+                    <button id="mega-menu-full-cta-dropdown-button" data-collapse-toggle="mega-menu-full-cta-dropdown" data-dropdown-placement="bottom" class="flex items-center justify-between w-full py-2 px-3 font-medium text-gray-900 border-b border-gray-100 md:w-auto hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-600 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">O klubu <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                        </svg></button>
+                </li>
+                <li>
+                    <a href="{{ url('/admin') }}" class="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700">Členská sekce</a>
+                </li>
+                <li>
+                    <button id="theme-toggle" type="button" class="inline-flex items-center p-2 pt-0 m-0 text-sm text-gray-500 rounded-lg focus:outline-none dark:text-gray-400" aria-controls="navbar-default" aria-expanded="false">
                         <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                         <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
                     </button>
                 </li>
             </ul>
         </div>
-
-
+    </div>
+    <div id="mega-menu-full-cta-dropdown" class="hidden mt-1 bg-white border-gray-200 shadow-sm border-y dark:bg-gray-800 dark:border-gray-600">
+        <div class="grid max-w-screen-xl px-4 py-5 mx-auto text-sm text-gray-500 dark:text-gray-400 md:grid-cols-3 md:px-6">
+            <ul class="space-y-4 sm:mb-4 md:mb-0" aria-labelledby="mega-menu-full-cta-button">
+                <li>
+                    <a href="https://mapy.orientacnisporty.cz/cs/clubs/abm" class="hover:underline hover:text-blue-600 dark:hover:text-blue-500">
+                        Naše mapy
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url('/stranka/o-klubu') }}" class="hover:underline hover:text-blue-600 dark:hover:text-blue-500">
+                        Náš klub
+                    </a>
+                </li>
+            </ul>
+            <ul class="space-y-4 sm:mb-4 md:mb-0" aria-labelledby="mega-menu-full-cta-button">
+                <li>
+                    <a href="{{ url('/stranka/odkazy') }}" class="hover:underline hover:text-blue-600 dark:hover:text-blue-500">
+                        Odkazy
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="hover:underline hover:text-blue-600 dark:hover:text-blue-500">
+                        Zásady používání
+                    </a>
+                </li>
+            </ul>
+            <div class="hidden md:block">
+                <h2 class="mb-2 font-semibold text-gray-900 dark:text-white">Dalin</h2>
+                <p class="mb-2 text-gray-500 dark:text-gray-400">Návod na interní oddílový informační systém.</p>
+                <a href="https://jirizejda.cz/dalin/napoveda/" class="inline-flex items-center text-sm font-medium text-blue-600 hover:underline hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-700">
+                    Prozkoumat návod
+                    <span class="sr-only">Prozkoumat návod </span>
+                    <svg class="w-3 h-3 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
     </div>
 </nav>
