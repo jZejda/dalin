@@ -6,13 +6,16 @@ namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 
-class UserPasswordSend extends Mailable
+class UserPasswordSend extends Mailable implements ShouldQueue
 {
     use Queueable;
+    use SerializesModels;
 
     public const string ACTION_SEND_PASSWORD = 'sendPassword';
     public const string ACTION_RESET_PASSWORD = 'resetPassword';

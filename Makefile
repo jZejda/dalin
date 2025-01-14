@@ -36,6 +36,10 @@ down: ## Stop the docker hub
 bash: ## Connect to PHP container via bash so up and down arrows go to previous commands
 	@$(SAIL) bash
 
+clear: ## Clear various caches
+	@$(SAIL) $(ARTISAN) route:clear
+	@$(SAIL) $(ARTISAN) view:clear
+
 lint: ## Run the PHP linter
 	@$(PINT)
 
