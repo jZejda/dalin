@@ -20,6 +20,7 @@ return [
         'user_credit_limit' => env('USER_CREDIT_LIMIT', -2000), //use integer
         'regular_membership_fees_prefix' => '111',
         'extra_membership_fees_prefix' => '888',
+        'technical_email' => env('TECHNICAL_EMAIL', null),
     ],
 
     /*

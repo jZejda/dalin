@@ -10,21 +10,27 @@ use App\Models\User;
 
 <x-mail::message>
 
-## {{ $action === UserPasswordSend::ACTION_SEND_PASSWORD ? 'Nové heslo' : 'Reset hesla'  }} do členské sekce {!!config('site-config.club.abbr')!!}.
+## {{ $action === UserPasswordSend::ACTION_SEND_PASSWORD ? 'Heslo' : 'Reset hesla'  }} do členské sekce - {!!config('site-config.club.abbr')!!}.
 
-Na tomto účtu **{{ $user->name }}** | {{ $user->email }} bylo nyní nastaveno heslo.
-
-
-**Nové heslo** k přihlášení do portálu na adrese **[{!! \Illuminate\Support\Facades\URL::to('/') !!}/admin/login]({!! \Illuminate\Support\Facades\URL::to('/') !!}/admin/login)**:
-
+{{ $action === UserPasswordSend::ACTION_SEND_PASSWORD ? 'Byl vám vytvořen nový účet ' : 'Bylo vám resetováno heslo '  }} v přihláškovém systému oddílu {!!config('site-config.club.abbr')!!}.
 
 @component('mail::divider')
-**{{ $newPassword }}**
+Adresa: **[{!! \Illuminate\Support\Facades\URL::to('/') !!}/admin/login]({!! \Illuminate\Support\Facades\URL::to('/') !!}/admin/login)**
+
+Jméno: **{{ $user->name }}**
+
+Login: **{{ $user->email }}**
+
+Heslo: **{{ $newPassword }}**
+
+
 @endcomponent
 
-### Nápověda
+### Nápověda / Řešení potíží
 
 Pro více informací, jak pracovat s aplikací, navštivte prosím naši nápovědu na [této stránce]({{ \App\Shared\Helpers\AppHelper::getPageHelpUrl('') }}).
+V případě problémů s přihlášením, směřujte případné dotazy na email {!! config('site-config.club.technical_email') !!}.
+Vygenerované heslo si lze po přihlášení v systému změnit.
 
 #### Mohlo by se hodit
 
