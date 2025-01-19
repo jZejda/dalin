@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Filament\Widgets\PostsOverview;
-use Awcodes\Curator\CuratorPlugin;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -40,7 +37,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(function (): ?View {
                 $logoPath = 'filament.logo.' . strtolower(config('site-config.club.abbr')) . '-logo';
                 if (FacadesView::exists($logoPath)) {
-                    return view('filament.logo.abm-logo');
+                    return view($logoPath);
                 }
 
                 return null;

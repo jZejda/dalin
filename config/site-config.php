@@ -42,6 +42,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Site Features settings
+    |--------------------------------------------------------------------------
+    |
+    | Settings for site behaviour
+    |
+    */
+
+    'features' => [
+        'general' => [
+            'synchronize_bank_accounts' => true,
+            'automatic_parring_transactions' => true,
+        ],
+        'public_site' => [
+            'use_public_site' => true,
+        ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Site Discord channels
     |--------------------------------------------------------------------------
     |

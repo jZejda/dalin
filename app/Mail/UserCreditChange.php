@@ -36,7 +36,7 @@ class UserCreditChange extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.event.eventNotification',
+            markdown: 'emails.event.userCreditChange',
             with: [
                 'user' => $this->user,
                 'userCredit' => $this->userCredit,
