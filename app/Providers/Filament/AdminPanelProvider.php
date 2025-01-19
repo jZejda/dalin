@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Filament\Widgets\PostsOverview;
-use Awcodes\Curator\CuratorPlugin;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -23,6 +20,8 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\View as FacadesView;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -34,47 +33,55 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->maxContentWidth('full')
-//            ->brandName('Dalin BETA3')
+//            ->brandName(config('site-config.club.abbr'))
+            ->brandLogo(function (): ?View {
+                $logoPath = 'filament.logo.' . strtolower(config('site-config.club.abbr')) . '-logo';
+                if (FacadesView::exists($logoPath)) {
+                    return view($logoPath);
+                }
+
+                return null;
+            })
             ->sidebarCollapsibleOnDesktop()
             ->colors([
-                'primary' => Color::Amber,
+            'primary' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
-                // Pages\Dashboard::class,
+            // Pages\Dashboard::class,
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                // Widgets\AccountWidget::class,
-                // Widgets\FilamentInfoWidget::class,
-                PostsOverview::class,
+            // Widgets\AccountWidget::class,
+            // Widgets\FilamentInfoWidget::class,
+            PostsOverview::class,
             ])
             ->databaseNotifications()
             ->databaseNotificationsPolling('300s')
             ->middleware([
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartSession::class,
-                AuthenticateSession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                SubstituteBindings::class,
-                DisableBladeIconComponents::class,
-                DispatchServingFilamentEvent::class,
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartSession::class,
+            AuthenticateSession::class,
+            ShareErrorsFromSession::class,
+            VerifyCsrfToken::class,
+            SubstituteBindings::class,
+            DisableBladeIconComponents::class,
+            DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                Authenticate::class,
+            Authenticate::class,
             ])
             ->userMenuItems([
-                MenuItem::make()
-                    ->label('Můj přehled')
-                    ->url(fn (): string => 'user-setting')
-                    ->icon('heroicon-o-home'),
+            MenuItem::make()
+                ->label('Můj přehled')
+                ->url(fn (): string => 'user-setting')
+                ->icon('heroicon-o-home'),
             ])
             ->plugins([
-                FilamentShieldPlugin::make(),
+            FilamentShieldPlugin::make(),
 //                CuratorPlugin::make()
 //                    ->label('Media')
 //                    ->pluralLabel('Media')
@@ -82,7 +89,7 @@ class AdminPanelProvider extends PanelProvider
 //                    ->navigationGroup('Obsah')
 //                    ->navigationSort(3)
 //                    ->navigationCountBadge(),
-                    //->resource(CustomMediaResource::class)
+                //->resource(CustomMediaResource::class)
             ]);
     }
 }

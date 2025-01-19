@@ -6,8 +6,10 @@ namespace App\Http\Controllers\Cron\Jobs;
 
 use App\Models\BankAccount;
 use App\Models\BankTransaction;
+use App\Services\Bank\BankAccountService;
 use App\Services\Bank\Connector\MonetaBank;
 use App\Services\Bank\Connector\Transaction;
+use App\Services\Bank\MatchRules\ExtraMembershipFeesRule;
 use Carbon\Carbon;
 
 final class UpdateBankTransaction implements CommonCronJobs
@@ -55,6 +57,8 @@ final class UpdateBankTransaction implements CommonCronJobs
             $transaction->note = $bankTransaction->note;
 
             $transaction->saveOrFail();
+
+            (new BankAccountService())->matchTransactionToUser($transaction, (new ExtraMembershipFeesRule())->getRule());
         }
 
     }

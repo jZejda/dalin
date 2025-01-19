@@ -13,11 +13,14 @@ return [
 
     'club' => [
         'abbr' => 'ABM',
-        'full_name' => 'Klub orientačního běhu ABM Brno',
+        'full_name' => 'Klub orientačního běhu ALFA Brno z.s.',
+        'primary_bank_account_number' => '159826453/0600',
+        'primary_bank_account_name' => 'MONETA Money Bank, a. s.',
         'iban' => env('CLUB_IBAN', null),
-        'user_credit_limit' => env('USER_CREDIT_LIMIT', -2000),
-        'regular_membership_fees_prefix' => 111,
-        'extra_membership_fees_prefix' => 888,
+        'user_credit_limit' => env('USER_CREDIT_LIMIT', -2000), //use integer
+        'regular_membership_fees_prefix' => '111',
+        'extra_membership_fees_prefix' => '888',
+        'technical_email' => env('TECHNICAL_EMAIL', null),
     ],
 
     /*
@@ -33,7 +36,27 @@ return [
         'general' => [
             'username' => env('ORIS_GENERAL_USERNAME', null),
             'password' => env('ORIS_GENERAL_PASSWORD', null),
+            'clubkey' => env('ORIS_GENERAL_CLUBKEY', null),
         ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Site Features settings
+    |--------------------------------------------------------------------------
+    |
+    | Settings for site behaviour
+    |
+    */
+
+    'features' => [
+        'general' => [
+            'synchronize_bank_accounts' => true,
+            'automatic_parring_transactions' => true,
+        ],
+        'public_site' => [
+            'use_public_site' => true,
+        ]
     ],
 
     /*

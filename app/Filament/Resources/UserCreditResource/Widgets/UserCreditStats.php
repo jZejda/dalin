@@ -17,8 +17,12 @@ class UserCreditStats extends BaseWidget
         return [
             Stat::make('Nepřiřazené transakce Kč', $this->getSumUnAssignCredit()),
             Stat::make('Počet nepřiřazených', $this->getCountUnAssignCredit()),
-            Stat::make('Pokus', $this->record),
         ];
+    }
+
+    protected function getColumns(): int
+    {
+        return 2;
     }
 
 

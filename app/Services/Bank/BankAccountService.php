@@ -4,27 +4,75 @@ declare(strict_types=1);
 
 namespace App\Services\Bank;
 
+use App\Enums\UserCreditSource;
+use App\Enums\UserCreditStatus;
+use App\Enums\UserCreditType;
+use App\Mail\UserCreditChange;
 use App\Models\BankAccount;
+use App\Models\BankTransaction;
+use App\Models\User;
+use App\Models\UserCredit;
 use App\Services\Bank\Connector\MonetaBank;
+use App\Services\Bank\Enums\TransactionIndicator;
+use App\Services\Bank\MatchRules\CompareRule;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Str;
 
 final class BankAccountService
 {
-    public function synchronizeAccount(): void
+    public function matchTransactionToUser(BankTransaction $transaction, CompareRule $compareRule): void
     {
-        /** @var BankAccount[] $bankAccounts */
-        $bankAccounts = BankAccount::query()->where('active', '=', 1)->get();
+        if (
+            $transaction->transaction_indicator === TransactionIndicator::Credit
+            && $compareRule->transactionIndicator === $transaction->transaction_indicator
+        ) {
 
-        foreach ($bankAccounts as $bankAccount) {
-            $class = match ($bankAccount->code) {
-                BankAccount::MONETA_MONEY_BANK => MonetaBank::class,
-                default => null,
-            };
+            $bankTransactionVariableSymbol = Str::trim($transaction->variable_symbol);
 
-            $list = (new $class())->getTransactions($bankAccount, $bankAccount->last_synced);
+            if ($bankTransactionVariableSymbol !== null) {
+                if ($compareRule->variablePrefix !== null) {
+                    $prefixLength = strlen($compareRule->variablePrefix);
+                    $bankTransactionVariableSymbol = substr($bankTransactionVariableSymbol, $prefixLength);
+                }
 
-            dd($list);
+                $userByVariableSymbol = User::query()
+                    ->where('payer_variable_symbol', '=', $bankTransactionVariableSymbol)
+                    ->where('active', '=', 1)
+                    ->get();
 
+                if (count($userByVariableSymbol) === 1) {
+                    /** @var User $user */
+                    $user = $userByVariableSymbol[0];
+
+                    $userCredit = $this->storeCreditToUser($user, $transaction);
+                    $this->sendUserEmail($user, $userCredit);
+
+                }
+            }
         }
+    }
 
+    private function storeCreditToUser(User $user, BankTransaction $transaction): UserCredit
+    {
+        $userCredit = new UserCredit();
+        $userCredit->user_id = $user->id;
+        $userCredit->amount = $transaction->amount;
+        $userCredit->currency = $transaction->currency;
+        $userCredit->bank_transaction_id = $transaction->id;
+        $userCredit->source = UserCreditSource::User->value;
+        $userCredit->status = UserCreditStatus::Done;
+        $userCredit->credit_type = UserCreditType::UserDonation;
+        $userCredit->source_user_id = 1;
+        $userCredit->saveOrFail();
+
+        Log::channel('site')->info('Uživateli '. $user->id .' byl automaticky přidán kredit: ' . $userCredit->id);
+
+        return $userCredit;
+    }
+
+    private function sendUserEmail(User $user, UserCredit $userCredit): void
+    {
+        Mail::to($user)->queue(new UserCreditChange($user, $userCredit));
     }
 }

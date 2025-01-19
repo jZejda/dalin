@@ -18,7 +18,7 @@ return new class () extends Migration {
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('payer_variable_symbol')->nullable();
+            $table->string('payer_variable_symbol', 16)->nullable();
             $table->boolean('active')->default(true);
             $table->rememberToken();
             $table->timestamps();

@@ -7,6 +7,7 @@ use App\Http\Controllers\Frontend\ResultListController;
 use App\Http\Controllers\Frontend\StartListController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserEntryController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', ['sponsorSectionId' => 0]);
 });
 
 //Route::get('/email/', function(){
@@ -38,6 +39,8 @@ Route::get('/novinka/{id}', [PostController::class, 'post']);
 Route::get('/stranka/{slug}', [PageController::class, 'page']);
 Route::get('/startovka/{slug}', [StartListController::class, 'singleStartList']);
 Route::get('/vysledky/{slug}', [ResultListController::class, 'singleResultList']);
+
+// Route::get('/akce/{id}', [ResultListController::class, 'singleResultList']);
 
 
 Route::get('/dashboard', function () {

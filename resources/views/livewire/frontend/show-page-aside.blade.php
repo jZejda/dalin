@@ -1,5 +1,4 @@
 @php
-    use Carbon\Carbon;
     use App\Models\Page;
     use App\Shared\Entities\FrontendLinks;
     use App\Models\SportEventExport;
@@ -11,7 +10,7 @@
 
 @extends('layouts.app')
 
-@section('title', 'Page Title')
+@section('title', $page->title)
 
 @section('content')
     <div class="py-4 md:py-8 bg-[url(https://abmbrno.cz/images/topography1.svg)] bg-slate-950 text-gray-700 dark:text-gray-300">

@@ -21,6 +21,36 @@ parameters:
 			path: app/Filament/Pages/UserMailNotification.php
 
 		-
+			message: "#^Anonymous function never returns null so it can be removed from the return type\\.$#"
+			count: 1
+			path: app/Filament/Resources/BankTransactionResource.php
+
+		-
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\UserCredit\\|null\\.$#"
+			count: 2
+			path: app/Filament/Resources/BankTransactionResource.php
+
+		-
+			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
+			count: 1
+			path: app/Filament/Resources/BankTransactionResource.php
+
+		-
+			message: "#^Property App\\\\Models\\\\UserCredit\\:\\:\\$source_user_id \\(int\\|null\\) does not accept int\\|string\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/BankTransactionResource.php
+
+		-
+			message: "#^Property App\\\\Models\\\\UserCreditNote\\:\\:\\$internal \\(bool\\) does not accept int\\.$#"
+			count: 1
+			path: app/Filament/Resources/BankTransactionResource.php
+
+		-
+			message: "#^Property App\\\\Models\\\\UserCreditNote\\:\\:\\$note_user_id \\(int\\) does not accept int\\|string\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/BankTransactionResource.php
+
+		-
 			message: "#^Method App\\\\Filament\\\\Resources\\\\PageResource\\:\\:getGlobalSearchResultDetails\\(\\) should return array\\<string, string\\> but returns array\\<string, string\\|null\\>\\.$#"
 			count: 1
 			path: app/Filament/Resources/PageResource.php
@@ -147,16 +177,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method hasRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
-			count: 2
-			path: app/Filament/Resources/SportEventResource/Pages/EditSportEvent.php
-
-		-
-			message: "#^Method App\\\\Filament\\\\Resources\\\\SportEventResource\\\\Pages\\\\EditSportEvent\\:\\:getHeaderActions\\(\\) should return array\\<Filament\\\\Actions\\\\Action\\|Filament\\\\Actions\\\\ActionGroup\\> but returns array\\{Filament\\\\Pages\\\\Actions\\\\Action\\|null, Filament\\\\Pages\\\\Actions\\\\Action\\|null, Filament\\\\Pages\\\\Actions\\\\DeleteAction\\}\\.$#"
-			count: 1
-			path: app/Filament/Resources/SportEventResource/Pages/EditSportEvent.php
-
-		-
-			message: "#^Offset 'id' does not exist on array\\<string, mixed\\>\\|null\\.$#"
 			count: 1
 			path: app/Filament/Resources/SportEventResource/Pages/EditSportEvent.php
 
@@ -286,36 +306,6 @@ parameters:
 			path: app/Filament/Resources/SportEventResource/Pages/ViewSportEvent.php
 
 		-
-			message: "#^Call to method numeric\\(\\) on an unknown class Filament\\\\Forms\\\\Components\\\\TextInput\\\\Mask\\.$#"
-			count: 4
-			path: app/Filament/Resources/SportEventResource/RelationManagers/SportClassesRelationManager.php
-
-		-
-			message: "#^Parameter \\$mask of anonymous function has invalid type Filament\\\\Forms\\\\Components\\\\TextInput\\\\Mask\\.$#"
-			count: 4
-			path: app/Filament/Resources/SportEventResource/RelationManagers/SportClassesRelationManager.php
-
-		-
-			message: "#^Call to method numeric\\(\\) on an unknown class Filament\\\\Forms\\\\Components\\\\TextInput\\\\Mask\\.$#"
-			count: 3
-			path: app/Filament/Resources/SportEventResource/RelationManagers/SportServicesRelationManager.php
-
-		-
-			message: "#^Parameter \\$mask of anonymous function has invalid type Filament\\\\Forms\\\\Components\\\\TextInput\\\\Mask\\.$#"
-			count: 3
-			path: app/Filament/Resources/SportEventResource/RelationManagers/SportServicesRelationManager.php
-
-		-
-			message: "#^Access to an undefined property App\\\\Filament\\\\Resources\\\\SportEventResource\\\\RelationManagers\\\\UserEntryRelationManager\\:\\:\\$id\\.$#"
-			count: 1
-			path: app/Filament/Resources/SportEventResource/RelationManagers/UserEntryRelationManager.php
-
-		-
-			message: "#^Method App\\\\Filament\\\\Resources\\\\SportEventResource\\\\RelationManagers\\\\UserEntryRelationManager\\:\\:getModelId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: app/Filament/Resources/SportEventResource/RelationManagers/UserEntryRelationManager.php
-
-		-
 			message: "#^Access to constant COLOR_BLUE on an unknown class App\\\\Filament\\\\Resources\\\\SportEventResource\\\\Widgets\\\\Marker\\.$#"
 			count: 1
 			path: app/Filament/Resources/SportEventResource/Widgets/EventEditMap.php
@@ -426,11 +416,6 @@ parameters:
 			path: app/Filament/Resources/SportEventResource/Widgets/EventMap.php
 
 		-
-			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
-			count: 1
-			path: app/Filament/Resources/UserCreditResource.php
-
-		-
 			message: "#^Static method App\\\\Filament\\\\Resources\\\\UserCreditResource\\:\\:getPluckUsers\\(\\) is unused\\.$#"
 			count: 1
 			path: app/Filament/Resources/UserCreditResource.php
@@ -451,7 +436,7 @@ parameters:
 			path: app/Filament/Resources/UserCreditResource/Pages/ViewUserCredit.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of static method Filament\\\\Widgets\\\\StatsOverviewWidget\\\\Stat\\:\\:make\\(\\) expects bool\\|Closure\\|float\\|Illuminate\\\\Contracts\\\\Support\\\\Htmlable\\|int\\|string, Illuminate\\\\Database\\\\Eloquent\\\\Model\\|null given\\.$#"
+			message: "#^Method App\\\\Filament\\\\Resources\\\\UserCreditResource\\\\Widgets\\\\UserCreditStats\\:\\:getSumUnAssignCredit\\(\\) should return float\\|null but returns float\\|int\\|string\\.$#"
 			count: 1
 			path: app/Filament/Resources/UserCreditResource/Widgets/UserCreditStats.php
 
@@ -459,11 +444,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$value of static method Filament\\\\Widgets\\\\StatsOverviewWidget\\\\Stat\\:\\:make\\(\\) expects bool\\|Closure\\|float\\|Illuminate\\\\Contracts\\\\Support\\\\Htmlable\\|int\\|string, float\\|null given\\.$#"
 			count: 2
 			path: app/Filament/Resources/UserCreditResource/Widgets/UserCreditStats.php
-
-		-
-			message: "#^Class App\\\\Filament\\\\Resources\\\\UserEntryResource\\\\InfoList\\\\UserEntryOverview referenced with incorrect case\\: App\\\\Filament\\\\Resources\\\\UserEntryResource\\\\Infolist\\\\UserEntryOverview\\.$#"
-			count: 2
-			path: app/Filament/Resources/UserEntryResource.php
 
 		-
 			message: "#^Cannot call method hasRole\\(\\) on App\\\\Models\\\\User\\|null\\.$#"
@@ -479,6 +459,11 @@ parameters:
 			message: "#^Method App\\\\Filament\\\\Resources\\\\UserRaceProfileResource\\\\Pages\\\\ListUserRaceProfiles\\:\\:getHeaderActions\\(\\) should return array\\<Filament\\\\Actions\\\\Action\\|Filament\\\\Actions\\\\ActionGroup\\> but returns array\\{Filament\\\\Pages\\\\Actions\\\\CreateAction, Filament\\\\Pages\\\\Actions\\\\Action\\|null\\}\\.$#"
 			count: 1
 			path: app/Filament/Resources/UserRaceProfileResource/Pages/ListUserRaceProfiles.php
+
+		-
+			message: "#^Offset 'password' does not exist on array\\<string, mixed\\>\\|null\\.$#"
+			count: 1
+			path: app/Filament/Resources/UserResource/Pages/CreateUser.php
 
 		-
 			message: "#^Call to an undefined method App\\\\Filament\\\\Widgets\\\\MapOverview\\:\\:fitBounds\\(\\)\\.$#"
@@ -561,7 +546,7 @@ parameters:
 			path: app/Http/Controllers/Cron/Jobs/UpdateEventWeather.php
 
 		-
-			message: "#^Cannot access property \\$timestamp on Carbon\\\\Carbon\\|false\\.$#"
+			message: "#^Cannot access property \\$timestamp on Carbon\\\\Carbon\\|null\\.$#"
 			count: 1
 			path: app/Http/Controllers/Cron/Jobs/UpdateEventWeather.php
 
@@ -569,11 +554,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$code of function abort expects Illuminate\\\\Contracts\\\\Support\\\\Responsable\\|int\\|Symfony\\\\Component\\\\HttpFoundation\\\\Response, string given\\.$#"
 			count: 1
 			path: app/Http/Controllers/Frontend/PostController.php
-
-		-
-			message: "#^Parameter \\#1 \\$code of function abort expects Illuminate\\\\Contracts\\\\Support\\\\Responsable\\|int\\|Symfony\\\\Component\\\\HttpFoundation\\\\Response, string given\\.$#"
-			count: 1
-			path: app/Http/Controllers/Frontend/ResultListController.php
 
 		-
 			message: "#^Parameter \\#1 \\$code of function abort expects Illuminate\\\\Contracts\\\\Support\\\\Responsable\\|int\\|Symfony\\\\Component\\\\HttpFoundation\\\\Response, string given\\.$#"
@@ -611,12 +591,12 @@ parameters:
 			path: app/Livewire/Frontend/OverviewInfo.php
 
 		-
-			message: "#^Match arm comparison between App\\\\Enums\\\\SportEventExportsType and 'eventEntryListCat' is always false\\.$#"
+			message: "#^Match arm comparison between App\\\\Enums\\\\SportEventExportsType\\:\\:EventEntryListCat\\|App\\\\Enums\\\\SportEventExportsType\\:\\:ResultEntryListCat and 'eventEntryListCat' is always false\\.$#"
 			count: 1
 			path: app/Livewire/Frontend/ShowPage.php
 
 		-
-			message: "#^Match arm comparison between App\\\\Enums\\\\SportEventExportsType and 'resultEntryListCat' is always false\\.$#"
+			message: "#^Match arm comparison between App\\\\Enums\\\\SportEventExportsType\\:\\:EventEntryListCat\\|App\\\\Enums\\\\SportEventExportsType\\:\\:ResultEntryListCat and 'resultEntryListCat' is always false\\.$#"
 			count: 1
 			path: app/Livewire/Frontend/ShowPage.php
 
@@ -626,7 +606,12 @@ parameters:
 			path: app/Livewire/Frontend/ShowPage.php
 
 		-
-			message: "#^Method App\\\\Livewire\\\\Shared\\\\Maps\\\\BaseMap\\:\\:getMarkersFromEvents\\(\\) should return array\\<App\\\\Livewire\\\\Shared\\\\Maps\\\\Marker\\> but returns array\\<App\\\\Livewire\\\\Shared\\\\Maps\\\\Marker\\>\\|null\\.$#"
+			message: "#^Access to an undefined property App\\\\Models\\\\SportEventMarker\\:\\:\\$date\\.$#"
+			count: 1
+			path: app/Livewire/Shared/Maps/BaseMap.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Models\\\\SportEventMarker\\:\\:\\$region\\.$#"
 			count: 1
 			path: app/Livewire/Shared/Maps/BaseMap.php
 
@@ -636,29 +621,29 @@ parameters:
 			path: app/Livewire/Shared/Maps/BaseMap.php
 
 		-
-			message: "#^Cannot call method calculateCenterMapFromEvent\\(\\) on App\\\\Livewire\\\\Shared\\\\Maps\\\\BaseMap\\|null\\.$#"
+			message: "#^Parameter \\#1 \\$sportEvent of method App\\\\Livewire\\\\Shared\\\\Maps\\\\BaseMap\\:\\:getMarkersFromEvent\\(\\) expects App\\\\Models\\\\SportEvent, App\\\\Models\\\\SportEvent\\|null given\\.$#"
 			count: 1
 			path: app/Livewire/Shared/Maps/LeafletMap.php
 
 		-
-			message: "#^Cannot call method getMarkersFromEvent\\(\\) on App\\\\Livewire\\\\Shared\\\\Maps\\\\BaseMap\\|null\\.$#"
+			message: "#^Parameter \\#1 \\$sportId of method Illuminate\\\\Database\\\\Eloquent\\\\Builder\\<App\\\\Models\\\\SportEvent\\>\\:\\:sport\\(\\) expects int, int\\|null given\\.$#"
 			count: 1
 			path: app/Livewire/Shared/Maps/LeafletMap.php
 
 		-
-			message: "#^Constructor of class App\\\\Livewire\\\\Shared\\\\Maps\\\\LeafletMap has an unused parameter \\$baseMap\\.$#"
+			message: "#^Cannot access property \\$id on array\\|object\\|null\\.$#"
 			count: 1
-			path: app/Livewire/Shared/Maps/LeafletMap.php
+			path: app/Mail/AddUpdateSportEvent.php
 
 		-
-			message: "#^Property App\\\\Livewire\\\\Shared\\\\Maps\\\\LeafletMap\\:\\:\\$baseMap \\(App\\\\Livewire\\\\Shared\\\\Maps\\\\BaseMap\\|null\\) does not accept App\\\\Livewire\\\\Shared\\\\Maps\\\\BaseMap\\|App\\\\Livewire\\\\Shared\\\\Maps\\\\MapBuilder\\.$#"
+			message: "#^Parameter \\$replyTo of class Illuminate\\\\Mail\\\\Mailables\\\\Envelope constructor expects array\\<int, Illuminate\\\\Mail\\\\Mailables\\\\Address\\|string\\>, array\\<int, string\\|null\\> given\\.$#"
 			count: 1
-			path: app/Livewire/Shared/Maps/LeafletMap.php
+			path: app/Mail/UserAppNotification.php
 
 		-
-			message: "#^Variable \\$markers in PHPDoc tag @var does not exist\\.$#"
+			message: "#^Parameter \\$replyTo of class Illuminate\\\\Mail\\\\Mailables\\\\Envelope constructor expects array\\<int, Illuminate\\\\Mail\\\\Mailables\\\\Address\\|string\\>, array\\<int, string\\|null\\> given\\.$#"
 			count: 1
-			path: app/Livewire/Shared/Maps/LeafletMap.php
+			path: app/Mail/UserEntryNotification.php
 
 		-
 			message: "#^Parameter \\#1 \\$array of static method Illuminate\\\\Support\\\\Arr\\:\\:join\\(\\) expects array, array\\|null given\\.$#"
@@ -666,13 +651,18 @@ parameters:
 			path: app/Models/SportEvent.php
 
 		-
-			message: "#^Parameter \\#1 \\$created of method Spatie\\\\IcalendarGenerator\\\\Components\\\\Event\\:\\:createdAt\\(\\) expects DateTimeInterface, Illuminate\\\\Support\\\\Carbon\\|null given\\.$#"
+			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
 			count: 1
-			path: app/Services/IcalService.php
+			path: app/Services/Bank/BankAccountService.php
 
 		-
-			message: "#^Parameter \\#1 \\$date of method Carbon\\\\Carbon\\:\\:setTimeFrom\\(\\) expects DateTimeInterface\\|null, Carbon\\\\Carbon\\|string given\\.$#"
-			count: 2
+			message: "#^Parameter \\#1 \\$value of static method Illuminate\\\\Support\\\\Str\\:\\:trim\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: app/Services/Bank/BankAccountService.php
+
+		-
+			message: "#^Parameter \\#1 \\$created of method Spatie\\\\IcalendarGenerator\\\\Components\\\\Event\\:\\:createdAt\\(\\) expects DateTimeInterface, Illuminate\\\\Support\\\\Carbon\\|null given\\.$#"
+			count: 1
 			path: app/Services/IcalService.php
 
 		-
@@ -708,6 +698,11 @@ parameters:
 		-
 			message: "#^Cannot access property \\$id on App\\\\Models\\\\User\\|null\\.$#"
 			count: 2
+			path: app/Services/OrisApiService.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
 			path: app/Services/OrisApiService.php
 
 		-
@@ -771,12 +766,7 @@ parameters:
 			path: app/Services/OrisApiService.php
 
 		-
-			message: "#^Property App\\\\Models\\\\SportEventMarker\\:\\:\\$lat \\(float\\) does not accept string\\.$#"
-			count: 1
-			path: app/Services/OrisApiService.php
-
-		-
-			message: "#^Property App\\\\Models\\\\SportEventMarker\\:\\:\\$lon \\(float\\) does not accept string\\.$#"
+			message: "#^Property App\\\\Models\\\\SportEventNews\\:\\:\\$date \\(Illuminate\\\\Support\\\\Carbon\\) does not accept Illuminate\\\\Support\\\\Carbon\\|null\\.$#"
 			count: 1
 			path: app/Services/OrisApiService.php
 
@@ -811,9 +801,14 @@ parameters:
 			path: app/Services/OrisApiService.php
 
 		-
-			message: "#^Variable \\$classDefinitionExist in PHPDoc tag @var does not match assigned variable \\$classDefinitionModel\\.$#"
+			message: "#^If condition is always true\\.$#"
 			count: 1
-			path: app/Services/OrisApiService.php
+			path: app/Services/UserCreditService.php
+
+		-
+			message: "#^Parameter \\#1 \\$title of static method Illuminate\\\\Support\\\\Str\\:\\:slug\\(\\) expects string, bool\\|string given\\.$#"
+			count: 1
+			path: config/cache.php
 
 		-
 			message: "#^Class Awcodes\\\\Curator\\\\Curations\\\\ThumbnailPreset not found\\.$#"
@@ -834,6 +829,21 @@ parameters:
 			message: "#^Class Awcodes\\\\Curator\\\\Resources\\\\MediaResource not found\\.$#"
 			count: 1
 			path: config/curator.php
+
+		-
+			message: "#^Parameter \\#1 \\$title of static method Illuminate\\\\Support\\\\Str\\:\\:slug\\(\\) expects string, bool\\|string given\\.$#"
+			count: 1
+			path: config/database.php
+
+		-
+			message: "#^Parameter \\#2 \\$string of function explode expects string, bool\\|string given\\.$#"
+			count: 1
+			path: config/sanctum.php
+
+		-
+			message: "#^Parameter \\#1 \\$title of static method Illuminate\\\\Support\\\\Str\\:\\:slug\\(\\) expects string, bool\\|string given\\.$#"
+			count: 1
+			path: config/session.php
 
 		-
 			message: "#^Undefined variable\\: \\$this$#"

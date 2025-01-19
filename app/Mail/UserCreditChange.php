@@ -5,38 +5,41 @@ declare(strict_types=1);
 namespace App\Mail;
 
 use App\Models\User;
+use App\Models\UserCredit;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 
-class UserPasswordReset extends Mailable
+class UserCreditChange extends Mailable
 {
     use Queueable;
+    use SerializesModels;
 
-    private string $password;
     private User $user;
+    private UserCredit $userCredit;
 
-    public function __construct(string $password, User $user)
+    public function __construct(User $user, UserCredit $userCredit)
     {
-        $this->password = $password;
         $this->user = $user;
+        $this->userCredit = $userCredit;
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name') . ' - Reset hesla k portálu',
+            subject: config('app.name') . ' - ' . __('mail/user-credit-change.subject.userCreditChange'),
         );
     }
 
     public function content(): Content
     {
         return new Content(
-            markdown: 'emails.user.userResetPassword',
+            markdown: 'emails.event.userCreditChange',
             with: [
-                'newPassword' => $this->password,
                 'user' => $this->user,
+                'userCredit' => $this->userCredit,
             ]
         );
     }

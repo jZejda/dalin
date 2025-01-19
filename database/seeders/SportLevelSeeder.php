@@ -102,5 +102,10 @@ class SportLevelSeeder extends Seeder
             'short_name'  => 'VET',
             'long_name'  => 'Veteraniáda ČR',
         ]);
+        SportLevel::create([
+            'oris_id'  => 18,
+            'short_name'  => 'R',
+            'long_name'  => 'Regionální závod',
+        ]);
     }
 }

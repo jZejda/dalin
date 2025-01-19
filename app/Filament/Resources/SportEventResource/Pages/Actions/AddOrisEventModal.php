@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\SportEventResource\Pages\Actions;
 
 use App\Enums\AppRoles;
+use App\Models\SportEvent;
 use App\Models\SportList;
 use App\Models\SportRegion;
 use App\Services\OrisApiService;
@@ -26,14 +27,27 @@ class AddOrisEventModal
         return Action::make('addOrisEvent')
             ->action(function (array $data): void {
 
+                $onlyUpdate = SportEvent::query()->where('oris_id', '=', $data['oris_id'])->first();
+
+
                 $event = (new OrisApiService())->updateEvent(intval($data['oris_id']));
                 if ($event) {
-                    Notification::make()
-                        ->title('Závod ID ' . intval($data['oris_id']) . ' byl vytvořen')
-                        ->body('V systému byl založen nový závod s kategoriemi a dostupnými službami. Data jsou aktuální oproti ORISu.')
-                        ->success()
-                        ->seconds(8)
-                        ->send();
+
+                    if ($onlyUpdate !== null) {
+                        Notification::make()
+                            ->title('Závod ID ' . intval($data['oris_id']) . ' byl zaktualizován')
+                            ->body('V systému se již tento závod nachází, stávající závod byl pouze zaktualizován s ORISem.')
+                            ->warning()
+                            ->seconds(8)
+                            ->send();
+                    } else {
+                        Notification::make()
+                            ->title('Závod ID ' . intval($data['oris_id']) . ' byl vytvořen')
+                            ->body('V systému byl založen nový závod s kategoriemi a dostupnými službami. Data jsou aktuální oproti ORISu.')
+                            ->success()
+                            ->seconds(8)
+                            ->send();
+                    }
                 }
             })
             ->color('gray')

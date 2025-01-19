@@ -19,7 +19,7 @@ class SportClassesRelationManager extends RelationManager
 {
     protected static string $relationship = 'sportClasses';
 
-    protected static ?string $recordTitleAttribute = 'class_definition_id';
+    protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $label = 'Kategorie';
 
@@ -34,7 +34,7 @@ class SportClassesRelationManager extends RelationManager
                         ->label('Název kategorie')
                         ->required(),
                     Select::make('class_definition_id')
-                        ->label('Kategorie')
+                        ->label('Definice kategorie (věk/gender)')
                         ->required()
                         ->options(SportClassDefinition::all()->pluck('class_definition_full_label', 'id'))
                         ->searchable(),

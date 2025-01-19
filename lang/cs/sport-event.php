@@ -49,6 +49,10 @@ return [
     ],
 
     'type_enum_markers' => [
+        SportEventMarkerType::DefaultMarker->value => 'Obecný bod',
+        SportEventMarkerType::ObRaceSimple->value => 'Jednodenní závod',
+        SportEventMarkerType::ObRaceDot->value => 'Jednodenní závod dot',
+        SportEventMarkerType::ObRaceStages->value => 'Jednodenní závod etapový',
         SportEventMarkerType::StageStart->value => 'Start etapy',
         SportEventMarkerType::Parking->value => 'Parkování',
         SportEventMarkerType::Other->value => 'Ostatní',

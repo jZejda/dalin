@@ -17,12 +17,27 @@ class UserRolesSeeder extends Seeder
     public function run(): void
     {
         Role::create([
+            'name'  => 'super_admin',
+            'guard_name'  => 'web',
+        ]);
+
+        Role::create([
+            'name'  => 'club_admin',
+            'guard_name'  => 'web',
+        ]);
+
+        Role::create([
             'name'  => 'redactor',
             'guard_name'  => 'web',
         ]);
 
         Role::create([
             'name'  => 'event_master',
+            'guard_name'  => 'web',
+        ]);
+
+        Role::create([
+            'name'  => 'event_organizer',
             'guard_name'  => 'web',
         ]);
 

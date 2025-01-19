@@ -415,23 +415,27 @@ class SportEventResource extends Resource implements HasShieldPermissions
 
                                     Select::make('discipline_id')
                                         ->label('Disciplína')
+                                        ->default(1)
                                         ->options(SportDiscipline::all()->pluck('long_name', 'id'))
                                         ->searchable()
                                         ->required(),
                                     Select::make('sport_id')
                                         ->label('Sport')
+                                        ->default(1)
                                         ->options(SportList::all()->pluck('short_name', 'id'))
                                         ->searchable()
                                         ->required(),
 
                                     Select::make('level_id')
                                         ->label('Level')
+                                        ->default(6)
                                         ->options(SportLevel::all()->pluck('long_name', 'oris_id'))
                                         ->searchable()
                                         ->required(),
 
                                     Select::make('organization')
                                         ->multiple()
+                                        ->default([config('site-config.club.abbr')])
                                         ->options(Club::all()->pluck('name', 'abbr'))
                                         ->maxItemsMessage('Je možné definovat pouze dva kluby')
                                         ->maxItems(2)

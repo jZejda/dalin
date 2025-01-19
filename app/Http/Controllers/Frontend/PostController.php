@@ -25,6 +25,9 @@ class PostController extends Controller
             abort('404');
         }
 
-        return view('pages.frontend.show-post', ['post' => $post]);
+        return view('pages.frontend.show-post', [
+            'post' => $post,
+            'sponsorSectionId' => 0,  // logic from model
+        ]);
     }
 }

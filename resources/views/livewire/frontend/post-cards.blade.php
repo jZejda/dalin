@@ -8,7 +8,7 @@
 
 <section class="bg-white dark:bg-gray-900 m-5">
     @foreach($posts as $post)
-        <article class="format" style="max-width: max-content;">
+        <article class="mb-8" style="max-width: max-content;">
 
                 <h4 class="card-title">
                     <a href="{{ url('/novinka', $post->id) }}">{{$post->title}}</a>
@@ -20,15 +20,18 @@
                 @endif
 
 {{--                <p>{!! app(Spatie\LaravelMarkdown\MarkdownRenderer::class)->toHtml($post->content) !!}</p>--}}
-                <figcaption class="flex items-center mt-6 space-x-3">
+
+            <div class="pb-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600">
+
+                <figcaption class="flex items-center space-x-2">
                     <div class="flex items-center divide-x-2 divide-gray-300 dark:divide-gray-700">
                         <cite class="pr-3 font-medium text-gray-900 dark:text-white">{{  $post->user->name }}</cite>
                         <cite class="pl-3 text-sm font-light text-gray-500 dark:text-gray-400">{{ Carbon::createFromFormat('Y-m-d H:i:s', $post->created_at)->format('H:i - d.h.Y')  }}</cite>
                     </div>
                 </figcaption>
-
-
+            </div>
         </article>
+
     @endforeach
     <div class="mb-20"></div>
 </section>

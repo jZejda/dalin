@@ -18,14 +18,13 @@ parameters:
     reportUnmatchedIgnoredErrors: false
 
     ignoreErrors:
-        - '#Unsafe usage of new static#'
+    		- identifier: missingType.iterableValue
+    		- identifier: missingType.generics
 
     excludePaths:
         - ./*/*/FileToBeExcluded.php
         - ./app/Http/Controllers/TestController.php
         - ./app/Policies/*
 
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
     treatPhpDocTypesAsCertain: false
 

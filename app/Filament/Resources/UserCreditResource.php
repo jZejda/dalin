@@ -17,7 +17,6 @@ use App\Models\UserRaceProfile;
 use App\Shared\Helpers\AppHelper;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Carbon\Carbon;
-use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -33,6 +32,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
 
 class UserCreditResource extends Resource implements HasShieldPermissions
 {
@@ -152,7 +152,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
 
                                     return $users->pluck('user_identification', 'id');
                                 })
-                                ->default(auth()->user()->id)
+                                ->default(auth()->user()?->id)
                                 ->searchable(),
 
                             Select::make('status')
@@ -176,7 +176,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
             ->columns([
                 TextColumn::make('id')
                     ->label(__('user-credit.id'))
-                    ->searchable()
+                    ->sortable()
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
@@ -222,7 +222,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                     ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
                     ->color(fn (UserCredit $record): ?string => $record->credit_type->getColor())
                     ->label(__('user-credit.table.amount_title'))
-                    ->description(function (UserCredit $record): ?string {
+                    ->description(function (UserCredit $record): null|string|HtmlString {
                         if ($record->relatedUser !== null) {
                             if ($record->amount < 0) {
                                 $amountDirection = __('user-credit.table.for_user');
@@ -231,6 +231,10 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                             }
 
                             return $amountDirection.$record->relatedUser->name;
+                        }
+
+                        if ($record->bankTransaction !== null) {
+                            return new HtmlString('<a href="' . route('filament.admin.resources.bank-transactions.index') .'">Transakce: ' . $record->bankTransaction->id . '</a>');
                         }
 
                         return null;
@@ -266,25 +270,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\ViewAction::make(),
-                    Tables\Actions\Action::make('create_comment')
-                        ->icon('heroicon-o-ticket')
-                        ->label('Přihlásit na závod.')
-                        ->action(function (Collection $records, array $data): void {
-
-                            dd($data);
-
-                        })
-                        ->form([
-                            Forms\Components\Select::make('authorId')
-                                ->label('Author')
-                                ->options(User::query()->pluck('name', 'id'))
-                                ->required(),
-                            Forms\Components\TextInput::make('stiznost')
-                                ->label('stiznost'),
-                        ])
-                        ->modalContentFooter(view('filament.modals.user-credit-comment', (['data' => self::$model]))),
                 ]),
-
             ])
             ->bulkActions([
                 //Tables\Actions\DeleteBulkAction::make(),

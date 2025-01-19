@@ -21,6 +21,9 @@ return [
     'user_source_id' => 'Založil/Změnil',
     'event_name' => 'Závod/událost',
     'status' => 'Status',
+    'amount' => 'Částka',
+    'currency' => 'Měna',
+    'note' => 'Poznámka',
 
     // Credit Resource
     'form' => [

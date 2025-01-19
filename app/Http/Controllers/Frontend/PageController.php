@@ -34,9 +34,13 @@ class PageController extends Controller
                     'page' => $page,
                     'relatedPages' => $this->getAsideMenu($page),
                     'relatedLinks' => $this->getAsideLinks($page),
+                    'sponsorSectionId' => 1,  // logic from model
                 ]);
             } else {
-                return view('pages.frontend.show-page', ['page' => $page]);
+                return view('pages.frontend.show-page', [
+                    'page' => $page,
+                    'sponsorSectionId' => 0,  // logic from model
+                ]);
             }
         } else {
             abort(404);

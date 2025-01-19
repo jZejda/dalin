@@ -16,9 +16,9 @@ $sportEvent = $getRecord();
         <div class="ml-2">
             <p>
                 @if ($sportEvent->cancelled)
-                    <span class="line-through text-red-800">{{ $sportEvent->name }}</span>
+                    <span class="line-through text-red-800">{{ Str::limit($sportEvent->name, 40) }}</span>
                 @else
-                    {{ $sportEvent->name }}
+                    {{ Str::limit($sportEvent->name, 40) }}
                 @endif
                 @if ($sportEvent->stages > 0)
                     <span class="ml-1 bg-green-100 text-green-800 text-xs font-medium px-1 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">

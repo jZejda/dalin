@@ -15,7 +15,7 @@ class ResultListController extends Controller
     public function singleResultList(string|null $slug): View
     {
         if ($slug === null) {
-            abort('404');
+            abort(404);
         }
 
         $xmlContent = null;
@@ -46,6 +46,7 @@ class ResultListController extends Controller
             'eventAttributes' => $eventAttributes ?? null,
             'classResult' => $classResult ?? null,
             'sportEventExport' => $sportEventExport,
+            'sponsorSectionId' => 0,  // logic from model
         ]);
 
     }

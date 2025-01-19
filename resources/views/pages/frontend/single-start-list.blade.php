@@ -29,7 +29,7 @@
                 </div>
             @else
                 <div class="text-2xl md:text-4xl bg-gradient-to-r from-yellow-400 to-amber-200 text-transparent bg-clip-text font-extrabold">
-                    404 Nenalezeno
+                    404 - Startovka není k nalezení
                 </div>
             @endif
         </div>
@@ -94,7 +94,7 @@
                                                         $startTime = \Carbon\Carbon::parse($person->getStart()->getStartTime(), 'Europe/Prague');
                                                         $zeroTime = $startTime->diffInMinutes($sportEventExport->start_time);
                                                     @endphp
-                                                    {{sprintf("%02d", $zeroTime)}}
+                                                    {{abs(sprintf("%02d", $zeroTime))}}
                                                 </td>
                                                 <td class="px-4 py-2">
                                                     @if($person->getPerson()->getName()->getFamily() === 'Vakant' || $person->getPerson()->getName()->getGiven() === 'Vakant')
@@ -146,8 +146,13 @@
 
             @else
                 <section class="app-front-content">
-                    <h1>404 Nenalezeno</h1>
-                    <p>Zatím zde není žádný obsah. Na startovce se pravděpodobně ještě pracuje. Počkejte na zveřejnění. Předem děkujeme.</p>
+                    <h1>Startovka není dostupná</h1>
+                    <p>Zatím zde není žádný obsah. Je možné že:</p>
+                    <ul>
+                        <li>Jste zde moc brzo a startovka se ještě nevyrábí.</li>
+                        <li>Startovka ještě není zveřejněná.</li>
+                        <li>Nebo se něco pokazilo</li>
+                    </ul>
                 </section>
 
             @endif

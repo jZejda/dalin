@@ -52,10 +52,18 @@ class GuzzleClient
 
     private function getCredentials(): array
     {
-        return [
-            'username' => config('site-config.oris_credentials.general.username'),
-            'password' => config('site-config.oris_credentials.general.password'),
-        ];
+        $clubKey = config('site-config.oris_credentials.general.clubkey');
+
+        if ($clubKey !== null) {
+            return [
+                'clubkey' => $clubKey,
+            ];
+        } else {
+            return [
+                'username' => config('site-config.oris_credentials.general.username'),
+                'password' => config('site-config.oris_credentials.general.password'),
+            ];
+        }
     }
 
 }

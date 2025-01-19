@@ -22,7 +22,7 @@ class SendSportEventNearestMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'ABM - blížící se konec přihlášek',
+            subject: config('app.name') . ' - Blížící se konec přihlášek',
         );
     }
 

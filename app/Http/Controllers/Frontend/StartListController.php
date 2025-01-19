@@ -50,6 +50,7 @@ class StartListController extends Controller
             'eventAttributes' => $eventAttributes,
             'classStart' => $classStart,
             'sportEventExport' => $sportEventExport,
+            'sponsorSectionId' => 0,  // logic from model
         ]);
 
     }

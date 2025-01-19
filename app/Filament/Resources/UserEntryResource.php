@@ -3,9 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Enums\EntryStatus;
-use App\Filament\Resources\UserEntryResource\Infolist\UserEntryOverview;
+use App\Filament\Resources\UserEntryResource\InfoList\UserEntryOverview;
 use App\Filament\Resources\UserEntryResource\Pages;
-// use App\Filament\Resources\UserEntryResource\RelationManagers;
 use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserEntry;

@@ -4,10 +4,11 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Http\Controllers\Cron\Jobs\UserSendPassword;
+use App\Mail\UserPasswordSend;
 use App\Models\User;
 use App\Shared\Helpers\AppHelper;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
-use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -16,10 +17,15 @@ use Filament\Forms\Form;
 use Filament\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Filament\Tables\Table;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Hash;
+use Filament\Actions\StaticAction;
+use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 
 class UserResource extends Resource implements HasShieldPermissions
 {
@@ -43,6 +49,9 @@ class UserResource extends Resource implements HasShieldPermissions
                 ])->schema([
                     // Main column
                     Section::make()
+                        ->description(function (): HtmlString {
+                            return new HtmlString('Pokud vytváříte nového uživatele, bude tomuto uživateli na jeho e-mail <strong>zasláno heslo k portálu</strong>.');
+                        })
                         ->schema([
                             TextInput::make('name')
                                 ->required()
@@ -61,6 +70,8 @@ class UserResource extends Resource implements HasShieldPermissions
                                 ->password()
                                 ->required()
                                 ->maxLength(255)
+                                ->default(Str::random(10))
+                                ->revealable()
                                 ->dehydrateStateUsing(static fn (?string $state): ?string => filled($state) ? Hash::make($state) : null)
                                 ->required(static fn (Page $livewire): bool => $livewire instanceof Pages\CreateUser)
                                 ->dehydrated(static fn (?string $state): bool => filled($state))
@@ -75,7 +86,7 @@ class UserResource extends Resource implements HasShieldPermissions
                         ]),
 
                     // Right Column
-                    Card::make()
+                    Section::make()
                         ->schema([
                             Select::make('roles')
                                 ->label('Role')
@@ -113,6 +124,10 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->size(TextColumnSize::Large)
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('payer_variable_symbol')
+                    ->label('VS')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('roles.name')
                     ->badge()
                     ->separator(',')
@@ -130,7 +145,10 @@ class UserResource extends Resource implements HasShieldPermissions
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    EditAction::make(),
+                    self::resetUserPasswordAction(),
+                ]),
             ])
             ->bulkActions([
                 // Tables\Actions\DeleteBulkAction::make(),
@@ -165,5 +183,33 @@ class UserResource extends Resource implements HasShieldPermissions
             'update',
             'delete',
         ];
+    }
+
+    private static function resetUserPasswordAction(): StaticAction
+    {
+        return Tables\Actions\Action::make('Resetovat heslo')
+            ->icon('heroicon-m-arrow-uturn-right')
+            ->color('info')
+            ->modalHeading('Nové heslo')
+            ->modalDescription(function (User $user): HtmlString {
+                return new HtmlString('Resetuje heslo uživateli.<br><br> Po potvrzení se uživatelovi: '. $user->userIdentification .' <strong>zašle e-mail s novým heslem.</strong>');
+            })
+            ->modalIcon('heroicon-m-arrow-uturn-right')
+            ->form([
+                TextInput::make('password')
+                    ->label('Nové heslo')
+                    ->required()
+                    ->readOnly()
+                    ->default(Str::random(10)),
+
+            ])
+            ->action(function (User $user, array $data): void {
+                (new UserSendPassword())->sendNewPassword($user, $data['password'], UserPasswordSend::ACTION_RESET_PASSWORD);
+                Notification::make()
+                    ->title('Reset hesla')
+                    ->body('Nové heslo bylo resetováno a odesláno uživateli na jeho e-mailovou schránku: ' . $user->email . '.')
+                    ->success()
+                    ->send();
+            });
     }
 }

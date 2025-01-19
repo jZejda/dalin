@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Frontend;
 
+use App\Enums\SportEventType;
 use App\Models\SportEvent;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -29,7 +30,12 @@ class EventList extends Component
     {
         return SportEvent::query()
             ->where('date', '>', Carbon::now()->subDays(2))
-            ->whereIn('event_type', ['race', 'training', 'trainingCamp'])
+            ->where('cancelled', '=', 0)
+            ->whereIn('event_type', [
+                SportEventType::Race->value,
+                SportEventType::Training->value,
+                SportEventType::TrainingCamp->value,
+            ])
             ->sport(1)
             ->limit(6)
             ->orderBy('date', 'asc')
