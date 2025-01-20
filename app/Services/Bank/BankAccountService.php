@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\UserCredit;
 use App\Services\Bank\Enums\TransactionIndicator;
 use App\Services\Bank\MatchRules\CompareRule;
+use App\Shared\Helpers\BankTransactionHelper;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Str;
@@ -47,7 +48,7 @@ final class BankAccountService
                     $user = $userByVariableSymbol[0];
                     $userVariableSymbol = $compareRule->variablePrefix . $user->payer_variable_symbol;
 
-                    if ($userVariableSymbol === $bankTransactionVariableSymbol) {
+                    if (BankTransactionHelper::compareVariableSymbol($bankTransactionVariableSymbol, $userVariableSymbol)) {
                         $userCredit = $this->storeCreditToUser($user, $transaction);
                         $this->sendUserEmail($user, $userCredit);
                     }

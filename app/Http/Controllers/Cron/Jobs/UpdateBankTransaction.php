@@ -26,7 +26,7 @@ final class UpdateBankTransaction implements CommonCronJobs
                 default => null,
             };
 
-            $bankTransactions = (new $class())->getTransactions($bankAccount, $bankAccount->last_synced);
+            $bankTransactions = (new $class())->getTransactions($bankAccount, $bankAccount->last_synced?->subMinutes(5));
 
             $this->storeTransactions($bankTransactions, $bankAccount->id);
 
