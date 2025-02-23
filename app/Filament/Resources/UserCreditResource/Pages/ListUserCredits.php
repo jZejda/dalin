@@ -25,6 +25,7 @@ class ListUserCredits extends ListRecords
         return [
             Actions\CreateAction::make(),
             $this->getEventOrisBalance(),
+            (new UserCreditResource\Actions\AddUserTransportBillingModal())->getAction(),
         ];
     }
 

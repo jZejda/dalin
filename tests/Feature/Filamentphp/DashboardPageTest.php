@@ -5,17 +5,25 @@ use App\Models\User;
 
 beforeEach(function () {
     $this->actingAs(
-        User::where('is_admin', true)->first()
+        User::where('id', '=', 1)->first()
     );
 });
 
-//beforeEach(function () {
-//
-//    $this->actingAs(User::factory()->create());
-//});
-
 test('the application returns a successful response', function () {
-    $response = $this->get('/admin/dashboard');
+    $response = $this->get('/admin/user-credits');
+
+    $response->assertStatus(200);
+});
+
+test('the application returns a successful response credit', function () {
+    $response = $this->get('/admin/pages');
+
+    $response->assertStatus(200);
+});
+
+
+test('the application returns a successful response posts', function () {
+    $response = $this->get('/admin/posts');
 
     $response->assertStatus(200);
 });

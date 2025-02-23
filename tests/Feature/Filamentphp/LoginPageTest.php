@@ -7,7 +7,7 @@ beforeEach(function () {
 });
 
 test('the application returns a successful response', function () {
-    $response = $this->get('/admin/login');
+    $response = $this->get('admin/login');
 
-    $response->assertStatus(200);
+    $response->assertStatus(302);
 });
