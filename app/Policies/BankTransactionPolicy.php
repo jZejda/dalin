@@ -55,7 +55,7 @@ class BankTransactionPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_bank::transaction');
+        return $user->can('{{ DeleteAny }}');
     }
 
     /**
@@ -63,7 +63,7 @@ class BankTransactionPolicy
      */
     public function forceDelete(User $user, BankTransaction $bankTransaction): bool
     {
-        return $user->can('force_delete_bank::transaction');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class BankTransactionPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_bank::transaction');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class BankTransactionPolicy
      */
     public function restore(User $user, BankTransaction $bankTransaction): bool
     {
-        return $user->can('restore_bank::transaction');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class BankTransactionPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_bank::transaction');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class BankTransactionPolicy
      */
     public function replicate(User $user, BankTransaction $bankTransaction): bool
     {
-        return $user->can('replicate_bank::transaction');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class BankTransactionPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_bank::transaction');
+        return $user->can('{{ Reorder }}');
     }
 }

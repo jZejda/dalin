@@ -55,7 +55,7 @@ class SportEventPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_sport::event');
+        return $user->can('{{ DeleteAny }}');
     }
 
     /**
@@ -63,7 +63,7 @@ class SportEventPolicy
      */
     public function forceDelete(User $user, SportEvent $sportEvent): bool
     {
-        return $user->can('force_delete_sport::event');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class SportEventPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_sport::event');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class SportEventPolicy
      */
     public function restore(User $user, SportEvent $sportEvent): bool
     {
-        return $user->can('restore_sport::event');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class SportEventPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_sport::event');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class SportEventPolicy
      */
     public function replicate(User $user, SportEvent $sportEvent): bool
     {
-        return $user->can('replicate_sport::event');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class SportEventPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_sport::event');
+        return $user->can('{{ Reorder }}');
     }
 }

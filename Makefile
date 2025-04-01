@@ -40,6 +40,10 @@ clear: ## Clear various caches
 	@$(SAIL) $(ARTISAN) route:clear
 	@$(SAIL) $(ARTISAN) view:clear
 	@$(SAIL) $(ARTISAN) config:clear
+	@$(SAIL) $(ARTISAN) clear-compiled
+	@$(SAIL) $(ARTISAN) permission:cache-reset
+	@$(SAIL) $(COMPOSER) dump-autoload
+	@$(SAIL) $(ARTISAN) optimize
 
 migrate-test-database: ## Migrate test database
 #	@$(SAIL) $(ARTISAN) migrate:rollback --env=testing

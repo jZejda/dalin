@@ -55,7 +55,7 @@ class ClubPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_club');
+        return $user->can('{{ DeleteAny }}');
     }
 
     /**
@@ -63,7 +63,7 @@ class ClubPolicy
      */
     public function forceDelete(User $user, Club $club): bool
     {
-        return $user->can('force_delete_club');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class ClubPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_club');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class ClubPolicy
      */
     public function restore(User $user, Club $club): bool
     {
-        return $user->can('restore_club');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class ClubPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_club');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class ClubPolicy
      */
     public function replicate(User $user, Club $club): bool
     {
-        return $user->can('replicate_club');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class ClubPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_club');
+        return $user->can('{{ Reorder }}');
     }
 }
