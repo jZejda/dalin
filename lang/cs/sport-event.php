@@ -39,6 +39,7 @@ return [
         UserCreditType::MembershipFees->value => 'Členské příspěvky',
         UserCreditType::TransferCreditBetweenUsers->value => 'Přesun mezi uživateli',
         UserCreditType::InitialDeposit->value => 'Počáteční vklad',
+        UserCreditType::TransportBilling->value => 'Cestovní vyúčtování',
     ],
 
     'type_enum' => [

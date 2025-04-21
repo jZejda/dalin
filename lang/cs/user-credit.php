@@ -60,4 +60,16 @@ return [
         'for_user' => 'Pro uživatele:  ',
         'from_user' => 'Od uživatele:  ',
     ],
+
+    // Actions
+    'actions' => [
+        'transport_billing' => [
+            'action_group_label' => 'Cestovní vyúčtování',
+            'modal_title' => '',
+            'modal_label' => '',
+            'modal_heading' => '',
+            'modal_submit_action_label' => 'Přidej vyúčtování',
+
+        ]
+    ]
 ];

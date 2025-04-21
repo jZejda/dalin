@@ -16,7 +16,17 @@ class SportDisciplinesSeeder extends Seeder
      */
     public function run(): void
     {
-        $seederData = [
+        foreach (self::getSeederData() as $rowKey => $rowValue) {
+            SportDiscipline::query()->create([
+                'short_name'  => $rowKey,
+                'long_name'  => $rowValue,
+            ]);
+        }
+    }
+
+    public static function getSeederData(): array
+    {
+        return [
             'KL' => 'Klasická trať',
             'KT' => 'Krátká trať',
             'SP' => 'Sprint',
@@ -33,12 +43,5 @@ class SportDisciplinesSeeder extends Seeder
             'SS' => 'Sprintové štafety',
             'KO' => 'Knock-out sprint',
         ];
-
-        foreach ($seederData as $rowKey => $rowValue) {
-            SportDiscipline::query()->create([
-                'short_name'  => $rowKey,
-                'long_name'  => $rowValue,
-            ]);
-        }
     }
 }

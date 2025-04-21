@@ -15,6 +15,7 @@ enum UserCreditType: string implements HasColor, HasIcon
     case MembershipFees = 'membershipFees';
     case TransferCreditBetweenUsers = 'transferCreditBetweenUsers';
     case InitialDeposit = 'initialDeposit';
+    case TransportBilling = 'transportBilling';
 
     public static function enumArray(): array
     {
@@ -26,6 +27,7 @@ enum UserCreditType: string implements HasColor, HasIcon
             'membershipFees' => __($trKey.self::MembershipFees->value),
             'transferCreditBetweenUsers' => __($trKey.self::TransferCreditBetweenUsers->value),
             'initialDeposit' => __($trKey.self::InitialDeposit->value),
+            'transportBilling' => __($trKey.self::TransportBilling->value),
         ];
     }
 
@@ -38,6 +40,7 @@ enum UserCreditType: string implements HasColor, HasIcon
             self::MembershipFees => 'heroicon-m-banknotes',
             self::TransferCreditBetweenUsers => 'heroicon-m-arrows-right-left',
             self::InitialDeposit => 'heroicon-m-plus-circle',
+            self::TransportBilling => 'heroicon-o-truck',
         };
     }
 
@@ -49,6 +52,7 @@ enum UserCreditType: string implements HasColor, HasIcon
             self::UserDonation => 'success',
             self::MembershipFees, self::InitialDeposit => 'gray',
             self::TransferCreditBetweenUsers => 'warning',
+            self::TransportBilling => 'gray',
         };
     }
 }
