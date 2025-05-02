@@ -64,10 +64,9 @@ return [
     // Actions
     'actions' => [
         'transport_billing' => [
-            'action_group_label' => 'Cestovní vyúčtování',
-            'modal_title' => '',
-            'modal_label' => '',
-            'modal_heading' => '',
+            'action_group_label' => 'Cestovní rozůčtování',
+            'modal_description' => 'Vyúčtování cestovních nákladů mezi členy klubu. Jedná se převod financí mezi členy klubu, za účelem vyrovnání cestovních nákladů.',
+            'modal_heading' => 'Vyúčtování cestovních nákladů.',
             'modal_submit_action_label' => 'Přidej vyúčtování',
 
         ]

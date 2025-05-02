@@ -17,7 +17,6 @@ use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
-
 class AddUserTransportBillingModal
 {
     public function getAction(): Action
@@ -31,8 +30,8 @@ class AddUserTransportBillingModal
             ->color('gray')
             ->label(__('user-credit.actions.transport_billing.action_group_label'))
             ->icon('heroicon-o-truck')
-            ->modalHeading(__('user-credit.actions.transport_billing.action_group_label'))
-            ->modalDescription(__('user-credit.actions.transport_billing.action_group_label'))
+            ->modalHeading(__('user-credit.actions.transport_billing.modal_heading'))
+            ->modalDescription(__('user-credit.actions.transport_billing.modal_description'))
             ->modalSubmitActionLabel(__('user-credit.actions.transport_billing.modal_submit_action_label'))
             ->visible(
                 auth()->user() !== null && auth()->user()->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster])

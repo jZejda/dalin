@@ -62,7 +62,7 @@ phpstan: ## Run the PHPStan static analyzer
 	@$(PHPSTAN)	analyse --memory-limit=2G
 
 phpstan-baseline: ## Run the PHPStan static analyzer
-	@$(PHPSTAN)	analyz --generate-baseline
+	@$(PHPSTAN)	analyse --generate-baseline
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
