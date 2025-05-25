@@ -14,6 +14,7 @@ use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 
@@ -24,7 +25,8 @@ class AddUserTransportBillingModal
         return Action::make('addUserTransportBilling')
             ->action(function (array $data): void {
 
-                dd($data);
+                /** @var array{credit_type: string, amount: float, currency: string, user_id: int, related_user_id: int, note: string} $data */
+                dd($data[]);
 
             })
             ->color('gray')
@@ -82,7 +84,8 @@ class AddUserTransportBillingModal
                         ->required()
                         ->searchable(),
                 ])->columns(2),
-
+                MarkdownEditor::make('note')
+                    ->label(__('user-credit.note')),
                 Select::make('sport_event_id')
                     ->label(__('user-credit.event_name'))
                     ->options(
@@ -91,12 +94,6 @@ class AddUserTransportBillingModal
                             ->sortByDesc('date')
                             ->pluck('sport_event_oris_compact_title', 'id')
                     )->searchable(),
-                Select::make('source')
-                    ->label(__('user-credit.form.source_title'))
-                    ->default(UserCreditSource::User->value)
-                    ->options(UserCreditSource::enumArray())
-                    ->disabled()
-                    ->required(),
             ]);
 
     }
