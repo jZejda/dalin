@@ -81,7 +81,7 @@ class UserCreditRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
-                    ->label('RegNumber')
+                    ->label('Registrace závodníka')
                     ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? '')
                     ->sortable()
                     ->searchable(),

@@ -6,6 +6,10 @@ The system uses an external API from the [ORIS](https://oris.orientacnisporty.cz
 - [📢 &nbsp;Release Notes](https://jirizejda.cz/dalin/changelog/)
 - [✨ &nbsp;Used by AMB orienteering club](https://abmbrno.cz)
 
+> [!WARNING]
+> Pro dokumentaci v češtině prosím navštivte stránku níže.
+> - [🇨🇿 &nbsp;Popis v Češtině](https://github.com/jZejda/dalin/blob/develop/README-CZ.md)
+
 ## Show Demo
 
 ⚡ This project is presented in [ABM Brno](https://abmbrno.cz/) orienteering club.
