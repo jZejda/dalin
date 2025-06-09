@@ -55,7 +55,7 @@ class ContentCategoryPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_content::category');
+        return $user->can('{{ DeleteAny }}');
     }
 
     /**
@@ -63,7 +63,7 @@ class ContentCategoryPolicy
      */
     public function forceDelete(User $user, ContentCategory $contentCategory): bool
     {
-        return $user->can('force_delete_content::category');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class ContentCategoryPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_content::category');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class ContentCategoryPolicy
      */
     public function restore(User $user, ContentCategory $contentCategory): bool
     {
-        return $user->can('restore_content::category');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class ContentCategoryPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_content::category');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class ContentCategoryPolicy
      */
     public function replicate(User $user, ContentCategory $contentCategory): bool
     {
-        return $user->can('replicate_content::category');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class ContentCategoryPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_content::category');
+        return $user->can('{{ Reorder }}');
     }
 }

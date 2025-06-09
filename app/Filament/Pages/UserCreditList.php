@@ -6,10 +6,13 @@ namespace App\Filament\Pages;
 
 use App\Filament\Widgets\UserCreditBalance;
 use App\Filament\Widgets\UserSendCreditInfo;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Pages\Page;
 
 class UserCreditList extends Page
 {
+    use HasPageShield;
+
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
     protected static ?string $title = 'Finance';

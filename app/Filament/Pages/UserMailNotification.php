@@ -6,6 +6,7 @@ namespace App\Filament\Pages;
 
 use App\Models\SportList;
 use App\Models\UserSetting;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserMailNotification extends Page implements HasForms
 {
     use InteractsWithForms;
+    use HasPageShield;
 
     protected static ?int $navigationSort = 37;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';

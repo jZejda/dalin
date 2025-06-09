@@ -55,7 +55,7 @@ class SportClassDefinitionPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_sport::class::definition');
+        return $user->can('{{ DeleteAny }}');
     }
 
     /**
@@ -63,7 +63,7 @@ class SportClassDefinitionPolicy
      */
     public function forceDelete(User $user, SportClassDefinition $sportClassDefinition): bool
     {
-        return $user->can('force_delete_sport::class::definition');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class SportClassDefinitionPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_sport::class::definition');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class SportClassDefinitionPolicy
      */
     public function restore(User $user, SportClassDefinition $sportClassDefinition): bool
     {
-        return $user->can('restore_sport::class::definition');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class SportClassDefinitionPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_sport::class::definition');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class SportClassDefinitionPolicy
      */
     public function replicate(User $user, SportClassDefinition $sportClassDefinition): bool
     {
-        return $user->can('replicate_sport::class::definition');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class SportClassDefinitionPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_sport::class::definition');
+        return $user->can('{{ Reorder }}');
     }
 }

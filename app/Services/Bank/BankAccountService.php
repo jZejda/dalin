@@ -8,13 +8,12 @@ use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Mail\UserCreditChange;
-use App\Models\BankAccount;
 use App\Models\BankTransaction;
 use App\Models\User;
 use App\Models\UserCredit;
-use App\Services\Bank\Connector\MonetaBank;
 use App\Services\Bank\Enums\TransactionIndicator;
 use App\Services\Bank\MatchRules\CompareRule;
+use App\Shared\Helpers\BankTransactionHelper;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Str;
@@ -31,23 +30,28 @@ final class BankAccountService
             $bankTransactionVariableSymbol = Str::trim($transaction->variable_symbol);
 
             if ($bankTransactionVariableSymbol !== null) {
+
+                $searchingUserVariableSymbol = '';
+
                 if ($compareRule->variablePrefix !== null) {
                     $prefixLength = strlen($compareRule->variablePrefix);
-                    $bankTransactionVariableSymbol = substr($bankTransactionVariableSymbol, $prefixLength);
+                    $searchingUserVariableSymbol = substr($bankTransactionVariableSymbol, $prefixLength);
                 }
 
                 $userByVariableSymbol = User::query()
-                    ->where('payer_variable_symbol', '=', $bankTransactionVariableSymbol)
+                    ->where('payer_variable_symbol', '=', $searchingUserVariableSymbol)
                     ->where('active', '=', 1)
                     ->get();
 
                 if (count($userByVariableSymbol) === 1) {
                     /** @var User $user */
                     $user = $userByVariableSymbol[0];
+                    $userVariableSymbol = $compareRule->variablePrefix . $user->payer_variable_symbol;
 
-                    $userCredit = $this->storeCreditToUser($user, $transaction);
-                    $this->sendUserEmail($user, $userCredit);
-
+                    if (BankTransactionHelper::compareVariableSymbol($bankTransactionVariableSymbol, $userVariableSymbol)) {
+                        $userCredit = $this->storeCreditToUser($user, $transaction);
+                        $this->sendUserEmail($user, $userCredit);
+                    }
                 }
             }
         }

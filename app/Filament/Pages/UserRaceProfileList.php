@@ -7,6 +7,7 @@ namespace App\Filament\Pages;
 use App\Enums\AppRoles;
 use App\Filament\Pages\Actions\ExportUserRaceProfileData;
 use App\Shared\Helpers\AppHelper;
+use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Pages\Page;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 
 class UserRaceProfileList extends Page
 {
+    use HasPageShield;
+
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?string $title = 'Registrace';
     protected static ?string $navigationGroup = 'Správa';

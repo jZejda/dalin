@@ -55,7 +55,7 @@ class UserCreditPolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_user::credit');
+        return $user->can('{{ DeleteAny }}');
     }
 
     /**
@@ -63,7 +63,7 @@ class UserCreditPolicy
      */
     public function forceDelete(User $user, UserCredit $userCredit): bool
     {
-        return $user->can('force_delete_user::credit');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class UserCreditPolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_user::credit');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class UserCreditPolicy
      */
     public function restore(User $user, UserCredit $userCredit): bool
     {
-        return $user->can('restore_user::credit');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class UserCreditPolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_user::credit');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class UserCreditPolicy
      */
     public function replicate(User $user, UserCredit $userCredit): bool
     {
-        return $user->can('replicate_user::credit');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class UserCreditPolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_user::credit');
+        return $user->can('{{ Reorder }}');
     }
 }

@@ -55,7 +55,7 @@ class PagePolicy
      */
     public function deleteAny(User $user): bool
     {
-        return $user->can('delete_any_page');
+        return $user->can('{{ DeleteAny }}');
     }
 
     /**
@@ -63,7 +63,7 @@ class PagePolicy
      */
     public function forceDelete(User $user, Page $page): bool
     {
-        return $user->can('force_delete_page');
+        return $user->can('{{ ForceDelete }}');
     }
 
     /**
@@ -71,7 +71,7 @@ class PagePolicy
      */
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_page');
+        return $user->can('{{ ForceDeleteAny }}');
     }
 
     /**
@@ -79,7 +79,7 @@ class PagePolicy
      */
     public function restore(User $user, Page $page): bool
     {
-        return $user->can('restore_page');
+        return $user->can('{{ Restore }}');
     }
 
     /**
@@ -87,7 +87,7 @@ class PagePolicy
      */
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_page');
+        return $user->can('{{ RestoreAny }}');
     }
 
     /**
@@ -95,7 +95,7 @@ class PagePolicy
      */
     public function replicate(User $user, Page $page): bool
     {
-        return $user->can('replicate_page');
+        return $user->can('{{ Replicate }}');
     }
 
     /**
@@ -103,6 +103,6 @@ class PagePolicy
      */
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_page');
+        return $user->can('{{ Reorder }}');
     }
 }

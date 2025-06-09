@@ -4,17 +4,20 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\UserCreditResource\Pages;
 
+use App\Enums\AppRoles;
 use App\Filament\Resources\UserCreditResource;
 use App\Models\SportEvent;
 use App\Services\OrisApiService;
 use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
+use Filament\Actions\ActionGroup;
 use Filament\Pages\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Forms\Components\Grid;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class ListUserCredits extends ListRecords
 {
@@ -25,7 +28,25 @@ class ListUserCredits extends ListRecords
         return [
             Actions\CreateAction::make(),
             $this->getEventOrisBalance(),
+            (Auth::user()?->hasRole([
+                AppRoles::EventMaster,
+                AppRoles::EventOrganizer,
+                AppRoles::BillingSpecialist,
+                AppRoles::SuperAdmin,
+            ])) ? $this->getGroupActions() : ActionGroup::make([]),
         ];
+    }
+
+    protected function getGroupActions(): ActionGroup
+    {
+        return ActionGroup::make(
+            [
+                (new UserCreditResource\Actions\AddUserTransportBillingModal())->getAction(),
+            ]
+        )->button()
+            ->icon('heroicon-o-plus-circle')
+            ->color('gray')
+            ->label('Nový záznam');
     }
 
     public array $data_list = [

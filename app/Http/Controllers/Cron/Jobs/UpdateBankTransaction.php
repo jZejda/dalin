@@ -10,6 +10,7 @@ use App\Services\Bank\BankAccountService;
 use App\Services\Bank\Connector\MonetaBank;
 use App\Services\Bank\Connector\Transaction;
 use App\Services\Bank\MatchRules\ExtraMembershipFeesRule;
+use App\Shared\Helpers\BankTransactionHelper;
 use Carbon\Carbon;
 
 final class UpdateBankTransaction implements CommonCronJobs
@@ -25,7 +26,7 @@ final class UpdateBankTransaction implements CommonCronJobs
                 default => null,
             };
 
-            $bankTransactions = (new $class())->getTransactions($bankAccount, $bankAccount->last_synced);
+            $bankTransactions = (new $class())->getTransactions($bankAccount, $bankAccount->last_synced?->subMinutes(5));
 
             $this->storeTransactions($bankTransactions, $bankAccount->id);
 
@@ -58,8 +59,9 @@ final class UpdateBankTransaction implements CommonCronJobs
 
             $transaction->saveOrFail();
 
-            (new BankAccountService())->matchTransactionToUser($transaction, (new ExtraMembershipFeesRule())->getRule());
+            if (!BankTransactionHelper::hasTransactionUserCredit($transaction)) {
+                (new BankAccountService())->matchTransactionToUser($transaction, (new ExtraMembershipFeesRule())->getRule());
+            }
         }
-
     }
 }

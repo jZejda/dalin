@@ -28,7 +28,7 @@ build: ## Builds the Docker images
 	@$(DOCKER_COMP) build --pull --no-cache
 
 up: ## Start the docker hub in detached mode (no logs)
-	@$(SAIL) up --detach
+	@$(SAIL) up --detach --remove-orphans
 
 down: ## Stop the docker hub
 	@$(SAIL) down --remove-orphans
@@ -39,6 +39,15 @@ bash: ## Connect to PHP container via bash so up and down arrows go to previous 
 clear: ## Clear various caches
 	@$(SAIL) $(ARTISAN) route:clear
 	@$(SAIL) $(ARTISAN) view:clear
+	@$(SAIL) $(ARTISAN) config:clear
+	@$(SAIL) $(ARTISAN) clear-compiled
+	@$(SAIL) $(ARTISAN) permission:cache-reset
+	@$(SAIL) $(COMPOSER) dump-autoload
+	@$(SAIL) $(ARTISAN) optimize
+
+migrate-test-database: ## Migrate test database
+#	@$(SAIL) $(ARTISAN) migrate:rollback --env=testing
+	@$(SAIL) $(ARTISAN) migrate --env=testing --seed
 
 lint: ## Run the PHP linter
 	@$(PINT)
@@ -53,7 +62,7 @@ phpstan: ## Run the PHPStan static analyzer
 	@$(PHPSTAN)	analyse --memory-limit=2G
 
 phpstan-baseline: ## Run the PHPStan static analyzer
-	@$(PHPSTAN)	analyz --generate-baseline
+	@$(PHPSTAN)	analyse --generate-baseline
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'

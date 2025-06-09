@@ -114,7 +114,7 @@ return [
         ],
         'event_update' => [
             'active' => true,
-            'hours' => ['22', '04', '06'],
+            'hours' => ['22', '23', '01', '02', '04', '06'],
             'days_in_month' => ['*'],
             'months' => ['*'],
             'days_in_week' => ['*'],

@@ -56,6 +56,10 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $last_update
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ *
+ * @property-read string $sport_event_oris_compact_title
+ * @property-read string $sport_event_oris_title
+ * @property-read string $sport_event_last_cost_calculate
  */
 class SportEvent extends Model
 {

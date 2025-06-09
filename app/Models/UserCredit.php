@@ -33,6 +33,7 @@ use Illuminate\Support\Carbon;
  * @property UserCreditType $credit_type
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+
  * @property-read User|null $sourceUser
  * @property-read SportEvent|null $sportEvent
  * @property-read SportService|null $sportService

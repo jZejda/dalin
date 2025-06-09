@@ -6,6 +6,29 @@ The system uses an external API from the [ORIS](https://oris.orientacnisporty.cz
 - [📢 &nbsp;Release Notes](https://jirizejda.cz/dalin/changelog/)
 - [✨ &nbsp;Used by AMB orienteering club](https://abmbrno.cz)
 
+> [!WARNING]
+> Pro dokumentaci v češtině prosím navštivte stránku níže.
+> - [🇨🇿 &nbsp;Popis v Češtině](https://github.com/jZejda/dalin/blob/develop/README-CZ.md)
+
+## Show Demo
+
+⚡ This project is presented in [ABM Brno](https://abmbrno.cz/) orienteering club.
+
+📘 Documentation on this project may show on [project page](https://jirizejda.cz/dalin/).
+
+![Dalin - Races](https://jirizejda.cz/images/dalin.png)
+
+## Based on
+
+- PHP v8.3
+- MySql 8* and Up
+- [Laravel](https://laravel.com/) - PHP framework acctualy in version 11.x
+- [Filamentphp](https://filamentphp.com/) - in version 3.x
+- [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework
+    - [FLowbite](https://flowbite.com/) - open-source tailwind css library
+- [Livewire](https://laravel-livewire.com/) - Livewire is a full-stack framework for non fronted programmers
+- [Alpine.Js](https://alpinejs.dev/) - lightweight, JavaScript framework
+
 ## Setup
 
 Follow this instructions to install the project for local development:
@@ -36,23 +59,6 @@ Follow this instructions to install the project for local development:
 13. Login into application under `http://localhost/admin/login` with credentilas from `database/seeders/UserTableSeeder.php`
 
 I recommend use `make` bash tool in root of project.
-
-## Show Demo
-
-⚡ This project is presented in [ABM Brno](https://abmbrno.cz/) orienteering club.
-
-📘 Documentation on this project may show on [project page](https://jirizejda.cz/dalin/).
-
-## Based on
-
-- PHP v8.3
-- MySql 8* and Up
-- [Laravel](https://laravel.com/) - PHP framework acctualy in version 11.x
-- [Filamentphp](https://filamentphp.com/) - in version 3.x
-- [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework
-  - [FLowbite](https://flowbite.com/) - open-source tailwind css library
-- [Livewire](https://laravel-livewire.com/) - Livewire is a full-stack framework for non fronted programmers
-- [Alpine.Js](https://alpinejs.dev/) - lightweight, JavaScript framework
 
 ## License
 
