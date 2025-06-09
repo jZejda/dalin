@@ -10,7 +10,7 @@
         "orienteering"
     ],
     "license": "MIT",
-    "version": "11.3",
+    "version": "11.4",
     "require": {
         "php": "^8.3",
         "ext-intl": "*",

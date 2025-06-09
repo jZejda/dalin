@@ -48,7 +48,7 @@ class AddUserTransportBillingModal
                 $userCreditFrom->user_id = (integer)$data['related_user_id'];
                 $userCreditFrom->related_user_id = (integer)$data['user_id'];
                 $userCreditFrom->source_user_id = Auth()->user()?->id;
-                $userCreditTo->sport_event_id = (integer)$data['sport_event_id'];
+                $userCreditFrom->sport_event_id = (integer)$data['sport_event_id'];
                 $userCreditFrom->credit_type = UserCreditType::TransferCreditBetweenUsers;
                 $userCreditFrom->source = UserCreditSource::User->value;
                 $userCreditFrom->status = UserCreditStatus::Done;
