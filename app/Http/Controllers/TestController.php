@@ -18,7 +18,7 @@ class TestController extends Controller
     public function test(): void
     {
 
-//        dd(Carbon::now()->addDays(4));
+        //        dd(Carbon::now()->addDays(4));
 
         $sportEvents = DB::table('sport_events')
             ->where(function (Builder $query) {
@@ -38,12 +38,12 @@ class TestController extends Controller
 
         (new UpdateBankTransaction())->run();
 
-//        $transaction = BankTransaction::query()->where('id', '=', 103)->first();
-//
-//
-//        if (!BankTransactionHelper::hasTransactionUserCredit($transaction)) {
-//            (new BankAccountService())->matchTransactionToUser($transaction, (new ExtraMembershipFeesRule())->getRule());
-//        }
+        //        $transaction = BankTransaction::query()->where('id', '=', 103)->first();
+        //
+        //
+        //        if (!BankTransactionHelper::hasTransactionUserCredit($transaction)) {
+        //            (new BankAccountService())->matchTransactionToUser($transaction, (new ExtraMembershipFeesRule())->getRule());
+        //        }
 
         //dd($transaction);
 

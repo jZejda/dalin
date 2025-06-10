@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Resources\UserCreditResource\Pages;
 
 use App\Enums\AppRoles;
+use App\Enums\UserCreditType;
+use App\Filament\Resources\UserCreditResource\Actions\AddUserTransferBillingModal;
 use App\Filament\Resources\UserCreditResource;
 use App\Models\SportEvent;
 use App\Services\OrisApiService;
@@ -41,7 +43,14 @@ class ListUserCredits extends ListRecords
     {
         return ActionGroup::make(
             [
-                (new UserCreditResource\Actions\AddUserTransportBillingModal())->getAction(),
+                (new AddUserTransferBillingModal())->getAction(
+                    AddUserTransferBillingModal::ACTION_ADD_USER_TRANSPORT_BILLING,
+                    UserCreditType::TransportBilling
+                ),
+                (new AddUserTransferBillingModal())->getAction(
+                    AddUserTransferBillingModal::ACTION_ADD_USER_TRANSFER_BILLING,
+                    UserCreditType::TransferCreditBetweenUsers
+                ),
             ]
         )->button()
             ->icon('heroicon-o-plus-circle')

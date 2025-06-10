@@ -8,7 +8,6 @@ use App\Enums\AppRoles;
 use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
-use App\Models\BankTransaction;
 use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserCredit;
@@ -22,22 +21,29 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Illuminate\Support\Facades\Auth;
 
-class AddUserTransportBillingModal
+class AddUserTransferBillingModal
 {
-    public function getAction(): Action
+    public const string ACTION_ADD_USER_TRANSPORT_BILLING = 'addUserTransportBilling';
+    public const string ACTION_ADD_USER_TRANSFER_BILLING = 'addUserTransferBilling';
+
+    public function getAction(string $actionName, UserCreditType $userCreditType): Action
     {
-        return Action::make('addUserTransportBilling')
-            ->action(function (array $data): void {
+        return $this->createAction($actionName, $userCreditType);
+    }
+
+    private function createAction(string $actionName, UserCreditType $userCreditType): Action
+    {
+        return Action::make($actionName)
+            ->action(function (array $data) use ($userCreditType): void {
                 $userCreditTo = new UserCredit();
                 $userCreditTo->amount = $data['amount'];
                 $userCreditTo->currency = UserCredit::CURRENCY_CZK;
-                $userCreditTo->user_id = (integer)$data['user_id'];
-                $userCreditTo->related_user_id = (integer)$data['related_user_id'];
+                $userCreditTo->user_id = (int)$data['user_id'];
+                $userCreditTo->related_user_id = (int)$data['related_user_id'];
                 $userCreditTo->source_user_id = Auth()->user()?->id;
-                $userCreditTo->sport_event_id = (integer)$data['sport_event_id'];
-                $userCreditTo->credit_type = UserCreditType::TransferCreditBetweenUsers;
+                $userCreditTo->sport_event_id = (int)$data['sport_event_id'];
+                $userCreditTo->credit_type = $userCreditType;
                 $userCreditTo->source = UserCreditSource::User->value;
                 $userCreditTo->status = UserCreditStatus::Done;
                 $userCreditTo->saveOrFail();
@@ -45,11 +51,11 @@ class AddUserTransportBillingModal
                 $userCreditFrom = new UserCredit();
                 $userCreditFrom->amount = -$data['amount'];
                 $userCreditFrom->currency = UserCredit::CURRENCY_CZK;
-                $userCreditFrom->user_id = (integer)$data['related_user_id'];
-                $userCreditFrom->related_user_id = (integer)$data['user_id'];
+                $userCreditFrom->user_id = (int)$data['related_user_id'];
+                $userCreditFrom->related_user_id = (int)$data['user_id'];
                 $userCreditFrom->source_user_id = Auth()->user()?->id;
-                $userCreditFrom->sport_event_id = (integer)$data['sport_event_id'];
-                $userCreditFrom->credit_type = UserCreditType::TransferCreditBetweenUsers;
+                $userCreditFrom->sport_event_id = (int)$data['sport_event_id'];
+                $userCreditFrom->credit_type = $userCreditType;
                 $userCreditFrom->source = UserCreditSource::User->value;
                 $userCreditFrom->status = UserCreditStatus::Done;
                 $userCreditFrom->saveOrFail();
@@ -82,10 +88,34 @@ class AddUserTransportBillingModal
 
             })
             ->color('gray')
-            ->label(__('user-credit.actions.transport_billing.action_group_label'))
-            ->icon('heroicon-o-truck')
-            ->modalHeading(__('user-credit.actions.transport_billing.modal_heading'))
-            ->modalDescription(__('user-credit.actions.transport_billing.modal_description'))
+            ->label(function () use ($userCreditType): string {
+                return match ($userCreditType) {
+                    UserCreditType::TransportBilling => __('user-credit.actions.transport_billing.action_group_label'),
+                    UserCreditType::TransferCreditBetweenUsers => __('user-credit.actions.transfer_between_users_billing.action_group_label'),
+                    default => 'Přesun financi mezi členy',
+                };
+            })
+            ->icon(function () use ($userCreditType): string {
+                return match ($userCreditType) {
+                    UserCreditType::TransportBilling => 'heroicon-o-truck',
+                    UserCreditType::TransferCreditBetweenUsers => 'heroicon-o-arrows-right-left',
+                    default => 'heroicon-o-cube',
+                };
+            })
+            ->modalHeading(function () use ($userCreditType): string {
+                return match ($userCreditType) {
+                    UserCreditType::TransportBilling => __('user-credit.actions.transport_billing.modal_heading'),
+                    UserCreditType::TransferCreditBetweenUsers => __('user-credit.actions.transfer_between_users_billing.modal_heading'),
+                    default => 'Přesun financi mezi členy',
+                };
+            })
+            ->modalDescription(function () use ($userCreditType): string {
+                return match ($userCreditType) {
+                    UserCreditType::TransportBilling => __('user-credit.actions.transport_billing.modal_description'),
+                    UserCreditType::TransferCreditBetweenUsers => __('user-credit.actions.transfer_between_users_billing.modal_description'),
+                    default => 'Přesun financi mezi členy',
+                };
+            })
             ->modalSubmitActionLabel(__('user-credit.actions.transport_billing.modal_submit_action_label'))
             ->visible(
                 auth()->user() !== null && auth()->user()->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster])
@@ -97,7 +127,9 @@ class AddUserTransportBillingModal
                         ->label(__('user-credit.form.type_title'))
                         ->options(UserCreditType::enumArray())
                         ->debounce()
-                        ->default(UserCreditType::TransportBilling)
+                        ->default( function() use ($userCreditType): string {
+                            return $userCreditType->value;
+                        })
                         ->disabled()
                         ->required()
                         ->live(),
