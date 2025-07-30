@@ -10,7 +10,7 @@
         "orienteering"
     ],
     "license": "MIT",
-    "version": "11.4",
+    "version": "11.4.1",
     "require": {
         "php": "^8.3",
         "ext-intl": "*",
@@ -41,7 +41,6 @@
         "symfony/serializer": "^7.3"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^v3.5",
         "fakerphp/faker": "^1.24",
         "filament/upgrade": "^3.3",
         "larastan/larastan": "^v2.11",
@@ -76,9 +75,7 @@
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
             "@php artisan filament:upgrade",
-            "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "@php artisan ide-helper:generate",
-            "@php artisan ide-helper:meta"
+            "Illuminate\\Foundation\\ComposerScripts::postUpdate"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

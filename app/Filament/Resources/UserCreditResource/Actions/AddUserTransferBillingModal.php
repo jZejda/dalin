@@ -127,7 +127,7 @@ class AddUserTransferBillingModal
                         ->label(__('user-credit.form.type_title'))
                         ->options(UserCreditType::enumArray())
                         ->debounce()
-                        ->default( function() use ($userCreditType): string {
+                        ->default(function () use ($userCreditType): string {
                             return $userCreditType->value;
                         })
                         ->disabled()

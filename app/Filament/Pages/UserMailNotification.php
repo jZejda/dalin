@@ -12,6 +12,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Database\Eloquent\Model;
@@ -29,7 +30,7 @@ class UserMailNotification extends Page implements HasForms
     protected static ?string $navigationGroup = 'Uživatel';
     protected static ?string $title = 'Nastavení notifikací';
 
-    private const DEFAULT_TRIGGER_EVENT = 17;
+    private const int DEFAULT_TRIGGER_EVENT = 17;
 
     public array $news = [];
     public int $news_time_trigger = self::DEFAULT_TRIGGER_EVENT;
@@ -60,7 +61,9 @@ class UserMailNotification extends Page implements HasForms
     }
     public function submit(): void
     {
-        $this->form->getState();
+        /** @var Form $form */
+        $form = $this->form;
+        $form->getState();
 
         $mailNotification = UserSetting::where('user_id', '=', auth()->user()?->id)
             ->where('type', '=', 'mail')

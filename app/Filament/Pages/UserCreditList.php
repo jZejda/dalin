@@ -34,7 +34,7 @@ class UserCreditList extends Page
     {
         return [
             ActionGroup::make(
-            [
+                [
                 (new AddUserTransferBillingModal())->getAction(
                     AddUserTransferBillingModal::ACTION_ADD_USER_TRANSPORT_BILLING,
                     UserCreditType::TransportBilling
@@ -44,7 +44,7 @@ class UserCreditList extends Page
                     UserCreditType::TransferCreditBetweenUsers
                 ),
             ]
-        )->button()
+            )->button()
             ->icon('heroicon-o-plus-circle')
             ->color('gray')
             ->label('Nový záznam')
