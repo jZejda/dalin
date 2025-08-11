@@ -96,6 +96,8 @@ class UserCreditRelationManager extends RelationManager
                 TextColumn::make('sourceUser.name')
                     ->label(__('user-credit.table.source_user_title')),
             ])
+            ->defaultPaginationPageOption(25)
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('sport_event_id')
                     ->label('Závod')

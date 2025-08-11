@@ -21,12 +21,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/register', function () {
+   return redirect(url('/'));
+});
+
 Route::get('/', function () {
     return view('welcome', ['sponsorSectionId' => 0]);
 });
 
-//Route::get('/email/', function(){
-//    return new AddUpdateSportEvent();
+//Route::get('/', function () {
+//    return redirect()->route('filament.admin.auth.login');
 //});
 
 Route::get('/cron-scheduler/'.config('site-config.cron_url_key'), function () {

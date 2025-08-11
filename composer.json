@@ -12,7 +12,7 @@
     "license": "MIT",
     "version": "11.4.1",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
         "ext-intl": "*",
         "ext-libxml": "*",
         "ext-simplexml": "*",
@@ -24,7 +24,6 @@
         "filament/notifications": "^3.3",
         "filament/tables": "^3.3",
         "guzzlehttp/guzzle": "^7.8",
-        "laravel/breeze": "^v2.3",
         "laravel/framework": "^v11.45",
         "laravel/sanctum": "^v4.0",
         "laravel/tinker": "^2.10",

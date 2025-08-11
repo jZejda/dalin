@@ -160,8 +160,8 @@ class UserResource extends Resource implements HasShieldPermissions
     public static function getRelations(): array
     {
         return [
-            RelationManagers\UserRaceProfilesRelationManager::class,
             RelationManagers\UserCreditRelationManager::class,
+            RelationManagers\UserRaceProfilesRelationManager::class,
         ];
     }
 
