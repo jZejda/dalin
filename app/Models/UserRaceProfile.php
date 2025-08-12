@@ -52,6 +52,7 @@ class UserRaceProfile extends Model
         'email',
         'phone',
         'gender',
+        'street',
         'city',
         'zip',
         'si',

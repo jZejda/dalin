@@ -169,7 +169,7 @@ class PageResource extends Resource implements HasShieldPermissions
                     EditAction::make(),
                     DeleteAction::make(),
                 ])
-                    ->icon('heroicon-m-ellipsis-horizontal')
+                    ->icon('heroicon-m-ellipsis-vertical')
                     ->tooltip(__('app.tables.actions_tooltip')),
             ])
             ->recordUrl(

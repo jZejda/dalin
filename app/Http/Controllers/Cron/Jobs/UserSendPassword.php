@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Mail;
 
 class UserSendPassword
 {
-    public function sendNewPassword(User $user, string $password = null, string $type = UserPasswordSend::ACTION_SEND_PASSWORD): void
+    public function sendNewPassword(User $user, ?string $password = null, string $type = UserPasswordSend::ACTION_SEND_PASSWORD): void
     {
         if (is_null($password)) {
             $password = substr(sha1((string)time()), 0, 10);

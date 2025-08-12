@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
@@ -93,13 +95,13 @@ class UserResource extends Resource implements HasShieldPermissions
                                 ->multiple()
                                 ->searchable()
                                 ->relationship('roles', 'name')
-                                ->preload(),
-                            Select::make('permissions')
-                                ->label('Oprávnění')
-                                ->multiple()
-                                ->searchable()
-                                ->relationship('permissions', 'name')
-                                ->preload(),
+                                ->preload()
+//                            Select::make('permissions')
+//                                ->label('Oprávnění')
+//                                ->multiple()
+//                                ->searchable()
+//                                ->relationship('permissions', 'name')
+//                                ->preload(),
                         ])->columnSpan([
                             'sm' => 1,
                             'md' => 4,

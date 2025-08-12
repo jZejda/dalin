@@ -28,10 +28,10 @@ class SportEventExport extends Model
 {
     use HasFactory;
 
-    public const ENTRY_LIST_CATEGORY = 'eventEntryListCat';
-    public const RESULT_LIST_CATEGORY = 'resultEntryListCat';
+    public const string ENTRY_LIST_CATEGORY = 'eventEntryListCat';
+    public const string RESULT_LIST_CATEGORY = 'resultEntryListCat';
 
-    public const FILE_XML_IOF_V3 = 'xml_iof_v3_file';
+    public const string FILE_XML_IOF_V3 = 'xml_iof_v3_file';
 
     protected $fillable = [
         'title',

@@ -48,20 +48,30 @@ class PostResource extends Resource implements HasShieldPermissions
                     Section::make()
                         ->schema([
                             TextInput::make('title')
+                                ->label('Nadpis')
                                 ->required(),
 //                                ->reactive()
 //                                ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
 //                                    $set('slug', Str::slug($state));
 //                                }),
-                            Grid::make()->schema([
-                                MarkdownEditor::make('editorial')
-                            ])->columns(1),
 
                             // Markdown editor
                             Grid::make()->schema([
                                 MarkdownEditor::make('content')
+                                    ->label('Obsah novinky')
                                     ->required()
                             ])->columns(1),
+
+                            Section::make('Dodatečné informace')
+                                ->description('Editorial pro souhrn novinky - nepovinné - dostupné po rokliknutí')
+                                ->schema([
+                                    Grid::make()->schema([
+                                        MarkdownEditor::make('editorial')
+                                    ])->columns(1),
+                                ])
+                                ->collapsible()
+                                ->persistCollapsed()
+                                ->id('post-editorial'),
                         ])
                         ->columns(1)
                         ->columnSpan([
@@ -73,8 +83,10 @@ class PostResource extends Resource implements HasShieldPermissions
                     Section::make()
                         ->schema([
                             Toggle::make('private')->inline()
+                                ->label('Interní novinka')
                                 ->onIcon('heroicon-m-bolt')
-                                ->offIcon('heroicon-s-user'),
+                                ->offIcon('heroicon-s-user')
+                                ->default(true),
                             Select::make('user_id')
                                 ->label('Author')
                                 ->options(User::all()->pluck('name', 'id'))
@@ -85,7 +97,7 @@ class PostResource extends Resource implements HasShieldPermissions
                                 ->label('Formát')
                                 ->options(
                                     [
-                                        1 => 'HTML',
+//                                        1 => 'HTML',
                                         2 => 'Markdown',
                                     ]
                                 )->default(2)
@@ -137,7 +149,7 @@ class PostResource extends Resource implements HasShieldPermissions
                     EditAction::make(),
                     DeleteAction::make(),
                 ])
-                    ->icon('heroicon-m-ellipsis-horizontal')
+                    ->icon('heroicon-m-ellipsis-vertical')
                     ->tooltip(__('app.tables.actions_tooltip')),
             ]);
     }

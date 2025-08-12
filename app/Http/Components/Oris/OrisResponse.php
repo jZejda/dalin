@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Serializer;
 
 class OrisResponse
 {
-    public const ORIS_DEFAULT_DATA = 'Data';
+    public const string ORIS_DEFAULT_DATA = 'Data';
 
     public function checkOrisResponse(Response $response): bool
     {

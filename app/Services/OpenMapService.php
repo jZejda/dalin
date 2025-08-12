@@ -13,15 +13,15 @@ final class OpenMapService
 {
     private OpenMapResponse $openMapResponse;
 
-    public const OPEN_MAP_API_URL = 'https://api.openweathermap.org/data/2.5/forecast';
-    public const OPEN_MAP_DEFAULT_FORMAT = 'json';
+    public const string OPEN_MAP_API_URL = 'https://api.openweathermap.org/data/2.5/forecast';
+    public const string OPEN_MAP_DEFAULT_FORMAT = 'json';
 
-    public function __construct(OpenMapResponse $openMapResponse = null)
+    public function __construct(?OpenMapResponse $openMapResponse = null)
     {
         $this->openMapResponse = $openMapResponse ?? new OpenMapResponse();
     }
 
-    public function getWeather(float $lat = null, float $lon = null): BaseResponse
+    public function getWeather(?float $lat = null, ?float $lon = null): BaseResponse
     {
         $getParams = [
             'lat' => $lat,

@@ -32,10 +32,10 @@ use Illuminate\Support\Carbon;
 
 class Page extends Model
 {
-    public const STATUS_OPEN = 'open';
-    public const STATUS_CLOSED = 'close';
-    public const STATUS_DRAFT = 'draft';
-    public const STATUS_ARCHIVE = 'archive';
+    public const string STATUS_OPEN = 'open';
+    public const string STATUS_CLOSED = 'close';
+    public const string STATUS_DRAFT = 'draft';
+    public const string STATUS_ARCHIVE = 'archive';
 
     protected $casts = [
         'page_menu' => 'boolean',

@@ -4,7 +4,7 @@ return [
 
     'title' => 'Přihlášení',
 
-    'heading' => 'Přihlašte se k Vašemu účtu',
+    'heading' => 'Přihlášení do klientské sekce',
 
     'buttons' => [
 

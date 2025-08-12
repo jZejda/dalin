@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/register', function () {
-   return redirect(url('/'));
+    return redirect(url('/'));
 });
 
 Route::get('/', function () {
