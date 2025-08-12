@@ -32,7 +32,7 @@ final class UserSendMail
 
                 Notification::make()
                     ->title('E-mail rozeslán')
-                    ->body('Přihlášeným uživatelům byl odeslán e-mail.')
+                    ->body('Cílovým uživatelům byl odeslán e-mail.')
                     ->success()
                     ->seconds(8)
                     ->send();
@@ -59,6 +59,7 @@ final class UserSendMail
                             ->label('Adresa pro odpovědi')
                             ->default(Auth::user()?->email),
                         Select::make('targetUsers')
+                            ->label('Cílová skupina uživatelů podle role')
                             ->multiple()
                             ->options([
                                 'all' => 'Všem aktivním uživatelům',

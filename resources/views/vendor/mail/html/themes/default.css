@@ -10,7 +10,7 @@ body *:not(html):not(style):not(br):not(tr):not(code) {
 
 body {
     -webkit-text-size-adjust: none;
-    background-color: #282828;
+    background-color: #ffffff;
     color: #718096;
     height: 100%;
     line-height: 1.4;
@@ -106,7 +106,7 @@ hr {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #282828;
+    background-color: #ffffff;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -129,7 +129,7 @@ hr {
 }
 
 .header a {
-    color: #ffffff;
+    color: #1F2937;
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
@@ -149,7 +149,7 @@ hr {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #282828;
+    background-color: #ffffff;
     border-bottom: 1px solid #edf2f7;
     border-top: 1px solid #edf2f7;
     margin: 0;
