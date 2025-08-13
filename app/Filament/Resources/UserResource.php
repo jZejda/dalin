@@ -22,8 +22,10 @@ use Filament\Tables;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextColumn\TextColumnSize;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Filament\Notifications\Notification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Hash;
 use Filament\Actions\StaticAction;
 use Illuminate\Support\HtmlString;
@@ -119,6 +121,12 @@ class UserResource extends Resource implements HasShieldPermissions
                 TextColumn::make('name')
                     ->label('Jméno')
                     ->size(TextColumnSize::Large)
+                    ->color(function (User $model): string {
+                        if (!$model->active) {
+                            return 'danger';
+                        }
+                        return 'default';
+                    })
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
@@ -144,11 +152,22 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->dateTime(AppHelper::DATE_FORMAT),
             ])
             ->filters([
-                //
+                TernaryFilter::make('active')
+                    ->label(__('users.table_filter.users'))
+                    ->placeholder(__('users.table_filter.all_users'))
+                    ->trueLabel(__('users.table_filter.active_users'))
+                    ->falseLabel(__('users.table_filter.disable_users'))
+                    ->queries(
+                        true: fn (Builder $query) => $query->where('active', '=', 1),
+                        false: fn (Builder $query) => $query->where('active', '=', 0),
+                        blank: fn (Builder $query) => $query,
+                    )
+                    ->default(),
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     EditAction::make(),
+                    self::activeDeactiveUser(),
                     self::resetUserPasswordAction(),
                 ]),
             ])
@@ -191,7 +210,7 @@ class UserResource extends Resource implements HasShieldPermissions
     {
         return Tables\Actions\Action::make('Resetovat heslo')
             ->icon('heroicon-m-arrow-uturn-right')
-            ->color('info')
+            ->color('danger')
             ->modalHeading('Nové heslo')
             ->modalDescription(function (User $user): HtmlString {
                 return new HtmlString('Resetuje heslo uživateli.<br><br> Po potvrzení se uživatelovi: '. $user->userIdentification .' <strong>zašle e-mail s novým heslem.</strong>');
@@ -210,6 +229,39 @@ class UserResource extends Resource implements HasShieldPermissions
                 Notification::make()
                     ->title('Reset hesla')
                     ->body('Nové heslo bylo resetováno a odesláno uživateli na jeho e-mailovou schránku: ' . $user->email . '.')
+                    ->success()
+                    ->send();
+            });
+    }
+
+    private static function activeDeactiveUser(): StaticAction
+    {
+        return Tables\Actions\Action::make('Změnit stav')
+            ->icon('heroicon-m-power')
+            ->modalHeading('Změnit stav uživatele')
+            ->modalDescription(function (User $user): HtmlString {
+                $currentStatus = $user->active ? 'aktivní' : 'neaktivní';
+                return new HtmlString("Aktuální stav uživatele {$user->userIdentification} je <strong>{$currentStatus}</strong>.<br>Opravdu chcete změnit jeho stav?");
+            })
+            ->modalIcon('heroicon-m-power')
+            ->form([
+                Select::make('active')
+                    ->label('Stav uživatele')
+                    ->options([
+                        1 => 'Aktivní',
+                        0 => 'Neaktivní'
+                    ])
+                    ->default(fn (User $user) => (int)$user->active)
+                    ->required(),
+            ])
+            ->action(function (User $user, array $data): void {
+                $user->active = $data['active'];
+                $user->save();
+
+                $status = $data['active'] ? 'aktivován' : 'deaktivován';
+                Notification::make()
+                    ->title('Změna stavu uživatele')
+                    ->body("Uživatel {$user->userIdentification} byl {$status}.")
                     ->success()
                     ->send();
             });

@@ -10,7 +10,7 @@ body *:not(html):not(style):not(br):not(tr):not(code) {
 
 body {
     -webkit-text-size-adjust: none;
-    background-color: #ffffff;
+    background-color: #edf0f2;
     color: #718096;
     height: 100%;
     line-height: 1.4;
@@ -106,7 +106,7 @@ hr {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #ffffff;
+    background-color: #edf0f2;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -149,7 +149,7 @@ hr {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
-    background-color: #ffffff;
+    background-color: #edf0f2;
     border-bottom: 1px solid #edf2f7;
     border-top: 1px solid #edf2f7;
     margin: 0;
@@ -163,7 +163,7 @@ hr {
     -premailer-width: 650px;
     background-color: #ffffff;
     border-color: #e8e5ef;
-    border-radius: 2px 2px 0 0;
+    border-radius: 4px 4px 0 0;
     border-width: 1px;
     box-shadow: 0 2px 0 rgba(0, 0, 150, 0.025), 2px 4px 0 rgba(0, 0, 150, 0.015);
     margin: 0 auto;
@@ -267,7 +267,7 @@ hr {
 .after-cell {
     padding: 0;
     background-color: #20d65f;
-    border-radius: 0 0 2px 2px;
+    border-radius: 0 0 4px 4px;
 }
 
 /* Buttons */
