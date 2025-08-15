@@ -31,7 +31,6 @@ use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-
 class PostResource extends Resource implements HasShieldPermissions
 {
     public static ?int $navigationSort = 65;
@@ -201,13 +200,11 @@ class PostResource extends Resource implements HasShieldPermissions
 
         return Action::make('sendNewsEmail')
             ->action(function (array $data, Post $record): void {
-                /** @var Post $post */
-
-                new SendNewsMail(
+                (new SendNewsMail(
                     $record,
                     $data['subject'],
                     $data['selection'],
-                )->send();
+                ))->send();
 
                 Notification::make()
                     ->title('E-mail novinky rozeslán')
@@ -222,13 +219,13 @@ class PostResource extends Resource implements HasShieldPermissions
             ->modalHeading('Pošle e-mailovou zprávu k novice')
             ->modalDescription('E-mail je odeslán sepárátně každému uživateli zvlášť. Pokud zvolíte zaslat zprávu všem, bude tato odeslána bez ohledu na uživatelské preferenci.')
             ->modalSubmitActionLabel('Odeslat')
-            ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::Redactor->value]))
+            ->visible(auth()->user()?->hasRole([AppRoles::SuperAdmin->value, AppRoles::Redactor->value]) ?? false)
             ->form([
                 Grid::make(1)
                     ->schema([
                         TextInput::make('subject')
                             ->label('Předmět zprávy')
-                            ->default(fn(Post $record ): string => $record->title)
+                            ->default(fn (Post $record): string => $record->title)
                             ->required(),
                         Select::make('selection')
                             ->label('Zvolte možnost')

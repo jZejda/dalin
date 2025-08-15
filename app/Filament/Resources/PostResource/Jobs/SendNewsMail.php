@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\PostResource\Jobs;
 
-use App\Mail\UserEntryNotification;
+use App\Mail\NewPost;
 use App\Models\Post;
+use App\Models\User;
 use App\Models\UserSetting;
-use DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -22,33 +22,31 @@ class SendNewsMail
         $this->post = $post;
         $this->subject = $subject;
         $this->selection = $selection;
-
     }
 
     public function send(): void
     {
-        /** @var UserSetting[]|null $userSetting */
-        $userSetting = null;
-
         if ($this->selection === 1) {
-            $userSettings = UserSetting::query()
+            $userWithPrivateNotes = UserSetting::query()
+                ->select('user_id')
                 ->whereJsonContains('options->news', '1')
+                ->get();
+
+            $users = User::query()
+                ->wherein('id', $userWithPrivateNotes->pluck('user_id')->toArray())
+                ->where('active', '=', 1)
+                ->get();
+        } else {
+            $users = User::query()
+                ->where('active', '=', 1)
                 ->get();
         }
 
-        if ($userSetting !== null) {
-            foreach ($userSetting as $setting) {
+        /** @var User[] $users */
+        foreach ($users as $user) {
+            Mail::to($user)->queue(new NewPost($this->post, $this->subject));
 
-                $user = DB::table('users')->where('id', '=', $setting->user_id)->first();
-
-                Mail::to($user)
-                    ->queue(new UserEntryNotification(
-                        $this->sportEvent,
-                        $this->subject,
-                    ));
-
-            }
-            Log::channel('site')->info('E-mail notifikace');
+            Log::channel('site')->info('E-mail Novinka notifikace pro uzivatele ' . $user->name);
         }
     }
 }
