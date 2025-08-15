@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\AppRoles;
+use App\Filament\Resources\PostResource\Jobs\SendNewsMail;
 use App\Filament\Resources\PostResource\Pages;
 use App\Models\Post;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use Filament\Actions\StaticAction;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
@@ -15,10 +18,11 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\FontWeight;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Table;
@@ -26,7 +30,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 
 class PostResource extends Resource implements HasShieldPermissions
 {
@@ -147,7 +150,8 @@ class PostResource extends Resource implements HasShieldPermissions
                 ActionGroup::make([
                     ViewAction::make(),
                     EditAction::make(),
-                    DeleteAction::make(),
+                    self::sendNewsEmail(),
+                    //DeleteAction::make(),
                 ])
                     ->icon('heroicon-m-ellipsis-vertical')
                     ->tooltip(__('app.tables.actions_tooltip')),
@@ -189,6 +193,52 @@ class PostResource extends Resource implements HasShieldPermissions
             'edit' => Pages\EditPost::route('/{record}/edit'),
             'view' => Pages\ViewPost::route('/{record}'),
         ];
+    }
+
+    public static function sendNewsEmail(): StaticAction
+    {
+
+        return Action::make('sendNewsEmail')
+            ->action(function (array $data, Post $record): void {
+                (new SendNewsMail(
+                    $record,
+                    $data['subject'],
+                    $data['selection'],
+                ))->send();
+
+                Notification::make()
+                    ->title('E-mail novinky rozeslán')
+                    ->body('Zvoleným uživatelům byl odeslán e-mail.')
+                    ->success()
+                    ->seconds(8)
+                    ->send();
+            })
+            ->color('gray')
+            ->label('Pošli e-mail')
+            ->icon('heroicon-s-paper-airplane')
+            ->modalHeading('Pošle e-mailovou zprávu k novice')
+            ->modalDescription('E-mail je odeslán sepárátně každému uživateli zvlášť. Pokud zvolíte zaslat zprávu všem, bude tato odeslána bez ohledu na uživatelské preferenci.')
+            ->modalSubmitActionLabel('Odeslat')
+            ->visible(auth()->user()?->hasRole([AppRoles::SuperAdmin->value, AppRoles::Redactor->value]) ?? false)
+            ->form([
+                Grid::make(1)
+                    ->schema([
+                        TextInput::make('subject')
+                            ->label('Předmět zprávy')
+                            ->default(fn (Post $record): string => $record->title)
+                            ->required(),
+                        Select::make('selection')
+                            ->label('Zvolte možnost')
+                            ->options([
+                                1 => 'Uživatelé kteří mají zájem o novinky',
+                                0 => 'Všem aktivním uživatelům systému'
+                            ])
+                            ->default(1)
+                            ->required(),
+
+                    ]),
+
+            ]);
     }
 
     public static function getPermissionPrefixes(): array
