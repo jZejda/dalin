@@ -219,7 +219,14 @@ class PostResource extends Resource implements HasShieldPermissions
             ->modalHeading('Pošle e-mailovou zprávu k novice')
             ->modalDescription('E-mail je odeslán sepárátně každému uživateli zvlášť. Pokud zvolíte zaslat zprávu všem, bude tato odeslána bez ohledu na uživatelské preferenci.')
             ->modalSubmitActionLabel('Odeslat')
-            ->visible(auth()->user()?->hasRole([AppRoles::SuperAdmin->value, AppRoles::Redactor->value]) ?? false)
+            ->visible(function (): bool {
+                $allowSendEmail = auth()->user()?->hasRole([AppRoles::SuperAdmin->value, AppRoles::Redactor->value]);
+                if ($allowSendEmail === true) {
+                    return true;
+                }
+
+                return false;
+            })
             ->form([
                 Grid::make(1)
                     ->schema([
