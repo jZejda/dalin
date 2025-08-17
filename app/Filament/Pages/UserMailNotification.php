@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Filament\Pages;
 
 use App\Models\SportList;
+use App\Models\User;
 use App\Models\UserSetting;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -26,9 +28,9 @@ class UserMailNotification extends Page implements HasForms
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.user-mail-notification';
     protected static ?string $slug = 'mail-notification';
-    protected static ?string $navigationLabel = 'Nastavení notifikací';
+    protected static ?string $navigationLabel = 'Uživatelská nastavení';
     protected static ?string $navigationGroup = 'Uživatel';
-    protected static ?string $title = 'Nastavení notifikací';
+    protected static ?string $title = 'Uživatelská nastavení';
 
     private const int DEFAULT_TRIGGER_EVENT = 17;
 
@@ -41,9 +43,10 @@ class UserMailNotification extends Page implements HasForms
 
     public array $week_report_by_sport = [];
 
+    public array $users_allow_sing_up_for_race = [];
+
     public function mount(): void
     {
-
         $mailNotification = UserSetting::where('user_id', '=', auth()->user()?->id)
             ->where('type', '=', 'mail')
             ->first();
@@ -57,6 +60,10 @@ class UserMailNotification extends Page implements HasForms
 
             $this->week_report_by_sport = $mailNotification->options['week_report_by_sport'] ?? [];
         }
+
+        $this->users_allow_sing_up_for_race = $mailNotification->options['users_allow_sing_up_for_race'] ?? [];
+
+
 
     }
     public function submit(): void
@@ -85,11 +92,12 @@ class UserMailNotification extends Page implements HasForms
 
         $options['week_report_by_sport'] = $this->week_report_by_sport;
 
+        $options['users_allow_sing_up_for_race'] = $this->users_allow_sing_up_for_race;
+
         if ($mailNotification !== null) {
             $mailNotification->options = $options;
             $mailNotification->save();
         }
-
 
         Notification::make()
             ->title('Nastavení uloženo')
@@ -128,21 +136,14 @@ class UserMailNotification extends Page implements HasForms
     {
         return [
             Section::make('Upozornění na Novinky')
-                ->columns(2)
+                ->columns(1)
                 ->schema([
                     CheckboxList::make('news')
                         ->label('Novinky')
                         ->options([
                             '0' => 'Novinky veřejné',
-                            '1' => 'Novinky interní',
+                            '1' => 'Novinky členské sekce',
                         ]),
-                    TextInput::make('news_time_trigger')
-                        ->label('Přibližná hodina upozornění')
-                        ->numeric()
-                        ->maxValue(24)
-                        ->minValue(0)
-                        ->default(self::DEFAULT_TRIGGER_EVENT),
-
                 ]),
             Section::make('Upozornění na blížící se konec přihlášek k závodům')
                 ->columns(3)
@@ -171,6 +172,17 @@ class UserMailNotification extends Page implements HasForms
                         ->label('Sport')
                         ->options(SportList::all()->pluck('short_name', 'id')),
                 ]),
+            Section::make('Oprávnění k přihlašování')
+                ->description('V nastavení můžete udělit právo přihlašovat všechny vámi spravované registrace vybraným uživatelům. Vhodné například pro rodinné příslušníky, kamarády. Právo můžete kdykoliv odvolat')
+                ->aside()
+                ->schema([
+                    Select::make('users_allow_sing_up_for_race')
+                        ->label('Uživatelé kteří mě mohou přihlašovat a odhlašovat ze závodů')
+                        ->multiple()
+                        ->searchable()
+                        ->options(User::all()->where('active', '=', 1)->pluck('user_identification', 'id'))
+                        ->preload()
+                ])
         ];
     }
 }
