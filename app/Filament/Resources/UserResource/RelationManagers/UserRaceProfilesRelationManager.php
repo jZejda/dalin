@@ -95,7 +95,14 @@ class UserRaceProfilesRelationManager extends RelationManager
                                         ->throw()
                                         ->json('Data');
 
-                                    $firstKeyOfClubUserResponse = array_key_first($orisResponseClubUser);
+                                    $userClubId = null;
+
+                                    foreach ($orisResponseClubUser as $userClub) {
+                                        if ($userClub['RegNo'] === $state) {
+                                            $userClubId = $userClub['ID'];
+                                            break;
+                                        }
+                                    }
 
                                 } catch (RequestException $e) {
                                     Notification::make()
@@ -118,7 +125,7 @@ class UserRaceProfilesRelationManager extends RelationManager
                                 $set('oris_id', $orisResponse['ID'] ?? null);
                                 $set('first_name', $orisResponse['FirstName'] ?? null);
                                 $set('last_name', $orisResponse['LastName'] ?? null);
-                                $set('club_user_id', $orisResponseClubUser[$firstKeyOfClubUserResponse]['ID'] ?? null);
+                                $set('club_user_id', $userClubId);
                             })
                     ),
                 Select::make('gender')
