@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Cron\Jobs;
 use App\Models\BankAccount;
 use App\Models\BankTransaction;
 use App\Services\Bank\BankAccountService;
+use App\Services\Bank\Connector\FioBank;
 use App\Services\Bank\Connector\MonetaBank;
 use App\Services\Bank\Connector\Transaction;
 use App\Services\Bank\MatchRules\ExtraMembershipFeesRule;
@@ -23,6 +24,7 @@ final class UpdateBankTransaction implements CommonCronJobs
         foreach ($bankAccounts as $bankAccount) {
             $class = match ($bankAccount->code) {
                 BankAccount::MONETA_MONEY_BANK => MonetaBank::class,
+                BankAccount::FIO_BANK => FioBank::class,
                 default => null,
             };
 

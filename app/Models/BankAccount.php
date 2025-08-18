@@ -27,6 +27,7 @@ class BankAccount extends Model
     use HasFactory;
 
     public const string MONETA_MONEY_BANK = 'monetaMoneyBank';
+    public const string FIO_BANK = 'fioBank';
 
     /** @var array<string, string> */
     protected $casts = [
