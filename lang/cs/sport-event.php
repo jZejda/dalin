@@ -82,7 +82,7 @@ return [
         SportEventLinkType::ResultsForMastersRanking->value => 'Výsledky pro ranking veteránů',
 
         SportEventLinkType::Accommodation->value => 'Ubytování',
-        SportEventLinkType::Livelox->value => 'Livevox',
+        SportEventLinkType::Livelox->value => 'Livelox',
         SportEventLinkType::Other->value => 'Ostatní',
     ],
 
