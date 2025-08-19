@@ -318,7 +318,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         $sportEvent = $this->record;
 
         return ActionAction::make($registerAll ? 'createEventEntryFull' : 'createEventEntry')
-            ->action(function (array $data): void {
+            ->action(function (array $data) : void {
 
                 /** @var SportEvent $sportEvent */
                 $sportEvent = $this->record;
@@ -385,9 +385,23 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             })
 
             ->disabled(
-                EmptyType::arrayEmpty((new UserRaceProfiles())->getUserRaceProfiles($this->record)->toArray())
-                || $sportEvent->cancelled
-                || ! Auth::user()?->canCreateEntry()
+                function (SportEvent $sportEvent) use ($registerAll): bool {
+                    if ($registerAll) {
+                        if ($sportEvent->cancelled === true) {
+                            return true;
+                        }
+                    } else {
+                        if (
+                            EmptyType::arrayEmpty((new UserRaceProfiles())->getUserRaceProfiles($this->record)->toArray())
+                            || $sportEvent->cancelled
+                            || ! Auth::user()?->canCreateEntry()
+                        ) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
             )
 
             ->color($registerAll ? 'gray' : 'primary')
@@ -399,7 +413,11 @@ class EntrySportEvent extends Page implements HasForms, HasTable
             ->form([
                 Select::make('raceProfileId')
                     ->label('Vyberte závodní profil')
-                    ->options($registerAll ? (new UserRaceProfiles())->getUserRaceProfiles($this->record, true) : (new UserRaceProfiles())->getUserRaceProfiles($this->record))
+                    ->options(
+                        $registerAll
+                            ? (new UserRaceProfiles())->getUserRaceProfiles($this->record, true)
+                            : (new UserRaceProfiles())->getUserRaceProfiles($this->record)
+                    )
                     ->default(function (SportEvent $sportEvent): ?int {
                         $userProfileRecords = (new UserRaceProfiles())->getUserRaceProfiles($this->record);
                         if ($sportEvent->oris_id === null && count($userProfileRecords) === 1) {
@@ -410,6 +428,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     })
                     ->required()
                     ->live()
+                    ->searchable()
                     ->afterStateUpdated(
                         (function ($state, Set $set) {
 

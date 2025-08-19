@@ -170,7 +170,8 @@ class SportEventResource extends Resource implements HasShieldPermissions
 //                        }
 //                        return 'secondary';
 //                    })
-                    ->sortable(),
+                    ->sortable()
+                    ->searchable(),
             ])
             ->defaultSort('date')
             ->persistSortInSession()

@@ -118,7 +118,7 @@ final class OrisApiService
             $eventModel->discipline_id = (int) $orisData->Discipline->ID;
             $eventModel->level_id = (int) $orisData->Level->ID;
 
-            $eventModel->start_time = $orisData->StartTime;
+            $eventModel->start_time = EmptyType::stringNotEmpty($orisData->StartTime) ? $orisData->StartTime : null;
 
             $eventModel->entry_date_1 = strlen($orisData->EntryDate1) !== 0 ? $orisData->EntryDate1 : null;
 
