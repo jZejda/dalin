@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Bank\Connector;
 
 use App\Models\BankAccount;
-use App\Services\Bank\Connector\MonetaResponseEntity\TransactionResponse;
+use App\Services\Bank\Connector\FioResponseEntity\TransactionResponse;
 use App\Services\Bank\Enums\TransactionIndicator;
 use App\Shared\SymfonySerializer;
 use Carbon\Carbon;
@@ -28,24 +28,26 @@ class FioBank implements ConnectorInterface
         $transactions = [];
         $response = $this->callBank($bankAccount, $fromDate);
 
-        if ($response !== null) {
-            foreach ($response->transactions as $transaction) {
+        //dd($response);
 
-//                $transactions[] = new Transaction(
-//                    externalKey: $transaction->entryReference,
-//                    transactionIndicator: $this->getTransactionIndicators($transaction->creditDebitIndicator),
-//                    dateTime: Carbon::createFromFormat('Y-m-d', $transaction->valueDate->date)?->setTime(0, 0, 0) ?? Carbon::now(),
-//                    amount: $transaction->amount->value,
-//                    currency: $transaction->amount->currency,
-//                    bankAccountIdentifier: $this->extractPayerAccount($transaction),
-//                    variableSymbol: $this->extractVariableSymbol($transaction->entryDetails->transactionDetails->remittanceInformation->structured->creditorReferenceInformation->reference),
-//                    specificSymbol: null,
-//                    constantSymbol: null,
-//                    note: $transaction->entryDetails->transactionDetails->references->transactionDescription,
-//                    description: null,
-//                    error: null,
-//                    status: $transaction->status
-//                );
+        if ($response !== null) {
+            foreach ($response->accountStatement->transactionList->transaction as $transaction) {
+
+                $transactions[] = new Transaction(
+                    externalKey: (string)$transaction->column22->value,
+                    transactionIndicator: TransactionIndicator::Debit,
+                    dateTime: Carbon::createFromFormat('Y-m-dO', $transaction->column0?->value)?->setTime(0, 0, 0) ?? Carbon::now(),
+                    amount: (float)$transaction->column5?->value,
+                    currency: $transaction->column5?->value ?? 'CZK',
+                    bankAccountIdentifier: $transaction->column5?->value,
+                    variableSymbol: $transaction->column5?->value,
+                    specificSymbol: null,
+                    constantSymbol: $transaction->column4?->value,
+                    note: $transaction->column16?->value,
+                    description: null,
+                    error: null,
+                    status: null
+                );
             }
         }
 
@@ -74,11 +76,9 @@ class FioBank implements ConnectorInterface
                 ['headers' => $headers]
             );
 
-            dd($response->getBody()->getContents());
-
             return $this->serializer?->getSerializer()->deserialize($response->getBody()->getContents(), TransactionResponse::class, 'json');
         } catch (GuzzleException $e) {
-            Log::channel('site')->error('Bank Account MonetaMoneyBank exception: '.$e->getMessage());
+            Log::channel('site')->error('Bank Account FioMoneyBank exception: '.$e->getMessage());
         }
 
         return null;
