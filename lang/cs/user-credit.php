@@ -75,7 +75,7 @@ return [
         'transfer_between_users_billing' => [
             'action_group_label' => 'Přerozdělení mezi členy',
             'modal_description' => 'Jedná se převod financí mezi členy klubu například například v případě kdy jeden člen uhradil startovné druhému členu.
-            Akce vytvoří dva záznamy, jeden plusový uživateli kterému se častka připisuje.
+            Akce vytvoří dva záznamy, jeden plusový uživateli kterému se částka připisuje.
             Druhý záznam tomu, kterému se částka strhává.',
             'modal_heading' => 'Přerozdělení financí mezi členy',
         ],
