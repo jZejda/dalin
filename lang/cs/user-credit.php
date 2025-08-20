@@ -64,10 +64,10 @@ return [
     // Actions
     'actions' => [
         'transport_billing' => [
-            'action_group_label' => 'Cestovní rozůčtování',
+            'action_group_label' => 'Cestovní rozúčtování',
             'modal_description' => 'Vyúčtování cestovních nákladů mezi členy klubu. Jedná se převod financí mezi členy klubu,
-            za účelem vyrovnání cestovních nákladů. Akce vytvoří dva záznamy, jeden plusový uživateli kterému se častka připisuje.
-            Druhý záznam, kterému se částka strhává.',
+            za účelem vyrovnání cestovních nákladů. Akce vytvoří dva záznamy, jeden plusový uživateli kterému se částka připisuje.
+            Druhý záznam tomu, kterému se částka strhává.',
             'modal_heading' => 'Vyúčtování cestovních nákladů.',
             'modal_submit_action_label' => 'Přidej vyúčtování',
 
@@ -75,8 +75,8 @@ return [
         'transfer_between_users_billing' => [
             'action_group_label' => 'Přerozdělení mezi členy',
             'modal_description' => 'Jedná se převod financí mezi členy klubu například například v případě kdy jeden člen uhradil startovné druhému členu.
-            Akce vytvoří dva záznamy, jeden plusový uživateli kterému se častka připisuje.
-            Druhý záznam, kterému se částka strhává.',
+            Akce vytvoří dva záznamy, jeden plusový uživateli kterému se částka připisuje.
+            Druhý záznam tomu, kterému se částka strhává.',
             'modal_heading' => 'Přerozdělení financí mezi členy',
         ],
     ]

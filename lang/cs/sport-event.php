@@ -88,7 +88,7 @@ return [
 
     'type_enum_entry_status' => [
         EntryStatus::Create->value => 'vytvořeno',
-        EntryStatus::Edit->value => 'upaveno',
+        EntryStatus::Edit->value => 'upraveno',
         EntryStatus::Cancel->value => 'stornováno',
     ],
 ];
