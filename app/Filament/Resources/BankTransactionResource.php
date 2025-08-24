@@ -217,7 +217,7 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                 return 'Přidání transakce konkrétnímu uživateli s VS: ' . $bankTransaction->variable_symbol ?? '---';
             })
             ->modalDescription(function (): HtmlString {
-                return new HtmlString('Příchozí transkakce jsou uživateli <strong>pokud je správně uveden variabilní symbol</strong>automaticky přiřazeny.</br>
+                return new HtmlString('Příchozí transkakce jsou uživateli <strong>pokud je správně uveden variabilní symbol</strong> automaticky přiřazeny.</br>
                 Zde je můžeš priřadit nebo zrušit ručně.');
             })
             ->modalIcon('heroicon-o-document-text')

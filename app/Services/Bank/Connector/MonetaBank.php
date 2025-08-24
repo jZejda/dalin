@@ -137,6 +137,6 @@ class MonetaBank implements ConnectorInterface
 
     private function getBankBaseUrl(): string
     {
-        return 'https://api.moneta.cz/api/v1/';
+        return 'https://api.moneta.cz/api/v4/';
     }
 }
