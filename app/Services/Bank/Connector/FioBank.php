@@ -33,7 +33,7 @@ class FioBank implements ConnectorInterface
             foreach ($response->accountStatement->transactionList->transaction as $transaction) {
 
                 if ($transaction->column22?->value === null) {
-                    throw new \Exception('Transaction has no external key');
+                    throw new \LogicException('Transaction has no external key');
                 }
 
                 $transactions[] = new Transaction(
