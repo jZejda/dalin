@@ -7,17 +7,22 @@ namespace App\Services\Bank\Connector\FioResponseEntity;
 readonly class Transaction
 {
     public function __construct(
-        public ?Column $column0,
-        public ?Column $column1,
-        public ?Column $column2,
-        public ?Column $column3,
-        public ?Column $column4,
-        public ?Column $column5,
-        public ?Column $column10,
-        public ?Column $column12,
-        public ?Column $column14,
-        public ?Column $column16,
-        public ?Column $column22,
+        public ?ColumnStringType $column0,
+        public ?ColumnFloatVal $column1,
+        public ?ColumnStringType $column2,
+        public ?ColumnStringType $column3,
+        public ?ColumnStringType $column4,
+        public ?ColumnStringType $column5,
+        public ?ColumnStringType $column6,
+        public ?ColumnStringType $column7,
+        public ?ColumnStringType $column8,
+        public ?ColumnStringType $column9,
+        public ?ColumnStringType $column10,
+        public ?ColumnStringType $column12,
+        public ?ColumnStringType $column14,
+        public ?ColumnStringType $column16,
+        public ?ColumnIntVal $column22,
+        public ?ColumnStringType $column25,
     ) {
     }
 }

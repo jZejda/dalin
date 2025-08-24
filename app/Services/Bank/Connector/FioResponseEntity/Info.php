@@ -18,8 +18,8 @@ readonly class Info
         public string $dateEnd,
         public ?string $yearList,
         public ?string $idList,
-        public int $idFrom,
-        public int $idTo,
+        public ?int $idFrom,
+        public ?int $idTo,
         public ?int $idLastDownload
     ) {
     }

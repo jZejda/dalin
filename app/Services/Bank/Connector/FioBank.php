@@ -6,6 +6,7 @@ namespace App\Services\Bank\Connector;
 
 use App\Models\BankAccount;
 use App\Services\Bank\Connector\FioResponseEntity\TransactionResponse;
+use App\Services\Bank\Connector\FioResponseEntity\Transaction as FioTransaction;
 use App\Services\Bank\Enums\TransactionIndicator;
 use App\Shared\SymfonySerializer;
 use Carbon\Carbon;
@@ -28,23 +29,25 @@ class FioBank implements ConnectorInterface
         $transactions = [];
         $response = $this->callBank($bankAccount, $fromDate);
 
-        //dd($response);
-
         if ($response !== null) {
             foreach ($response->accountStatement->transactionList->transaction as $transaction) {
 
+                if ($transaction->column22?->value === null) {
+                    throw new \Exception('Transaction has no external key');
+                }
+
                 $transactions[] = new Transaction(
                     externalKey: (string)$transaction->column22->value,
-                    transactionIndicator: TransactionIndicator::Debit,
-                    dateTime: Carbon::createFromFormat('Y-m-dO', $transaction->column0?->value)?->setTime(0, 0, 0) ?? Carbon::now(),
-                    amount: (float)$transaction->column5?->value,
+                    transactionIndicator: $this->getTransactionIndicator($transaction),
+                    dateTime: Carbon::createFromFormat('Y-m-dO', $transaction->column0?->value ?? '')?->setTime(0, 0, 0) ?? Carbon::now(),
+                    amount: (float)$transaction->column1?->value,
                     currency: $transaction->column5?->value ?? 'CZK',
-                    bankAccountIdentifier: $transaction->column5?->value,
+                    bankAccountIdentifier: $this->getBankAccountIdentifier($transaction),
                     variableSymbol: $transaction->column5?->value,
                     specificSymbol: null,
                     constantSymbol: $transaction->column4?->value,
                     note: $transaction->column16?->value,
-                    description: null,
+                    description: $transaction->column25?->value,
                     error: null,
                     status: null
                 );
@@ -52,6 +55,22 @@ class FioBank implements ConnectorInterface
         }
 
         return $transactions;
+    }
+
+    private function getBankAccountIdentifier(FioTransaction $transaction): string
+    {
+        return $transaction->column2?->value . '/' . $transaction->column3?->value;
+    }
+
+    private function getTransactionIndicator(FioTransaction $transaction): TransactionIndicator
+    {
+        $amount = $transaction->column1?->value;
+
+        if ($amount === null) {
+            return TransactionIndicator::Debit;
+        }
+
+        return $amount < 0 ? TransactionIndicator::Debit : TransactionIndicator::Credit;
     }
 
     private function callBank(BankAccount $bankAccount, ?Carbon $fromDate = null): ?TransactionResponse
