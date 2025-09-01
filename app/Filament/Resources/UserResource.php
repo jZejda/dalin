@@ -54,7 +54,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     // Main column
                     Section::make()
                         ->description(function (): HtmlString {
-                            return new HtmlString('Pokud vytváříte nového uživatele, bude tomuto uživateli na jeho e-mail <strong>zasláno heslo k portálu</strong>.');
+                            return new HtmlString(__('filament/user.new_user.description', ['help_url' => AppHelper::getPageHelpUrl('jak-pridat-uzivatele.html')]));
                         })
                         ->schema([
                             TextInput::make('name')

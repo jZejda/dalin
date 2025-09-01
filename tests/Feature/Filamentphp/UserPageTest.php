@@ -1,9 +1,12 @@
 <?php
 
+namespace Tests\Feature\Filamentphp;
+
 use App\Filament\Resources\UserResource\Pages\EditUser;
-use App\Filament\Resources\PostResource;
+use App\Filament\Resources\UserResource\Pages\ListUsers;
 use App\Filament\Resources\UserResource\RelationManagers\UserCreditRelationManager;
 use App\Models\User;
+use Livewire\Livewire;
 
 beforeEach(function () {
     $this->actingAs(
@@ -20,8 +23,7 @@ test('the application returns a successful response', function () {
 it('can load the relation manager', function () {
     $user = User::factory()->create();
 
-    $this->livewire(EditUser::class, [
-        'record' => $user->id,
-    ])->assertSeeResource(PostResource::class);
+    Livewire::test(ListUsers::class)
+    ->assertOk()
+    ->assertCanSeeTableRecords([$user]);
 });
-
