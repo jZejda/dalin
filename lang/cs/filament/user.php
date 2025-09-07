@@ -1,6 +1,5 @@
 <?php
 
-use App\Shared\Helpers\AppHelper;
 
 return [
 

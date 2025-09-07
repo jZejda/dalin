@@ -110,7 +110,10 @@ final class OrisApiService
                 $regions[] = $orisData->Region;
             }
 
-            $eventModel->name = $orisData->Name;
+            /** @description Not update if the event exists */
+            if ($newEvent) {
+                $eventModel->name = $orisData->Name ?? 'N/A';
+            }
             $eventModel->oris_id = $eventId;
             $eventModel->date = $orisData->Date;
             $eventModel->place = $orisData->Place;

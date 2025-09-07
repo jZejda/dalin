@@ -2,9 +2,7 @@
 
 namespace Tests\Feature\Filamentphp;
 
-use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\Pages\ListUsers;
-use App\Filament\Resources\UserResource\RelationManagers\UserCreditRelationManager;
 use App\Models\User;
 use Livewire\Livewire;
 

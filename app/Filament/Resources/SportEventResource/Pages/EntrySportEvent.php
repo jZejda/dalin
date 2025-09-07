@@ -318,7 +318,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         $sportEvent = $this->record;
 
         return ActionAction::make($registerAll ? 'createEventEntryFull' : 'createEventEntry')
-            ->action(function (array $data) : void {
+            ->action(function (array $data): void {
 
                 /** @var SportEvent $sportEvent */
                 $sportEvent = $this->record;

@@ -12,10 +12,10 @@ return [
     */
 
     'club' => [
-        'abbr' => 'ABM',
-        'full_name' => 'Klub orientačního běhu ALFA Brno z.s.',
-        'primary_bank_account_number' => '159826453/0600',
-        'primary_bank_account_name' => 'MONETA Money Bank, a. s.',
+        'abbr' => 'ABC',
+        'full_name' => 'KLUB ABC',
+        'primary_bank_account_number' => '123456789/1234',
+        'primary_bank_account_name' => 'Bank',
         'iban' => env('CLUB_IBAN', null),
         'user_credit_limit' => env('USER_CREDIT_LIMIT', -2000), //use integer
         'regular_membership_fees_prefix' => '111',
