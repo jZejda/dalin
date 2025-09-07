@@ -62,6 +62,18 @@ class UserRaceProfileTable extends Component implements HasForms, HasTable
                     ->size(TextColumnSize::Large)
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('street')
+                    ->label(__('user-race-profile.table.street'))
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('city')
+                    ->label(__('user-race-profile.table.city'))
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('zip')
+                    ->label(__('user-race-profile.table.zip'))
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('email')
                     ->label(__('user-race-profile.table.email'))
                     ->icon('heroicon-o-envelope')
