@@ -11,6 +11,7 @@ use App\Models\UserSetting;
 use App\Shared\Helpers\AppHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserRaceProfiles
@@ -72,7 +73,7 @@ class UserRaceProfiles
     private function getRelevantRaceProfiles(bool $registerAnyone): Collection
     {
         $relevantUserRaceProfile = UserRaceProfile::query()
-            ->where('user_id', '=', auth()->user()?->id)
+            ->where('user_id', '=', Auth::user()?->id)
             ->where('active', '=', '1')
             ->orderBy('reg_number')
             ->get();
@@ -84,17 +85,24 @@ class UserRaceProfiles
                 ->get();
         }
 
-        // Add AllowingAnotherUserRaceProfile
-        $allowRegisterUserProfile = UserSetting::where('user_id', '=', auth()->user()?->id)
-            ->where('type', '=', 'allowRegisterUserProfile')
-            ->first();
+        // Přidání profilů uživatelů, kteří dovolili přihlašování
+        $currentUserId = Auth::user()?->id;
+        if ($currentUserId) {
+            $userSettings = UserSetting::where('type', '=', 'usersAllowSignForRace')
+                ->whereJsonContains('options->users_allow_sign_up_for_race', (string)$currentUserId)
+                ->get();
 
-        if (isset($allowRegisterUserProfile->options['profileIds'])) {
-            foreach ($allowRegisterUserProfile->options['profileIds'] as $profileId) {
-                $userProfile = UserRaceProfile::query()->where('id', '=', $profileId)->first();
-                $relevantUserRaceProfile->add($userProfile);
+            foreach ($userSettings as $setting) {
+                $allowedUserProfiles = UserRaceProfile::query()
+                    ->where('user_id', '=', $setting->user_id)
+                    ->where('active', '=', '1')
+                    ->orderBy('reg_number')
+                    ->get();
+
+                $relevantUserRaceProfile = $relevantUserRaceProfile->merge($allowedUserProfiles);
             }
         }
+
         return $relevantUserRaceProfile;
     }
 }

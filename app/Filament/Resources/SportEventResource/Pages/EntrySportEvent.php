@@ -391,13 +391,13 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                             return true;
                         }
                     } else {
-                        if (
-                            EmptyType::arrayEmpty((new UserRaceProfiles())->getUserRaceProfiles($this->record)->toArray())
-                            || $sportEvent->cancelled
-                            || ! Auth::user()?->canCreateEntry()
-                        ) {
-                            return true;
-                        }
+                        //                        if (
+                        //                            EmptyType::arrayEmpty((new UserRaceProfiles())->getUserRaceProfiles($this->record)->toArray())
+                        //                            || $sportEvent->cancelled
+                        //                            || ! Auth::user()?->canCreateEntry()
+                        //                        ) {
+                        //                            return true;
+                        //                        }
                     }
 
                     return false;
@@ -418,6 +418,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                             ? (new UserRaceProfiles())->getUserRaceProfiles($this->record, true)
                             : (new UserRaceProfiles())->getUserRaceProfiles($this->record)
                     )
+                    ->allowHtml()
                     ->default(function (SportEvent $sportEvent): ?int {
                         $userProfileRecords = (new UserRaceProfiles())->getUserRaceProfiles($this->record);
                         if ($sportEvent->oris_id === null && count($userProfileRecords) === 1) {
