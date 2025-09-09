@@ -31,11 +31,10 @@ class UserRaceProfiles
             //vyselektuje relevatni profily pro uzivatel
             $relevantUserRaceProfile = $this->getRelevantRaceProfiles($registerAnyone);
 
-            $relevantUserRaceProfile = $relevantUserRaceProfile->whereNotNull('oris_id')
-                ->pluck('user_race_full_name', 'oris_id');
+            $relevantUserRaceProfile = $relevantUserRaceProfile->whereNotNull('oris_id');
 
             // zjisti id profil; ktere jsou uz v zavode pro uzivatele
-            $entries = DB::table('user_race_profiles as urp')
+            $userRaceProfiles = DB::table('user_race_profiles as urp')
                 ->select(['urp.oris_id'])
                 ->leftJoin('user_entries AS ue', 'ue.user_race_profile_id', '=', 'urp.id')
                 ->where('ue.sport_event_id', '=', $sportEvent->id)
@@ -44,17 +43,19 @@ class UserRaceProfiles
                 ->get();
 
             // unsetne z pole relevatnich profil;
-            foreach ($entries as $entry) {
-                $relevantUserRaceProfile->forget((int)$entry->oris_id);
+            foreach ($userRaceProfiles as $userRaceProfile) {
+                $relevantUserRaceProfile = $relevantUserRaceProfile->reject(function (UserRaceProfile $profile) use ($userRaceProfile) {
+                    return (int)$profile->oris_id === (int)$userRaceProfile->oris_id;
+                });
             }
+
+            $relevantUserRaceProfile = $this->formatProfilesWithStyling($relevantUserRaceProfile, 'oris_id');
         } else {
             //Non ORIS race
             $relevantUserRaceProfile = $this->getRelevantRaceProfiles($registerAnyone);
 
-            $relevantUserRaceProfile = $relevantUserRaceProfile->pluck('user_race_full_name', 'id');
-
             // Has allready signed
-            $entries = DB::table('user_race_profiles as urp')
+            $userRaceProfiles = DB::table('user_race_profiles as urp')
                 ->select(['urp.id'])
                 ->leftJoin('user_entries AS ue', 'ue.user_race_profile_id', '=', 'urp.id')
                 ->where('ue.sport_event_id', '=', $sportEvent->id)
@@ -63,10 +64,15 @@ class UserRaceProfiles
                 ->get();
 
             // Unset from field
-            foreach ($entries as $entry) {
-                $relevantUserRaceProfile->forget((int)$entry->id);
+            foreach ($userRaceProfiles as $userRaceProfile) {
+                $relevantUserRaceProfile = $relevantUserRaceProfile->reject(function (UserRaceProfile $profile) use ($userRaceProfile) {
+                    return (int)$profile->id === (int)$userRaceProfile->id;
+                });
             }
+
+            $relevantUserRaceProfile = $this->formatProfilesWithStyling($relevantUserRaceProfile, 'id');
         }
+
         return $relevantUserRaceProfile;
     }
 
@@ -85,7 +91,7 @@ class UserRaceProfiles
                 ->get();
         }
 
-        // Přidání profilů uživatelů, kteří dovolili přihlašování
+        // Add UserRaceProfiles from users that allow signup to other user
         $currentUserId = Auth::user()?->id;
         if ($currentUserId) {
             $userSettings = UserSetting::where('type', '=', 'usersAllowSignForRace')
@@ -104,5 +110,24 @@ class UserRaceProfiles
         }
 
         return $relevantUserRaceProfile;
+    }
+
+    private function formatProfilesWithStyling(Collection $profiles, string $userProfileKeyField): Collection
+    {
+        $currentUserId = Auth::user()?->id;
+        $formattedProfiles = new Collection();
+
+        foreach ($profiles as $profile) {
+            $key = $profile->$userProfileKeyField;
+            $name = $profile->user_race_full_name;
+
+            if ($profile->user_id === $currentUserId) {
+                $formattedProfiles->put($key, $name);
+            } else {
+                $formattedProfiles->put($key, '<span class="text-blue-500">' . $name . '</span>');
+            }
+        }
+
+        return $formattedProfiles;
     }
 }
