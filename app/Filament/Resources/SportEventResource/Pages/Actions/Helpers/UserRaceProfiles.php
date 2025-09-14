@@ -30,7 +30,7 @@ class UserRaceProfiles
 
             //vyselektuje relevatni profily pro uzivatel
             $relevantUserRaceProfile = $this->getRelevantRaceProfiles($registerAnyone);
-
+            //omezí pouze tam kde je aktuální oris_id
             $relevantUserRaceProfile = $relevantUserRaceProfile->whereNotNull('oris_id');
 
             // zjisti id profil; ktere jsou uz v zavode pro uzivatele
@@ -124,10 +124,34 @@ class UserRaceProfiles
             if ($profile->user_id === $currentUserId) {
                 $formattedProfiles->put($key, $name);
             } else {
-                $formattedProfiles->put($key, '<span class="text-blue-500">' . $name . '</span>');
+                $formattedProfiles->put($key, '<span class="text-yellow-600 dark:text-yellow-400">' . $name . '</span>');
             }
         }
 
         return $formattedProfiles;
+    }
+
+    public static function allowAnotherUserCareTheirUserRaceProfile(UserRaceProfile $userRaceProfile): bool
+    {
+        $user = Auth::user();
+
+        $userSettings = UserSetting::where('type', '=', 'usersAllowSignForRace')
+                ->whereJsonContains('options->users_allow_sign_up_for_race', (string)$user?->id)
+                ->get();
+
+        foreach ($userSettings as $setting) {
+            $allowedUserProfiles = UserRaceProfile::query()
+                ->where('user_id', '=', $setting->user_id)
+                ->where('active', '=', '1')
+                ->get();
+
+            foreach ($allowedUserProfiles as $allowedUserProfile) {
+                if ($allowedUserProfile !== null && $userRaceProfile->id === $allowedUserProfile->id) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

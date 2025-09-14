@@ -134,6 +134,8 @@ class UserMailNotification extends Page implements HasForms
     {
         return [
             Section::make('Upozornění na Novinky')
+                ->description('Zde můžete nastavit upozornění na novinky veřejné a noviny z členské sekce.')
+                ->aside()
                 ->columns(1)
                 ->schema([
                     CheckboxList::make('news')
@@ -144,6 +146,8 @@ class UserMailNotification extends Page implements HasForms
                         ]),
                 ]),
             Section::make('Upozornění na blížící se konec přihlášek k závodům')
+                ->description('Pokud se bude blížit konec přihlášek k závodům, budete na toto upozorněni v e-mailu v uvedený čas s předstihem nastaveným ve volbě počtu dnů před koncem přihlášek.')
+                ->aside()
                 ->columns(3)
                 ->schema([
                     CheckboxList::make('sport')
@@ -164,6 +168,8 @@ class UserMailNotification extends Page implements HasForms
                         ->default(4),
                 ]),
             Section::make('Souhrn závodů u kterých končí termín přihlášek následující týden')
+                ->description('V nastaveni definujete, které sporty budou v e-mailu souhrnně uvedeny. Souhrn obsahuje závody u kterých končí termín přihlášek následující týden.')
+                ->aside()
                 ->columns(2)
                 ->schema([
                     CheckboxList::make('week_report_by_sport')
@@ -171,7 +177,7 @@ class UserMailNotification extends Page implements HasForms
                         ->options(SportList::all()->pluck('short_name', 'id')),
                 ]),
             Section::make('Oprávnění k přihlašování')
-                ->description('V nastavení můžete udělit právo přihlašovat všechny vámi spravované registrace vybraným uživatelům. Vhodné například pro rodinné příslušníky, kamarády. Právo můžete kdykoliv odvolat')
+                ->description('V nastavení můžete udělit právo přihlašovat všechny vámi spravované registrace vybraným uživatelům. Vhodné například pro rodinné příslušníky, kamarády. Právo můžete kdykoliv odvolat.')
                 ->aside()
                 ->schema([
                     Select::make('users_allow_sign_up_for_race')

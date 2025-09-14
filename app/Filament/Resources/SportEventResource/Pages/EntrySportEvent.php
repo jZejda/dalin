@@ -170,7 +170,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->label('Uživatel')
                 ->badge()
                 ->color(static function ($state): string {
-                    if ($state === auth()->user()?->name) {
+                    if ($state === Auth::user()?->name) {
                         return 'success';
                     }
 
@@ -298,7 +298,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                             ->send();
                     }
                 })
-                ->color('danger')
+                ->color(fn (UserEntry $userEntry): string => Auth::user()?->id === $userEntry->userRaceProfile->user?->id ? 'danger' : 'warning')
                 ->label('Odhlásit')
                 ->icon('heroicon-o-trash')
                 ->disabled(fn (UserEntry $record): bool => AppHelper::allowModifyUserEntry($record->sportEvent))
@@ -391,13 +391,13 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                             return true;
                         }
                     } else {
-                        //                        if (
-                        //                            EmptyType::arrayEmpty((new UserRaceProfiles())->getUserRaceProfiles($this->record)->toArray())
-                        //                            || $sportEvent->cancelled
-                        //                            || ! Auth::user()?->canCreateEntry()
-                        //                        ) {
-                        //                            return true;
-                        //                        }
+                        if (
+                            EmptyType::arrayEmpty((new UserRaceProfiles())->getUserRaceProfiles($this->record)->toArray())
+                            || $sportEvent->cancelled
+                            || ! Auth::user()?->canCreateEntry()
+                        ) {
+                            return true;
+                        }
                     }
 
                     return false;
@@ -709,11 +709,23 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         /** @var SportEvent $sportEvent */
         $sportEvent = $this->record;
 
+        if ((Auth::user()?->hasRole([
+           AppRoles::EventMaster,
+           AppRoles::EventOrganizer,
+        ]))) {
+            return false;
+        }
+
+        if ($userEntry->userRaceProfile !== null && UserRaceProfiles::allowAnotherUserCareTheirUserRaceProfile($userEntry->userRaceProfile)) {
+            return false;
+        }
+
+
         if ($userEntry->entry_status === EntryStatus::Cancel) {
             return true;
         }
 
-        if ($userEntry->userRaceProfile->user->id !== auth()->user()?->id) {
+        if ($userEntry->userRaceProfile?->user?->id !== Auth::user()?->id) {
             return true;
         }
 
