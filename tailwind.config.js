@@ -1,7 +1,7 @@
-import preset from './vendor/filament/support/tailwind.config.preset'
+// import preset from './vendor/filament/support/tailwind.config.preset'
 
 export default {
-    presets: [preset],
+    // presets: [preset],
     mode: 'jit',
     darkMode: 'class',
     content: [
