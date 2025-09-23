@@ -19,7 +19,7 @@ final class UserChangePassword
             ->modalSubmitActionLabel(__('filament/common.user_setting.change_password_submit_label'))
             ->modalIcon('heroicon-o-finger-print')
             ->modalIconColor('danger')
-            ->form([
+            ->schema([
                 TextInput::make('password')
                     ->label(__('filament/common.new_password'))
                     ->required()

@@ -12,7 +12,7 @@ class PostsOverview extends Widget
 {
     use HasWidgetShield;
 
-    protected static string $view = 'filament.widgets.posts-overview';
+    protected string $view = 'filament.widgets.posts-overview';
 
     public function render(): View
     {

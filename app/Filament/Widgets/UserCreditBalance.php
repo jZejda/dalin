@@ -12,7 +12,7 @@ class UserCreditBalance extends Widget
 {
     use HasWidgetShield;
 
-    protected static string $view = 'filament.pages.widgets.user-credit-balance';
+    protected string $view = 'filament.pages.widgets.user-credit-balance';
 
     public function render(): View
     {

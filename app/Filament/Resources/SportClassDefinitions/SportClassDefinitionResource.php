@@ -1,0 +1,140 @@
+<?php
+
+namespace App\Filament\Resources\SportClassDefinitions;
+
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\SportClassDefinitions\Pages\ListSportClassDefinitions;
+use App\Filament\Resources\SportClassDefinitions\Pages\CreateSportClassDefinition;
+use App\Filament\Resources\SportClassDefinitions\Pages\EditSportClassDefinition;
+use App\Filament\Resources\SportClassDefinitionResource\Pages;
+use App\Models\SportClassDefinition;
+use App\Models\SportList;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
+use Filament\Tables\Table;
+use Filament\Tables;
+
+class SportClassDefinitionResource extends Resource implements HasShieldPermissions
+{
+    protected static ?string $model = SportClassDefinition::class;
+
+    protected static ?int $navigationSort = 100;
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \UnitEnum | null $navigationGroup = 'Správa';
+    protected static ?string $label = 'Definice kategorie';
+    protected static ?string $pluralLabel = 'Definice kategorií';
+
+    public static function form(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Section::make()
+                    ->schema([
+
+                        TextInput::make('name')
+                            ->label('Název')
+                            ->required(),
+                        Select::make('gender')
+                            ->label('Pohlaví')
+                            ->options([
+                                'F' => 'Žena',
+                                'M' => 'Muž',
+                                'A' => 'Vše',
+                            ])
+                            ->required(),
+
+                        TextInput::make('age_from')
+                            ->label('Věk od:')
+                            ->required(),
+                        TextInput::make('age_to')
+                            ->label('Věk do:')
+                            ->required(),
+
+                        Select::make('sport_id')
+                            ->label('Sport')
+                            ->options(SportList::all()->pluck('short_name', 'id'))
+                            ->searchable()
+                            ->required(),
+                        TextInput::make('oris_id')
+                            ->label('ORIS ID')
+                            ->disabled(true),
+                    ])
+                    ->columns(2)
+                    ->columnSpan([
+                        'sm' => 1,
+                        'md' => 12
+                    ]),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('name')
+                    ->sortable()
+                    ->searchable()
+                    ->description(fn (SportClassDefinition $record): string => $record->class_definition_fullLabel ?? ''),
+                TextColumn::make('age_from')
+                    ->label('Věk od')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('age_to')
+                    ->label('Věk do')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('gender')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('sport.short_name')
+                    ->label('Sport')
+                    ->sortable()
+                    ->searchable(),
+                TextColumn::make('oris_id')
+                    ->label('ORIS ID'),
+            ])
+            ->defaultPaginationPageOption(25)
+            ->filters([
+                //
+            ])
+            ->recordActions([
+                EditAction::make(),
+            ])
+            ->toolbarActions([
+                DeleteBulkAction::make(),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListSportClassDefinitions::route('/'),
+            'create' => CreateSportClassDefinition::route('/create'),
+            'edit' => EditSportClassDefinition::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'delete',
+        ];
+    }
+}

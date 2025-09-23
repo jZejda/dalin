@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Livewire\Backend;
 
+use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Support\Enums\TextSize;
+use Filament\Actions\BulkActionGroup;
 use App\Models\UserRaceProfile;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Tables\Columns\TextColumn\TextColumnSize;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -22,8 +25,9 @@ use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\TernaryFilter;
 
-class UserRaceProfileTable extends Component implements HasForms, HasTable
+class UserRaceProfileTable extends Component implements HasForms, HasTable, HasActions
 {
+    use InteractsWithActions;
     use InteractsWithForms;
     use InteractsWithTable;
     use InteractsWithRecord;
@@ -39,7 +43,7 @@ class UserRaceProfileTable extends Component implements HasForms, HasTable
                     ->label(__('user-race-profile.table.reg_number'))
                     ->sortable()
                     ->searchable()
-                    ->size(TextColumnSize::Large)
+                    ->size(TextSize::Large)
                     ->color(function (UserRaceProfile $model): string {
                         if (!$model->active) {
                             return 'danger';
@@ -54,12 +58,12 @@ class UserRaceProfileTable extends Component implements HasForms, HasTable
                     }),
                 TextColumn::make('first_name')
                     ->label(__('user-race-profile.table.first_name'))
-                    ->size(TextColumnSize::Large)
+                    ->size(TextSize::Large)
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('last_name')
                     ->label(__('user-race-profile.table.last_name'))
-                    ->size(TextColumnSize::Large)
+                    ->size(TextSize::Large)
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('street')
@@ -125,13 +129,13 @@ class UserRaceProfileTable extends Component implements HasForms, HasTable
                     )
                     ->default(),
             ])
-            ->actions([
+            ->recordActions([
 //                Action::make('edit')
 //                    ->url(fn (UserRaceProfile $record): string => '/')
 //                    ->openUrlInNewTab()
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     //
                 ]),
             ])

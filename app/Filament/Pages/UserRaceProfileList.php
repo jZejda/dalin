@@ -17,12 +17,12 @@ class UserRaceProfileList extends Page
 {
     use HasPageShield;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
     protected static ?string $title = 'Registrace';
-    protected static ?string $navigationGroup = 'Správa';
+    protected static string | \UnitEnum | null $navigationGroup = 'Správa';
     protected static ?int $navigationSort = 34;
 
-    protected static string $view = 'filament.pages.user-race-profile-list';
+    protected string $view = 'filament.pages.user-race-profile-list';
 
 
     protected function getHeaderActions(): array
@@ -42,7 +42,7 @@ class UserRaceProfileList extends Page
         ];
     }
 
-    public function getHeaderWidgetsColumns(): int | array
+    public function getHeaderWidgetsColumns(): int|array
     {
         return 3;
     }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Actions;
 
+use Filament\Schemas\Components\Grid;
 use App\Enums\AppRoles;
 use App\Filament\Pages\Jobs\SendUserMail;
 use App\Models\SportEvent;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -49,7 +49,7 @@ final class UserSendMail
                 AppRoles::BillingSpecialist->value,
                 AppRoles::EventOrganizer->value,
             ]))
-            ->form([
+            ->schema([
                 Grid::make(1)
                     ->schema([
                         TextInput::make('subject')

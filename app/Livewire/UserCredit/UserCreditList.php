@@ -2,6 +2,10 @@
 
 namespace App\Livewire\UserCredit;
 
+use Filament\Actions\Contracts\HasActions;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Action;
+use Filament\Actions\BulkActionGroup;
 use App\Enums\AppRoles;
 use App\Models\User;
 use App\Models\UserCredit;
@@ -12,7 +16,6 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
@@ -22,8 +25,9 @@ use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
 
-class UserCreditList extends Component implements HasForms, HasTable
+class UserCreditList extends Component implements HasForms, HasTable, HasActions
 {
+    use InteractsWithActions;
     use InteractsWithForms;
     use InteractsWithTable;
 
@@ -104,7 +108,7 @@ class UserCreditList extends Component implements HasForms, HasTable
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 Action::make('createNewNote')
                     ->model(UserCredit::class)
                     ->action(function (UserCredit $userCredit, array $data): void {
@@ -142,13 +146,13 @@ class UserCreditList extends Component implements HasForms, HasTable
                         'filament.modals.user-credit-comment',
                         ['record' => $record],
                     ))
-                    ->form([
+                    ->schema([
                         MarkdownEditor::make('user_note')
                             ->label('Poznámka'),
                     ]),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
+            ->toolbarActions([
+                BulkActionGroup::make([
                     //
                 ]),
             ]);

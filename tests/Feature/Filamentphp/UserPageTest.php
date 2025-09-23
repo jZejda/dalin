@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Filamentphp;
 
-use App\Filament\Resources\UserResource\Pages\ListUsers;
+use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Models\User;
 use Livewire\Livewire;
 

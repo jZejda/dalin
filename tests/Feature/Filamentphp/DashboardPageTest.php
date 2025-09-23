@@ -1,6 +1,6 @@
 <?php
 
-use App\Filament\Resources\PostResource;
+use App\Filament\Resources\Posts\PostResource;
 use App\Models\User;
 
 beforeEach(function () {

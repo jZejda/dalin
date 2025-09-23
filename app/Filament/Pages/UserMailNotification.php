@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
+use Filament\Schemas\Components\Section;
 use App\Models\SportList;
 use App\Models\User;
 use App\Models\UserSetting;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Database\Eloquent\Model;
@@ -26,11 +25,11 @@ class UserMailNotification extends Page implements HasForms
     use HasPageShield;
 
     protected static ?int $navigationSort = 37;
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    protected static string $view = 'filament.pages.user-mail-notification';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
+    protected string $view = 'filament.pages.user-mail-notification';
     protected static ?string $slug = 'mail-notification';
     protected static ?string $navigationLabel = 'Uživatelská nastavení';
-    protected static ?string $navigationGroup = 'Uživatel';
+    protected static string | \UnitEnum | null $navigationGroup = 'Uživatel';
     protected static ?string $title = 'Uživatelská nastavení';
 
     private const int DEFAULT_TRIGGER_EVENT = 17;
@@ -73,7 +72,7 @@ class UserMailNotification extends Page implements HasForms
     }
     public function submit(): void
     {
-        /** @var Form $form */
+        /** @var \Filament\Schemas\Schema $form */
         $form = $this->form;
         $form->getState();
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Pages;
 
 use App\Enums\UserCreditType;
-use App\Filament\Resources\UserCreditResource\Actions\AddUserTransferBillingModal;
+use App\Filament\Resources\UserCredits\Actions\AddUserTransferBillingModal;
 use App\Filament\Widgets\UserCreditBalance;
 use App\Filament\Widgets\UserSendCreditInfo;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
@@ -16,10 +16,10 @@ class UserCreditList extends Page
 {
     use HasPageShield;
 
-    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-banknotes';
 
     protected static ?string $title = 'Finance';
-    protected static ?string $navigationGroup = 'Uživatel';
+    protected static string | \UnitEnum | null $navigationGroup = 'Uživatel';
     protected static ?int $navigationSort = 34;
 
     protected function getHeaderWidgets(): array
@@ -51,5 +51,5 @@ class UserCreditList extends Page
         ];
     }
 
-    protected static string $view = 'filament.pages.user-credit-list';
+    protected string $view = 'filament.pages.user-credit-list';
 }

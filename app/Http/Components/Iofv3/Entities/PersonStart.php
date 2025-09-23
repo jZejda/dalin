@@ -10,7 +10,7 @@ class PersonStart
     private Organization $Organisation;
     private Start $Start;
 
-    public function __construct(Person $Person, \App\Http\Components\Iofv3\Entities\Organization $Organisation, Start $Start)
+    public function __construct(Person $Person, Organization $Organisation, Start $Start)
     {
         $this->Person = $Person;
         $this->Organisation = $Organisation;
@@ -22,7 +22,7 @@ class PersonStart
         return $this->Person;
     }
 
-    public function getOrganisation(): \App\Http\Components\Iofv3\Entities\Organization
+    public function getOrganisation(): Organization
     {
         return $this->Organisation;
     }

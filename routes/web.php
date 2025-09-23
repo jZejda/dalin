@@ -51,9 +51,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::prefix('admin')->group(function () {
-    Route::get('/export/event-entry/{eventId}', [UserEntryController::class, 'export']);
-})->middleware(['auth', 'verified']);
+// Route::prefix('admin')->group(function () {
+//     Route::get('/export/event-entry/{eventId}', [UserEntryController::class, 'export']);
+// })->middleware(['auth', 'verified']);
 
 Route::get('/admin/test', [TestController::class, 'test']);
 //Route::get('/admin/webhook', [DiscordRaceEventNotification::class, 'notification']);

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Actions;
 
+use Filament\Schemas\Components\Grid;
 use App\Enums\AppRoles;
 use App\Http\Controllers\UserRaceProfileController;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Actions\Action;
@@ -47,7 +47,7 @@ final class ExportUserRaceProfileData
             })
             ->modalSubmitActionLabel('Exportovat')
             ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster, AppRoles::EventOrganizer, AppRoles::BillingSpecialist]))
-            ->form([
+            ->schema([
                 Grid::make(1)
                     ->schema([
                         Select::make('export_type')

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron;
 
+use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Cron\Jobs\EntryEndsToPay;
 use App\Http\Controllers\Cron\Jobs\ReportEmailEventWeeklyEndsBySport;
@@ -25,7 +26,7 @@ class CommonCron extends Controller
                 (new UpdateEventWeather())->run();
                 Log::channel('site')->info('STOP WeatherForecast run cron at '.$this->getActualHour());
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('site')->warning('ERROR WeatherForecast:'.$e->getMessage());
         }
 
@@ -36,7 +37,7 @@ class CommonCron extends Controller
                 (new UpdateEvent())->run();
                 Log::channel('site')->info('STOP EventUpdates run cron at '.$this->getActualHour());
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('site')->warning('ERROR EventUpdates: '.$e->getMessage());
         }
 
@@ -47,7 +48,7 @@ class CommonCron extends Controller
                 (new ReportEmailUserDebit())->run();
                 Log::channel('site')->info('STOP  MailMonthlyUserDebitReport run cron at '.$this->getActualHour());
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('site')->warning('ERROR MailMonthlyUserDebitReport: '.$e->getMessage());
         }
 
@@ -58,7 +59,7 @@ class CommonCron extends Controller
                 (new ReportEmailEventWeeklyEndsBySport())->run();
                 Log::channel('site')->info('STOP  MailWeeklyUserEventSummary run cron at '.$this->getActualHour());
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('site')->warning('ERROR ErrorMessage: '.$e->getMessage());
         }
 
@@ -69,7 +70,7 @@ class CommonCron extends Controller
                 (new EntryEndsToPay())->run();
                 Log::channel('site')->info('STOP  MailEntryEndsToPay run cron at '.$this->getActualHour());
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('site')->warning('ERROR ErrorMessage: '.$e->getMessage());
         }
 
@@ -80,7 +81,7 @@ class CommonCron extends Controller
                 (new UpdateBankTransaction())->run();
                 Log::channel('site')->info('STOP Bank transaction at '.$this->getActualHour());
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::channel('site')->warning('ERROR Bank transaction:'.$e->getMessage());
         }
     }

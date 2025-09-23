@@ -12,7 +12,7 @@ class UserSendCreditInfo extends Widget
 {
     use HasWidgetShield;
 
-    protected static string $view = 'filament.pages.widgets.user-send-credit-info';
+    protected string $view = 'filament.pages.widgets.user-send-credit-info';
 
     public function render(): View
     {

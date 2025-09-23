@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
+use Filament\Support\Enums\Width;
 use App\Enums\AppRoles;
 use App\Enums\UserParamType;
 use App\Filament\Pages\Actions\UserChangePassword;
@@ -13,7 +14,6 @@ use App\Filament\Widgets\StatsOverview;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Pages\Page;
-use Filament\Support\Enums\MaxWidth;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,15 +23,15 @@ class UserSettings extends Page
 {
     use HasPageShield;
 
-    protected static ?string $navigationIcon = 'heroicon-o-home';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-home';
 
-    protected static string $view = 'filament.pages.user-settings';
+    protected string $view = 'filament.pages.user-settings';
     protected static ?string $slug = 'user-setting';
 
 
-    public function getMaxContentWidth(): MaxWidth
+    public function getMaxContentWidth(): Width
     {
-        return MaxWidth::Full;
+        return Width::Full;
     }
 
     public function getHeading(): string
@@ -97,12 +97,12 @@ class UserSettings extends Page
         ];
     }
 
-    public function getHeaderWidgetsColumns(): int|string|array
+    public function getHeaderWidgetsColumns(): int|array
     {
         return 3;
     }
 
-    public function getFooterWidgetsColumns(): int|string|array
+    public function getFooterWidgetsColumns(): int|array
     {
         return 3;
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Widgets\Actions\ZoomAction;
+use App\Filament\Widgets\Actions\Action;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
@@ -101,9 +103,9 @@ class MapOverview
     public function getActions(): array
     {
         return [
-            Actions\ZoomAction::make(),
+            ZoomAction::make(),
             Actions\CenterMapAction::make()->zoom(2),
-            Actions\Action::make('mode')
+            Action::make('mode')
                 ->icon('filamentmapsicon-o-square-3-stack-3d')
                 ->callback('setTileLayer(mode === "OpenStreetMap" ? "OpenTopoMap" : "OpenStreetMap")'),
             CenterMapAction::make()->fitBounds($this->getFitBounds()),

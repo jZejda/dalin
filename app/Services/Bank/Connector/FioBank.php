@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Bank\Connector;
 
+use LogicException;
 use App\Models\BankAccount;
 use App\Services\Bank\Connector\FioResponseEntity\TransactionResponse;
 use App\Services\Bank\Connector\FioResponseEntity\Transaction as FioTransaction;
@@ -33,7 +34,7 @@ class FioBank implements ConnectorInterface
             foreach ($response->accountStatement->transactionList->transaction as $transaction) {
 
                 if ($transaction->column22?->value === null) {
-                    throw new \LogicException('Transaction has no external key');
+                    throw new LogicException('Transaction has no external key');
                 }
 
                 $transactions[] = new Transaction(
