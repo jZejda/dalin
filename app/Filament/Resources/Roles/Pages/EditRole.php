@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\Shield\Roles\Pages;
+declare(strict_types=1);
 
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\Shield\Roles\RoleResource;
+namespace App\Filament\Resources\Roles\Pages;
+
+use App\Filament\Resources\Roles\RoleResource;
 use BezhanSalleh\FilamentShield\Support\Utils;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -26,12 +27,14 @@ class EditRole extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $this->permissions = collect($data)
-            ->filter(function ($permission, $key) {
-                return ! in_array($key, ['name', 'guard_name', 'select_all']);
-            })
+            ->filter(fn (mixed $permission, string $key): bool => ! in_array($key, ['name', 'guard_name', 'select_all', Utils::getTenantModelForeignKey()]))
             ->values()
             ->flatten()
             ->unique();
+
+        if (Utils::isTenancyEnabled() && Arr::has($data, Utils::getTenantModelForeignKey()) && filled($data[Utils::getTenantModelForeignKey()])) {
+            return Arr::only($data, ['name', 'guard_name', Utils::getTenantModelForeignKey()]);
+        }
 
         return Arr::only($data, ['name', 'guard_name']);
     }
@@ -39,13 +42,14 @@ class EditRole extends EditRecord
     protected function afterSave(): void
     {
         $permissionModels = collect();
-        $this->permissions->each(function ($permission) use ($permissionModels) {
+        $this->permissions->each(function (string $permission) use ($permissionModels): void {
             $permissionModels->push(Utils::getPermissionModel()::firstOrCreate([
                 'name' => $permission,
                 'guard_name' => $this->data['guard_name'],
             ]));
         });
 
+        // @phpstan-ignore-next-line
         $this->record->syncPermissions($permissionModels);
     }
 }

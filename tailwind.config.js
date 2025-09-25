@@ -1,7 +1,4 @@
-// import preset from './vendor/filament/support/tailwind.config.preset'
-
 export default {
-    // presets: [preset],
     mode: 'jit',
     darkMode: 'class',
     content: [
@@ -16,7 +13,5 @@ export default {
     theme: {
         extend: {},
     },
-    plugins: [
-        require('flowbite/plugin')
-    ],
+    plugins: [],
 }
