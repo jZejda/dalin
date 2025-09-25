@@ -1,3 +1,8 @@
+@php
+
+    use Illuminate\Support\Str;
+
+@endphp
 <x-filament::widget>
     <x-filament::card>
         {{-- Widget content --}}
@@ -6,7 +11,7 @@
             @if($content_mode === 1)
                 <span>{!! $content !!}</span>
             @elseif($content_mode === 2)
-                <span>{!! \Illuminate\Support\Str::markdown($content) !!}</span>
+                <span>{!! Str::markdown($content) !!}</span>
             @endif
 
         </div>

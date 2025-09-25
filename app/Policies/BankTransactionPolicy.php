@@ -1,108 +1,70 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\User;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\BankTransaction;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BankTransactionPolicy
 {
     use HandlesAuthorization;
-
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
+    
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $user->can('view_any_bank::transaction');
+        return $authUser->can('ViewAny:BankTransaction');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, BankTransaction $bankTransaction): bool
+    public function view(AuthUser $authUser, BankTransaction $bankTransaction): bool
     {
-        return $user->can('view_bank::transaction');
+        return $authUser->can('View:BankTransaction');
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $user->can('create_bank::transaction');
+        return $authUser->can('Create:BankTransaction');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, BankTransaction $bankTransaction): bool
+    public function update(AuthUser $authUser, BankTransaction $bankTransaction): bool
     {
-        return $user->can('update_bank::transaction');
+        return $authUser->can('Update:BankTransaction');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, BankTransaction $bankTransaction): bool
+    public function delete(AuthUser $authUser, BankTransaction $bankTransaction): bool
     {
-        return $user->can('delete_bank::transaction');
+        return $authUser->can('Delete:BankTransaction');
     }
 
-    /**
-     * Determine whether the user can bulk delete.
-     */
-    public function deleteAny(User $user): bool
+    public function restore(AuthUser $authUser, BankTransaction $bankTransaction): bool
     {
-        return $user->can('{{ DeleteAny }}');
+        return $authUser->can('Restore:BankTransaction');
     }
 
-    /**
-     * Determine whether the user can permanently delete.
-     */
-    public function forceDelete(User $user, BankTransaction $bankTransaction): bool
+    public function forceDelete(AuthUser $authUser, BankTransaction $bankTransaction): bool
     {
-        return $user->can('{{ ForceDelete }}');
+        return $authUser->can('ForceDelete:BankTransaction');
     }
 
-    /**
-     * Determine whether the user can permanently bulk delete.
-     */
-    public function forceDeleteAny(User $user): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $user->can('{{ ForceDeleteAny }}');
+        return $authUser->can('ForceDeleteAny:BankTransaction');
     }
 
-    /**
-     * Determine whether the user can restore.
-     */
-    public function restore(User $user, BankTransaction $bankTransaction): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $user->can('{{ Restore }}');
+        return $authUser->can('RestoreAny:BankTransaction');
     }
 
-    /**
-     * Determine whether the user can bulk restore.
-     */
-    public function restoreAny(User $user): bool
+    public function replicate(AuthUser $authUser, BankTransaction $bankTransaction): bool
     {
-        return $user->can('{{ RestoreAny }}');
+        return $authUser->can('Replicate:BankTransaction');
     }
 
-    /**
-     * Determine whether the user can replicate.
-     */
-    public function replicate(User $user, BankTransaction $bankTransaction): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $user->can('{{ Replicate }}');
+        return $authUser->can('Reorder:BankTransaction');
     }
 
-    /**
-     * Determine whether the user can reorder.
-     */
-    public function reorder(User $user): bool
-    {
-        return $user->can('{{ Reorder }}');
-    }
 }

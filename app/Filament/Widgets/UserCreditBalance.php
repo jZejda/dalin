@@ -27,7 +27,7 @@ class UserCreditBalance extends Widget
             ->select(['amount'])
             ->sum('amount');
 
-        return view(static::$view, [
+        return view($this->view, [
             'user_balance' => $usersAmountCount,
         ]);
     }

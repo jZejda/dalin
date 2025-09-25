@@ -25,7 +25,7 @@ class PostsOverview extends Widget
             ->orderByDesc('created_at')
             ->first();
 
-        return view(static::$view, [
+        return view($this->view, [
             'content_mode' => $lastPost->content_mode ?? 1,
             'title' => $lastPost->title ?? '',
             'content' => $lastPost->content ?? 'nic',

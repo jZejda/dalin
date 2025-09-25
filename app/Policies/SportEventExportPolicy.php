@@ -1,108 +1,70 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\User;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\SportEventExport;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SportEventExportPolicy
 {
     use HandlesAuthorization;
-
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
+    
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $user->can('view_any_sport::event::export');
+        return $authUser->can('ViewAny:SportEventExport');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, SportEventExport $sportEventExport): bool
+    public function view(AuthUser $authUser, SportEventExport $sportEventExport): bool
     {
-        return $user->can('view_sport::event::export');
+        return $authUser->can('View:SportEventExport');
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $user->can('create_sport::event::export');
+        return $authUser->can('Create:SportEventExport');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, SportEventExport $sportEventExport): bool
+    public function update(AuthUser $authUser, SportEventExport $sportEventExport): bool
     {
-        return $user->can('update_sport::event::export');
+        return $authUser->can('Update:SportEventExport');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, SportEventExport $sportEventExport): bool
+    public function delete(AuthUser $authUser, SportEventExport $sportEventExport): bool
     {
-        return $user->can('{{ Delete }}');
+        return $authUser->can('Delete:SportEventExport');
     }
 
-    /**
-     * Determine whether the user can bulk delete.
-     */
-    public function deleteAny(User $user): bool
+    public function restore(AuthUser $authUser, SportEventExport $sportEventExport): bool
     {
-        return $user->can('{{ DeleteAny }}');
+        return $authUser->can('Restore:SportEventExport');
     }
 
-    /**
-     * Determine whether the user can permanently delete.
-     */
-    public function forceDelete(User $user, SportEventExport $sportEventExport): bool
+    public function forceDelete(AuthUser $authUser, SportEventExport $sportEventExport): bool
     {
-        return $user->can('{{ ForceDelete }}');
+        return $authUser->can('ForceDelete:SportEventExport');
     }
 
-    /**
-     * Determine whether the user can permanently bulk delete.
-     */
-    public function forceDeleteAny(User $user): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $user->can('{{ ForceDeleteAny }}');
+        return $authUser->can('ForceDeleteAny:SportEventExport');
     }
 
-    /**
-     * Determine whether the user can restore.
-     */
-    public function restore(User $user, SportEventExport $sportEventExport): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $user->can('{{ Restore }}');
+        return $authUser->can('RestoreAny:SportEventExport');
     }
 
-    /**
-     * Determine whether the user can bulk restore.
-     */
-    public function restoreAny(User $user): bool
+    public function replicate(AuthUser $authUser, SportEventExport $sportEventExport): bool
     {
-        return $user->can('{{ RestoreAny }}');
+        return $authUser->can('Replicate:SportEventExport');
     }
 
-    /**
-     * Determine whether the user can replicate.
-     */
-    public function replicate(User $user, SportEventExport $sportEventExport): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $user->can('{{ Replicate }}');
+        return $authUser->can('Reorder:SportEventExport');
     }
 
-    /**
-     * Determine whether the user can reorder.
-     */
-    public function reorder(User $user): bool
-    {
-        return $user->can('{{ Reorder }}');
-    }
 }

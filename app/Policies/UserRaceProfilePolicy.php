@@ -1,108 +1,70 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\User;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use App\Models\UserRaceProfile;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserRaceProfilePolicy
 {
     use HandlesAuthorization;
-
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
+    
+    public function viewAny(AuthUser $authUser): bool
     {
-        return $user->can('view_any_user::race::profile');
+        return $authUser->can('ViewAny:UserRaceProfile');
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
-    public function view(User $user, UserRaceProfile $userRaceProfile): bool
+    public function view(AuthUser $authUser, UserRaceProfile $userRaceProfile): bool
     {
-        return $user->can('view_user::race::profile');
+        return $authUser->can('View:UserRaceProfile');
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
-    public function create(User $user): bool
+    public function create(AuthUser $authUser): bool
     {
-        return $user->can('create_user::race::profile');
+        return $authUser->can('Create:UserRaceProfile');
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, UserRaceProfile $userRaceProfile): bool
+    public function update(AuthUser $authUser, UserRaceProfile $userRaceProfile): bool
     {
-        return $user->can('update_user::race::profile');
+        return $authUser->can('Update:UserRaceProfile');
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, UserRaceProfile $userRaceProfile): bool
+    public function delete(AuthUser $authUser, UserRaceProfile $userRaceProfile): bool
     {
-        return $user->can('delete_user::race::profile');
+        return $authUser->can('Delete:UserRaceProfile');
     }
 
-    /**
-     * Determine whether the user can bulk delete.
-     */
-    public function deleteAny(User $user): bool
+    public function restore(AuthUser $authUser, UserRaceProfile $userRaceProfile): bool
     {
-        return $user->can('{{ DeleteAny }}');
+        return $authUser->can('Restore:UserRaceProfile');
     }
 
-    /**
-     * Determine whether the user can permanently delete.
-     */
-    public function forceDelete(User $user, UserRaceProfile $userRaceProfile): bool
+    public function forceDelete(AuthUser $authUser, UserRaceProfile $userRaceProfile): bool
     {
-        return $user->can('{{ ForceDelete }}');
+        return $authUser->can('ForceDelete:UserRaceProfile');
     }
 
-    /**
-     * Determine whether the user can permanently bulk delete.
-     */
-    public function forceDeleteAny(User $user): bool
+    public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $user->can('{{ ForceDeleteAny }}');
+        return $authUser->can('ForceDeleteAny:UserRaceProfile');
     }
 
-    /**
-     * Determine whether the user can restore.
-     */
-    public function restore(User $user, UserRaceProfile $userRaceProfile): bool
+    public function restoreAny(AuthUser $authUser): bool
     {
-        return $user->can('{{ Restore }}');
+        return $authUser->can('RestoreAny:UserRaceProfile');
     }
 
-    /**
-     * Determine whether the user can bulk restore.
-     */
-    public function restoreAny(User $user): bool
+    public function replicate(AuthUser $authUser, UserRaceProfile $userRaceProfile): bool
     {
-        return $user->can('{{ RestoreAny }}');
+        return $authUser->can('Replicate:UserRaceProfile');
     }
 
-    /**
-     * Determine whether the user can replicate.
-     */
-    public function replicate(User $user, UserRaceProfile $userRaceProfile): bool
+    public function reorder(AuthUser $authUser): bool
     {
-        return $user->can('{{ Replicate }}');
+        return $authUser->can('Reorder:UserRaceProfile');
     }
 
-    /**
-     * Determine whether the user can reorder.
-     */
-    public function reorder(User $user): bool
-    {
-        return $user->can('{{ Reorder }}');
-    }
 }
