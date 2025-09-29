@@ -13,7 +13,6 @@ use App\Filament\Resources\SportEventExports\Pages\CreateSportEventExport;
 use App\Filament\Resources\SportEventExports\Pages\EditSportEventExport;
 use App\Enums\SportEventExportsType;
 use App\Enums\SportEventType;
-use App\Filament\Resources\SportEventExportResource\Pages;
 use App\Models\SportEvent;
 use App\Models\SportEventExport;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;

@@ -10,7 +10,6 @@ use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\SportClassDefinitions\Pages\ListSportClassDefinitions;
 use App\Filament\Resources\SportClassDefinitions\Pages\CreateSportClassDefinition;
 use App\Filament\Resources\SportClassDefinitions\Pages\EditSportClassDefinition;
-use App\Filament\Resources\SportClassDefinitionResource\Pages;
 use App\Models\SportClassDefinition;
 use App\Models\SportList;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -18,7 +17,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class SportClassDefinitionResource extends Resource implements HasShieldPermissions
 {

@@ -11,7 +11,6 @@ use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\Clubs\Pages\ListClubs;
 use App\Filament\Resources\Clubs\Pages\CreateClub;
 use App\Filament\Resources\Clubs\Pages\EditClub;
-use App\Filament\Resources\ClubResource\Pages;
 use App\Models\Club;
 use App\Models\SportRegion;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -19,7 +18,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class ClubResource extends Resource implements HasShieldPermissions
 {

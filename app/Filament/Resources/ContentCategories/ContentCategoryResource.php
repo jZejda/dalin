@@ -14,8 +14,6 @@ use App\Filament\Resources\ContentCategories\Pages\ListContentCategories;
 use App\Filament\Resources\ContentCategories\Pages\CreateContentCategory;
 use App\Filament\Resources\ContentCategories\Pages\EditContentCategory;
 use App\Enums\SportEventType;
-use App\Filament\Resources\ContentCategoryResource\Pages;
-use App\Filament\Resources\ContentCategoryResource\RelationManagers;
 use App\Models\ContentCategory;
 use App\Models\SportEvent;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -77,7 +75,8 @@ class ContentCategoryResource extends Resource implements HasShieldPermissions
                                     TextInput::make('description')
                                     ->label(__('filament/common.content_category.description')),
                                 ])
-                                ->columns(1),
+                                ->columns(1)
+                                ->columnSpan(3),
                         ])
                         ->columns(3)
                         ->columnSpan([
@@ -85,7 +84,7 @@ class ContentCategoryResource extends Resource implements HasShieldPermissions
                             'md' => 12,
                         ]),
 
-                ]),
+                ])->columnSpan(12),
             ]);
     }
 

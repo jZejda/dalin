@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Pages\Pages;
 
 use Filament\Actions\CreateAction;
 use App\Filament\Resources\Pages\PageResource;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListPages extends ListRecords

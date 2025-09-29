@@ -19,7 +19,6 @@ use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ViewPage;
 use App\Enums\ContentFormat;
 use App\Enums\PageStatus;
-use App\Filament\Resources\PageResource\Pages;
 use App\Models\ContentCategory;
 use App\Models\Page;
 use App\Models\User;
@@ -75,11 +74,12 @@ class PageResource extends Resource implements HasShieldPermissions
                                 ->unique(ignoreRecord: true),
 
                             // Markdown editor
-                            Grid::make()->schema([
+                            Grid::make(1)->schema([
                                 MarkdownEditor::make('content')
                                 ->label('Obsah')
                                 ->required()
-                            ])->columns(1),
+                            ])->columns(1)
+                            ->columnSpan(2),
                         ])
                         ->columns(2)
                         ->columnSpan([
@@ -131,7 +131,7 @@ class PageResource extends Resource implements HasShieldPermissions
                             'md' => 4
                         ]),
 
-                ])
+                ])->columnSpan(12)
             ]);
     }
 

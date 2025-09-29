@@ -6,7 +6,6 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use App\Filament\Resources\ContentCategories\ContentCategoryResource;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditContentCategory extends EditRecord

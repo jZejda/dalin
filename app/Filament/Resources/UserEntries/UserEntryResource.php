@@ -9,7 +9,6 @@ use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\UserEntries\Pages\ListUserEntries;
 use App\Enums\EntryStatus;
 use App\Filament\Resources\UserEntries\InfoList\UserEntryOverview;
-use App\Filament\Resources\UserEntryResource\Pages;
 use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserEntry;

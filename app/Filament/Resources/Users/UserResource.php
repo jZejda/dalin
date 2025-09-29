@@ -16,8 +16,6 @@ use App\Filament\Resources\Users\RelationManagers\UserCreditRelationManager;
 use App\Filament\Resources\Users\RelationManagers\UserRaceProfilesRelationManager;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use Filament\Actions\Action;
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Http\Controllers\Cron\Jobs\UserSendPassword;
 use App\Mail\UserPasswordSend;
 use App\Models\User;

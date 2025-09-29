@@ -19,7 +19,6 @@ use App\Enums\AppRoles;
 use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
-use App\Filament\Resources\UserCreditResource\Pages;
 use App\Filament\Resources\UserCredits\Widgets\UserCreditStats;
 use App\Models\SportEvent;
 use App\Models\User;

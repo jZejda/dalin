@@ -6,7 +6,6 @@ use Filament\Actions\DeleteAction;
 use App\Filament\Resources\UserCredits\UserCreditResource;
 use App\Filament\Resources\UserCredits\Widgets\UserCreditOverview;
 use App\Filament\Resources\UserCredits\Widgets\UserCreditChat;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditUserCredit extends EditRecord

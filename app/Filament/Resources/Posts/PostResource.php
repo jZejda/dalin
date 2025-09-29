@@ -18,7 +18,6 @@ use App\Filament\Resources\Posts\Pages\ViewPost;
 use Filament\Actions\Action;
 use App\Enums\AppRoles;
 use App\Filament\Resources\Posts\Jobs\SendNewsMail;
-use App\Filament\Resources\PostResource\Pages;
 use App\Models\Post;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -49,9 +48,9 @@ class PostResource extends Resource implements HasShieldPermissions
         return $schema
             ->components([
                 Grid::make([
-                    'sm' => 1,
                     'md' => 12,
-                ])->schema([
+                ])
+                    ->schema([
                     Section::make()
                         ->schema([
                             TextInput::make('title')
@@ -81,10 +80,7 @@ class PostResource extends Resource implements HasShieldPermissions
                                 ->id('post-editorial'),
                         ])
                         ->columns(1)
-                        ->columnSpan([
-                            'sm' => 1,
-                            'md' => 8
-                        ]),
+                        ->columnSpan(8),
 
                     // Right Column
                     Section::make()
@@ -109,12 +105,9 @@ class PostResource extends Resource implements HasShieldPermissions
                                     ]
                                 )->default(2)
                                 ->required(),
-                        ])->columnSpan([
-                            'sm' => 1,
-                            'md' => 4
-                        ]),
+                        ])->columnSpan(4),
 
-                ])
+                ])->columnSpan(12)
             ]);
     }
 

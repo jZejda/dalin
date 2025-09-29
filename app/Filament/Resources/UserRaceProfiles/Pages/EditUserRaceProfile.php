@@ -4,7 +4,6 @@ namespace App\Filament\Resources\UserRaceProfiles\Pages;
 
 use Filament\Actions\DeleteAction;
 use App\Filament\Resources\UserRaceProfiles\UserRaceProfileResource;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditUserRaceProfile extends EditRecord

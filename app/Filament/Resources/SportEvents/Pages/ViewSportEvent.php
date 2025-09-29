@@ -9,7 +9,6 @@ use Filament\Actions\Action;
 use App\Filament\Resources\SportEvents\SportEventResource;
 use App\Services\OrisApiService;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewSportEvent extends ViewRecord

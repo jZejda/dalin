@@ -21,6 +21,7 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Illuminate\View\View;
+use Filament\Support\Enums\Width;
 use Illuminate\Support\Facades\View as FacadesView;
 
 class AdminPanelProvider extends PanelProvider
@@ -32,7 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->maxContentWidth('full')
+            ->maxContentWidth(Width::Full)
 //            ->brandName(config('site-config.club.abbr'))
             ->brandLogo(function (): ?View {
                 $logoPath = 'filament.logo.' . strtolower(config('site-config.club.abbr')) . '-logo';
@@ -44,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
             })
             ->sidebarCollapsibleOnDesktop()
             ->colors([
-            'primary' => Color::Amber,
+                'primary' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')

@@ -4,7 +4,6 @@ namespace App\Filament\Resources\ContentCategories\Pages;
 
 use Filament\Actions\CreateAction;
 use App\Filament\Resources\ContentCategories\ContentCategoryResource;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListContentCategories extends ListRecords

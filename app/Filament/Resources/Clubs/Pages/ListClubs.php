@@ -9,7 +9,6 @@ use Filament\Actions\Action;
 use App\Filament\Resources\Clubs\ClubResource;
 use App\Services\OrisApiService;
 use Filament\Notifications\Notification;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListClubs extends ListRecords
