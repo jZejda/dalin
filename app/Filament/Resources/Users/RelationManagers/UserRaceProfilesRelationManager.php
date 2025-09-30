@@ -164,7 +164,8 @@ class UserRaceProfilesRelationManager extends RelationManager
                         TextInput::make('phone')
                             ->label('Telefon'),
                     ])
-                    ->columns(2),
+                    ->columns(2)
+                    ->columnSpan(2),
                 Section::make('SI')
                     ->schema([
                         TextInput::make('si')
@@ -173,7 +174,8 @@ class UserRaceProfilesRelationManager extends RelationManager
                             ->numeric()
                             ->integer()
                             ->columnSpan('full'),
-                    ]),
+                    ])->columns(2)
+                    ->columnSpan(2),
                 Section::make('Licence')
                     ->schema([
                         Select::make('licence_ob')
@@ -194,7 +196,8 @@ class UserRaceProfilesRelationManager extends RelationManager
                                 self::getSportLicenceOptions()
                             )
                             ->default('-'),
-                    ])->columns(2),
+                    ])->columns(2)
+                    ->columnSpan(2),
             ]);
     }
 

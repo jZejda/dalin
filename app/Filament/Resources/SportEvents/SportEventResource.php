@@ -247,7 +247,10 @@ class SportEventResource extends Resource implements HasShieldPermissions
     {
         return $schema
             ->components([
-                Group::make()
+                Group::make([
+                    'sm' => 1,
+                    'md' => 12
+                ])
                     ->schema([
                         Section::make()
                             ->schema([

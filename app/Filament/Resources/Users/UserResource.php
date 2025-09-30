@@ -26,6 +26,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Schemas\Components\Text;
+use Filament\Schemas\Components\Icon;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
@@ -96,6 +99,10 @@ class UserResource extends Resource implements HasShieldPermissions
                     // Right Column
                     Section::make()
                         ->schema([
+                            Text::make(str('**Info:** Uživateli je potřeba přiřadit minimálně jenu z rolí, jinak nebude mít oprávněníní k žádné akci.')
+                                ->inlineMarkdown()
+                                ->toHtmlString()
+                            )->color('warning'),
                             Select::make('roles')
                                 ->label('Role')
                                 ->multiple()
@@ -113,7 +120,7 @@ class UserResource extends Resource implements HasShieldPermissions
                             'md' => 4,
                         ]),
 
-                ]),
+                ])->columnSpanFull(),
             ]);
 
     }

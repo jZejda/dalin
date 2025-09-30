@@ -48,9 +48,9 @@ class PostResource extends Resource implements HasShieldPermissions
         return $schema
             ->components([
                 Grid::make([
+                    'sm' => 1,
                     'md' => 12,
-                ])
-                    ->schema([
+                ])->schema([
                     Section::make()
                         ->schema([
                             TextInput::make('title')
@@ -80,7 +80,10 @@ class PostResource extends Resource implements HasShieldPermissions
                                 ->id('post-editorial'),
                         ])
                         ->columns(1)
-                        ->columnSpan(8),
+                        ->columnSpan([
+                            'sm' => 1,
+                            'md' => 8
+                        ]),
 
                     // Right Column
                     Section::make()
@@ -105,9 +108,12 @@ class PostResource extends Resource implements HasShieldPermissions
                                     ]
                                 )->default(2)
                                 ->required(),
-                        ])->columnSpan(4),
+                        ])->columnSpan([
+                            'sm' => 1,
+                            'md' => 4
+                        ]),
 
-                ])->columnSpan(12)
+                ])->columnSpanFull()
             ]);
     }
 

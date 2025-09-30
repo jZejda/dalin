@@ -31,9 +31,6 @@ class Post extends Model
 {
     use SoftDeletes;
 
-    public const POST_PUBLIC = 0;
-    public const POST_PRIVATE = 1;
-
     protected $casts = [
         'private' => PostStatus::class,
         'content_mode' => ContentFormat::class,
