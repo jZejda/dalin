@@ -8,15 +8,15 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Support\Enums\TextSize;
 use Filament\Actions\BulkActionGroup;
+use App\Enums\AppRoles;
+use App\Models\User;
 use App\Models\UserRaceProfile;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Contracts\View\View;
@@ -29,9 +29,7 @@ class UserRaceProfileTable extends Component implements HasForms, HasTable, HasA
     use InteractsWithActions;
     use InteractsWithForms;
     use InteractsWithTable;
-    use InteractsWithRecord;
 
-    public Model|int|string|null $record;
 
     public function table(Table $table): Table
     {
@@ -89,7 +87,7 @@ class UserRaceProfileTable extends Component implements HasForms, HasTable, HasA
                     ->searchable(),
                 ToggleColumn::make('active')
                     ->label(__('user-race-profile.table.active'))
-                    ->hidden(!Auth::user()?->hasRole('super_admin')),
+                    ->hidden(!$this->isSuperAdmin()),
                 TextColumn::make('created_at')
                     ->label(__('user-race-profile.table.created_at'))
                     ->dateTime('d.m.Y')
@@ -141,6 +139,13 @@ class UserRaceProfileTable extends Component implements HasForms, HasTable, HasA
             ->headerActions([
                 //
             ]);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        /** @var User|null $user */
+        $user = Auth::user();
+        return $user?->hasRole([AppRoles::SuperAdmin->value]) ?? false;
     }
 
     public function render(): View
