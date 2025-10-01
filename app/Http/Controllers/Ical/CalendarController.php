@@ -7,7 +7,11 @@ namespace App\Http\Controllers\Ical;
 use App\Http\Controllers\Controller;
 use App\Services\IcalService;
 use Illuminate\Http\Response;
+use Knuckles\Scribe\Attributes\Group;
+use Knuckles\Scribe\Attributes\Subgroup;
 
+#[Group("Calendar", "APIs for server ical calendar feed common calendar applications")]
+#[Subgroup("ICAL", "Server ical calendar feed")]
 class CalendarController extends Controller
 {
     private IcalService $icalService;
