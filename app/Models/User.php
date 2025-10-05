@@ -80,6 +80,7 @@ class User extends Authenticatable implements FilamentUser
     protected $hidden = [
         'password',
         'remember_token',
+        'api_key_hash',
     ];
 
     /** @var array<string, string> */
@@ -87,6 +88,12 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
         'active' => 'boolean',
     ];
+
+    public function setApiKey(string $plainApiKey): void
+    {
+        $this->api_key_hash = hash('sha256', $plainApiKey);
+        $this->saveOrFail();
+    }
 
     public function userRaceProfiles(): HasMany
     {

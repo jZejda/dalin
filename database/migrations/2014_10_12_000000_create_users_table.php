@@ -21,6 +21,7 @@ return new class () extends Migration {
             $table->string('payer_variable_symbol', 16)->nullable();
             $table->boolean('active')->default(true);
             $table->rememberToken();
+            $table->char('api_key_hash', 64)->nullable()->unique();
             $table->timestamps();
         });
     }

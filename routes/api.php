@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Ical\CalendarController;
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,14 @@ Route::get('/feed/kalendar/treninky/all/', [CalendarController::class, 'training
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+// Posts API protected by x-apikey and role permission using spatie/permission ( OR Permission)
+Route::prefix('v1')->middleware([
+    'apikey',
+    'role:' . \App\Models\User::ROLE_REDACTOR 
+    . '|' . \App\Models\User::ROLE_SUPER_ADMIN 
+    . '|' . \App\Models\User::ROLE_EVENT_MASTER,
+])->group(function () {
+    Route::get('/posts', [PostController::class, 'index']);
 });
