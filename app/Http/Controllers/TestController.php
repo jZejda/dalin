@@ -11,12 +11,21 @@ class TestController extends Controller
     public function test(): void
     {
 
-        $users = User::query()
-            ->whereIn('id', [1,4])
-            ->get();
+        $user = User::find(1);
+
+        $user->setApiKey($this->generateApiKey());
 
 
-        dd($users);
+//        $users = User::query()
+//            ->whereIn('id', [1,4])
+//            ->get();
+//
+//
+//        dd($users);
 
+    }
+
+    function generateApiKey(int $length = 32): string {
+        return bin2hex(random_bytes($length));
     }
 }

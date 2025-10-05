@@ -20,12 +20,9 @@ class ApiKeyAuth
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        // Use sha256 hex hash for constant-time lookup
-        $apiKeyHash = hash('sha256', $apiKey);
-
         /** @var User|null $user */
         $user = User::query()
-            ->where('api_key_hash', '=', $apiKeyHash)
+            ->where('api_key_hash', '=', $apiKey)
             ->first();
 
         if ($user === null || !$user->isActive()) {

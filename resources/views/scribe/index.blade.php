@@ -94,9 +94,21 @@
                                                     <li class="tocify-item level-2" data-unique="endpoints-GETapi-user">
                                 <a href="#endpoints-GETapi-user">GET api/user</a>
                             </li>
-                                                                                <li class="tocify-item level-2" data-unique="endpoints-GETapi-v1-posts">
-                                <a href="#endpoints-GETapi-v1-posts">GET api/v1/posts</a>
+                                                                        </ul>
+                            </ul>
+                    <ul id="tocify-header-v1" class="tocify-header">
+                <li class="tocify-item level-1" data-unique="v1">
+                    <a href="#v1">V1</a>
+                </li>
+                                    <ul id="tocify-subheader-v1" class="tocify-subheader">
+                                                    <li class="tocify-item level-2" data-unique="v1-post">
+                                <a href="#v1-post">POST</a>
                             </li>
+                                                            <ul id="tocify-subheader-v1-post" class="tocify-subheader">
+                                                                            <li class="tocify-item level-3" data-unique="v1-GETapi-v1-posts">
+                                            <a href="#v1-GETapi-v1-posts">GET api/v1/posts</a>
+                                        </li>
+                                                                    </ul>
                                                                         </ul>
                             </ul>
             </div>
@@ -108,7 +120,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: October 5, 2025</li>
+        <li>Last updated: October 6, 2025</li>
     </ul>
 </div>
 
@@ -199,7 +211,7 @@ fetch(url, {
 content-type: text/calendar; charset=utf-8
 content-disposition: attachment; filename=&quot;abm-zavody.ics&quot;
 x-ratelimit-limit: 30
-x-ratelimit-remaining: 27
+x-ratelimit-remaining: 29
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
@@ -347,7 +359,7 @@ fetch(url, {
 content-type: text/calendar; charset=utf-8
 content-disposition: attachment; filename=&quot;abm-treninky.ics&quot;
 x-ratelimit-limit: 30
-x-ratelimit-remaining: 26
+x-ratelimit-remaining: 28
 access-control-allow-origin: *
  </code></pre></details>         <pre>
 
@@ -576,7 +588,15 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                         </form>
 
-                    <h2 id="endpoints-GETapi-v1-posts">GET api/v1/posts</h2>
+                <h1 id="v1">V1</h1>
+
+    <p>APIs V1</p>
+
+                        <h2 id="v1-post">POST</h2>
+                                        <p>
+                    <p>News</p>
+                </p>
+                                        <h2 id="v1-GETapi-v1-posts">GET api/v1/posts</h2>
 
 <p>
 </p>
@@ -597,6 +617,12 @@ $response = $client-&gt;get(
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
+        'query' =&gt; [
+            'from' =&gt; '2024-12-31',
+            'to' =&gt; '2024-12-31',
+            'page' =&gt; '1',
+            'per_page' =&gt; 'architecto',
+        ],
     ]
 );
 $body = $response-&gt;getBody();
@@ -605,7 +631,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://127.0.0.1:8000/api/v1/posts" \
+    --get "http://127.0.0.1:8000/api/v1/posts?from=2024-12-31&amp;to=2024-12-31&amp;page=1&amp;per_page=architecto" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -614,6 +640,15 @@ print_r(json_decode((string) $body));</code></pre></div>
     <pre><code class="language-javascript">const url = new URL(
     "http://127.0.0.1:8000/api/v1/posts"
 );
+
+const params = {
+    "from": "2024-12-31",
+    "to": "2024-12-31",
+    "page": "1",
+    "per_page": "architecto",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
 
 const headers = {
     "Content-Type": "application/json",
@@ -629,21 +664,39 @@ fetch(url, {
 
 <span id="example-responses-GETapi-v1-posts">
             <blockquote>
-            <p>Example response (401):</p>
+            <p>Example response (200):</p>
         </blockquote>
-                <details class="annotation">
-            <summary style="cursor: pointer;">
-                <small onclick="textContent = parentElement.parentElement.open ? 'Show headers' : 'Hide headers'">Show headers</small>
-            </summary>
-            <pre><code class="language-http">cache-control: no-cache, private
-content-type: application/json
-x-ratelimit-limit: 60
-x-ratelimit-remaining: 55
-access-control-allow-origin: *
- </code></pre></details>         <pre>
+                <pre>
 
 <code class="language-json" style="max-height: 300px;">{
-    &quot;message&quot;: &quot;Unauthorized&quot;
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1,
+            &quot;user_id&quot;: 1,
+            &quot;title&quot;: &quot;Novinka jak noh&quot;,
+            &quot;editorial&quot;: null,
+            &quot;img_url&quot;: null,
+            &quot;content&quot;: &quot;Toto je prvn9 novinka&quot;,
+            &quot;content_mode&quot;: 2,
+            &quot;private&quot;: 1,
+            &quot;created_at&quot;: &quot;2025-10-05T21:26:52.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2025-10-05T21:26:52.000000Z&quot;
+        }
+    ],
+    &quot;links&quot;: {
+        &quot;first&quot;: &quot;http://localhost/api/v1/posts?page=1&quot;,
+        &quot;last&quot;: null,
+        &quot;prev&quot;: null,
+        &quot;next&quot;: null
+    },
+    &quot;meta&quot;: {
+        &quot;current_page&quot;: 1,
+        &quot;current_page_url&quot;: &quot;http://localhost/api/v1/posts?page=1&quot;,
+        &quot;from&quot;: 1,
+        &quot;path&quot;: &quot;http://localhost/api/v1/posts&quot;,
+        &quot;per_page&quot;: 20,
+        &quot;to&quot;: 1
+    }
 }</code>
  </pre>
     </span>
@@ -716,7 +769,52 @@ You can check the Dev Tools console for debugging information.</code></pre>
     <br>
 <p>Example: <code>application/json</code></p>
             </div>
-                        </form>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>from</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="from"                data-endpoint="GETapi-v1-posts"
+               value="2024-12-31"
+               data-component="query">
+    <br>
+<p>Date from in Y-M-D Example: <code>2024-12-31</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="to"                data-endpoint="GETapi-v1-posts"
+               value="2024-12-31"
+               data-component="query">
+    <br>
+<p>Date to in Y-M-D Example: <code>2024-12-31</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-v1-posts"
+               value="1"
+               data-component="query">
+    <br>
+<p>Filter by whether a post is public or not. Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+                <input type="text" style="display: none"
+                              name="per_page"                data-endpoint="GETapi-v1-posts"
+               value="architecto"
+               data-component="query">
+    <br>
+<p>Field to sort by. Defaults to 'id'. Example: <code>architecto</code></p>
+            </div>
+                </form>
 
             
 

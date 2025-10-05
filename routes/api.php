@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Ical\CalendarController;
-use App\Http\Controllers\PostController;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,9 +30,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Posts API protected by x-apikey and role permission using spatie/permission ( OR Permission)
 Route::prefix('v1')->middleware([
     'apikey',
-    'role:' . \App\Models\User::ROLE_REDACTOR 
-    . '|' . \App\Models\User::ROLE_SUPER_ADMIN 
-    . '|' . \App\Models\User::ROLE_EVENT_MASTER,
+    'role:' . User::ROLE_REDACTOR
+    . '|' . User::ROLE_SUPER_ADMIN
+    . '|' . User::ROLE_EVENT_MASTER,
 ])->group(function () {
     Route::get('/posts', [PostController::class, 'index']);
 });
