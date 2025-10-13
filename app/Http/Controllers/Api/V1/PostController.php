@@ -28,7 +28,7 @@ class PostController extends Controller
             {
                 "id": 1,
                 "user_id": 1,
-                "title": "Novinka jak noh",
+                "title": "Novinka jak noha",
                 "editorial": null,
                 "img_url": null,
                 "content": "Toto je prvn9 novinka",

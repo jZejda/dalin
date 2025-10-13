@@ -11,7 +11,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class SportEventExportPolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:SportEventExport');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEvents;
 
+use BackedEnum;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\ViewAction;
 use Filament\Actions\EditAction;
@@ -57,6 +58,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
+use UnitEnum;
 
 class SportEventResource extends Resource implements HasShieldPermissions
 {
@@ -64,9 +66,9 @@ class SportEventResource extends Resource implements HasShieldPermissions
 
     protected static ?int $navigationSort = 10;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-calendar';
+    protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-calendar';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Akce/Závody';
+    protected static string | UnitEnum | null $navigationGroup = 'Akce/Závody';
 
     protected static ?string $navigationLabel = 'Závod';
 
@@ -79,27 +81,13 @@ class SportEventResource extends Resource implements HasShieldPermissions
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn (Model $record): string => route('filament.admin.resources.sport-events.entry', ['record' => $record]),)
             ->columns([
                 ViewColumn::make('entry_type')
                     ->label('Typ')
                     ->view('filament.tables.columns.entryType')
                     ->alignment(Alignment::Center)
                     ->visibleFrom('md'),
-
-                //                TextColumn::make('name')
-                //                    ->searchable()
-                //                    ->label('Název')
-                //                    ->sortable()
-                //                    ->tooltip(fn (SportEvent $record): string => $record->last_update ? 'Poslední hromadná aktualizace: ' . $record->last_update->format('m.d.Y - H:i') : '')
-                //                    ->weight('medium')
-                //                    ->alignLeft()
-                //                    ->limit(35)
-                //                    ->color(fn (SportEvent $record): string => $record->cancelled === true ? 'danger' : '')
-                //                    ->icon(fn (SportEvent $record): string => $record->cancelled === true ? 'heroicon-s-x-circle' : '')
-                //                    ->iconPosition('before') // `before` or `after`
-                //                    //->description(fn (SportEvent $record): string => $record->oris_id ? 'ORIS ID: ' . $record->oris_id : ''),
-                //                    ->description(fn (SportEvent $record): string => $record->alt_name ? $record->alt_name : ''),
-
                 ViewColumn::make('name')
                     ->searchable()
                     ->sortable()

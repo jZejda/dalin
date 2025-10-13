@@ -11,7 +11,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class PagePolicy
 {
     use HandlesAuthorization;
-
+    
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:Page');

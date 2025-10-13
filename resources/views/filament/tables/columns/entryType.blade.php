@@ -4,7 +4,7 @@ use App\Enums\SportEventType;
 
 ?>
 
-<div>
+<div style="width: 100%; text-align: center; display: flex; justify-content: center; align-items: center; margin: 0 auto;">
     @if ($getRecord()->event_type->value === SportEventType::Race->value)
         <div>
             <x-sport-event.event-icon :eventType="$getRecord()->event_type" :sportId="$getRecord()->sport_id"/>
