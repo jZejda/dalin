@@ -2,6 +2,7 @@
 use Carbon\Carbon;
 use App\Models\Page;
 use App\Enums\ContentFormat;
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
 
     /** @var Page $page */
 ?>
@@ -31,6 +32,8 @@ use App\Enums\ContentFormat;
                 <p>{!! $page->content !!}</p>
             @elseif($page->content_format === ContentFormat::Markdown)
                 <p>{{ Markdown::parse($page->content) }}</p>
+            @elseif($page->content_format === ContentFormat::TipTapJson)
+                <p>{!! RichContentRenderer::make($page->content)->toHtml() !!}</p>
             @endif
         </div>
 
