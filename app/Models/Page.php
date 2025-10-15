@@ -41,6 +41,7 @@ class Page extends Model
         'page_menu' => 'boolean',
         'status' => PageStatus::class,
         'content_format' => ContentFormat::class,
+        // content is handled by custom accessor/mutator
     ];
 
 
@@ -65,5 +66,37 @@ class Page extends Model
     public function contentCategory(): HasOne
     {
         return $this->hasOne(ContentCategory::class, 'id', 'content_category_id');
+    }
+
+    /**
+     * Get the content attribute with intelligent casting based on content_format
+     */
+    public function getContentAttribute($value)
+    {
+        // If content_format is HTML, try to decode as JSON, fallback to string
+        if ($this->content_format === ContentFormat::TipTapJson) {
+            if (is_string($value)) {
+                $decoded = json_decode($value, true);
+                return $decoded !== null ? $decoded : $value;
+            }
+            return $value;
+        }
+        
+        // For Markdown, always return as string
+        return $value;
+    }
+
+    /**
+     * Set the content attribute with intelligent encoding based on content_format
+     */
+    public function setContentAttribute($value)
+    {
+        // If value is array, encode as JSON (for RichEditor)
+        if (is_array($value)) {
+            $this->attributes['content'] = json_encode($value);
+        } else {
+            // For string values, store as string (for MarkdownEditor)
+            $this->attributes['content'] = $value;
+        }
     }
 }

@@ -11,12 +11,14 @@ enum ContentFormat: int implements HasLabel, HasColor
 {
     case Html = 1;
     case Markdown = 2;
+    case TipTapJson = 3;
 
     public function getLabel(): ?string
     {
         return match ($this) {
             self::Html => 'HTML',
             self::Markdown => 'Markdown',
+            self::TipTapJson => 'TipTap JSON',
         };
     }
 
@@ -25,6 +27,7 @@ enum ContentFormat: int implements HasLabel, HasColor
         return match ($this) {
             self::Html => 'info',
             self::Markdown => 'success',
+            self::TipTapJson => 'warning',
         };
     }
 }

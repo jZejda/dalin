@@ -17,6 +17,7 @@ use App\Filament\Resources\Pages\Pages\ListPages;
 use App\Filament\Resources\Pages\Pages\CreatePage;
 use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ViewPage;
+use App\Enums\AppRoles;
 use App\Enums\ContentFormat;
 use App\Enums\PageStatus;
 use App\Models\ContentCategory;
@@ -24,6 +25,7 @@ use App\Models\Page;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -73,12 +75,34 @@ class PageResource extends Resource implements HasShieldPermissions
                                 ->rules(['alpha_dash'])
                                 ->unique(ignoreRecord: true),
 
-                            // Markdown editor
-                            Grid::make(1)->schema([
-                                MarkdownEditor::make('content')
-                                ->label('Obsah')
-                                ->required()
-                            ])->columns(1)
+                            // Dynamic editor based on content_format
+                            Grid::make(1)->schema(function (callable $get) {
+                                $contentFormat = $get('content_format');
+                                
+                                // Pokud je vybrán HTML (ContentFormat::Html = 1)
+                                if ($contentFormat === 3 || $contentFormat === ContentFormat::TipTapJson) {
+                                    return [
+                                        RichEditor::make('content')
+                                            ->label('Obsah')
+                                            ->required()
+                                            ->json()
+                                            ->toolbarButtons([
+                                                ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link'],
+                                                ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
+                                                ['blockquote', 'codeBlock', 'bulletList', 'orderedList', 'details', 'grid', 'gridDelete'],
+                                                ['table', 'attachFiles'], // The `customBlocks` and `mergeTags` tools are also added here if those features are used.
+                                                ['undo', 'redo', 'lead', 'small', 'textColor'],
+                                            ])
+                                    ];
+                                }
+                                
+                                // Defaultně Markdown (ContentFormat::Markdown = 2)
+                                return [
+                                    MarkdownEditor::make('content')
+                                        ->label('Obsah')
+                                        ->required()
+                                ];
+                            })->columns(1)
                             ->columnSpan(2),
                         ])
                         ->columns(2)
@@ -106,7 +130,8 @@ class PageResource extends Resource implements HasShieldPermissions
                                 ->label('Formát')
                                 ->options(ContentFormat::class)
                                 ->default(ContentFormat::Markdown)
-                                ->disabled(!Auth::user()?->hasRole('super_admin'))
+                                ->reactive()
+                                ->disabled(fn ($context) => $context === 'edit' || !Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                 ->required(),
 
                             Select::make('content_category_id')
