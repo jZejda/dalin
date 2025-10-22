@@ -14,6 +14,12 @@
 | Build tools   | Vite                                | Kompilace JS/CSS, hot reload |
 | Deployment    | [Forge / Envoyer / jiný]            | CI/CD pipeline, staging & production |
 
+## 🧩 Dokumentace závislostí
+- **Laravel v 12.x** https://laravel.com/docs/12.x
+- **FilamentPHP v4.x** https://filamentphp.com/docs/4.x
+- **TailwindCSS v4.x** https://tailwindcss.com/docs/installation/using-vite
+- **Livewire** https://livewire.laravel.com/docs/quickstart
+
 ## 🧩 Architektura
 - **Modulární struktura**: Každý modul má vlastní `Service`, `Repository`, `DTO`, `Controller`.
 - **Validace**: Laravel Form Requests.

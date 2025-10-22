@@ -20,6 +20,7 @@ use App\Filament\Resources\Pages\Pages\ViewPage;
 use App\Enums\AppRoles;
 use App\Enums\ContentFormat;
 use App\Enums\PageStatus;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\HeroBlock;
 use App\Models\ContentCategory;
 use App\Models\Page;
 use App\Models\User;
@@ -84,14 +85,17 @@ class PageResource extends Resource implements HasShieldPermissions
                                     return [
                                         RichEditor::make('content')
                                             ->label('Obsah')
+                                            ->customBlocks([
+                                                HeroBlock::class,
+                                            ])
                                             ->required()
                                             ->json()
                                             ->toolbarButtons([
                                                 ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link'],
                                                 ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
                                                 ['blockquote', 'codeBlock', 'bulletList', 'orderedList', 'details', 'grid', 'gridDelete'],
-                                                ['table', 'attachFiles'], // The `customBlocks` and `mergeTags` tools are also added here if those features are used.
-                                                ['undo', 'redo', 'lead', 'small', 'textColor'],
+                                                ['table', 'attachFiles'],
+                                                ['undo', 'redo', 'lead', 'small', 'textColor', 'customBlocks'],
                                             ])
                                     ];
                                 }

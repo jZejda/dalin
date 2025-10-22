@@ -3,6 +3,7 @@ use Carbon\Carbon;
 use App\Models\Page;
 use App\Enums\ContentFormat;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\HeroBlock;
 
     /** @var Page $page */
 ?>
@@ -33,7 +34,9 @@ use Filament\Forms\Components\RichEditor\RichContentRenderer;
             @elseif($page->content_format === ContentFormat::Markdown)
                 <p>{{ Markdown::parse($page->content) }}</p>
             @elseif($page->content_format === ContentFormat::TipTapJson)
-                <p>{!! RichContentRenderer::make($page->content)->toHtml() !!}</p>
+                <p>{!! RichContentRenderer::make($page->content)->customBlocks([
+                        HeroBlock::class,
+                    ])->toHtml() !!}</p>
             @endif
         </div>
 

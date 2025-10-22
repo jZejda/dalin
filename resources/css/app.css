@@ -90,4 +90,98 @@
     @apply text-lg font-semibold text-gray-900 dark:text-white;
 }
 
+/* Hero Block Styles */
+.hero-block {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-heading {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.hero-subheading {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+.hero-button {
+    display: inline-block;
+    background: white;
+    color: #667eea;
+    padding: 0.75rem 2rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.hero-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Hero Block Preview Styles */
+.hero-preview {
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    padding: 1.5rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+}
+
+.hero-preview-content {
+    text-align: center;
+}
+
+.hero-preview-heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.hero-preview-subheading {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Grid Layout Styles */
+.app-front-content .grid-layout {
+    @apply block;
+}
+
+@media (min-width: 768px) {
+    .app-front-content .grid-layout {
+        @apply grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+}
+
+.app-front-content .grid-layout-col {
+    @apply w-full;
+}
+
+@media (min-width: 768px) {
+    .app-front-content .grid-layout-col {
+        @apply block;
+        width: 100%;
+    }
+}
+
 @tailwind utilities;
