@@ -4,6 +4,7 @@ use App\Models\Page;
 use App\Enums\ContentFormat;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\HeroBlock;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
 
     /** @var Page $page */
 ?>
@@ -36,6 +37,7 @@ use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\HeroBlock;
             @elseif($page->content_format === ContentFormat::TipTapJson)
                 <p>{!! RichContentRenderer::make($page->content)->customBlocks([
                         HeroBlock::class,
+                        AlertBlock::class,
                     ])->toHtml() !!}</p>
             @endif
         </div>

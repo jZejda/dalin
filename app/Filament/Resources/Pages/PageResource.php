@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Pages;
 
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -79,7 +80,7 @@ class PageResource extends Resource implements HasShieldPermissions
                             // Dynamic editor based on content_format
                             Grid::make(1)->schema(function (callable $get) {
                                 $contentFormat = $get('content_format');
-                                
+
                                 // Pokud je vybrán HTML (ContentFormat::Html = 1)
                                 if ($contentFormat === 3 || $contentFormat === ContentFormat::TipTapJson) {
                                     return [
@@ -87,6 +88,7 @@ class PageResource extends Resource implements HasShieldPermissions
                                             ->label('Obsah')
                                             ->customBlocks([
                                                 HeroBlock::class,
+                                                AlertBlock::class,
                                             ])
                                             ->required()
                                             ->json()
@@ -99,7 +101,7 @@ class PageResource extends Resource implements HasShieldPermissions
                                             ])
                                     ];
                                 }
-                                
+
                                 // Defaultně Markdown (ContentFormat::Markdown = 2)
                                 return [
                                     MarkdownEditor::make('content')
