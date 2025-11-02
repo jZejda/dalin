@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\SportEvent;
+use App\Services\OrisApiService;
 use Illuminate\Support\Carbon;
 
 /** @var SportEvent[] $sportEvents */
@@ -25,11 +26,11 @@ Závody u kterých právě končí **{{$deadline}} termín** přihlášek.
     | :----------------- |:------------- |:------------- |
     @foreach ($sportEvents as $event)
         @if ($deadline === 1)
-        | {{ Carbon::parse($event->entry_date_1)->format('d.m.Y - H:i') }}  | {{$event->name }} | @if($event->oris_id !== null)[{{$event->oris_id }}](https://oris.orientacnisporty.cz/Zavod?id={{$event->oris_id}})@endif  |
+        | {{ Carbon::parse($event->entry_date_1)->format('d.m.Y - H:i') }}  | {{$event->name }} | @if($event->oris_id !== null)[{{$event->oris_id }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$event->oris_id}})@endif  |
         @elseif($deadline === 2)
-        | {{ Carbon::parse($event->entry_date_2)->format('d.m.Y - H:i') }}  | {{$event->name }} | @if($event->oris_id !== null)[{{$event->oris_id }}](https://oris.orientacnisporty.cz/Zavod?id={{$event->oris_id}})@endif  |
+        | {{ Carbon::parse($event->entry_date_2)->format('d.m.Y - H:i') }}  | {{$event->name }} | @if($event->oris_id !== null)[{{$event->oris_id }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$event->oris_id}})@endif  |
         @elseif($deadline === 3)
-        | {{ Carbon::parse($event->entry_date_3)->format('d.m.Y - H:i') }}  | {{$event->name }} | @if($event->oris_id !== null)[{{$event->oris_id }}](https://oris.orientacnisporty.cz/Zavod?id={{$event->oris_id}})@endif  |
+        | {{ Carbon::parse($event->entry_date_3)->format('d.m.Y - H:i') }}  | {{$event->name }} | @if($event->oris_id !== null)[{{$event->oris_id }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$event->oris_id}})@endif  |
         @endif
     @endforeach
 @endcomponent

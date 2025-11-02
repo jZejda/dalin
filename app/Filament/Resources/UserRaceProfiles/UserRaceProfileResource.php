@@ -18,6 +18,7 @@ use App\Filament\Resources\UserRaceProfiles\Pages\EditUserRaceProfile;
 use App\Enums\AppRoles;
 use App\Models\User;
 use App\Models\UserRaceProfile;
+use App\Services\OrisApiService;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -88,7 +89,7 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
 
                                                 try {
                                                     $orisResponse = Http::get(
-                                                        'https://oris.orientacnisporty.cz/API',
+                                                        OrisApiService::ORIS_API_URL,
                                                         [
                                                             'format' => 'json',
                                                             'method' => 'getUser',

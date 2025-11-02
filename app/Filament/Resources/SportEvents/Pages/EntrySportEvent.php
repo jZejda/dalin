@@ -27,6 +27,7 @@ use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserEntry;
 use App\Models\UserRaceProfile;
+use App\Services\OrisApiService;
 use App\Shared\Helpers\AppHelper;
 use App\Shared\Helpers\EmptyType;
 use Filament\Actions\Action as ActionAction;
@@ -275,7 +276,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                         ->label('Přejít na url závodu')
                                         ->button()
                                         ->openUrlInNewTab()
-                                        ->url('https://oris.orientacnisporty.cz/Zavod?id='.$eventOrisId),
+                                        ->url(OrisApiService::ORIS_URL.'/Zavod?id='.$eventOrisId),
                                 ])
                                 ->seconds(15)
                                 ->send();
@@ -347,7 +348,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                         ->label('Přejít na stránku závodu')
                                         ->button()
                                         ->openUrlInNewTab()
-                                        ->url('https://oris.orientacnisporty.cz/PrehledPrihlasenych?id='.$sportEvent->oris_id),
+                                        ->url(OrisApiService::ORIS_URL.'/PrehledPrihlasenych?id='.$sportEvent->oris_id),
                                 ])
                                 ->seconds(15)
                                 ->send();
@@ -431,13 +432,13 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     ->live()
                     ->searchable()
                     ->afterStateUpdated(
-                        (function ($state, Set $set) {
+                        (function (string $state, Set $set) {
 
                             /** @var SportEvent $sportEvent */
                             $sportEvent = $this->record;
 
                             try {
-                                $userProfile = UserRaceProfile::where('oris_id', '=', $state)->first();
+                                $userProfile = UserRaceProfile::where('id', '=', (int)$state)->first();
 
                                 $params = [
                                     'format' => 'json',
@@ -446,7 +447,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                     'comp' => $sportEvent->oris_id,
                                 ];
 
-                                $orisResponse = Http::get('https://oris.orientacnisporty.cz/API', $params)
+                                $orisResponse = Http::get(OrisApiService::ORIS_API_URL, $params)
                                     ->throw()
                                     ->json('Data');
 

@@ -34,6 +34,7 @@ use App\Models\SportEvent;
 use App\Models\SportLevel;
 use App\Models\SportList;
 use App\Models\SportRegion;
+use App\Services\OrisApiService;
 use App\Shared\Helpers\AppHelper;
 use App\Shared\Helpers\EmptyType;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -267,7 +268,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                                     try {
                                                         //$client = (new GuzzleClient())->create();
                                                         $orisResponse = Http::get(
-                                                            'https://oris.orientacnisporty.cz/API',
+                                                            OrisApiService::ORIS_API_URL,
                                                             [
                                                                 'format' => 'json',
                                                                 'method' => 'getEvent',

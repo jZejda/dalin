@@ -2,7 +2,7 @@
 
 **DaLin** - informační systém na správu klubu orientačních sportů.
 Systém využívá v maximální míře různá napojení na ostatní automatizované systémy, 
-pro český region hlavně [ORIS](https://oris.orientacnisporty.cz/) systém pro automatizaci přihlášek na závody, stahování plateb, atd.
+pro český region hlavně [ORIS](https://oris.ceskyorientak.cz/) systém pro automatizaci přihlášek na závody, stahování plateb, atd.
 
 - [📢 &nbsp;Informace k vydání](https://jirizejda.cz/dalin/changelog/)
 - [✨ &nbsp;Používá ABM klub orientačního běhu](https://abmbrno.cz)

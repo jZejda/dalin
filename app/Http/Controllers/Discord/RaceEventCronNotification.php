@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Discord;
 
 use App\Http\Controllers\Controller;
 use App\Models\SportEvent;
+use App\Services\OrisApiService;
 use Carbon\Carbon;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
@@ -29,7 +30,7 @@ final class RaceEventCronNotification extends Controller
 
                 $raceEventOrisLink = '';
                 if (isset($raceEvent->oris_id)) {
-                    $raceEventOrisLink = sprintf('[%s](https://oris.orientacnisporty.cz/Zavod?id=%s)', $raceEvent->oris_id, $raceEvent->oris_id);
+                    $raceEventOrisLink = sprintf('[%s](%s/Zavod?id=%s)', $raceEvent->oris_id, OrisApiService::ORIS_URL, $raceEvent->oris_id);
                 }
 
                 $embeds[] = [

@@ -1,26 +1,45 @@
-/node_modules
+# NODE Dependencies
+node_modules/
+package-lock.json
+
+# Public dirs
 /public/build
 /public/hot
 /public/storage
 /public/orisdata
 /public/media
 /storage/*.key
-/vendor
+
 /bootstrap/cache
+
+# Environment files
 .env
 .env.backup
 exclude_file*
 .scribe
 .phpunit.result.cache
-.phpstorm.meta.php
+
 _ide_helper_models.php
 _ide_helper.php
 deploy.sh
 Homestead.json
 Homestead.yaml
 auth.json
+
+# Logs
 npm-debug.log
 yarn-error.log
+
+# IDE files
 /.idea
 /.vscode
+/.scribe
 /.cursor
+.phpstorm.meta.php
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# PHP
+vendor/

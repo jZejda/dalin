@@ -70,7 +70,7 @@ class UsersEntryExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
             'Kategorie',
             'Poznámka',
             'Klubová poznámka',
-            'Požadavky na strat',
+            'Požadavky na start',
             'Čip',
             'Pujcit cip',
         ];
