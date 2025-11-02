@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Components\Oris;
 
+use App\Services\OrisApiService;
 use GuzzleHttp;
 use GuzzleHttp\Client;
 
@@ -15,14 +16,13 @@ class GuzzleClient
 
     public function create(): Client
     {
-        return new Client(['base_uri' => 'https://oris.orientacnisporty.cz']);
+        return new Client(['base_uri' => OrisApiService::ORIS_URL]);
     }
 
     public function generateMultipartForm(string $method, array $context = []): array
     {
 
         $boundary = sprintf("--------------------------------------%u", mt_rand(1000000000, 9999999999));
-        // $boundary = '--------------------------250790699679000650450122';
         $default = [
             'format' => 'json',
             'method' => $method,

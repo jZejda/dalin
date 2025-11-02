@@ -1,6 +1,6 @@
 @php
     use App\Models\SportEvent;
-    use Carbon\Carbon;
+    use App\Services\OrisApiService;use Carbon\Carbon;
     use App\Models\Post;
     use App\Enums\ContentFormat;
 
@@ -16,11 +16,13 @@
                 @php($ourClub = 'border-yellow-300 dark:border-yellow-300')
             @endif
         @endforeach
-        <div class="flex border {{$ourClub}} shadow-sm rounded-xl mb-2 hover:shadow-md focus:outline-none focus:shadow-md transition">
+        <div
+            class="flex border {{$ourClub}} shadow-sm rounded-xl mb-2 hover:shadow-md focus:outline-none focus:shadow-md transition">
 
             <!-- Left Section -->
             <div class="w-1/5 p-2 border-r-2 border-gray-300 dark:border-gray-700 border-dotted">
-                <div class="text-center text-2xl font-black">{{$event->date->format('d')}}/{{$event->date->format('m')}}</div>
+                <div class="text-center text-2xl font-black">{{$event->date->format('d')}}
+                    /{{$event->date->format('m')}}</div>
                 <div class="text-center text-md tracking-tighter text-gray-600 dark:text-gray-400">
                     <span class="font-bold">
                         @if($event->date->format('N') === 1)
@@ -102,25 +104,30 @@
                 </div>
                 <div class="tracking-tight">
                     <div class="flex items-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="20" height="20" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="20" height="20"
+                             stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/>
                         </svg>
                         @if($event->oris_id !== null)
                             <a
-                                class="ml-1 inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-700 dark:text-white no-underline" style="text-decoration: none !important;"
-                                href='https://oris.orientacnisporty.cz/Zavod?id={{$event->oris_id}}'
+                                class="ml-1 inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-700 dark:text-white no-underline"
+                                style="text-decoration: none !important;"
+                                href={{OrisApiService::ORIS_URL}}'/Zavod?id={{$event->oris_id}}'
                                 target='_blank';
                             >
                                 {{ $event->oris_id }}
                             </a>
                         @endif
                         @if((count($event->organization ?? []) > 0))
-                            <div class="ml-1 inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-700 dark:text-white">
+                            <div
+                                class="ml-1 inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-700 dark:text-white">
                                 {{ ((count($event->organization ?? []) > 0) ? Arr::join($event->organization, ', ') : '') }}
                             </div>
                         @endif
                         @if((count($event->region ?? []) > 0))
-                            <div class="ml-1 inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-700 dark:text-white">
+                            <div
+                                class="ml-1 inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-700 dark:text-white">
                                 {{ ((count($event->region ?? []) > 0) ? Arr::join($event->region, ', ') : '') }}
                             </div>
                         @endif

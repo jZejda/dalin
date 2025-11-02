@@ -134,7 +134,7 @@ class AddOrisEventModal
                                                     }
                                                 }
 
-                                                $orisResponse = Http::get('https://oris.orientacnisporty.cz/API', $baseUriParams)
+                                                $orisResponse = Http::get(OrisApiService::ORIS_API_URL, $baseUriParams)
                                                     ->throw()
                                                     ->json('Data');
 

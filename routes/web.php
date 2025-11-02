@@ -53,6 +53,7 @@ Route::get('/dashboard', function () {
 
 Route::prefix('admin')->group(function () {
     Route::get('/export/event-entry/{eventId}', [UserEntryController::class, 'export']);
+    Route::get('/export/event-entry-iof/{eventId}', [UserEntryController::class, 'exportEntryListIofV3'])->name('admin.export.event-entry-iof');
 })->middleware(['auth', 'verified']);
 
 Route::get('/admin/test', [TestController::class, 'test']);
