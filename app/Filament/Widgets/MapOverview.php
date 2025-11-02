@@ -12,6 +12,7 @@ use App\Shared\Helpers\EmptyType;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
+use App\Services\OrisApiService;
 use stdClass;
 
 //use Webbingbrasil\FilamentMaps\Actions;
@@ -95,7 +96,7 @@ class MapOverview
             . '<br>'
             . 'místo: <b>' . $sportEvent->place . '</b>'
             . '<br>'
-            . 'ORIS: <b><a href="https://oris.orientacnisporty.cz/Zavod?id=' . $sportEvent->oris_id . '" target="_blank">' . $sportEvent->oris_id . '</a></b>';
+            . 'ORIS: <b><a href="'. OrisApiService::ORIS_URL .'/Zavod?id=' . $sportEvent->oris_id . '" target="_blank">' . $sportEvent->oris_id . '</a></b>';
     }
 
     public function getActions(): array

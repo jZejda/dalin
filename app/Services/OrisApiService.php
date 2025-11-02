@@ -43,7 +43,9 @@ final class OrisApiService
 
     private OrisMethod $orisMethod;
 
-    public const string ORIS_API_URL = 'https://oris.orientacnisporty.cz/API';
+    public const string ORIS_URL = 'https://oris.ceskyorientak.cz'; // https://oris.orientacnisporty.cz
+
+    public const string ORIS_API_URL = 'https://oris.ceskyorientak.cz/API';
 
     public const string ORIS_API_DEFAULT_FORMAT = 'json';
 

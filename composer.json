@@ -36,7 +36,8 @@
         "spatie/laravel-markdown": "^2.7",
         "symfony/property-access": "^7.3",
         "symfony/property-info": "^7.3",
-        "symfony/serializer": "^7.3"
+        "symfony/serializer": "^7.3",
+        "ext-dom": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.24",

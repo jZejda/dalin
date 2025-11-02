@@ -5,6 +5,7 @@ use App\Models\SportEvent;
 use Illuminate\Support\Carbon;
 use App\Shared\Helpers\EmptyType;
 use Illuminate\Support\Str;
+use App\Services\OrisApiService;
 
 /** @var SportEvent[]|Collection $eventFirstDateEnd */
 /** @var SportEvent[]|Collection $eventSecondDateEnd */
@@ -29,7 +30,7 @@ Závody u kterých končí **první termín** přihlášek.
 | Přihláška do       | Datum akce         | Název akce/závodu   |
 | :----------------- |:------------------ |:------------------ |
 @foreach ($eventFirstDateEnd as $firstDate)
-| {{ Carbon::parse($firstDate->entry_date_1)->format('d.m.Y - H:i') }} | @if(EmptyType::stringNotEmpty($firstDate->alt_name)){{ Carbon::parse($firstDate->date)->format('d.m.Y') }}@endif | @if($firstDate->oris_id !== null)[{{$firstDate->name}}](https://oris.orientacnisporty.cz/Zavod?id={{$firstDate->oris_id}})@endif<br>@if(EmptyType::stringNotEmpty($firstDate->alt_name)){{Str::limit($firstDate->alt_name, 35)}}@endif | @if($firstDate->oris_id !== null)[{{$firstDate->oris_id }}](https://oris.orientacnisporty.cz/Zavod?id={{$firstDate->oris_id}})@endif  |
+| {{ Carbon::parse($firstDate->entry_date_1)->format('d.m.Y - H:i') }} | @if(EmptyType::stringNotEmpty($firstDate->alt_name)){{ Carbon::parse($firstDate->date)->format('d.m.Y') }}@endif | @if($firstDate->oris_id !== null)[{{$firstDate->name}}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$firstDate->oris_id}})@endif<br>@if(EmptyType::stringNotEmpty($firstDate->alt_name)){{Str::limit($firstDate->alt_name, 35)}}@endif | @if($firstDate->oris_id !== null)[{{$firstDate->oris_id }}](https://oris.orientacnisporty.cz/Zavod?id={{$firstDate->oris_id}})@endif  |
 @endforeach
 @endcomponent
 @endif
@@ -46,7 +47,7 @@ Závody u kterých končí **druhý termín** přihlášek.
 | Přihláška do       | Datum akce         | Název akce/závodu   |
 | :----------------- |:------------------ |:------------------ |
 @foreach ($eventSecondDateEnd as $secondDate)
-| {{ Carbon::parse($secondDate->entry_date_2)->format('d.m.Y - H:i') }} | @if(EmptyType::stringNotEmpty($secondDate->alt_name)){{ Carbon::parse($secondDate->date)->format('d.m.Y') }}@endif | @if($secondDate->oris_id !== null) [{{$secondDate->name}}](https://oris.orientacnisporty.cz/Zavod?id={{$secondDate->oris_id}})@endif<br>@if(EmptyType::stringNotEmpty($secondDate->alt_name)){{Str::limit($secondDate->alt_name, 35)}}@endif | @if($secondDate->oris_id !== null)[{{$secondDate->oris_id }}](https://oris.orientacnisporty.cz/Zavod?id={{$secondDate->oris_id}})@endif  |
+| {{ Carbon::parse($secondDate->entry_date_2)->format('d.m.Y - H:i') }} | @if(EmptyType::stringNotEmpty($secondDate->alt_name)){{ Carbon::parse($secondDate->date)->format('d.m.Y') }}@endif | @if($secondDate->oris_id !== null) [{{$secondDate->name}}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$secondDate->oris_id}})@endif<br>@if(EmptyType::stringNotEmpty($secondDate->alt_name)){{Str::limit($secondDate->alt_name, 35)}}@endif | @if($secondDate->oris_id !== null)[{{$secondDate->oris_id }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$secondDate->oris_id}})@endif  |
 @endforeach
 
 @endcomponent
@@ -64,7 +65,7 @@ Závody u kterých končí **třetí termín** přihlášek.
 | Přihláška do       | Datum akce         | Název akce/závodu   |
 | :----------------- |:------------------ |:------------------ |
 @foreach ($eventThirdDateEnd as $thirdDate)
-| {{ Carbon::parse($thirdDate->entry_date_3)->format('d.m.Y - H:i') }} | @if(EmptyType::stringNotEmpty($thirdDate->alt_name)) {{ Carbon::parse($thirdDate->date)->format('d.m.Y') }}@endif | @if($thirdDate->oris_id !== null) [{{$thirdDate->name}}](https://oris.orientacnisporty.cz/Zavod?id={{$thirdDate->oris_id}})@endif<br>@if(EmptyType::stringNotEmpty($thirdDate->alt_name)){{Str::limit($thirdDate->alt_name, 35)}}@endif | @if($thirdDate->oris_id !== null)[{{$thirdDate->oris_id }}](https://oris.orientacnisporty.cz/Zavod?id={{$thirdDate->oris_id}})@endif  |
+| {{ Carbon::parse($thirdDate->entry_date_3)->format('d.m.Y - H:i') }} | @if(EmptyType::stringNotEmpty($thirdDate->alt_name)) {{ Carbon::parse($thirdDate->date)->format('d.m.Y') }}@endif | @if($thirdDate->oris_id !== null) [{{$thirdDate->name}}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$thirdDate->oris_id}})@endif<br>@if(EmptyType::stringNotEmpty($thirdDate->alt_name)){{Str::limit($thirdDate->alt_name, 35)}}@endif | @if($thirdDate->oris_id !== null)[{{$thirdDate->oris_id }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$thirdDate->oris_id}})@endif  |
 @endforeach
 @endcomponent
 @endif

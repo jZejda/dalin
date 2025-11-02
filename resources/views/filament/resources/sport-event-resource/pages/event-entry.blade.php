@@ -4,6 +4,7 @@
     use App\Models\SportClass;
     use App\Models\SportService;
     use App\Enums\AppRoles;
+    use App\Services\OrisApiService;
     use App\Shared\Helpers\AppHelper;use Carbon\Carbon;
 
     /** @var SportEvent $record */
@@ -67,15 +68,15 @@
                 </div>
                 <div>
                     @if (EmptyType::intNotEmpty($record->oris_id))
-                        <a href="https://oris.orientacnisporty.cz/Zavod?id={{ $record->oris_id }}" target="_blank">
+                        <a href="{{ OrisApiService::ORIS_URL }}/Zavod?id={{ $record->oris_id }}" target="_blank">
                             <span
                                 class="bg-gray-100 text-gray-800 text-sm font-medium mr-1 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">ORIS</span>
                         </a>
-                        <a href="https://oris.orientacnisporty.cz/Startovka?id={{ $record->oris_id }}" target="_blank">
+                        <a href="{{ OrisApiService::ORIS_URL }}/Startovka?id={{ $record->oris_id }}" target="_blank">
                             <span
                                 class="bg-gray-100 text-gray-800 text-sm font-medium mr-1 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">P</span>
                         </a>
-                        <a href="https://oris.orientacnisporty.cz/Vysledky?id={{ $record->oris_id }}" target="_blank">
+                        <a href="{{ OrisApiService::ORIS_URL }}/Vysledky?id={{ $record->oris_id }}" target="_blank">
                             <span
                                 class="bg-gray-100 text-gray-800 text-sm font-medium mr-1 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">V</span>
                         </a>

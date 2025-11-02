@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\UserResource\RelationManagers;
 
+use App\Services\OrisApiService;
 use App\Shared\Helpers\AppHelper;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -62,7 +63,7 @@ class UserRaceProfilesRelationManager extends RelationManager
 
                                 try {
                                     $orisResponse = Http::get(
-                                        'https://oris.orientacnisporty.cz/API',
+                                        OrisApiService::ORIS_API_URL,
                                         [
                                             'format' => 'json',
                                             'method' => 'getUser',
@@ -85,7 +86,7 @@ class UserRaceProfilesRelationManager extends RelationManager
 
                                 try {
                                     $orisResponseClubUser = Http::get(
-                                        'https://oris.orientacnisporty.cz/API',
+                                        OrisApiService::ORIS_API_URL,
                                         [
                                             'format' => 'json',
                                             'method' => 'getClubUsers',
