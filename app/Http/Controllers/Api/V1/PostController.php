@@ -18,8 +18,8 @@ use Knuckles\Scribe\Attributes\Response;
 #[Subgroup("POST", "News")]
 class PostController extends Controller
 {
-    #[QueryParam('from',  'string', description:'Date from in Y-M-D', required: false, example: '2024-12-31')]
-    #[QueryParam('to', 'string', description: 'Date to in Y-M-D', required: false,example: '2024-12-31')]
+    #[QueryParam('from', 'string', description:'Date from in Y-M-D', required: false, example: '2024-12-31')]
+    #[QueryParam('to', 'string', description: 'Date to in Y-M-D', required: false, example: '2024-12-31')]
     #[QueryParam('page', 'integer', 'Filter by whether a post is public or not.', required: false, example: 1)]
     #[QueryParam('per_page', 'string', 'Field to sort by. Defaults to \'id\'.', required: false)]
     #[Response(<<<JSON
@@ -80,5 +80,3 @@ class PostController extends Controller
         return JsonResource::collection($posts);
     }
 }
-
-

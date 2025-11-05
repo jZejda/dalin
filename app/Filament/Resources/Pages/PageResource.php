@@ -18,7 +18,6 @@ use App\Filament\Resources\Pages\Pages\ListPages;
 use App\Filament\Resources\Pages\Pages\CreatePage;
 use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ViewPage;
-use App\Enums\AppRoles;
 use App\Enums\ContentFormat;
 use App\Enums\PageStatus;
 use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\HeroBlock;

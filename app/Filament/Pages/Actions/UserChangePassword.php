@@ -15,7 +15,7 @@ final class UserChangePassword
     {
         return Action::make('setNewPassword')
             ->label(__('filament/common.change_password'))
-            ->modalDescription(__('filament/common.user_setting.change_password_description', ['user' => auth()->user()?->name ?? '']))
+            ->modalDescription(__('filament/common.user_setting.change_password_description', ['user' => auth()->user()->name ?? '']))
             ->modalSubmitActionLabel(__('filament/common.user_setting.change_password_submit_label'))
             ->modalIcon('heroicon-o-finger-print')
             ->modalIconColor('danger')

@@ -7,7 +7,6 @@ namespace App\Http\Middleware;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiKeyAuth
@@ -35,5 +34,3 @@ class ApiKeyAuth
         return $next($request);
     }
 }
-
-

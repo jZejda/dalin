@@ -82,7 +82,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
     public static function table(Table $table): Table
     {
         return $table
-            ->recordUrl(fn (Model $record): string => route('filament.admin.resources.sport-events.entry', ['record' => $record]),)
+            ->recordUrl(fn (Model $record): string => route('filament.admin.resources.sport-events.entry', ['record' => $record]), )
             ->columns([
                 ViewColumn::make('entry_type')
                     ->label('Typ')
@@ -345,7 +345,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                         ->label('Název závodu/akce')
                                         ->required(),
 
-                                ])->columns(3),
+                                ])->columns(3)->columnSpan(3),
 
                                 Grid::make()->schema([
                                     DatePicker::make('date')
@@ -361,21 +361,23 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                         ->hint('Pouze pro etapové závody')
                                         ->hintIcon('heroicon-m-exclamation-triangle')
                                         ->hintColor('warning'),
-                                ])->columns(3),
+                                ])->columns(3)->columnSpan(3),
 
-                                TextInput::make('alt_name')
-                                    ->label('Alternativní název závodu')
-                                    ->hint('Nebude automaticky aktualizován cronem.'),
-                                TextInput::make('place')
-                                    ->label('Místo'),
+                                Grid::make()->schema([
+                                    TextInput::make('alt_name')
+                                        ->label('Alternativní název závodu')
+                                        ->hint('Nebude automaticky aktualizován cronem.'),
+                                    TextInput::make('place')
+                                        ->label('Místo'),
 
-                                TextInput::make('gps_lat')
-                                    ->label('GPS Lat')
-                                    ->numeric(),
+                                    TextInput::make('gps_lat')
+                                        ->label('GPS Lat')
+                                        ->numeric(),
 
-                                TextInput::make('gps_lon')
-                                    ->label('GPS Lon')
-                                    ->numeric(),
+                                    TextInput::make('gps_lon')
+                                        ->label('GPS Lon')
+                                        ->numeric(),
+                                ])->columns(2)->columnSpan(3),
 
                                 Grid::make()->schema([
                                     MarkdownEditor::make('entry_desc')
@@ -384,7 +386,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                         ->label('Info'),
                                     TextInput::make('event_warning')
                                         ->label('Upozornění'),
-                                ])->columns(1),
+                                ])->columns(1)->columnSpan(3),
                             ])
                             ->columns(2),
                     ])
@@ -408,10 +410,11 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                     )->label('Třetí termín'),
                                 ])->columns(2),
                             ]),
+
                         Section::make('Ostatní parametry')
+                            ->description('Ostatní parametry závodu/akce')
                             ->schema([
                                 Grid::make()->schema([
-
                                     Select::make('discipline_id')
                                         ->label('Disciplína')
                                         ->default(1)
@@ -439,42 +442,35 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                         ->maxItemsMessage('Je možné definovat pouze dva kluby')
                                         ->maxItems(2)
                                         ->searchable(),
-
-                                    Grid::make()->schema([
-                                        Select::make('region')
-                                            ->multiple()
-                                            ->options(SportRegion::all()->pluck('long_name', 'short_name'))
-                                            ->searchable(),
-                                    ])->columns(1),
-
-                                    Grid::make()->schema([
-                                        Toggle::make('use_oris_for_entries')
-                                            ->label('Používá ORIS?')
-                                            ->inline(false)
-                                            ->onIcon('heroicon-s-check')
-                                            ->offIcon('heroicon-m-x-mark'),
-
-                                        Toggle::make('dont_update_excluded')
-                                            ->label('Neaktualizovat')
-                                            ->inline(false)
-                                            ->onIcon('heroicon-s-check')
-                                            ->offIcon('heroicon-m-x-mark')
-                                            ->default(true),
-                                        Toggle::make('cancelled')
-                                            ->label('Zrušeno')
-                                            ->inline(false)
-                                            ->onIcon('heroicon-s-check')
-                                            ->offIcon('heroicon-m-x-mark')
-                                            ->onColor('danger')
-                                            ->default(false),
-                                    ])->columns(3),
-
                                 ])->columns(2),
+                                Select::make('region')
+                                    ->multiple()
+                                    ->options(SportRegion::all()->pluck('long_name', 'short_name'))
+                                    ->searchable(),
+                                Grid::make()->schema([
+                                    Toggle::make('use_oris_for_entries')
+                                        ->label('Používá ORIS?')
+                                        ->inline(false)
+                                        ->onIcon('heroicon-s-check')
+                                        ->offIcon('heroicon-m-x-mark'),
+
+                                    Toggle::make('dont_update_excluded')
+                                        ->label('Neaktualizovat')
+                                        ->inline(false)
+                                        ->onIcon('heroicon-s-check')
+                                        ->offIcon('heroicon-m-x-mark')
+                                        ->default(true),
+                                    Toggle::make('cancelled')
+                                        ->label('Zrušeno')
+                                        ->inline(false)
+                                        ->onIcon('heroicon-s-check')
+                                        ->offIcon('heroicon-m-x-mark')
+                                        ->onColor('danger')
+                                        ->default(false),
+                                ])->columns(3),
                             ]),
-                    ])
-                    ->columnSpan(['lg' => 1]),
-            ])
-            ->columns(3);
+                    ])->columnSpan(['lg' => 1]),
+            ])->columns(3);
     }
 
     public static function getRelations(): array

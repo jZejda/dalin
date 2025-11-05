@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Resources\SportEvents\Pages;
 
 use App\Filament\Resources\SportEvents\Pages\Actions\ExportsData;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;

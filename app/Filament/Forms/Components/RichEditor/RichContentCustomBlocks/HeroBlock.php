@@ -60,10 +60,10 @@ class HeroBlock extends RichContentCustomBlock
         ])->render();
     }
 
-     /**
-     * @param  array<string, mixed>  $config
-     * @param  array<string, mixed>  $data
-     */
+    /**
+    * @param  array<string, mixed>  $config
+    * @param  array<string, mixed>  $data
+    */
     public static function toHtml(array $config, array $data): string
     {
         return view('filament.forms.components.rich-editor.rich-content-custom-blocks.hero.index', [

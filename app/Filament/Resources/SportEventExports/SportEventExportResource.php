@@ -109,7 +109,7 @@ class SportEventExportResource extends Resource implements HasShieldPermissions
                             'md' => 4,
                         ]),
 
-                ]),
+                ])->columnSpan(12),
             ]);
     }
 

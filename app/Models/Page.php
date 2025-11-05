@@ -81,7 +81,7 @@ class Page extends Model
             }
             return $value;
         }
-        
+
         // For Markdown, always return as string
         return $value;
     }

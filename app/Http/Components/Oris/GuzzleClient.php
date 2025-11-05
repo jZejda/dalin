@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Components\Oris;
 
 use App\Services\OrisApiService;
-use GuzzleHttp;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Client;
 

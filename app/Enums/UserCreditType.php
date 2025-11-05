@@ -32,7 +32,7 @@ enum UserCreditType: string implements HasColor, HasIcon
     }
 
     #[Override]
-    public function getIcon(): ?string
+    public function getIcon(): string
     {
         return match ($this) {
             self::CacheOut => 'heroicon-m-arrow-trending-down',
@@ -45,7 +45,7 @@ enum UserCreditType: string implements HasColor, HasIcon
     }
 
     #[Override]
-    public function getColor(): ?string
+    public function getColor(): string
     {
         return match ($this) {
             self::CacheOut => 'danger',

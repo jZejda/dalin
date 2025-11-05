@@ -15,7 +15,7 @@ enum TransactionIndicator: string implements HasColor, HasIcon, HasLabel
     case Credit = 'credit';
 
     #[Override]
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         $trKey = 'bank_transaction.transaction_indicator.';
 
@@ -23,7 +23,7 @@ enum TransactionIndicator: string implements HasColor, HasIcon, HasLabel
     }
 
     #[Override]
-    public function getIcon(): ?string
+    public function getIcon(): string
     {
         return match ($this) {
             self::Debit => 'heroicon-m-arrow-trending-down',
@@ -32,7 +32,7 @@ enum TransactionIndicator: string implements HasColor, HasIcon, HasLabel
     }
 
     #[Override]
-    public function getColor(): ?string
+    public function getColor(): string
     {
         return match ($this) {
             self::Debit => 'danger',

@@ -16,16 +16,17 @@ class TestController extends Controller
         $user->setApiKey($this->generateApiKey());
 
 
-//        $users = User::query()
-//            ->whereIn('id', [1,4])
-//            ->get();
-//
-//
-//        dd($users);
+        //        $users = User::query()
+        //            ->whereIn('id', [1,4])
+        //            ->get();
+        //
+        //
+        //        dd($users);
 
     }
 
-    function generateApiKey(int $length = 32): string {
+    public function generateApiKey(int $length = 32): string
+    {
         return bin2hex(random_bytes($length));
     }
 }
