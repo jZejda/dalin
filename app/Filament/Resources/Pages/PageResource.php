@@ -37,6 +37,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PageResource extends Resource implements HasShieldPermissions
@@ -91,12 +92,84 @@ class PageResource extends Resource implements HasShieldPermissions
                                             ])
                                             ->required()
                                             ->json()
+                                            ->fileAttachmentsDisk('rich-editor-attachments')
+                                            ->fileAttachmentsDirectory('attachments')
+                                            ->fileAttachmentsVisibility('public')
+//                                            ->saveUploadedFileAttachmentUsing(function ($file, $record) {
+//                                                // If record doesn't exist yet (create mode), save temporarily
+//                                                if (!$record) {
+//                                                    $path = $file->store('attachments', 'rich-editor-attachments');
+//                                                    return $path;
+//                                                }
+//
+//                                                // Save file via medialibrary
+//                                                // addMedia() accepts UploadedFile or string path
+//                                                $media = $record->addMedia($file->getRealPath())
+//                                                    ->usingName($file->getClientOriginalName())
+//                                                    ->usingFileName($file->getClientOriginalName())
+//                                                    ->toMediaCollection('rich-editor-attachments', 'rich-editor-attachments');
+//
+//                                                // Return media ID as identifier - we'll use it to retrieve URL later
+//                                                // Format: "media:{id}" so we can distinguish it from regular paths
+//                                                return 'media:' . $media->id;
+//                                            })
+//                                            ->getFileAttachmentUrlUsing(function ($file, $record) {
+//                                                if (!$record) {
+//                                                    // In create mode, return temporary URL
+//                                                    return Storage::disk('rich-editor-attachments')->url($file);
+//                                                }
+//
+//                                                // Check if file path is a media ID reference (format: "media:123")
+//                                                if (str_starts_with($file, 'media:')) {
+//                                                    $mediaId = (int) str_replace('media:', '', $file);
+//                                                    $media = $record->getMedia('rich-editor-attachments')
+//                                                        ->firstWhere('id', $mediaId);
+//
+//                                                    if ($media) {
+//                                                        return $media->getUrl();
+//                                                    }
+//                                                }
+//
+//                                                // Try to find by path relative to root
+//                                                $media = $record->getMedia('rich-editor-attachments')
+//                                                    ->first(function ($media) use ($file) {
+//                                                        return $media->getPathRelativeToRoot() === $file;
+//                                                    });
+//
+//                                                // If not found by path, try by filename
+//                                                if (!$media) {
+//                                                    $fileName = basename($file);
+//                                                    $media = $record->getMedia('rich-editor-attachments')
+//                                                        ->firstWhere('file_name', $fileName);
+//                                                }
+//
+//                                                if ($media) {
+//                                                    return $media->getUrl();
+//                                                }
+//
+//                                                // Fallback to direct storage URL
+//                                                return Storage::disk('rich-editor-attachments')->url($file);
+//                                            })
                                             ->toolbarButtons([
-                                                ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'link'],
+                                                ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'lead', 'link'],
                                                 ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
-                                                ['blockquote', 'codeBlock', 'bulletList', 'orderedList', 'details', 'grid', 'gridDelete'],
+                                                ['blockquote', 'codeBlock', 'highlight', 'bulletList', 'orderedList', 'details', 'grid', 'gridDelete'],
                                                 ['table', 'attachFiles'],
                                                 ['undo', 'redo', 'lead', 'small', 'textColor', 'customBlocks'],
+                                            ])->floatingToolbars([
+//                                                'paragraph' => [
+//                                                    'bold', 'italic', 'underline', 'strike', 'subscript', 'superscript',
+//                                                ],
+//                                                'heading' => [
+//                                                    'h1', 'h2', 'h3',
+//                                                ],
+//                                                'table' => [
+//                                                    'tableAddColumnBefore', 'tableAddColumnAfter', 'tableDeleteColumn',
+//                                                    'tableAddRowBefore', 'tableAddRowAfter', 'tableDeleteRow',
+//                                                    'tableMergeCells', 'tableSplitCell',
+//                                                    'tableToggleHeaderRow',
+//                                                    'tableDelete',
+//                                                ],
                                             ])
                                     ];
                                 }

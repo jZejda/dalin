@@ -35,10 +35,13 @@ use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
             @elseif($page->content_format === ContentFormat::Markdown)
                 <p>{{ Markdown::parse($page->content) }}</p>
             @elseif($page->content_format === ContentFormat::TipTapJson)
-                <p>{!! RichContentRenderer::make($page->content)->customBlocks([
+                {!! RichContentRenderer::make($page->content)->customBlocks([
                         HeroBlock::class,
                         AlertBlock::class,
-                    ])->toHtml() !!}</p>
+                    ])
+                    ->fileAttachmentsDisk('rich-editor-attachments')
+                    ->fileAttachmentsVisibility('public')
+                    ->toUnsafeHtml() !!}
             @endif
         </div>
 

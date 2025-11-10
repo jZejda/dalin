@@ -6,10 +6,18 @@ namespace App\Models;
 
 use App\Enums\ContentFormat;
 use App\Enums\PostStatus;
+use Filament\Forms\Components\RichEditor\FileAttachmentProviders\SpatieMediaLibraryFileAttachmentProvider;
+use Filament\Forms\Components\RichEditor\Models\Concerns\InteractsWithRichContent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * App\Models\Post
@@ -27,9 +35,11 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read User|null $user
  */
-class Post extends Model
+class Post extends Model implements HasMedia
 {
     use SoftDeletes;
+    use InteractsWithMedia;
+    use InteractsWithRichContent;
 
     protected $casts = [
         'private' => PostStatus::class,
@@ -51,4 +61,20 @@ class Post extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+//    public function setUpRichContent(): void
+//    {
+//        $this->registerRichContent('content')
+//            ->fileAttachmentProvider(SpatieMediaLibraryFileAttachmentProvider::make())
+//            ->mediaName(fn (TemporaryUploadedFile $file): string => Str::random() . '_' . $file->getClientOriginalName())
+//            ->collection('content-file-attachments');
+//    }
+
+//    public function registerMediaConversions(?Media $media = null): void
+//    {
+//        $this
+//            ->addMediaConversion('preview')
+//            ->fit(Fit::Contain, 300, 300)
+//            ->nonQueued();
+//    }
 }

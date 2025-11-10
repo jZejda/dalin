@@ -9,6 +9,9 @@ use App\Enums\PageStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
  * App\Models\Page
@@ -30,8 +33,9 @@ use Illuminate\Support\Carbon;
  * @property-read User|null $user
  */
 
-class Page extends Model
+class Page extends Model implements HasMedia
 {
+    use InteractsWithMedia;
     public const string STATUS_OPEN = 'open';
     public const string STATUS_CLOSED = 'close';
     public const string STATUS_DRAFT = 'draft';
@@ -98,5 +102,15 @@ class Page extends Model
             // For string values, store as string (for MarkdownEditor)
             $this->attributes['content'] = $value;
         }
+    }
+
+    /**
+     * Register media collections for RichEditor attachments
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('rich-editor-attachments')
+            ->useDisk('rich-editor-attachments')
+            ->singleFile(false);
     }
 }

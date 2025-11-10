@@ -223,7 +223,7 @@
 
 /* Alert Block Styles */
 .alert-block {
-    @apply border-l-4 p-4 my-4 rounded-r-md;
+    @apply border-1 border-dashed pt-4 px-4 my-4 rounded-lg;
 }
 
 .alert-block-content {
@@ -239,15 +239,19 @@
 }
 
 .alert-block-heading {
-    @apply text-lg font-semibold m-0;
+    @apply text-lg font-semibold m-0 p-0;
+}
+
+.app-front-content .alert-block-heading {
+    @apply pb-0;
 }
 
 .alert-block-body {
-    @apply mt-3;
+    @apply mt-1;
 }
 
 .alert-block-body p {
-    @apply m-0 mb-2 last:mb-0;
+    @apply m-0 last:mb-2;
 }
 
 .alert-block-body ul,
