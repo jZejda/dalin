@@ -73,7 +73,7 @@ class PostController extends Controller
 
         $posts = $query->orderByDesc('created_at')
             ->select([
-                'id', 'user_id', 'title', 'editorial', 'img_url', 'content', 'content_mode', 'private', 'created_at', 'updated_at'
+                'id', 'user_id', 'title', 'editorial', 'img_url', 'content', 'content_mode', 'private', 'meta', 'created_at', 'updated_at'
             ])
             ->simplePaginate($request->query('per_page', 20));
 

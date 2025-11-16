@@ -27,6 +27,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property string $status
  * @property int $weight
  * @property bool $page_menu
+ * @property array|null $meta
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read ContentCategory|null $content_category
@@ -45,6 +46,7 @@ class Page extends Model implements HasMedia
         'page_menu' => 'boolean',
         'status' => PageStatus::class,
         'content_format' => ContentFormat::class,
+        'meta' => 'array',  
         // content is handled by custom accessor/mutator
     ];
 
@@ -60,6 +62,7 @@ class Page extends Model implements HasMedia
         'content_format',
         'picture_attachment',
         'weight',
+        'meta',
     ];
 
     public function user(): HasOne

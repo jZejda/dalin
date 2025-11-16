@@ -31,22 +31,6 @@ final class AppHelper
         return '';
     }
 
-    public static function getWhiteSpaceBeforeString(?string $characters, int $totalLength): string
-    {
-        if (EmptyType::stringNotEmpty($characters) && ! is_null($characters)) {
-            $stringLength = mb_strlen($characters);
-
-            $string = $characters;
-            for ($i = 0; $i < $totalLength - $stringLength; $i++) {
-                $string = $string.'&nbsp;';
-            }
-        } else {
-            $string = '';
-        }
-
-        return $string;
-    }
-
     public static function allowModifyUserEntry(SportEvent $sportEvent): bool
     {
         if (is_null($sportEvent->lastEntryDate())) {

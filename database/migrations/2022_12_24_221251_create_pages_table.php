@@ -28,6 +28,7 @@ return new class () extends Migration {
             $table->string('status', 10)->default('close');
             $table->tinyInteger('weight')->default(50);
             $table->tinyInteger('page_menu')->default(0)->unsigned();
+            $table->json('meta')->nullable();
             $table->timestamps();
 
             $table->index(['title']);

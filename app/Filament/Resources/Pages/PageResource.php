@@ -31,6 +31,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Repeater;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
@@ -229,6 +231,45 @@ class PageResource extends Resource implements HasShieldPermissions
                                 ->numeric()
                                 ->default(50),
 
+                            Repeater::make('meta_items')
+                                ->label('Meta')
+                                ->schema([
+                                    Select::make('key')
+                                        ->label('Klíč')
+                                        ->options([
+                                            'title' => 'Title',
+                                            'description' => 'Description',
+                                            'keywords' => 'Keywords',
+                                            'carrier' => 'Carrier',
+                                            'og:title' => 'OG Title',
+                                            'og:description' => 'OG Description',
+                                            'og:image' => 'OG Image',
+                                        ])
+                                        ->required()
+                                        ->searchable()
+                                        ->live()
+                                        ->afterStateUpdated(function (Set $set, $state, $get) {
+                                            // Zabraň duplicitním klíčům - pokud je klíč již použit, vyčisti ho
+                                            $currentItems = $get('../../meta_items') ?? [];
+                                            $duplicates = collect($currentItems)
+                                                ->where('key', $state)
+                                                ->keys();
+                                            
+                                            if ($duplicates->count() > 1) {
+                                                // Pokud je duplicitní, nastav prázdný
+                                                $set('key', null);
+                                            }
+                                        }),
+                                    TextInput::make('value')
+                                        ->label('Hodnota')
+                                        ->required(),
+                                ])
+                                ->columns(2)
+                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
+                                ->defaultItems(0)
+                                ->deletable(true)
+                                ->addable(true)
+                                ->reorderable(false)
                         ])->columnSpan([
                             'sm' => 1,
                             'md' => 4

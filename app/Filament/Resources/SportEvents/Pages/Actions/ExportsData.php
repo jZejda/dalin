@@ -53,6 +53,16 @@ class ExportsData
 
                     $action->close();
                     return response()->redirectTo(route('admin.export.event-entry-iof', ['eventId' => $this->sportEvent->id]));
+                } elseif ($data['export_type'] === 'CSOS') {
+                    Notification::make()
+                        ->title('Export přihlášek proběhl v pořádku')
+                        ->body('Souboru txt CSOS přihlášených uživatelů otevřete z disku.')
+                        ->success()
+                        ->seconds(15)
+                        ->send();
+
+                    $action->close();
+                    return response()->redirectTo(route('admin.export.event-entry-csos', ['eventId' => $this->sportEvent->id]));
                 } else {
                     return null;
                 }
@@ -68,9 +78,11 @@ class ExportsData
                 Grid::make(1)
                     ->schema([
                         Select::make('export_type')
+                            ->label('Nabízené exporty')
                             ->options([
-                                'userEntryXlsx' => 'Excel - Přihlášky',
-                                'IofV3EntryList' => 'IOF XMLv3 - Přihlášky - EXPERIMENTAL',
+                                'userEntryXlsx' => 'Přihlášky | Excel (*.xlsx)',
+                                'IofV3EntryList' => 'Přihlášky | IOF XML v3 (*.xml) - EXPERIMENTAL',
+                                'CSOS' => 'Přihlášky | ČSOS (*.txt) - EXPERIMENTAL',
                             ])
                             ->required(),
                     ]),
