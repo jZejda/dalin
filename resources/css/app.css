@@ -1,4 +1,5 @@
 @import 'tailwindcss'; /* Frontend content */
+@custom-variant dark (&:where(.dark, .dark *));
 
 .app-front-content p {
     @apply pb-4 dark:text-white;

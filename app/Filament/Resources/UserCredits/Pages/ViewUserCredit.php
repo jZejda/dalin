@@ -14,6 +14,7 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Notifications\Notification;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
+use Illuminate\Support\Facades\Auth;
 
 class ViewUserCredit extends ViewRecord
 {
@@ -46,7 +47,7 @@ class ViewUserCredit extends ViewRecord
 
                 $userCreditNote = new UserCreditNote();
                 $userCreditNote->user_credit_id = $this->record->id;
-                $userCreditNote->note_user_id = auth()->user()->id;
+                $userCreditNote->note_user_id = Auth::user()?->id;
                 $userCreditNote->note = $data['user_note'];
 
                 if ($userCreditNote->save()) {
@@ -62,7 +63,7 @@ class ViewUserCredit extends ViewRecord
                     foreach ($notificationUsers as $recipient) {
                         Notification::make()
                             ->title('Poznámka k vyúčtování')
-                            ->body('Uživatel: ' . auth()->user()?->name . ' | Vyúčtování ID: ' . $this->record->id)
+                            ->body('Uživatel: ' . Auth::user()?->name . ' | Vyúčtování ID: ' . $this->record->id)
                             ->sendToDatabase($recipient);
                     }
                 }

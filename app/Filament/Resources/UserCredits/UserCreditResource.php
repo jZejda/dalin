@@ -38,6 +38,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 
 class UserCreditResource extends Resource implements HasShieldPermissions
@@ -140,7 +141,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                                 ->required(),
 
                         ])
-                        ->columns(2)
+                        ->columns(1)
                         ->columnSpan([
                             'sm' => 1,
                             'md' => 8,
@@ -151,14 +152,14 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                         ->schema([
                             Select::make('source_user_id')
                                 ->label(__('user-credit.user_source_id'))
-                                ->options(function (User $user) {
+                                ->options(function () {
                                     $users = User::with('roles')->whereHas('roles', function ($q) {
                                         $q->whereIn('name', [AppRoles::BillingSpecialist->value, AppRoles::SuperAdmin->value]);
                                     })->get();
 
                                     return $users->pluck('user_identification', 'id');
                                 })
-                                ->default(auth()->user()?->id)
+                                ->default(Auth::user()?->id)
                                 ->searchable(),
 
                             Select::make('status')
@@ -172,7 +173,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                             'md' => 4,
                         ]),
 
-                ]),
+                ])->columnSpanFull(),
             ]);
     }
 

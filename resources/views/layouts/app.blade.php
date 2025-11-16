@@ -13,7 +13,6 @@
         @filamentStyles
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @stack('scripts')
-        <script src="https://cdn.tailwindcss.com"></script>
 
         <script>
             // On page load or when changing themes, best to add inline in `head` to avoid FOUC
@@ -51,44 +50,72 @@
     <script src="./node_modules/preline/dist/preline.js"></script>
 
     <script>
-        var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        function initThemeToggle() {
+            var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+            var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+            var themeToggleBtn = document.getElementById('theme-toggle');
 
-        // Change the icons inside the button based on previous settings
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            themeToggleLightIcon.classList.remove('hidden');
-        } else {
-            themeToggleDarkIcon.classList.remove('hidden');
+            // Check if elements exist
+            if (!themeToggleBtn || !themeToggleDarkIcon || !themeToggleLightIcon) {
+                return false;
+            }
+
+            // Change the icons inside the button based on previous settings
+            if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                themeToggleLightIcon.classList.remove('hidden');
+                themeToggleDarkIcon.classList.add('hidden');
+            } else {
+                themeToggleDarkIcon.classList.remove('hidden');
+                themeToggleLightIcon.classList.add('hidden');
+            }
+
+            // Remove existing event listeners by cloning the button
+            var newThemeToggleBtn = themeToggleBtn.cloneNode(true);
+            themeToggleBtn.parentNode.replaceChild(newThemeToggleBtn, themeToggleBtn);
+
+            // Add click event listener
+            newThemeToggleBtn.addEventListener('click', function() {
+                var darkIcon = document.getElementById('theme-toggle-dark-icon');
+                var lightIcon = document.getElementById('theme-toggle-light-icon');
+                var htmlElement = document.documentElement;
+
+                // Toggle dark mode class on html element
+                var isDark = htmlElement.classList.contains('dark');
+
+                if (isDark) {
+                    htmlElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                    darkIcon.classList.remove('hidden');
+                    lightIcon.classList.add('hidden');
+                } else {
+                    htmlElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                    darkIcon.classList.add('hidden');
+                    lightIcon.classList.remove('hidden');
+                }
+            });
+
+            return true;
         }
 
-        var themeToggleBtn = document.getElementById('theme-toggle');
-
-        themeToggleBtn.addEventListener('click', function() {
-
-            // toggle icons inside button
-            themeToggleDarkIcon.classList.toggle('hidden');
-            themeToggleLightIcon.classList.toggle('hidden');
-
-            // if set via local storage previously
-            if (localStorage.getItem('color-theme')) {
-                if (localStorage.getItem('color-theme') === 'light') {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                }
-
-                // if NOT set via local storage previously
-            } else {
-                if (document.documentElement.classList.contains('dark')) {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                } else {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                }
+        // Initialize on DOM content loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Try to initialize immediately
+            if (!initThemeToggle()) {
+                // If elements don't exist yet, try again after a short delay
+                setTimeout(function() {
+                    initThemeToggle();
+                }, 100);
             }
+        });
+
+        // Also initialize when Livewire finishes loading/updating
+        document.addEventListener('livewire:init', function() {
+            setTimeout(initThemeToggle, 50);
+        });
+
+        document.addEventListener('livewire:navigated', function() {
+            setTimeout(initThemeToggle, 50);
         });
     </script>
 </html>
