@@ -35,7 +35,9 @@ yarn-error.log
 /.vscode
 /.scribe
 /.cursor
+/.junie
 .phpstorm.meta.php
+CLAUDE.md
 
 # OS files
 .DS_Store
