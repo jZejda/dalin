@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Ical\CalendarController;
 use App\Models\User;
@@ -34,5 +35,9 @@ Route::prefix('v1')->middleware([
     . '|' . User::ROLE_SUPER_ADMIN
     . '|' . User::ROLE_EVENT_MASTER,
 ])->group(function () {
-    Route::get('/posts', [PostController::class, 'index']);
+    Route::get('/post/list', [PostController::class, 'list']);
+    Route::get('/post/{post}', [PostController::class, 'detail']);
+
+    Route::get('/page/list', [PageController::class, 'list']);
+    Route::get('/page/{page}', [PageController::class, 'detail']);
 });

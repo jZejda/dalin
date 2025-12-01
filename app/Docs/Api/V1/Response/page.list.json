@@ -1,0 +1,30 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "title": "Novinka jak noha",
+            "editorial": null,
+            "img_url": null,
+            "content": "Toto je prvn9 novinka",
+            "content_mode": 2,
+            "private": 1,
+            "created_at": "2025-10-05T21:26:52.000000Z",
+            "updated_at": "2025-10-05T21:26:52.000000Z"
+        }
+    ],
+    "links": {
+        "first": "http://localhost/api/v1/posts/list?page=1",
+        "last": null,
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "current_page_url": "http://localhost/api/v1/posts/list?page=1",
+        "from": 1,
+        "path": "http://localhost/api/v1/posts/list",
+        "per_page": 20,
+        "to": 1
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "data": {
+        "id": 2,
+        "user_id": 1,
+        "content_category_id": null,
+        "title": "Kontakt",
+        "slug": "kontakt",
+        "content": "<h1>Kontakt</h1><p>This is HTML content</p>",
+        "content_format": 1,
+        "picture_attachment": "",
+        "status": "open",
+        "weight": 30,
+        "page_menu": true,
+        "meta": null,
+        "created_at": "2025-10-05T21:26:52.000000Z",
+        "updated_at": "2025-10-05T21:26:52.000000Z"
+    }
+}
