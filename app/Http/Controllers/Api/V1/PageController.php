@@ -76,9 +76,6 @@ class PageController extends Controller
     #[ResponseFromFile('app/Docs/Api/V1/Response/page.detail.tiptap.json', 200, description: 'Example with TipTap JSON content (content_format = 3)')]
     public function detail(Page $page): PageResource
     {
-
-        dd($page);
-
         return new PageResource($page, true);
     }
 }

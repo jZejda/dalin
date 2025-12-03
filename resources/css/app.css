@@ -86,8 +86,16 @@
     @apply bg-gray-100 dark:bg-gray-800;
 }
 
+.app-front-content code {
+    @apply bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 px-1 py-1 rounded font-mono text-sm dark:text-white;
+}
+
 .app-front-content pre {
-    @apply text-gray-900 dark:text-gray-100 dark:bg-gray-900 py-4;
+    @apply text-gray-900 dark:text-gray-100 dark:bg-gray-900 bg-gray-100 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded overflow-x-auto font-mono;
+}
+
+.app-front-content pre code {
+    @apply bg-transparent border-0 px-0 py-0 rounded-none;
 }
 
 .app-front-content text {

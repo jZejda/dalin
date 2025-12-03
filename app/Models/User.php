@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enums\AppRoles;
 use App\Enums\UserParamType;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -197,5 +201,18 @@ class User extends Authenticatable implements FilamentUser
         }
 
         return null;
+    }
+
+    /** ------ Query scopes -------- */
+
+    /**
+     * @param Builder $query
+     * @var array<int, AppRoles> $roles
+     */
+    #[Scope]
+    protected function activeUsersByRole(Builder $query, array $roles): void
+    {
+        $query->where('active', '=', 1)
+              ->role($roles);
     }
 }

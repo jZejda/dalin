@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Pages;
 
+use App\Enums\AppRoles;
 use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
@@ -40,6 +41,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
 class PageResource extends Resource implements HasShieldPermissions
@@ -65,7 +67,7 @@ class PageResource extends Resource implements HasShieldPermissions
 
                             TextInput::make('title')
                                 ->required()
-                                ->reactive()
+                                ->live(onBlur: true)
                                 ->afterStateUpdated(function (Set $set, $state, $context) {
                                     if ($context === 'edit') {
                                         return;
@@ -155,23 +157,23 @@ class PageResource extends Resource implements HasShieldPermissions
                                             ->toolbarButtons([
                                                 ['bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'lead', 'link'],
                                                 ['h2', 'h3', 'alignStart', 'alignCenter', 'alignEnd'],
-                                                ['blockquote', 'codeBlock', 'highlight', 'bulletList', 'orderedList', 'details', 'grid', 'gridDelete'],
+                                                ['blockquote', 'code', 'codeBlock', 'highlight', 'bulletList', 'orderedList', 'details', 'grid', 'gridDelete'],
                                                 ['table', 'attachFiles'],
                                                 ['undo', 'redo', 'lead', 'small', 'textColor', 'customBlocks'],
                                             ])->floatingToolbars([
-//                                                'paragraph' => [
-//                                                    'bold', 'italic', 'underline', 'strike', 'subscript', 'superscript',
-//                                                ],
+                                                'paragraph' => [
+                                                    'bold', 'italic', 'underline', 'strike', 'subscript', 'superscript',
+                                                ],
 //                                                'heading' => [
 //                                                    'h1', 'h2', 'h3',
 //                                                ],
-//                                                'table' => [
-//                                                    'tableAddColumnBefore', 'tableAddColumnAfter', 'tableDeleteColumn',
-//                                                    'tableAddRowBefore', 'tableAddRowAfter', 'tableDeleteRow',
-//                                                    'tableMergeCells', 'tableSplitCell',
-//                                                    'tableToggleHeaderRow',
-//                                                    'tableDelete',
-//                                                ],
+                                                'table' => [
+                                                    'tableAddColumnBefore', 'tableAddColumnAfter', 'tableDeleteColumn',
+                                                    'tableAddRowBefore', 'tableAddRowAfter', 'tableDeleteRow',
+                                                    'tableMergeCells', 'tableSplitCell',
+                                                    'tableToggleHeaderRow',
+                                                    'tableDelete',
+                                                ],
                                             ])
                                     ];
                                 }
@@ -197,7 +199,7 @@ class PageResource extends Resource implements HasShieldPermissions
                         ->schema([
                             Select::make('user_id')
                                 ->label('Author')
-                                ->options(User::all()->pluck('name', 'id'))
+                                ->options(User::query()->activeUsersByRole([AppRoles::Redactor])->pluck('name', 'id'))
                                 ->default(Auth::id())
                                 ->searchable()
                                 ->required(),
@@ -254,7 +256,7 @@ class PageResource extends Resource implements HasShieldPermissions
                                             $duplicates = collect($currentItems)
                                                 ->where('key', $state)
                                                 ->keys();
-                                            
+
                                             if ($duplicates->count() > 1) {
                                                 // Pokud je duplicitní, nastav prázdný
                                                 $set('key', null);
@@ -285,7 +287,7 @@ class PageResource extends Resource implements HasShieldPermissions
             ->columns([
                 TextColumn::make('title')
                     ->label('Název')
-                    ->description(fn (Page $record): string => $record->slug ?? '')
+                    ->description(fn (Page $record): HtmlString => new HtmlString('<a href="' . url('/stranka/' . $record->slug) . '"target="_blank" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">' . ($record->slug ?? '') . '</a>'))
                     ->sortable()
                     ->searchable()
                     ->size(TextSize::Large)

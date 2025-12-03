@@ -48,7 +48,7 @@ class ContentCategoryResource extends Resource implements HasShieldPermissions
                         ->schema([
                             TextInput::make('title')
                                 ->label(__('filament/common.content_category.title'))
-                                ->reactive()
+                                ->live(onBlur: true)
                                 ->afterStateUpdated(function (Set $set, $state, $context) {
                                     if ($context === 'edit') {
                                         return;

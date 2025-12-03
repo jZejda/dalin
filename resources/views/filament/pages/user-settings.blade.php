@@ -71,7 +71,7 @@
                     <div>
                         <h3 class="block font-bold text-gray-800 dark:text-white">Aplikace</h3>
                         <p class="text-gray-600 dark:text-gray-400">Aktuální verze aplikace</p>
-                        <p class="mt-4 font-black text-4xl text-gray-600 dark:text-gray-400">11.5</p>
+                        <p class="mt-4 font-black text-4xl text-gray-600 dark:text-gray-400">12.0</p>
                     </div>
 
                     <p class="mt-3 inline-flex items-center gap-x-1 text-sm font-semibold text-gray-800 dark:text-gray-200">
