@@ -7,13 +7,11 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PageResource;
 use App\Models\Page;
-use App\Enums\PageStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\QueryParam;
-use Knuckles\Scribe\Attributes\Response;
 use Knuckles\Scribe\Attributes\ResponseFromFile;
 use Knuckles\Scribe\Attributes\Subgroup;
 use Knuckles\Scribe\Attributes\UrlParam;
@@ -70,7 +68,7 @@ class PageController extends Controller
         return JsonResource::collection($pages);
     }
 
-//    #[UrlParam('page', 'integer', 'The ID of the Page.', required: true, example: 1)]
+    //    #[UrlParam('page', 'integer', 'The ID of the Page.', required: true, example: 1)]
     #[ResponseFromFile('app/Docs/Api/V1/Response/page.detail.html.json', 200, description: 'Example with HTML content (content_format = 1)')]
     #[ResponseFromFile('app/Docs/Api/V1/Response/page.detail.markdown.json', 200, description: 'Example with Markdown content (content_format = 2)')]
     #[ResponseFromFile('app/Docs/Api/V1/Response/page.detail.tiptap.json', 200, description: 'Example with TipTap JSON content (content_format = 3)')]
@@ -79,4 +77,3 @@ class PageController extends Controller
         return new PageResource($page, true);
     }
 }
-

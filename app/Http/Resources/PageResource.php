@@ -62,4 +62,3 @@ class PageResource extends JsonResource
         return $data;
     }
 }
-

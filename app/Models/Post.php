@@ -62,19 +62,19 @@ class Post extends Model implements HasMedia
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-//    public function setUpRichContent(): void
-//    {
-//        $this->registerRichContent('content')
-//            ->fileAttachmentProvider(SpatieMediaLibraryFileAttachmentProvider::make())
-//            ->mediaName(fn (TemporaryUploadedFile $file): string => Str::random() . '_' . $file->getClientOriginalName())
-//            ->collection('content-file-attachments');
-//    }
+    //    public function setUpRichContent(): void
+    //    {
+    //        $this->registerRichContent('content')
+    //            ->fileAttachmentProvider(SpatieMediaLibraryFileAttachmentProvider::make())
+    //            ->mediaName(fn (TemporaryUploadedFile $file): string => Str::random() . '_' . $file->getClientOriginalName())
+    //            ->collection('content-file-attachments');
+    //    }
 
-//    public function registerMediaConversions(?Media $media = null): void
-//    {
-//        $this
-//            ->addMediaConversion('preview')
-//            ->fit(Fit::Contain, 300, 300)
-//            ->nonQueued();
-//    }
+    //    public function registerMediaConversions(?Media $media = null): void
+    //    {
+    //        $this
+    //            ->addMediaConversion('preview')
+    //            ->fit(Fit::Contain, 300, 300)
+    //            ->nonQueued();
+    //    }
 }

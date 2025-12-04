@@ -46,7 +46,7 @@ class Page extends Model implements HasMedia
         'page_menu' => 'boolean',
         'status' => PageStatus::class,
         'content_format' => ContentFormat::class,
-        'meta' => 'array',  
+        'meta' => 'array',
         // content is handled by custom accessor/mutator
     ];
 

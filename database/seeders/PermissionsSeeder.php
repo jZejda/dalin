@@ -174,4 +174,3 @@ class PermissionsSeeder extends Seeder
         DB::table('permissions')->insert($permissions);
     }
 }
-
