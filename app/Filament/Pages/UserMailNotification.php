@@ -21,6 +21,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -50,7 +51,11 @@ class UserMailNotification extends Page implements HasForms
 
     public array $users_allow_sign_up_for_race = [];
 
-    public array $filters = [];
+    public array $event_filters = [];
+
+    public ?string $api_key = null;
+    public bool $has_api_key = false;
+    public bool $show_api_key = false;
 
     public function mount(): void
     {
@@ -75,11 +80,90 @@ class UserMailNotification extends Page implements HasForms
         $this->users_allow_sign_up_for_race = $usersAllowSingUpForRace?->options['users_allow_sign_up_for_race'] ?? [];
 
         $filtersSetting = UserSetting::where('user_id', '=', Auth::user()?->id)
-            ->where('type', '=', 'filters')
+            ->where('type', '=', 'event_filters')
             ->first();
 
-        $this->filters = $filtersSetting?->options['filters'] ?? [];
+        $this->event_filters = $filtersSetting?->options['event_filters'] ?? [];
+
+        /** @var User $user */
+        $user = Auth::user();
+        $this->has_api_key = !is_null($user?->api_key_hash);
+
+        // Načíst hash z databáze, aby byl zobrazen i po refresh stránky
+        if ($this->has_api_key && $user?->api_key_hash !== null) {
+            $this->api_key = $user->api_key_hash;
+            $this->show_api_key = true;
+        }
     }
+    public function generateApiKey(): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $plainApiKey = bin2hex(random_bytes(32));
+        $user->setApiKey($plainApiKey);
+
+        // Načíst hash z databáze pro zobrazení uživateli
+        $user->refresh();
+        $this->api_key = $user->api_key_hash;
+        $this->has_api_key = true;
+        $this->show_api_key = true;
+
+        Notification::make()
+            ->title('API klíč vygenerován')
+            ->success()
+            ->body('Nový API klíč byl úspěšně vygenerován. Hash klíče je zobrazen níže a zůstane viditelný i po obnovení stránky.')
+            ->send();
+    }
+
+    public function regenerateApiKey(): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $plainApiKey = bin2hex(random_bytes(32));
+        $user->setApiKey($plainApiKey);
+
+        // Načíst hash z databáze pro zobrazení uživateli
+        $user->refresh();
+        $this->api_key = $user->api_key_hash;
+        $this->has_api_key = true;
+        $this->show_api_key = true;
+
+        Notification::make()
+            ->title('API klíč přegenerován')
+            ->success()
+            ->body('API klíč byl úspěšně přegenerován. Starý klíč již není platný. Nový hash klíče je zobrazen níže.')
+            ->send();
+    }
+
+    public function deleteApiKey(): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $user->api_key_hash = null;
+        $user->saveOrFail();
+
+        $this->api_key = null;
+        $this->has_api_key = false;
+        $this->show_api_key = false;
+
+        Notification::make()
+            ->title('API klíč smazán')
+            ->success()
+            ->body('API klíč byl úspěšně smazán.')
+            ->send();
+    }
+
+    public function copyApiKey(): void
+    {
+        Notification::make()
+            ->title('Zkopírováno')
+            ->success()
+            ->body('API klíč byl zkopírován do schránky.')
+            ->send();
+    }
+
     public function submit(): void
     {
         /** @var \Filament\Schemas\Schema $form */
@@ -109,7 +193,7 @@ class UserMailNotification extends Page implements HasForms
         /**
          * Filters Options
          */
-        $filtersOptions['filters'] = $this->filters;
+        $filtersOptions['event_filters'] = $this->event_filters;
         $this->storeFilters($filtersOptions);
 
         Notification::make()
@@ -199,26 +283,36 @@ class UserMailNotification extends Page implements HasForms
 
                     Tab::make('Filtry zobrazení')
                         ->schema([
-                            Repeater::make('filters')
+                            Repeater::make('event_filters')
+                                ->label('Uživatelské filtry listu závodů a událostí.')
                                 ->schema([
-                                    Select::make('sport_event_type')
-                                        ->label('Typ akce')
-                                        ->options(SportEventType::enumArray())
-                                        ->required(),
-                                    TextInput::make('days_from_today')
-                                        ->label('Počet dnů od dnešního dne')
-                                        ->numeric()
+                                    TextInput::make('name')
+                                        ->label('Název filtru')
+                                        ->hint('Bude zobrazen jako název filtru.')
                                         ->required(),
                                     Select::make('sport_list')
                                         ->label('Sport')
                                         ->options(SportList::whereIn('short_name', ['OB', 'LOB', 'MTBO', 'TRAIL'])->pluck('short_name', 'id'))
+                                        ->multiple()
+                                        ->required(),
+                                    Select::make('sport_event_type')
+                                        ->label('Typ akce')
+                                        ->options(SportEventType::enumArray())
+                                        ->multiple()
+                                        ->required(),
+                                    TextInput::make('days_from_today')
+                                        ->label('Zobraz od dne.')
+                                        ->numeric()
+                                        ->hint('Posun dnů')
+                                        ->hintColor('primary')
+                                        ->hintIcon('heroicon-m-question-mark-circle')
                                         ->required(),
                                     Select::make('icon')
                                         ->label('Ikona')
                                         ->options(SportEventMarkerType::enumArray())
                                         ->required(),
                                 ])
-                                ->columns(4)
+                                ->columns(3)
                                 ->addActionLabel('Přidej nový filtr')
                                 ->reorderableWithButtons()
                         ]),
@@ -235,6 +329,21 @@ class UserMailNotification extends Page implements HasForms
                                         ->searchable()
                                         ->options(User::all()->where('active', '=', 1)->pluck('user_identification', 'id'))
                                         ->preload()
+                                ]),
+                        ]),
+
+                    Tab::make('API Klíč')
+                        ->schema([
+                            Section::make('Správa API klíče')
+                                ->description('API klíč slouží pro autentizaci při používání API. Uchovávejte jej v tajnosti.')
+                                ->aside()
+                                ->schema([
+                                    View::make('filament.pages.components.api-key-manager')
+                                        ->viewData([
+                                            'hasApiKey' => $this->has_api_key,
+                                            'showApiKey' => $this->show_api_key,
+                                            'apiKey' => $this->api_key,
+                                        ])
                                 ]),
                         ]),
                 ])
@@ -281,13 +390,13 @@ class UserMailNotification extends Page implements HasForms
     private function storeFilters(array $filtersOptions): void
     {
         $filtersSetting = UserSetting::where('user_id', '=', Auth::user()?->id)
-            ->where('type', '=', 'filters')
+            ->where('type', '=', 'event_filters')
             ->first();
 
         if (is_null($filtersSetting) && Auth::user()?->id !== null) {
             $filtersSetting = new UserSetting();
             $filtersSetting->user_id = Auth::user()->id;
-            $filtersSetting->type = 'filters';
+            $filtersSetting->type = 'event_filters';
         }
 
         if ($filtersSetting !== null) {

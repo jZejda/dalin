@@ -17,10 +17,14 @@ use App\Filament\Resources\SportEvents\Pages\Actions\AddOrisEventModal;
 use App\Http\Controllers\Discord\DiscordWebhookHelper;
 use App\Http\Controllers\Discord\RaceEventAddedNotification;
 use App\Models\SportEvent;
+use App\Models\SportList;
+use App\Models\UserSetting;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ListSportEvents extends ListRecords
 {
@@ -37,30 +41,169 @@ class ListSportEvents extends ListRecords
 
     public function getTabs(): array
     {
-        return [
+        $tabs = [
             'all' => Tab::make()
                 ->label('Vše'),
-            'race' => Tab::make()
+        ];
+
+        $userFilters = $this->getUserFilters();
+
+        if (!empty($userFilters)) {
+            // Použít uživatelské filtry
+            foreach ($userFilters as $filterId => $filter) {
+                $tabs[$filterId] = Tab::make()
+                    ->label($this->generateFilterName($filter))
+                    ->badgeColor('success')
+                    ->icon($this->mapIconToHeroicon($filter['icon'] ?? null))
+                    ->modifyQueryUsing($this->buildQueryModifier($filter));
+            }
+        } else {
+            // Použít výchozí záložky
+            $tabs['race'] = Tab::make()
                 ->label('Závody')
                 ->badgeColor('success')
                 ->icon('heroicon-m-flag')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Race)),
-            'traing' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Race));
+            $tabs['traing'] = Tab::make()
                 ->label('Trénink')
                 ->badgeColor('success')
                 ->icon('heroicon-m-clock')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Training)),
-            'trainingCamp' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Training));
+            $tabs['trainingCamp'] = Tab::make()
                 ->label('Soustředění')
                 ->badgeColor('success')
                 ->icon('heroicon-m-calendar-days')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::TrainingCamp)),
-            'other' => Tab::make()
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::TrainingCamp));
+            $tabs['other'] = Tab::make()
                 ->label('Ostatní')
                 ->badgeColor('success')
                 ->icon('heroicon-m-exclamation-circle')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Other)),
-        ];
+                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Other));
+        }
+
+        return $tabs;
+    }
+
+    /**
+     * Načte uživatelsky definované filtry z user_settings
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    private function getUserFilters(): array
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return [];
+        }
+
+        $filtersSetting = UserSetting::where('user_id', '=', $user->id)
+            ->where('type', '=', 'filters')
+            ->first();
+
+        if (!$filtersSetting || !isset($filtersSetting->options['filters'])) {
+            return [];
+        }
+
+        return $filtersSetting->options['filters'] ?? [];
+    }
+
+    /**
+     * Mapuje custom ikonu na heroicon ikonu
+     *
+     * @param string|null $icon
+     * @return string
+     */
+    private function mapIconToHeroicon(?string $icon): string
+    {
+        return match ($icon) {
+            'obRaceStages' => 'heroicon-m-flag',
+            'obRaceDot' => 'heroicon-m-flag',
+            'obRaceSimple' => 'heroicon-m-flag',
+            default => 'heroicon-m-flag',
+        };
+    }
+
+    /**
+     * Vygeneruje název filtru z parametrů, pokud není definován name
+     *
+     * @param array<string, mixed> $filter
+     * @return string
+     */
+    private function generateFilterName(array $filter): string
+    {
+        // Pokud má filtr definovaný name, použij ho
+        if (isset($filter['name']) && !empty($filter['name'])) {
+            return $filter['name'];
+        }
+
+        $parts = [];
+
+        // Sport
+        if (isset($filter['sport_list']) && !empty($filter['sport_list'])) {
+            $sportId = (int) $filter['sport_list'];
+            $sport = SportList::find($sportId);
+            if ($sport) {
+                $parts[] = $sport->short_name;
+            }
+        }
+
+        // Typ události
+        if (isset($filter['sport_event_type']) && !empty($filter['sport_event_type'])) {
+            $eventType = $filter['sport_event_type'];
+            $eventTypeLabel = match ($eventType) {
+                'race' => 'Závody',
+                'training' => 'Trénink',
+                'trainingCamp' => 'Soustředění',
+                'other' => 'Ostatní',
+                default => $eventType,
+            };
+            $parts[] = $eventTypeLabel;
+        }
+
+        // Počet dní
+        if (isset($filter['days_from_today']) && !empty($filter['days_from_today'])) {
+            $days = (int) $filter['days_from_today'];
+            $parts[] = "{$days} dní";
+        }
+
+        return !empty($parts) ? implode(', ', $parts) : 'Filtr';
+    }
+
+    /**
+     * Vytvoří query modifikátor pro filtr na základě parametrů
+     *
+     * @param array<string, mixed> $filter
+     * @return Closure
+     */
+    private function buildQueryModifier(array $filter): Closure
+    {
+        return function (Builder $query) use ($filter): Builder {
+            // Filtrování podle sport_id
+            if (isset($filter['sport_list']) && !empty($filter['sport_list'])) {
+                $sportId = (int) $filter['sport_list'];
+                $query->where('sport_id', '=', $sportId);
+            }
+
+            // Filtrování podle event_type
+            if (isset($filter['sport_event_type']) && !empty($filter['sport_event_type'])) {
+                $eventType = $filter['sport_event_type'];
+                try {
+                    $eventTypeEnum = SportEventType::from($eventType);
+                    $query->where('event_type', '=', $eventTypeEnum);
+                } catch (\ValueError $e) {
+                    // Neplatný event_type, ignorujeme
+                }
+            }
+
+            // Filtrování podle data (od dneška + days_from_today)
+            if (isset($filter['days_from_today']) && !empty($filter['days_from_today'])) {
+                $days = (int) $filter['days_from_today'];
+                $fromDate = Carbon::today()->addDays($days);
+                $query->whereDate('date', '>=', $fromDate);
+            }
+
+            return $query;
+        };
     }
 
     protected function getTableRecordUrlUsing(): ?Closure
@@ -94,7 +237,7 @@ class ListSportEvents extends ListRecords
                 ->modalHeading('Pošli notifikaci k závodu/akci')
                 ->modalDescription('Notifikace je možná poslat do různých kanálů na objekty, jakékoliv objekty v listu')
                 ->modalSubmitActionLabel('Ano poslat notifikaci')
-                ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
+                ->visible(Auth::user()?->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]) ?? false)
                 ->schema([
                     Grid::make(2)
                         ->schema([

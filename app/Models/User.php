@@ -39,6 +39,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string|null $payer_variable_symbol
  * @property bool $active
  * @property string|null $remember_token
+ * @property string|null $api_key_hash
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read string $user_identification

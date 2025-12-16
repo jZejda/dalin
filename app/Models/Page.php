@@ -78,7 +78,7 @@ class Page extends Model implements HasMedia
     /**
      * Get the content attribute with intelligent casting based on content_format
      */
-    public function getContentAttribute($value)
+    public function getContentAttribute($value): ?string
     {
         // If content_format is HTML, try to decode as JSON, fallback to string
         if ($this->content_format === ContentFormat::TipTapJson) {
@@ -96,7 +96,7 @@ class Page extends Model implements HasMedia
     /**
      * Set the content attribute with intelligent encoding based on content_format
      */
-    public function setContentAttribute($value)
+    public function setContentAttribute($value): void
     {
         // If value is array, encode as JSON (for RichEditor)
         if (is_array($value)) {
