@@ -330,6 +330,9 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                      * Part of ORIS enty
                      */
                     $userRaceProfile = UserRaceProfile::where('oris_id', '=', $data['raceProfileId'])->first();
+
+                    //dd($userRaceProfile);
+
                     $sportClass = SportClass::where('oris_id', '=', $data['classId'])->first();
 
                     $orisResponse = $this->orisCreateEntry($data, $userRaceProfile, $sportEvent);
@@ -438,7 +441,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                             $sportEvent = $this->record;
 
                             try {
-                                $userProfile = UserRaceProfile::where('id', '=', (int)$state)->first();
+                                $userProfile = UserRaceProfile::where('oris_id', '=', (int)$state)->first();
 
                                 $params = [
                                     'format' => 'json',
