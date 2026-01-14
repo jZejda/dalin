@@ -1,5 +1,14 @@
 # DaLin
 
+<div align="center">
+*PHP - MySQL • Laravel • Filament • Tailwind*
+
+![PHP 8.4](https://img.shields.io/badge/PHP-8.4-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![Laravel 12.x](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![FilamentPHP v4.x](https://img.shields.io/badge/FilamentPHP-v4.x-FB70A9?style=for-the-badge&logo=filament)
+![Tailwind CSS 4.0](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+</div>
+
 DaLin makes it easy to manage orienteering club operations. 
 The system uses an external API from the [ORIS](https://oris.ceskyorientak.cz/) system to automatically process members' race entries, download payments, etc.
 
@@ -20,10 +29,10 @@ The system uses an external API from the [ORIS](https://oris.ceskyorientak.cz/) 
 
 ## Based on
 
-- PHP v8.3
+- PHP v8.4
 - MySql 8* and Up
-- [Laravel](https://laravel.com/) - PHP framework acctualy in version 11.x
-- [Filamentphp](https://filamentphp.com/) - in version 3.x
+- [Laravel](https://laravel.com/) - PHP framework acctualy in version 12.x
+- [Filamentphp](https://filamentphp.com/) - in version 4.x
 - [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework
     - [FLowbite](https://flowbite.com/) - open-source tailwind css library
 - [Livewire](https://laravel-livewire.com/) - Livewire is a full-stack framework for non fronted programmers

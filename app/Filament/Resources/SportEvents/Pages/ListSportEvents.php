@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEvents\Pages;
 
+use App\Shared\Helpers\EmptyType;
 use Filament\Actions\CreateAction;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Actions\Action;
@@ -49,7 +50,6 @@ class ListSportEvents extends ListRecords
         $userFilters = $this->getUserFilters();
 
         if (!empty($userFilters)) {
-            // Použít uživatelské filtry
             foreach ($userFilters as $filterId => $filter) {
                 $tabs[$filterId] = Tab::make()
                     ->label($this->generateFilterName($filter))
@@ -58,7 +58,7 @@ class ListSportEvents extends ListRecords
                     ->modifyQueryUsing($this->buildQueryModifier($filter));
             }
         } else {
-            // Použít výchozí záložky
+            // Default filters
             $tabs['race'] = Tab::make()
                 ->label('Závody')
                 ->badgeColor('success')
@@ -85,8 +85,6 @@ class ListSportEvents extends ListRecords
     }
 
     /**
-     * Načte uživatelsky definované filtry z user_settings
-     *
      * @return array<string, array<string, mixed>>
      */
     private function getUserFilters(): array
@@ -97,18 +95,18 @@ class ListSportEvents extends ListRecords
         }
 
         $filtersSetting = UserSetting::where('user_id', '=', $user->id)
-            ->where('type', '=', 'filters')
+            ->where('type', '=', UserSetting::USER_EVENT_FILTERS_NAME)
             ->first();
 
-        if (!$filtersSetting || !isset($filtersSetting->options['filters'])) {
+        if (!$filtersSetting || !isset($filtersSetting->options['event_filters'])) {
             return [];
         }
 
-        return $filtersSetting->options['filters'] ?? [];
+        return $filtersSetting->options['event_filters'] ?? [];
     }
 
     /**
-     * Mapuje custom ikonu na heroicon ikonu
+     * Custom icons map onto heroicons
      *
      * @param string|null $icon
      * @return string
@@ -124,44 +122,41 @@ class ListSportEvents extends ListRecords
     }
 
     /**
-     * Vygeneruje název filtru z parametrů, pokud není definován name
-     *
      * @param array<string, mixed> $filter
      * @return string
      */
     private function generateFilterName(array $filter): string
     {
-        // Pokud má filtr definovaný name, použij ho
-        if (isset($filter['name']) && !empty($filter['name'])) {
+        if (EmptyType::arrayNotEmpty($filter['name'])) {
             return $filter['name'];
         }
 
         $parts = [];
 
-        // Sport
-        if (isset($filter['sport_list']) && !empty($filter['sport_list'])) {
-            $sportId = (int) $filter['sport_list'];
-            $sport = SportList::find($sportId);
-            if ($sport) {
-                $parts[] = $sport->short_name;
+        if (EmptyType::arrayNotEmpty($filter['sport_list'])) {
+            $sportIds = array_map('intval', $filter['sport_list']);
+
+            $sportNames = SportList::whereIn('id', $sportIds)->pluck('short_name')->toArray();
+            if (!empty($sportNames)) {
+                $parts[] = implode(', ', $sportNames);
             }
         }
 
-        // Typ události
-        if (isset($filter['sport_event_type']) && !empty($filter['sport_event_type'])) {
-            $eventType = $filter['sport_event_type'];
-            $eventTypeLabel = match ($eventType) {
+        if (EmptyType::arrayNotEmpty($filter['sport_event_type'])) {
+            $eventTypes =  $filter['sport_event_type'];
+
+            $eventTypeLabels = array_map(fn ($eventType) => match ($eventType) {
                 'race' => 'Závody',
                 'training' => 'Trénink',
                 'trainingCamp' => 'Soustředění',
                 'other' => 'Ostatní',
                 default => $eventType,
-            };
-            $parts[] = $eventTypeLabel;
+            }, $eventTypes);
+            $parts[] = implode(', ', $eventTypeLabels);
         }
 
         // Počet dní
-        if (isset($filter['days_from_today']) && !empty($filter['days_from_today'])) {
+        if (EmptyType::arrayNotEmpty($filter['days_from_today'])) {
             $days = (int) $filter['days_from_today'];
             $parts[] = "{$days} dní";
         }
@@ -170,33 +165,36 @@ class ListSportEvents extends ListRecords
     }
 
     /**
-     * Vytvoří query modifikátor pro filtr na základě parametrů
-     *
      * @param array<string, mixed> $filter
      * @return Closure
      */
     private function buildQueryModifier(array $filter): Closure
     {
         return function (Builder $query) use ($filter): Builder {
-            // Filtrování podle sport_id
-            if (isset($filter['sport_list']) && !empty($filter['sport_list'])) {
-                $sportId = (int) $filter['sport_list'];
-                $query->where('sport_id', '=', $sportId);
+            if (EmptyType::arrayNotEmpty($filter['sport_list'])) {
+                $sportIds = array_map('intval', $filter['sport_list']);
+                $query->whereIn('sport_id', $sportIds);
             }
 
-            // Filtrování podle event_type
-            if (isset($filter['sport_event_type']) && !empty($filter['sport_event_type'])) {
-                $eventType = $filter['sport_event_type'];
-                try {
-                    $eventTypeEnum = SportEventType::from($eventType);
-                    $query->where('event_type', '=', $eventTypeEnum);
-                } catch (\ValueError $e) {
-                    // Neplatný event_type, ignorujeme
+            // Filtrování podle event_type (může být pole nebo jednotlivá hodnota)
+            if (EmptyType::arrayNotEmpty($filter['sport_event_type'])) {
+                $eventTypes = $filter['sport_event_type'];
+
+                $eventTypeEnums = [];
+                foreach ($eventTypes as $eventType) {
+                    try {
+                        $eventTypeEnums[] = SportEventType::from($eventType);
+                    } catch (\ValueError $e) {
+                        // Neplatný event_type, ignorujeme
+                    }
+                }
+
+                if (!empty($eventTypeEnums)) {
+                    $query->whereIn('event_type', $eventTypeEnums);
                 }
             }
 
-            // Filtrování podle data (od dneška + days_from_today)
-            if (isset($filter['days_from_today']) && !empty($filter['days_from_today'])) {
+            if (isset($filter['days_from_today']) && EmptyType::stringNotEmpty($filter['days_from_today'])) {
                 $days = (int) $filter['days_from_today'];
                 $fromDate = Carbon::today()->addDays($days);
                 $query->whereDate('date', '>=', $fromDate);

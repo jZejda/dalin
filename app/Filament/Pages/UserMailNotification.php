@@ -80,7 +80,7 @@ class UserMailNotification extends Page implements HasForms
         $this->users_allow_sign_up_for_race = $usersAllowSingUpForRace?->options['users_allow_sign_up_for_race'] ?? [];
 
         $filtersSetting = UserSetting::where('user_id', '=', Auth::user()?->id)
-            ->where('type', '=', 'event_filters')
+            ->where('type', '=', UserSetting::USER_EVENT_FILTERS_NAME)
             ->first();
 
         $this->event_filters = $filtersSetting?->options['event_filters'] ?? [];
@@ -89,7 +89,6 @@ class UserMailNotification extends Page implements HasForms
         $user = Auth::user();
         $this->has_api_key = !is_null($user?->api_key_hash);
 
-        // Načíst hash z databáze, aby byl zobrazen i po refresh stránky
         if ($this->has_api_key && $user?->api_key_hash !== null) {
             $this->api_key = $user->api_key_hash;
             $this->show_api_key = true;
@@ -103,7 +102,7 @@ class UserMailNotification extends Page implements HasForms
         $plainApiKey = bin2hex(random_bytes(32));
         $user->setApiKey($plainApiKey);
 
-        // Načíst hash z databáze pro zobrazení uživateli
+        // Load Hash from DB
         $user->refresh();
         $this->api_key = $user->api_key_hash;
         $this->has_api_key = true;
@@ -124,7 +123,7 @@ class UserMailNotification extends Page implements HasForms
         $plainApiKey = bin2hex(random_bytes(32));
         $user->setApiKey($plainApiKey);
 
-        // Načíst hash z databáze pro zobrazení uživateli
+        // Load Hash from DB
         $user->refresh();
         $this->api_key = $user->api_key_hash;
         $this->has_api_key = true;
@@ -287,8 +286,8 @@ class UserMailNotification extends Page implements HasForms
                                 ->label('Uživatelské filtry listu závodů a událostí.')
                                 ->schema([
                                     TextInput::make('name')
-                                        ->label('Název filtru')
-                                        ->hint('Bude zobrazen jako název filtru.')
+                                        ->label('Název')
+                                        ->hint('Bude zobrazen jako titulek filtru.')
                                         ->required(),
                                     Select::make('sport_list')
                                         ->label('Sport')
@@ -301,9 +300,9 @@ class UserMailNotification extends Page implements HasForms
                                         ->multiple()
                                         ->required(),
                                     TextInput::make('days_from_today')
-                                        ->label('Zobraz od dne.')
+                                        ->label('Od dne.')
                                         ->numeric()
-                                        ->hint('Posun dnů')
+                                        ->hint('Relativně k aktuálnímu dnu.')
                                         ->hintColor('primary')
                                         ->hintIcon('heroicon-m-question-mark-circle')
                                         ->required(),
@@ -390,7 +389,7 @@ class UserMailNotification extends Page implements HasForms
     private function storeFilters(array $filtersOptions): void
     {
         $filtersSetting = UserSetting::where('user_id', '=', Auth::user()?->id)
-            ->where('type', '=', 'event_filters')
+            ->where('type', '=', UserSetting::USER_EVENT_FILTERS_NAME)
             ->first();
 
         if (is_null($filtersSetting) && Auth::user()?->id !== null) {
