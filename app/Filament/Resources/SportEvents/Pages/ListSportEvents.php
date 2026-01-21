@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEvents\Pages;
 
+use App\Enums\AppHeroIcons;
 use App\Shared\Helpers\EmptyType;
 use Filament\Actions\CreateAction;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -22,6 +23,7 @@ use App\Models\SportList;
 use App\Models\UserSetting;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -40,21 +42,29 @@ class ListSportEvents extends ListRecords
         ];
     }
 
+//    public function table(Table $table): Table
+//    {
+//        $table = parent::table($table);
+//
+//        // If user has custom filters, remove default table filters
+//        if (EmptyType::arrayNotEmpty($this->getUserFilters())) {
+//            $table->filters([]);
+//        }
+//
+//        return $table;
+//    }
+
     public function getTabs(): array
     {
-        $tabs = [
-            'all' => Tab::make()
-                ->label('Vše'),
-        ];
-
+        $tabs = [];
         $userFilters = $this->getUserFilters();
 
-        if (!empty($userFilters)) {
+        if (EmptyType::arrayNotEmpty($userFilters)) {
             foreach ($userFilters as $filterId => $filter) {
                 $tabs[$filterId] = Tab::make()
-                    ->label($this->generateFilterName($filter))
+                    ->label($filter['name'])
                     ->badgeColor('success')
-                    ->icon($this->mapIconToHeroicon($filter['icon'] ?? null))
+                    ->icon(AppHeroIcons::tryFrom($filter['icon'])->getIcon())
                     ->modifyQueryUsing($this->buildQueryModifier($filter));
             }
         } else {
@@ -63,23 +73,34 @@ class ListSportEvents extends ListRecords
                 ->label('Závody')
                 ->badgeColor('success')
                 ->icon('heroicon-m-flag')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Race));
+                ->modifyQueryUsing(fn (Builder $query) => $query
+                    ->where('event_type', '=', SportEventType::Race)
+                    ->where('date', '>=', now()->subDays(7)));
             $tabs['traing'] = Tab::make()
                 ->label('Trénink')
                 ->badgeColor('success')
                 ->icon('heroicon-m-clock')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Training));
+                ->modifyQueryUsing(fn (Builder $query) => $query
+                    ->where('event_type', '=', SportEventType::Training)
+                    ->where('date', '>=', now()->subDays(7)));
             $tabs['trainingCamp'] = Tab::make()
                 ->label('Soustředění')
                 ->badgeColor('success')
                 ->icon('heroicon-m-calendar-days')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::TrainingCamp));
+                ->modifyQueryUsing(fn (Builder $query) => $query
+                    ->where('event_type', '=', SportEventType::TrainingCamp)
+                    ->where('date', '>=', now()->subDays(7)));
             $tabs['other'] = Tab::make()
                 ->label('Ostatní')
                 ->badgeColor('success')
                 ->icon('heroicon-m-exclamation-circle')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('event_type', '=', SportEventType::Other));
+                ->modifyQueryUsing(fn (Builder $query) => $query
+                    ->where('event_type', '=', SportEventType::Other)
+                    ->where('date', '>=', now()->subDays(7)));
         }
+
+        $tabs['all'] = Tab::make()
+            ->label('Vše');
 
         return $tabs;
     }
@@ -103,65 +124,6 @@ class ListSportEvents extends ListRecords
         }
 
         return $filtersSetting->options['event_filters'] ?? [];
-    }
-
-    /**
-     * Custom icons map onto heroicons
-     *
-     * @param string|null $icon
-     * @return string
-     */
-    private function mapIconToHeroicon(?string $icon): string
-    {
-        return match ($icon) {
-            'obRaceStages' => 'heroicon-m-flag',
-            'obRaceDot' => 'heroicon-m-flag',
-            'obRaceSimple' => 'heroicon-m-flag',
-            default => 'heroicon-m-flag',
-        };
-    }
-
-    /**
-     * @param array<string, mixed> $filter
-     * @return string
-     */
-    private function generateFilterName(array $filter): string
-    {
-        if (EmptyType::arrayNotEmpty($filter['name'])) {
-            return $filter['name'];
-        }
-
-        $parts = [];
-
-        if (EmptyType::arrayNotEmpty($filter['sport_list'])) {
-            $sportIds = array_map('intval', $filter['sport_list']);
-
-            $sportNames = SportList::whereIn('id', $sportIds)->pluck('short_name')->toArray();
-            if (!empty($sportNames)) {
-                $parts[] = implode(', ', $sportNames);
-            }
-        }
-
-        if (EmptyType::arrayNotEmpty($filter['sport_event_type'])) {
-            $eventTypes =  $filter['sport_event_type'];
-
-            $eventTypeLabels = array_map(fn ($eventType) => match ($eventType) {
-                'race' => 'Závody',
-                'training' => 'Trénink',
-                'trainingCamp' => 'Soustředění',
-                'other' => 'Ostatní',
-                default => $eventType,
-            }, $eventTypes);
-            $parts[] = implode(', ', $eventTypeLabels);
-        }
-
-        // Počet dní
-        if (EmptyType::arrayNotEmpty($filter['days_from_today'])) {
-            $days = (int) $filter['days_from_today'];
-            $parts[] = "{$days} dní";
-        }
-
-        return !empty($parts) ? implode(', ', $parts) : 'Filtr';
     }
 
     /**

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
+use App\Enums\AppColors;
+use App\Enums\AppHeroIcons;
 use Filament\Forms\Components\Repeater;
 use Filament\Schemas\Components\Section;
 use App\Models\SportList;
@@ -300,15 +302,16 @@ class UserMailNotification extends Page implements HasForms
                                         ->multiple()
                                         ->required(),
                                     TextInput::make('days_from_today')
-                                        ->label('Od dne.')
+                                        ->label('Dnů zpět / dopředu')
                                         ->numeric()
-                                        ->hint('Relativně k aktuálnímu dnu.')
+                                        ->hint('Platné k aktuálnímu dnu.')
                                         ->hintColor('primary')
                                         ->hintIcon('heroicon-m-question-mark-circle')
+                                        ->default(-7)
                                         ->required(),
                                     Select::make('icon')
                                         ->label('Ikona')
-                                        ->options(SportEventMarkerType::enumArray())
+                                        ->options(AppHeroIcons::enumArray())
                                         ->required(),
                                 ])
                                 ->columns(3)
