@@ -152,7 +152,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                             $record->oris_id
                         ) && $record->use_oris_for_entries
                             ? 'Přihláška do ORISu'
-                            : 'Závod má přiděleno ORIS ID, prihlášení bude pouze do interního systému.'
+                            : 'Závod nemá přiděleno ORIS ID, přihlášení bude pouze do interního systému.'
                     )
                     ->color(
                         fn (SportEvent $record): string => EmptyType::intNotEmpty(
