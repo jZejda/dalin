@@ -8,7 +8,9 @@
     use App\Shared\Helpers\AppHelper;use Carbon\Carbon;
 
     /** @var SportEvent $record */
+    /** @var SportClass[] $classes **/
     $classes = SportClass::query()->where('sport_event_id', '=', $record->id)->get();
+     /** @var SportEvent[] $services **/
     $services = SportService::query()->where('sport_event_id', '=', $record->id)->get();
 
     /** @var User $user */
@@ -101,13 +103,38 @@
             @endif
 
             @if(count($classes) > 0)
+                @php
+                    /** @var SportClass[] $mensClasses **/
+                    $mensClasses = $classes->filter(fn($c) => preg_match('/^H\d{2}[A-Z]?$/i', $c->name));
+                    /** @var SportClass[] $womensClasses **/
+                    $womensClasses = $classes->filter(fn($c) => preg_match('/^D\d{2}[A-Z]?$/i', $c->name));
+                    /** @var SportClass[] $otherClasses **/
+                    $otherClasses = $classes->filter(fn($c) => !preg_match('/^[HD]\d{2}[A-Z]?$/i', $c->name));
+                @endphp
                 <div class="mb-2 ml-1">
                     <span
                         class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">Kategorie</span>
-                    @foreach($classes as $class)
-                        <span
-                            class="bg-gray-100 text-gray-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">{{$class->name}}</span>
-                    @endforeach
+                    @if($womensClasses->isNotEmpty())
+                        <div class="mt-1">
+                            @foreach($womensClasses as $class)
+                                <span class="bg-purple-100 text-purple-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">{{$class->name}}</span>
+                            @endforeach
+                        </div>
+                    @endif
+                    @if($mensClasses->isNotEmpty())
+                        <div class="mt-1">
+                            @foreach($mensClasses as $class)
+                                <span class="bg-blue-100 text-blue-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{{$class->name}}</span>
+                            @endforeach
+                        </div>
+                    @endif
+                    @if($otherClasses->isNotEmpty())
+                        <div class="mt-1">
+                            @foreach($otherClasses as $class)
+                                <span class="bg-gray-100 text-gray-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">{{$class->name}}</span>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             @endif
 
