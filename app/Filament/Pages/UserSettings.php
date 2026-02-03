@@ -26,7 +26,7 @@ class UserSettings extends Page
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-home';
 
     protected string $view = 'filament.pages.user-settings';
-    protected static ?string $slug = 'user-setting';
+    protected static ?string $slug = 'user-overview';
 
 
     public function getMaxContentWidth(): Width

@@ -1,6 +1,7 @@
 @php
     use App\Enums\AppRoles;
-    use App\Models\SportEvent;use App\Shared\Helpers\AppHelper;
+    use App\Models\SportEvent;
+    use App\Shared\Helpers\AppHelper;
 
     $record = SportEvent::query()->where('id', '=', 150)->first();
 @endphp

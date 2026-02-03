@@ -78,7 +78,7 @@ class AdminPanelProvider extends PanelProvider
             ->userMenuItems([
             MenuItem::make()
                 ->label('Můj přehled')
-                ->url(fn (): string => 'user-setting')
+                ->url(fn (): string => 'user-overview')
                 ->icon('heroicon-o-home'),
             ])
             ->plugins([
