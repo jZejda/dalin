@@ -177,11 +177,11 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->options(SportEventType::enumArray()),
                 SelectFilter::make('sport_id')
                     ->label('Sport')
-                    ->options(SportList::all()->pluck('short_name', 'id'))
-                    ->default(1),
+                    ->options(SportList::all()->pluck('short_name', 'id')),
+                   // ->default(1),
                 Filter::make('date')
                     ->schema([
-                        DatePicker::make('date')->default(now()->subDays(7)),
+                        DatePicker::make('date')->default(now()->subDays(14)),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query

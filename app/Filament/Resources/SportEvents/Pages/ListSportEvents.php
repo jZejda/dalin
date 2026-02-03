@@ -19,7 +19,6 @@ use App\Filament\Resources\SportEvents\Pages\Actions\AddOrisEventModal;
 use App\Http\Controllers\Discord\DiscordWebhookHelper;
 use App\Http\Controllers\Discord\RaceEventAddedNotification;
 use App\Models\SportEvent;
-use App\Models\SportList;
 use App\Models\UserSetting;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
@@ -43,17 +42,17 @@ class ListSportEvents extends ListRecords
         ];
     }
 
-//    public function table(Table $table): Table
-//    {
-//        $table = parent::table($table);
-//
-//        // If user has custom filters, remove default table filters
-//        if (EmptyType::arrayNotEmpty($this->getUserFilters())) {
-//            $table->filters([]);
-//        }
-//
-//        return $table;
-//    }
+    //    public function table(Table $table): Table
+    //    {
+    //        $table = parent::table($table);
+    //
+    //        // If user has custom filters, remove default table filters
+    //        if (EmptyType::arrayNotEmpty($this->getUserFilters())) {
+    //            $table->filters([]);
+    //        }
+    //
+    //        return $table;
+    //    }
 
     public function getTabs(): array
     {
@@ -122,7 +121,7 @@ class ListSportEvents extends ListRecords
 
         $filters = $filtersSetting->options['event_filters'] ?? [];
         if (!empty($filters)) {
-            usort($filters, fn($a, $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
+            usort($filters, fn ($a, $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
         }
 
         // Key filters by UUID

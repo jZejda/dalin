@@ -29,10 +29,14 @@ return [
     'icons' => [
         AppHeroIcons::Trophy->value => 'Trofej',
         AppHeroIcons::Track->value => 'Auto',
-        AppHeroIcons::Watch->value => 'Hodiny',
+        AppHeroIcons::Watch->value => 'Stopky',
         AppHeroIcons::Tag->value => 'Tag',
         AppHeroIcons::Ticket->value => 'Tiket',
         AppHeroIcons::Trash->value => 'Koš',
+        AppHeroIcons::CalendarDays->value => 'Kalendář dny',
+        AppHeroIcons::Clock->value => 'Hodiny',
+        AppHeroIcons::Flag->value => 'Vlajka',
+        AppHeroIcons::ExclamationCircle->value => 'Vykřičník v kruhu',
     ],
 
     // Colors

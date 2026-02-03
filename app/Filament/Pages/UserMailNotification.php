@@ -9,6 +9,7 @@ use App\Models\SportList;
 use App\Models\User;
 use App\Models\UserSetting;
 use App\Enums\SportEventType;
+use App\Shared\Helpers\EmptyType;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Hidden;
@@ -88,7 +89,7 @@ class UserMailNotification extends Page implements HasForms
 
         // Add ID to existing filters without ID
         $this->event_filters = array_map(function ($filter) {
-            if (!isset($filter['id']) || empty($filter['id'])) {
+            if (!isset($filter['id']) || EmptyType::stringEmpty($filter['id'])) {
                 $filter['id'] = (string) Str::uuid();
             }
             return $filter;

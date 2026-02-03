@@ -241,7 +241,6 @@ class PageResource extends Resource implements HasShieldPermissions
                                             'title' => 'Title',
                                             'description' => 'Description',
                                             'keywords' => 'Keywords',
-                                            'carrier' => 'Carrier',
                                             'og:title' => 'OG Title',
                                             'og:description' => 'OG Description',
                                             'og:image' => 'OG Image',
@@ -250,14 +249,12 @@ class PageResource extends Resource implements HasShieldPermissions
                                         ->searchable()
                                         ->live()
                                         ->afterStateUpdated(function (Set $set, $state, $get) {
-                                            // Zabraň duplicitním klíčům - pokud je klíč již použit, vyčisti ho
                                             $currentItems = $get('../../meta_items') ?? [];
                                             $duplicates = collect($currentItems)
                                                 ->where('key', $state)
                                                 ->keys();
 
                                             if ($duplicates->count() > 1) {
-                                                // Pokud je duplicitní, nastav prázdný
                                                 $set('key', null);
                                             }
                                         }),

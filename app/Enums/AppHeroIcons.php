@@ -15,6 +15,10 @@ enum AppHeroIcons: string implements HasIcon
     case Tag = 'tag';
     case Ticket = 'ticket';
     case Trash = 'trash';
+    case CalendarDays = 'calendar-days';
+    case Clock = 'clock';
+    case Flag = 'flag';
+    case ExclamationCircle = 'exclamation-circle';
 
     public static function enumArray(): array
     {
@@ -27,6 +31,10 @@ enum AppHeroIcons: string implements HasIcon
             self::Tag->value => __($trKey . self::Tag->value),
             self::Ticket->value => __($trKey . self::Ticket->value),
             self::Trash->value => __($trKey . self::Trash->value),
+            self::CalendarDays->value => __($trKey . self::CalendarDays->value),
+            self::Clock->value => __($trKey . self::Clock->value),
+            self::Flag->value => __($trKey . self::Flag->value),
+            self::ExclamationCircle->value => __($trKey . self::ExclamationCircle->value),
         ];
     }
 
@@ -40,6 +48,10 @@ enum AppHeroIcons: string implements HasIcon
             self::Tag => 'heroicon-o-tag',
             self::Ticket => 'heroicon-o-ticket',
             self::Trash => 'heroicon-o-trash',
+            self::CalendarDays => 'heroicon-m-calendar-days',
+            self::Clock => 'heroicon-m-clock',
+            self::Flag => 'heroicon-m-flag',
+            self::ExclamationCircle => 'heroicon-m-exclamation-circle',
         };
     }
 }
