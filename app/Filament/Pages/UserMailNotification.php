@@ -4,28 +4,27 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
-use App\Enums\AppColors;
 use App\Enums\AppHeroIcons;
-use Filament\Forms\Components\Repeater;
-use Filament\Schemas\Components\Section;
 use App\Models\SportList;
 use App\Models\User;
 use App\Models\UserSetting;
 use App\Enums\SportEventType;
-use App\Enums\SportEventMarkerType;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\View;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class UserMailNotification extends Page implements HasForms
 {
@@ -35,7 +34,7 @@ class UserMailNotification extends Page implements HasForms
     protected static ?int $navigationSort = 37;
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
     protected string $view = 'filament.pages.user-mail-notification';
-    protected static ?string $slug = 'mail-notification';
+    protected static ?string $slug = 'user-settings';
     protected static ?string $navigationLabel = 'Uživatelská nastavení';
     protected static string | \UnitEnum | null $navigationGroup = 'Uživatel';
     protected static ?string $title = 'Uživatelská nastavení';
@@ -86,6 +85,14 @@ class UserMailNotification extends Page implements HasForms
             ->first();
 
         $this->event_filters = $filtersSetting?->options['event_filters'] ?? [];
+
+        // Add ID to existing filters without ID
+        $this->event_filters = array_map(function ($filter) {
+            if (!isset($filter['id']) || empty($filter['id'])) {
+                $filter['id'] = (string) Str::uuid();
+            }
+            return $filter;
+        }, $this->event_filters);
 
         /** @var User $user */
         $user = Auth::user();
@@ -225,131 +232,123 @@ class UserMailNotification extends Page implements HasForms
         ];
     }
 
-    protected function getFormModel(): Model | string | null
-    {
-        return UserSetting::class;
-    }
-
     protected function getFormSchema(): array
     {
         return [
-                Tabs::make('Tabs')
-                ->tabs([
-                    Tab::make('E-mailové nastavení')
-                        ->schema([
-                            Section::make('Upozornění na Novinky')
-                                ->description('Zde můžete nastavit upozornění na novinky veřejné a noviny z členské sekce.')
-                                ->aside()
-                                ->columns(1)
-                                ->schema([
-                                    CheckboxList::make('news')
-                                        ->label('Novinky')
-                                        ->options([
-                                            '0' => 'Novinky veřejné',
-                                            '1' => 'Novinky členské sekce',
-                                        ]),
-                                ]),
-                            Section::make('Upozornění na blížící se konec přihlášek k závodům')
-                                ->description('Pokud se bude blížit konec přihlášek k závodům, budete na toto upozorněni v e-mailu v uvedený čas s předstihem nastaveným ve volbě počtu dnů před koncem přihlášek.')
-                                ->aside()
-                                ->columns(3)
-                                ->schema([
-                                    CheckboxList::make('sport')
-                                        ->label('Sport')
-                                        ->options(SportList::all()->pluck('short_name', 'id')),
+            Tabs::make('Tabs')
+            ->tabs([
+                Tab::make('E-mailové nastavení')
+                    ->schema([
+                        Section::make('Upozornění na Novinky')
+                            ->description('Zde můžete nastavit upozornění na novinky veřejné a noviny z členské sekce.')
+                            ->aside()
+                            ->columns(1)
+                            ->schema([
+                                CheckboxList::make('news')
+                                    ->label('Novinky')
+                                    ->options([
+                                        '0' => 'Novinky veřejné',
+                                        '1' => 'Novinky členské sekce',
+                                    ]),
+                            ]),
+                        Section::make('Upozornění na blížící se konec přihlášek k závodům')
+                            ->description('Pokud se bude blížit konec přihlášek k závodům, budete na toto upozorněni v e-mailu v uvedený čas s předstihem nastaveným ve volbě počtu dnů před koncem přihlášek.')
+                            ->aside()
+                            ->columns(3)
+                            ->schema([
+                                CheckboxList::make('sport')
+                                    ->label('Sport')
+                                    ->options(SportList::all()->pluck('short_name', 'id')),
 
-                                    TextInput::make('sport_time_trigger')
-                                        ->label('Přibližná hodina upozornění')
-                                        ->numeric()
-                                        ->maxValue(24)
-                                        ->minValue(0)
-                                        ->default(self::DEFAULT_TRIGGER_EVENT),
-                                    TextInput::make('days_before_event_entry_ends')
-                                        ->label('Dnů před ukončením přihlášek')
-                                        ->numeric()
-                                        ->maxValue(14)
-                                        ->minValue(1)
-                                        ->default(4),
-                                ]),
-                            Section::make('Souhrn závodů u kterých končí termín přihlášek následující týden')
-                                ->description('V nastaveni definujete, které sporty budou v e-mailu souhrnně uvedeny. Souhrn obsahuje závody u kterých končí termín přihlášek následující týden.')
-                                ->aside()
-                                ->columns(2)
-                                ->schema([
-                                    CheckboxList::make('week_report_by_sport')
-                                        ->label('Sport')
-                                        ->options(SportList::all()->pluck('short_name', 'id')),
-                                ]),
-                        ]),
+                                TextInput::make('sport_time_trigger')
+                                    ->label('Přibližná hodina upozornění')
+                                    ->numeric()
+                                    ->maxValue(24)
+                                    ->minValue(0)
+                                    ->default(self::DEFAULT_TRIGGER_EVENT),
+                                TextInput::make('days_before_event_entry_ends')
+                                    ->label('Dnů před ukončením přihlášek')
+                                    ->numeric()
+                                    ->maxValue(14)
+                                    ->minValue(1)
+                                    ->default(4),
+                            ]),
+                        Section::make('Souhrn závodů u kterých končí termín přihlášek následující týden')
+                            ->description('V nastaveni definujete, které sporty budou v e-mailu souhrnně uvedeny. Souhrn obsahuje závody u kterých končí termín přihlášek následující týden.')
+                            ->aside()
+                            ->columns(2)
+                            ->schema([
+                                CheckboxList::make('week_report_by_sport')
+                                    ->label('Sport')
+                                    ->options(SportList::all()->pluck('short_name', 'id')),
+                            ]),
+                    ]),
 
-                    Tab::make('Filtry zobrazení')
-                        ->schema([
-                            Repeater::make('event_filters')
-                                ->label('Uživatelské filtry listu závodů a událostí.')
-                                ->schema([
-                                    TextInput::make('name')
-                                        ->label('Název')
-                                        ->hint('Bude zobrazen jako titulek filtru.')
-                                        ->required(),
-                                    Select::make('sport_list')
-                                        ->label('Sport')
-                                        ->options(SportList::whereIn('short_name', ['OB', 'LOB', 'MTBO', 'TRAIL'])->pluck('short_name', 'id'))
-                                        ->multiple()
-                                        ->required(),
-                                    Select::make('sport_event_type')
-                                        ->label('Typ akce')
-                                        ->options(SportEventType::enumArray())
-                                        ->multiple()
-                                        ->required(),
-                                    TextInput::make('days_from_today')
-                                        ->label('Dnů zpět / dopředu')
-                                        ->numeric()
-                                        ->hint('Platné k aktuálnímu dnu.')
-                                        ->hintColor('primary')
-                                        ->hintIcon('heroicon-m-question-mark-circle')
-                                        ->default(-7)
-                                        ->required(),
-                                    Select::make('icon')
-                                        ->label('Ikona')
-                                        ->options(AppHeroIcons::enumArray())
-                                        ->required(),
-                                ])
-                                ->columns(3)
-                                ->addActionLabel('Přidej nový filtr')
-                                ->reorderableWithButtons()
-                        ]),
+                Tab::make('Filtry zobrazení')
+                    ->schema([
+                        Repeater::make('event_filters')
+                            ->label('Uživatelské filtry listu závodů a událostí.')
+                            ->schema([
+                                Hidden::make('id')
+                                    ->default(fn () => (string) Str::uuid()),
+                                TextInput::make('name')
+                                    ->label('Název')
+                                    ->hint('Bude zobrazen jako titulek filtru.')
+                                    ->required(),
+                                Select::make('sport_list')
+                                    ->label('Sport')
+                                    ->options(SportList::whereIn('short_name', ['OB', 'LOB', 'MTBO', 'TRAIL'])->pluck('short_name', 'id'))
+                                    ->multiple()
+                                    ->default([])
+                                    ->required(),
+                                Select::make('sport_event_type')
+                                    ->label('Typ akce')
+                                    ->options(SportEventType::enumArray())
+                                    ->multiple()
+                                    ->default([])
+                                    ->required(),
+                                Select::make('icon')
+                                    ->label('Ikona')
+                                    ->options(AppHeroIcons::enumArray())
+                                    ->required(),
+                            ])
+                            ->columns(4)
+                            ->addActionLabel('Přidej nový filtr')
+                            ->reorderable(false)
+                            ->default([])
+                    ]),
 
-                    Tab::make('Ostatní')
-                        ->schema([
-                            Section::make('Oprávnění k přihlašování')
-                                ->description('V nastavení můžete udělit právo přihlašovat všechny vámi spravované registrace vybraným uživatelům. Vhodné například pro rodinné příslušníky, kamarády. Právo můžete kdykoliv odvolat.')
-                                ->aside()
-                                ->schema([
-                                    Select::make('users_allow_sign_up_for_race')
-                                        ->label('Uživatelé kteří mě mohou přihlašovat a odhlašovat ze závodů')
-                                        ->multiple()
-                                        ->searchable()
-                                        ->options(User::all()->where('active', '=', 1)->pluck('user_identification', 'id'))
-                                        ->preload()
-                                ]),
-                        ]),
+                Tab::make('Ostatní')
+                    ->schema([
+                        Section::make('Oprávnění k přihlašování')
+                            ->description('V nastavení můžete udělit právo přihlašovat všechny vámi spravované registrace vybraným uživatelům. Vhodné například pro rodinné příslušníky, kamarády. Právo můžete kdykoliv odvolat.')
+                            ->aside()
+                            ->schema([
+                                Select::make('users_allow_sign_up_for_race')
+                                    ->label('Uživatelé kteří mě mohou přihlašovat a odhlašovat ze závodů')
+                                    ->multiple()
+                                    ->searchable()
+                                    ->options(User::all()->where('active', '=', 1)->pluck('user_identification', 'id'))
+                                    ->preload()
+                            ]),
+                    ]),
 
-                    Tab::make('API Klíč')
-                        ->schema([
-                            Section::make('Správa API klíče')
-                                ->description('API klíč slouží pro autentizaci při používání API. Uchovávejte jej v tajnosti.')
-                                ->aside()
-                                ->schema([
-                                    View::make('filament.pages.components.api-key-manager')
-                                        ->viewData([
-                                            'hasApiKey' => $this->has_api_key,
-                                            'showApiKey' => $this->show_api_key,
-                                            'apiKey' => $this->api_key,
-                                        ])
-                                ]),
-                        ]),
-                ])
-                ->vertical()
+                Tab::make('API Klíč')
+                    ->schema([
+                        Section::make('Správa API klíče')
+                            ->description('API klíč slouží pro autentizaci při používání API. Uchovávejte jej v tajnosti.')
+                            ->aside()
+                            ->schema([
+                                View::make('filament.pages.components.api-key-manager')
+                                    ->viewData([
+                                        'hasApiKey' => $this->has_api_key,
+                                        'showApiKey' => $this->show_api_key,
+                                        'apiKey' => $this->api_key,
+                                    ])
+                            ]),
+                    ]),
+            ])
+            ->vertical()
         ];
     }
 
@@ -402,6 +401,14 @@ class UserMailNotification extends Page implements HasForms
         }
 
         if ($filtersSetting !== null) {
+            if (isset($filtersOptions['event_filters'])) {
+                $filtersOptions['event_filters'] = array_map(function ($filter) {
+                    if (!isset($filter['id']) || empty($filter['id'])) {
+                        $filter['id'] = (string) Str::uuid();
+                    }
+                    return $filter;
+                }, array_values($filtersOptions['event_filters']));
+            }
             $filtersSetting->options = $filtersOptions;
             $filtersSetting->save();
         }

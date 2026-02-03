@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ListSportEvents extends ListRecords
 {
@@ -74,29 +75,25 @@ class ListSportEvents extends ListRecords
                 ->badgeColor('success')
                 ->icon('heroicon-m-flag')
                 ->modifyQueryUsing(fn (Builder $query) => $query
-                    ->where('event_type', '=', SportEventType::Race)
-                    ->where('date', '>=', now()->subDays(7)));
+                    ->where('event_type', '=', SportEventType::Race));
             $tabs['traing'] = Tab::make()
                 ->label('Trénink')
                 ->badgeColor('success')
                 ->icon('heroicon-m-clock')
                 ->modifyQueryUsing(fn (Builder $query) => $query
-                    ->where('event_type', '=', SportEventType::Training)
-                    ->where('date', '>=', now()->subDays(7)));
+                    ->where('event_type', '=', SportEventType::Training));
             $tabs['trainingCamp'] = Tab::make()
                 ->label('Soustředění')
                 ->badgeColor('success')
                 ->icon('heroicon-m-calendar-days')
                 ->modifyQueryUsing(fn (Builder $query) => $query
-                    ->where('event_type', '=', SportEventType::TrainingCamp)
-                    ->where('date', '>=', now()->subDays(7)));
+                    ->where('event_type', '=', SportEventType::TrainingCamp));
             $tabs['other'] = Tab::make()
                 ->label('Ostatní')
                 ->badgeColor('success')
                 ->icon('heroicon-m-exclamation-circle')
                 ->modifyQueryUsing(fn (Builder $query) => $query
-                    ->where('event_type', '=', SportEventType::Other)
-                    ->where('date', '>=', now()->subDays(7)));
+                    ->where('event_type', '=', SportEventType::Other));
         }
 
         $tabs['all'] = Tab::make()
@@ -123,7 +120,18 @@ class ListSportEvents extends ListRecords
             return [];
         }
 
-        return $filtersSetting->options['event_filters'] ?? [];
+        $filters = $filtersSetting->options['event_filters'] ?? [];
+        if (!empty($filters)) {
+            usort($filters, fn($a, $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
+        }
+
+        // Key filters by UUID
+        $keyedFilters = [];
+        foreach ($filters as $filter) {
+            $key = $filter['id'] ?? (string) Str::uuid();
+            $keyedFilters[$key] = $filter;
+        }
+        return $keyedFilters;
     }
 
     /**
