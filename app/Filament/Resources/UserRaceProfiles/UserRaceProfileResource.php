@@ -279,7 +279,7 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                     ->sortable()
                     ->copyable(),
                 TextColumn::make('phone')
-                    ->label('Tel')
+                    ->label('Telefon')
                     ->searchable()
                     ->sortable()
                     ->copyable(),
