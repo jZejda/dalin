@@ -1,41 +1,47 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\Models\UserCredit;
+use App\Observers\UserCreditObserver;
 use Filament\Facades\Filament;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Vite;
-use Filament\Support\Assets\Css;
-use Filament\Support\Facades\FilamentAsset;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
-        //        Curator::navigationGroup('Obsah')
-        //        ->navigationSort(69);
+        //
     }
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        // TODO remove after release product db mysql up 5.7
-        // setting for older version db
-        // Schema::defaultStringLength(191);
+        // Observer from EventServiceProvider
+        UserCredit::observe(UserCreditObserver::class);
 
-        //        FilamentAsset::register([
-        //            //Css::make('custom-stylesheet', __DIR__ . '/../../resources/css/custom.css'),
-        //            Css::make('custom-stylesheet', __DIR__ . '/../../resources/css/custom.css'),
-        //        ]);
+        // Rate limiting from RouteServiceProvider
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        // Class aliases for Blade templates (lazy-loaded, no auto-discovery)
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        $loader->alias('Markdown', \Illuminate\Mail\Markdown::class);
+        $loader->alias('QrCode', \SimpleSoftwareIO\QrCode\Facades\QrCode::class);
+        $loader->alias('Excel', \Maatwebsite\Excel\Facades\Excel::class);
+
         Filament::serving(function () {
             // Using Vite
             Filament::registerTheme(
