@@ -103,7 +103,7 @@
                     </div>
                 </div>
                 <div class="tracking-tight">
-                    <div class="flex items-center space-x-2">
+                    <div class="flex flex-wrap items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="20" height="20"
                              stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -111,23 +111,23 @@
                         </svg>
                         @if($event->oris_id !== null)
                             <a
-                                class="ml-1 inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-700 dark:text-white no-underline"
+                                class="inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-neutral-700 dark:text-white no-underline"
                                 style="text-decoration: none !important;"
-                                href={{OrisApiService::ORIS_URL}}'/Zavod?id={{$event->oris_id}}'
-                                target='_blank';
+                                href="{{ OrisApiService::ORIS_URL }}/Zavod?id={{ $event->oris_id }}"
+                                target="_blank"
                             >
                                 {{ $event->oris_id }}
                             </a>
                         @endif
                         @if((count($event->organization ?? []) > 0))
                             <div
-                                class="ml-1 inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-700 dark:text-white">
+                                class="inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
                                 {{ ((count($event->organization ?? []) > 0) ? Arr::join($event->organization, ', ') : '') }}
                             </div>
                         @endif
                         @if((count($event->region ?? []) > 0))
                             <div
-                                class="ml-1 inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-700 dark:text-white">
+                                class="inline-flex items-center gap-x-1.5 py-1 px-2 rounded-md text-xs font-medium border border-gray-300 bg-white text-gray-800 shadow-sm dark:bg-neutral-900 dark:border-neutral-700 dark:text-white">
                                 {{ ((count($event->region ?? []) > 0) ? Arr::join($event->region, ', ') : '') }}
                             </div>
                         @endif
