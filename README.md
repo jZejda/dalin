@@ -5,7 +5,7 @@
 
 ![PHP 8.4](https://img.shields.io/badge/PHP-8.4-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![Laravel 12.x](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-![FilamentPHP v4.x](https://img.shields.io/badge/FilamentPHP-v4.x-FB70A9?style=for-the-badge&logo=filament)
+![FilamentPHP v5.x](https://img.shields.io/badge/FilamentPHP-v5.x-FB70A9?style=for-the-badge&logo=filament)
 ![Tailwind CSS 4.0](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 </div>
 
@@ -32,10 +32,10 @@ The system uses an external API from the [ORIS](https://oris.ceskyorientak.cz/) 
 - PHP v8.4
 - MySql 8* and Up
 - [Laravel](https://laravel.com/) - PHP framework acctualy in version 12.x
-- [Filamentphp](https://filamentphp.com/) - in version 4.x
+- [Filamentphp](https://filamentphp.com/) - in version 5.x
 - [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework
     - [FLowbite](https://flowbite.com/) - open-source tailwind css library
-- [Livewire](https://laravel-livewire.com/) - Livewire is a full-stack framework for non fronted programmers
+- [Livewire](https://livewire.laravel.com/) - Livewire is a full-stack framework for non fronted programmers
 - [Alpine.Js](https://alpinejs.dev/) - lightweight, JavaScript framework
 
 ## Setup

@@ -18,7 +18,8 @@
         @endforeach
         <div
             class="flex border {{$ourClub}} shadow-sm rounded-xl mb-2 hover:shadow-md focus:outline-none focus:shadow-md transition">
-
+{{--            <a href="{{ route('sport-event.show', $event->id) }}"--}}
+{{--               class="no-underline" style="text-decoration: none !important;">--}}
             <!-- Left Section -->
             <div class="w-1/5 p-2 border-r-2 border-gray-300 dark:border-gray-700 border-dotted">
                 <div class="text-center text-2xl font-black">{{$event->date->format('d')}}
@@ -135,7 +136,9 @@
 
                 </div>
             </div>
+{{--            </a>--}}
         </div>
+
     @endforeach
 
 </div>

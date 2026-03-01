@@ -14,13 +14,24 @@ class SportEvent extends Controller
     public function singleEvent(string|null $eventId): View
     {
         try {
-            $event = ModelsSportEvent::query()->findOrFail($eventId);
+            $event = ModelsSportEvent::query()
+                ->with([
+                    'sportDiscipline',
+                    'sportLevel',
+                    'sportClasses',
+                    'sportServices',
+                    'sportEventLinks',
+                    'sportEventMarkers',
+                    'sportEventNews',
+                ])
+                ->findOrFail($eventId);
         } catch (ModelNotFoundException $e) {
             abort(404);
         }
 
         return view('pages.frontend.single-event', [
             'event' => $event,
+            'sponsorSectionId' => 0,
         ]);
     }
 }

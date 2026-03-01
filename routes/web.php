@@ -44,7 +44,8 @@ Route::get('/stranka/{slug}', [PageController::class, 'page']);
 Route::get('/startovka/{slug}', [StartListController::class, 'singleStartList']);
 Route::get('/vysledky/{slug}', [ResultListController::class, 'singleResultList']);
 
-// Route::get('/akce/{id}', [ResultListController::class, 'singleResultList']);
+Route::get('/akce/{id}', [\App\Http\Controllers\Frontend\SportEvent::class, 'singleEvent'])
+    ->name('sport-event.show');
 
 
 Route::get('/dashboard', function () {
