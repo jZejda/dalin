@@ -23,7 +23,7 @@
                 </div>
                 <div>
                     <div class="mt-0 pt-0 ml-3">
-                        <span class="text-gray-400 text-md font-normal"> {{\Carbon\Carbon::parse($eventAttributes[0]->getCreateTime(), 'Europe/Prague')->format('d.m.Y - H:i')}} | </span>
+                        <span class="text-gray-400 text-md font-normal"> {{\Carbon\Carbon::parse($eventAttributes[0]->getCreateTime(), 'Europe/Prague')->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT)}} | </span>
                         <span class="text-gray-400 text-md font-normal">{{$eventAttributes[0]->getCreator()}} </span>
                     </div>
                 </div>

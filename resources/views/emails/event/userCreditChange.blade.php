@@ -14,13 +14,13 @@ use App\Enums\UserParamType;
 
 Na účtu uživatele **{{ $user->name }}** došlo k pohybu.
 
-Aktuální výše uživatelského konta: **{{ $user->getParam(UserParamType::UserActualBalance) }}** Kč k datu **{{ Carbon::now()->format('d.m.Y H:i') }}**.
+Aktuální výše uživatelského konta: **{{ $user->getParam(UserParamType::UserActualBalance) }}** Kč k datu **{{ Carbon::now()->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}**.
 
 @component('mail::divider')
 ## Pohyb z poslední transakce
 
 - částka: **{{ $userCredit->amount }} Kč**
-- datum transakce: {{ Carbon::parse($userCredit->created_at)->format('d.m.Y H:i') }}
+- datum transakce: {{ Carbon::parse($userCredit->created_at)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}
 - ID transakce: {{ $userCredit->id }}
 - vazba na ID bankovní transakce: {{ $userCredit->bank_transaction_id }}
 

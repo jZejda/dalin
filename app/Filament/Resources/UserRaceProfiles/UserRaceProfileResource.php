@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\UserRaceProfiles;
 
+use App\Shared\Helpers\AppHelper;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
@@ -255,7 +256,7 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                     ->description(function (UserRaceProfile $model): ?string {
                         if (! $model->active) {
                             return __('user-race-profile.table.active_until').': '.$model->active_until?->format(
-                                'd.m.Y'
+                                AppHelper::DATE_FORMAT
                             );
                         }
 

@@ -39,7 +39,7 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
-                    ->dateTime('d.m.Y')
+                    ->dateTime(AppHelper::DATE_FORMAT)
                     ->description(function (UserCredit $record): string {
                         return 'ID:'.$record->id;
                     })

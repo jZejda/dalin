@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\UserEntries\InfoList;
 
+use App\Shared\Helpers\AppHelper;
 use Filament\Schemas\Components\Section;
 use Filament\Support\Enums\TextSize;
 use Filament\Infolists\Components\IconEntry;
@@ -24,7 +25,7 @@ class UserEntryOverview
                     TextEntry::make('sportEvent.date')
                         ->label('Datum konání akce:')
                         ->icon('heroicon-m-calendar-days')
-                        ->dateTime('d.m.Y')
+                        ->dateTime(AppHelper::DATE_FORMAT)
                         ->size(TextSize::Large),
                     TextEntry::make('sportEvent.place')
                         ->label('Místo:')

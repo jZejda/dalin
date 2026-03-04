@@ -53,7 +53,7 @@
 
             if (!$mapData['eventMap']) {
                 if ($marker->date !== null) {
-                $popupContent .= '<br /><span class="text-sm text-black">Datum konání: ' . $marker->date->format('d.m.Y') .'</span>';
+                $popupContent .= '<br /><span class="text-sm text-black">Datum konání: ' . $marker->date->format(\App\Shared\Helpers\AppHelper::DATE_FORMAT) .'</span>';
                 }
 
                 if ($marker->date !== null && is_array($marker->region)) {

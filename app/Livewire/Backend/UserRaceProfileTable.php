@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Backend;
 
+use App\Shared\Helpers\AppHelper;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Support\Enums\TextSize;
@@ -49,7 +50,7 @@ class UserRaceProfileTable extends Component implements HasForms, HasTable, HasA
                     })
                     ->description(function (UserRaceProfile $model): ?string {
                         if (!$model->active) {
-                            return __('user-race-profile.table.active_until') . ': ' . $model->active_until?->format('d.m.Y');
+                            return __('user-race-profile.table.active_until') . ': ' . $model->active_until?->format(AppHelper::DATE_FORMAT);
                         }
                         return null;
                     }),
@@ -90,12 +91,12 @@ class UserRaceProfileTable extends Component implements HasForms, HasTable, HasA
                     ->hidden(!$this->isSuperAdmin()),
                 TextColumn::make('created_at')
                     ->label(__('user-race-profile.table.created_at'))
-                    ->dateTime('d.m.Y')
+                    ->dateTime(AppHelper::DATE_FORMAT)
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('active_until')
                     ->label(__('user-race-profile.table.active_until'))
-                    ->dateTime('d.m.Y')
+                    ->dateTime(AppHelper::DATE_FORMAT)
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('user.name')

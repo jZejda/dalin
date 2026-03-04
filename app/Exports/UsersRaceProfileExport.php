@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exports;
 
+use App\Shared\Helpers\AppHelper;
 use App\Filament\Pages\Actions\ExportUserRaceProfileData;
 use App\Models\UserRaceProfile;
 use Illuminate\Database\Eloquent\Builder;
@@ -65,9 +66,9 @@ class UsersRaceProfileExport implements FromQuery, WithHeadings, WithMapping, Sh
             $row->licence_ob,
             $row->licence_lob,
             $row->licence_mtbo,
-            $row->created_at?->format('d.m.Y'),
+            $row->created_at?->format(AppHelper::DATE_FORMAT),
             $row->active ? 'ANO' : 'NE',
-            $row->active_until?->format('d.m.Y'),
+            $row->active_until?->format(AppHelper::DATE_FORMAT),
         ];
     }
 

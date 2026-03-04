@@ -7,7 +7,7 @@ Upozornění z interního systemu {{ Config::get('site-config.club.abbr') }} na 
 @component('mail::divider')
 Zpráva od uživatele **{{ $user->name }}**.
 
-- Zpráva zaslána dne: **{{ \Carbon\Carbon::now()->format('d.h.Y H:i') ?? ''}}**
+- Zpráva zaslána dne: **{{ \Carbon\Carbon::now()->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) ?? ''}}**
 @endcomponent
 
 {{ $content }}

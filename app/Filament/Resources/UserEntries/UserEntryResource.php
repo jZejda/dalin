@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\UserEntries;
 
+use App\Shared\Helpers\AppHelper;
 use Filament\Schemas\Schema;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -72,7 +73,7 @@ class UserEntryResource extends Resource implements HasShieldPermissions
                     ->label('Registrace'),
                 TextColumn::make('sportEvent.date')
                     ->label('Datum')
-                    ->dateTime('d. m. Y')
+                    ->dateTime(AppHelper::DATE_FORMAT)
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('requested_start')

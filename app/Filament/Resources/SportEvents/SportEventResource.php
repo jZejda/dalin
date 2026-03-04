@@ -96,7 +96,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                         fn (
                             SportEvent $record
                         ): string => $record->last_update ? 'Poslední hromadná aktualizace: '.$record->last_update->format(
-                            'd.m.Y - H:i'
+                            AppHelper::DATE_TIME_FORMAT
                         ) : ''
                     )
                     ->label('Název')
@@ -111,7 +111,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->description(function (SportEvent $record) {
                         $dateEnd = $record->date_end;
                         if ($dateEnd !== null) {
-                            return $record->date->format('d').' - '.$record->date_end->format('d.m.Y');
+                            return $record->date->format('d').' - '.$record->date_end->format(AppHelper::DATE_FORMAT);
                         }
 
                         return '';
@@ -194,7 +194,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                             return null;
                         }
 
-                        return 'Závody novější: '.Carbon::parse($data['date'])->format('d.m.Y');
+                        return 'Závody novější: '.Carbon::parse($data['date'])->format(AppHelper::DATE_FORMAT);
                     })->default(now()->subDays(7)),
                 SelectFilter::make('discipline_id')
                     ->label('Disciplína')
@@ -350,11 +350,11 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                 Grid::make()->schema([
                                     DatePicker::make('date')
                                         ->label('Datum od')
-                                        ->displayFormat('d.m.Y')
+                                        ->displayFormat(AppHelper::DATE_FORMAT)
                                         ->required(),
                                     DatePicker::make('date_end')
                                         ->label('Datum do')
-                                        ->displayFormat('d.m.Y')
+                                        ->displayFormat(AppHelper::DATE_FORMAT)
                                         ->hint('Použij u vícedenních závodů'),
                                     TextInput::make('stages')
                                         ->label('Etap')

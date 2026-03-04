@@ -41,9 +41,9 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                         </svg>
-                        {{ $event->date->format('d.m.Y') }}
+                        {{ $event->date->format(\App\Shared\Helpers\AppHelper::DATE_FORMAT) }}
                         @if($event->date_end && $event->date_end->gt($event->date))
-                            — {{ $event->date_end->format('d.m.Y') }}
+                            — {{ $event->date_end->format(\App\Shared\Helpers\AppHelper::DATE_FORMAT) }}
                         @endif
                     </div>
 
@@ -189,15 +189,15 @@
                             <tbody>
                                 @if($event->entry_date_1)
                                     <tr class="border-b dark:border-gray-600 {{ Carbon::parse($event->entry_date_1)->isPast() ? 'opacity-50' : '' }}">
-                                        <td class="px-4 py-2 font-medium text-gray-900 dark:text-white">1. termin</td>
-                                        <td class="px-4 py-2 text-gray-900 dark:text-white">{{ Carbon::parse($event->entry_date_1)->format('d.m.Y H:i') }}</td>
+                                        <td class="px-4 py-2 font-medium text-gray-900 dark:text-white">1. termín</td>
+                                        <td class="px-4 py-2 text-gray-900 dark:text-white">{{ Carbon::parse($event->entry_date_1)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</td>
                                         <td class="px-4 py-2 text-gray-900 dark:text-white">—</td>
                                     </tr>
                                 @endif
                                 @if($event->entry_date_2)
                                     <tr class="border-b dark:border-gray-600 {{ Carbon::parse($event->entry_date_2)->isPast() ? 'opacity-50' : '' }}">
-                                        <td class="px-4 py-2 font-medium text-gray-900 dark:text-white">2. termin</td>
-                                        <td class="px-4 py-2 text-gray-900 dark:text-white">{{ Carbon::parse($event->entry_date_2)->format('d.m.Y H:i') }}</td>
+                                        <td class="px-4 py-2 font-medium text-gray-900 dark:text-white">2. termín</td>
+                                        <td class="px-4 py-2 text-gray-900 dark:text-white">{{ Carbon::parse($event->entry_date_2)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</td>
                                         <td class="px-4 py-2 text-gray-900 dark:text-white">
                                             @if($event->increase_entry_fee_2)
                                                 +{{ $event->increase_entry_fee_2 }} Kc
@@ -209,8 +209,8 @@
                                 @endif
                                 @if($event->entry_date_3)
                                     <tr class="border-b dark:border-gray-600 {{ Carbon::parse($event->entry_date_3)->isPast() ? 'opacity-50' : '' }}">
-                                        <td class="px-4 py-2 font-medium text-gray-900 dark:text-white">3. termin</td>
-                                        <td class="px-4 py-2 text-gray-900 dark:text-white">{{ Carbon::parse($event->entry_date_3)->format('d.m.Y H:i') }}</td>
+                                        <td class="px-4 py-2 font-medium text-gray-900 dark:text-white">3. termín</td>
+                                        <td class="px-4 py-2 text-gray-900 dark:text-white">{{ Carbon::parse($event->entry_date_3)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</td>
                                         <td class="px-4 py-2 text-gray-900 dark:text-white">
                                             @if($event->increase_entry_fee_3)
                                                 +{{ $event->increase_entry_fee_3 }} Kc
@@ -349,7 +349,7 @@
                         @foreach($event->sportEventNews->sortByDesc('date') as $news)
                             <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                                 <div class="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                                    {{ Carbon::parse($news->date)->format('d.m.Y') }}
+                                    {{ Carbon::parse($news->date)->format(\App\Shared\Helpers\AppHelper::DATE_FORMAT) }}
                                 </div>
                                 <div class="text-gray-800 dark:text-gray-200">
                                     {!! $news->text !!}

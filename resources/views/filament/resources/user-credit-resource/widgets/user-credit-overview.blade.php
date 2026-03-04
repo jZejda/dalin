@@ -58,7 +58,7 @@
                 </li>
                 <li>
                     Přihlášeno: <span class="font-semibold text-gray-900 dark:text-white">
-                    {{ Carbon::createFromFormat('Y-m-d H:i:s', $orisApiResponse->params['CreatedDateTime'])->format('d. m. Y H:i') }}
+                    {{ Carbon::createFromFormat('Y-m-d H:i:s', $orisApiResponse->params['CreatedDateTime'])->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}
                 </span>
                 </li>
                 @if(EmptyType::stringNotEmpty($orisApiResponse->params['UpdatedByUserID']))

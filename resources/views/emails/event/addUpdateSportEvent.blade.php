@@ -15,7 +15,7 @@ Do systemu byly přidány závody:
     | Závod              | Přihláska do         |
     | :----------------- |:------------- |
     @foreach ($sportEvents as $sportEvent)
-        | {{$sportEvent->name }}<br>@if(EmptyType::stringNotEmpty($sportEvent->alt_name)) {{Str::limit($sportEvent->alt_name, 35)}}@endif  | {{\Carbon\Carbon::parse($sportEvent->date)->format('Y.m.d H:i')}}  |
+        | {{$sportEvent->name }}<br>@if(EmptyType::stringNotEmpty($sportEvent->alt_name)) {{Str::limit($sportEvent->alt_name, 35)}}@endif  | {{\Carbon\Carbon::parse($sportEvent->date)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT)}}  |
     @endforeach
 @endcomponent
 

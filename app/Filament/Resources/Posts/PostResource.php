@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Posts;
 
+use App\Shared\Helpers\AppHelper;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -139,7 +140,7 @@ class PostResource extends Resource implements HasShieldPermissions
                     ->falseIcon('heroicon-o-x-circle'),
                 TextColumn::make('updated_at')
                     ->label(__('filament-shield::filament-shield.column.updated_at'))
-                    ->dateTime('d. m. Y - H:i')
+                    ->dateTime(AppHelper::DATE_TIME_FORMAT)
                     ->sortable(),
                 TextColumn::make('private')
                     ->badge()

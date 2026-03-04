@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Discord;
 
+use App\Shared\Helpers\AppHelper;
 use App\Http\Controllers\Controller;
 use App\Models\SportEvent;
 use App\Services\OrisApiService;
@@ -35,7 +36,7 @@ final class RaceEventCronNotification extends Controller
 
                 $embeds[] = [
                     'title' => $raceEvent->name,
-                    'description' => sprintf('Přihláška do: %s | ORIS: %s', Carbon::parse($raceEvent->entry_date_1)->format('m.d.Y H:i'), $raceEventOrisLink),
+                    'description' => sprintf('Přihláška do: %s | ORIS: %s', Carbon::parse($raceEvent->entry_date_1)->format(AppHelper::DATE_TIME_FORMAT), $raceEventOrisLink),
                     'color' => '7506394',
                 ];
             }
