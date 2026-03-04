@@ -2,8 +2,6 @@
 
 use App\Models\SportEvent;
 
-use Illuminate\Support\Carbon;
-
 /**
  * @var SportEvent $sportEvent
  */
