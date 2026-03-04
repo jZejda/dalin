@@ -34,7 +34,7 @@ return [
     ],
 
     'type_enum_credit_type' => [
-        UserCreditType::CacheOut->value => 'Výdaj',
+        UserCreditType::CashOut->value => 'Výdaj',
         UserCreditType::UserDonation->value => 'Mimořádný členský vklad',
         UserCreditType::MembershipFees->value => 'Členské příspěvky',
         UserCreditType::TransferCreditBetweenUsers->value => 'Přesun mezi uživateli',
