@@ -36,7 +36,7 @@ class ShowPage extends Component
                 return view('livewire.frontend.show-page-aside', [
                     'page' => $this->page,
                     'relatedPages' => $this->getAsideMenu($this->page),
-                    'relatedLinks' => $this->getAssideLinks($this->page),
+                    'relatedLinks' => $this->getAsideLinks($this->page),
                 ]);
             } else {
                 return view('', ['page' => $this->page]);
@@ -50,7 +50,7 @@ class ShowPage extends Component
      * @return FrontendLinks[]
      * @throws Exception
      */
-    private function getAssideLinks(Page $page): array
+    private function getAsideLinks(Page $page): array
     {
 
         /** @var ContentCategory|null $pageCategory */

@@ -34,14 +34,14 @@ class ListUserRaceProfiles extends ListRecords
                 if ($result) {
 
                     Notification::make()
-                        ->title('Atualizace členství závodníků v klubu proběhla v pořádku')
+                        ->title('Aktualizace členství závodníků v klubu proběhla v pořádku')
                         ->body('Členství v klubu proběhlo v pořádku')
                         ->success()
                         ->seconds(8)
                         ->send();
                 } else {
                     Notification::make()
-                        ->title('eeee')
+                        ->title('Něco se nepovedlo')
                         ->body('Něco se nepovedlo, Můžeš vyzkoušet akci zopakovat nebo kontaktuj admina s popisem chyby, děkujeme.')
                         ->danger()
                         ->send();

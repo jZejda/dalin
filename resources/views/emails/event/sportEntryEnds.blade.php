@@ -8,8 +8,8 @@
 
 ## Konec přihlášek - 1 termín
 
-Blíží ze konec přihlášek na závody vypasané níže. Do termínu přihlášení zbývají necelé **{{ $daysBefore }} dny**.
-Příhlášení proveď podle pokynů v administraci.
+Blíží se konec přihlášek na závody vypsané níže. Do termínu přihlášení zbývají necelé **{{ $daysBefore }} dny**.
+Přihlášení proveď podle pokynů v administraci.
 
 @component('mail::table')
     | Přihláška do       | Název akce/závodu        | ORIS ID

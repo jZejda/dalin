@@ -280,7 +280,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 ->send();
                         } else {
                             Notification::make()
-                                ->title('Neco se nepovedlo')
+                                ->title('Něco se nepovedlo')
                                 ->body('Toto pošli správci: '.$orisResponse->Status)
                                 ->warning()
                                 ->send();
@@ -339,7 +339,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         if ($storeResult) {
                             Notification::make()
                                 ->title('Přihláška  '.$userRaceProfile?->user_race_full_name.' do kategorie: '.$sportClass?->name)
-                                ->body('Prihlášku si zkontroluj na stránkách závodu přímo v ORISu.')
+                                ->body('Přihlášku si zkontroluj na stránkách závodu přímo v ORISu.')
                                 ->success()
                                 ->actions([
                                     ActionAction::make('view')
@@ -375,7 +375,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     if ($storeResult) {
                         Notification::make()
                             ->title('Přihláška  '.$userRaceProfile?->user_race_full_name.' do kategorie: '.$sportClass?->name)
-                            ->body('Prihlášku byla provedena pouze v interním systému')
+                            ->body('Přihláška byla provedena pouze v interním systému')
                             ->success()
                             ->seconds(8)
                             ->send();

@@ -2,11 +2,11 @@
 
 ## Konec přihlášek - 1 termín
 
-Blíží ze konec přihlášek na závody vypasané níže. Do termínu přihlášení zbývají necelé **dva dny**.
-Příhlášení proveď podle pokynů v administraci.
+Blíží se konec přihlášek na závody vypsané níže. Do termínu přihlášení zbývají necelé **dva dny**.
+Přihlášení proveď podle pokynů v administraci.
 
 @component('mail::table')
-    | Přihláska do       | Název akce/závodu        |
+    | Přihláška do       | Název akce/závodu        |
     | :----------------- |:------------- |
     @foreach ($sportEvents as $sportEvent)
         | {{  \Carbon\Carbon::parse($sportEvent->date)->format('Y.m.d H:i') }}  | {{$sportEvent->name }}  |

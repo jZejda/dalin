@@ -38,7 +38,7 @@ class UserCreditAdd extends Mailable
             markdown: 'emails.user.userCreditAdd',
             with: [
                 'amount' => $this->amount,
-                'curency' => $this->currency,
+                'currency' => $this->currency,
                 'user' => $this->user,
             ]
         );

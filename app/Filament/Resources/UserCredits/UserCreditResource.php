@@ -269,7 +269,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                     ->options(self::getUserCreditStatuses())
                     ->default(''),
                 Filter::make('user_id')
-                    ->label('Nená přiřazeno závodníka')
+                    ->label('Není přiřazen závodník')
                     ->query(fn (Builder $query): Builder => $query->where('user_id', '=', null))
                     ->default(false),
             ])

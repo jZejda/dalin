@@ -1,6 +1,6 @@
 <x-mail::message>
 
-## Notifikace k zavodu
+## Notifikace k závodu
 
 @component('mail::divider')
 Zpráva k závodu **{{ $sportEvent->name }}** @if(!is_null($sportEvent->alt_name)) | {{ $sportEvent->alt_name }} @endif odeslána na všechny aktuálně přihlášené závodníky.

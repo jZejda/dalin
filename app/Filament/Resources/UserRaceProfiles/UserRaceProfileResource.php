@@ -79,7 +79,7 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                                                 if (blank($state)) {
                                                     Notification::make()
                                                         ->title('Formulář vstupy')
-                                                        ->body('Vyplň prosím Registracni cislo.')
+                                                        ->body('Vyplň prosím Registrační číslo.')
                                                         ->danger()
                                                         ->seconds(8)
                                                         ->send();
@@ -149,7 +149,7 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                                 TextInput::make('city')
                                     ->label('Město'),
                                 TextInput::make('street')
-                                    ->label('Ulize číslo domu'),
+                                    ->label('Ulice číslo domu'),
                                 TextInput::make('zip')
                                     ->label('PSČ'),
 

@@ -78,7 +78,7 @@
                                         </a>
                                     </h5>
                                     <h5>
-                                        <span class="tracking-tight font-light text-gray-800">Prevýšení:</span>
+                                        <span class="tracking-tight font-light text-gray-800">Převýšení:</span>
                                         <span class="text-gray-800">{{ $class->getCourse()->getClimb() }}<span class="font-light"> m</span></span>
                                     </h5>
                                     <h5>

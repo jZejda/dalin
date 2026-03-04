@@ -98,7 +98,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     Section::make()
                         ->schema([
                             Text::make(
-                                str('**Info:** Uživateli je potřeba přiřadit minimálně jenu z rolí, jinak nebude mít oprávněníní k žádné akci.')
+                                str('**Info:** Uživateli je potřeba přiřadit minimálně jednu z rolí, jinak nebude mít oprávnění k žádné akci.')
                                 ->inlineMarkdown()
                                 ->toHtmlString()
                             )->color('warning'),

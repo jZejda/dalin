@@ -23,7 +23,7 @@ return [
 
     'event_news' => [
         'content' => 'Obsah novinky',
-        'date' => 'Datum novniky',
+        'date' => 'Datum novinky',
     ],
 
 

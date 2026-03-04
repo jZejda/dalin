@@ -29,7 +29,7 @@ class ListSportClassDefinitions extends ListRecords
                     if ($result) {
                         Notification::make()
                             ->title('Aktualizace definic kategorií')
-                            ->body('AKtualizace definic kategorií z ORISu proběhla v pořádku.')
+                            ->body('Aktualizace definic kategorií z ORISu proběhla v pořádku.')
                             ->success()
                             ->seconds(8)
                             ->send();

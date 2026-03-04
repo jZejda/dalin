@@ -31,11 +31,11 @@ The system uses an external API from the [ORIS](https://oris.ceskyorientak.cz/) 
 
 - PHP v8.4
 - MySql 8* and Up
-- [Laravel](https://laravel.com/) - PHP framework acctualy in version 12.x
+- [Laravel](https://laravel.com/) - PHP framework actually in version 12.x
 - [Filamentphp](https://filamentphp.com/) - in version 5.x
 - [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework
-    - [FLowbite](https://flowbite.com/) - open-source tailwind css library
-- [Livewire](https://livewire.laravel.com/) - Livewire is a full-stack framework for non fronted programmers
+    - [Flowbite](https://flowbite.com/) - open-source tailwind css library
+- [Livewire](https://livewire.laravel.com/) - Livewire is a full-stack framework for non frontend programmers
 - [Alpine.Js](https://alpinejs.dev/) - lightweight, JavaScript framework
 
 ## Setup
@@ -43,7 +43,7 @@ The system uses an external API from the [ORIS](https://oris.ceskyorientak.cz/) 
 Follow this instructions to install the project for local development:
 
 > [!NOTE]
-> For local development use 🐳 Docker containter.
+> For local development use 🐳 Docker container.
 > Just use make file with common commands, using `make` for help
 
 1. Clone this repo.
@@ -65,7 +65,7 @@ Follow this instructions to install the project for local development:
 12. `npm run dev` - compile the assets
 11. Open `https://localhost` with browser.
 12. Open `https://localhost:8084` You can manage MySQL database in phpMyAdmin tool.
-13. Login into application under `http://localhost/admin/login` with credentilas from `database/seeders/UserTableSeeder.php`
+13. Login into application under `http://localhost/admin/login` with credentials from `database/seeders/UserTableSeeder.php`
 
 I recommend use `make` bash tool in root of project.
 

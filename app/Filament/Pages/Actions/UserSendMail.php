@@ -40,7 +40,7 @@ final class UserSendMail
             ->color('gray')
             ->label('Pošli e-mail')
             ->icon('heroicon-s-paper-airplane')
-            ->modalHeading('Pošle e-mailovou vybraným skupinám uživatelů systému.')
+            ->modalHeading('Pošle e-mail vybraným skupinám uživatelů systému.')
             ->modalDescription('E-mail je odesílán z fronty každý 5 minut.')
             ->modalSubmitActionLabel('Odeslat')
             ->visible(auth()->user()->hasRole([

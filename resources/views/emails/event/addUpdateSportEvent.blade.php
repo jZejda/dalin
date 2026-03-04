@@ -5,14 +5,14 @@
 
 <x-mail::message>
 
-## Změny v seznamů závodů
+## Změny v seznamu závodů
 
 Vybrané informace o změnách v přihláškovém systému {{ Config::get('site-config.club.abbr') }}.
 
-Do systemu byly přidány závody:
+Do systému byly přidány závody:
 
 @component('mail::table')
-    | Závod              | Přihláska do         |
+    | Závod              | Přihláška do         |
     | :----------------- |:------------- |
     @foreach ($sportEvents as $sportEvent)
         | {{$sportEvent->name }}<br>@if(EmptyType::stringNotEmpty($sportEvent->alt_name)) {{Str::limit($sportEvent->alt_name, 35)}}@endif  | {{\Carbon\Carbon::parse($sportEvent->date)->format('Y.m.d H:i')}}  |

@@ -35,7 +35,7 @@ class EventWeeklyEndsBySport extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name').' - Týdenní souhrn termínů příhlášek',
+            subject: config('app.name').' - Týdenní souhrn termínů přihlášek',
         );
     }
 

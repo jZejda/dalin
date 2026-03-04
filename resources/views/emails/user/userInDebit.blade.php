@@ -10,7 +10,7 @@
 Měsíční výpis uživatelů {{ Config::get('site-config.club.abbr') }} klubu k dnešnímu dni
 {{ Carbon::now()->format('d.m.Y H:i') }}, kteří k prvnímu mají nízký kredit na kontě.
 
-Prosím o kontrolu s následou informací k uživatelům:
+Prosím o kontrolu s následnou informací k uživatelům:
 
 @component('mail::table')
     | Uživatel              | Stav konta Kč         |

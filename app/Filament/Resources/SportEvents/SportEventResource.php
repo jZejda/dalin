@@ -134,7 +134,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->alignLeft(),
 
                 ViewColumn::make('entries')
-                    ->label('Terminy')
+                    ->label('Termíny')
                     ->view('filament.tables.columns.entryDates'),
 
                 TextColumn::make('organization')
@@ -256,7 +256,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                                 ->action(function () use ($state, $set, $get) {
                                                     if (blank($state)) {
                                                         Notification::make()
-                                                            ->title('Formlulářová data')
+                                                            ->title('Formulářová data')
                                                             ->body('Vyplň prosím ORIS ID závodu.')
                                                             ->danger()
                                                             ->seconds(8)
