@@ -9,7 +9,7 @@ Příhlášení proveď podle pokynů v administraci.
     | Přihláska do       | Název akce/závodu        |
     | :----------------- |:------------- |
     @foreach ($sportEvents as $sportEvent)
-        | {{  \Carbon\Carbon::parse($sportEvent->date)->format('Y.m.d H:i') }}  | {{$sportEvent->name }}  |
+        | {{  \Carbon\Carbon::parse($sportEvent->date)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}  | {{$sportEvent->name }}  |
     @endforeach
 @endcomponent
 

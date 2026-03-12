@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEvents\RelationManagers;
 
+use App\Shared\Helpers\AppHelper;
 use Filament\Schemas\Schema;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
@@ -47,7 +48,7 @@ class SportEventNewsRelationManager extends RelationManager
                 TextColumn::make('date')
                     ->icon('heroicon-o-calendar')
                     ->label(__('sport-event.event_news.date'))
-                    ->dateTime('d.m.Y H:i')
+                    ->dateTime(AppHelper::DATE_TIME_FORMAT)
                     ->sortable(),
                 TextColumn::make('text')
                     ->label(__('sport-event.event_news.content'))

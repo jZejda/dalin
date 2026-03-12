@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Pages;
 
+use App\Shared\Helpers\AppHelper;
 use App\Enums\AppRoles;
 use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
 use Filament\Schemas\Schema;
@@ -300,7 +301,7 @@ class PageResource extends Resource implements HasShieldPermissions
                     ->sortable(),
                 TextColumn::make('updated_at')
                     ->label(__('filament-shield::filament-shield.column.updated_at'))
-                    ->dateTime('d. m. Y - H:i')
+                    ->dateTime(AppHelper::DATE_TIME_FORMAT)
                     ->sortable(),
             ])
             ->defaultPaginationPageOption(25)

@@ -1,5 +1,5 @@
 <?php
-use App\Shared\Helpers\AppHelper;
+
 use Illuminate\Support\Carbon;
 use App\Models\SportEvent;
 
@@ -16,7 +16,7 @@ $sportEvent = $getRecord();
             @elseif(Carbon::now() > $sportEvent->entry_date_1)
                 text-danger-600
             @endif
-        ">{{ $sportEvent->entry_date_1?->format(AppHelper::DATE_TIME_FORMAT ?? '') }}</p>
+        ">{{ $sportEvent->entry_date_1?->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</p>
     @endif
 
     @if ($getRecord()->entry_date_2 !== null)
@@ -28,7 +28,7 @@ $sportEvent = $getRecord();
             @endif
         ">
             <div class="flex justify-start">
-                <div>{{ $sportEvent->entry_date_2?->format(AppHelper::DATE_TIME_FORMAT ?? '') }}</div>
+                <div>{{ $sportEvent->entry_date_2?->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</div>
                 @if ($sportEvent->increase_entry_fee_2 !== null)
                 <div class="ml-1 bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-1 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">+{{$sportEvent->increase_entry_fee_2}}%</div>
                 @endif
@@ -44,7 +44,7 @@ $sportEvent = $getRecord();
                 text-danger-600
             @endif
         "><div class="flex justify-start">
-                <div>{{ $sportEvent->entry_date_3?->format(AppHelper::DATE_TIME_FORMAT ?? '') }}</div>
+                <div>{{ $sportEvent->entry_date_3?->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</div>
                 @if ($sportEvent->increase_entry_fee_3 !== null)
                     <div class="ml-1 bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-1 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">+{{$sportEvent->increase_entry_fee_3}}%</div>
                 @endif

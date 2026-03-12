@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\RelationManagers;
 
+use App\Shared\Helpers\AppHelper;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -59,7 +60,7 @@ class UserCreditRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
-                    ->dateTime('d.m.Y')
+                    ->dateTime(AppHelper::DATE_FORMAT)
                     ->description(function (UserCredit $record): string {
                         return 'id: '. $record->id;
                     })
@@ -140,7 +141,7 @@ class UserCreditRelationManager extends RelationManager
                             ->withColumns([
                                 Column::make('created_at')
                                     ->heading('Vytvořeno dne')
-                                    ->formatStateUsing(fn ($state) => Carbon::parse($state)->format('d.m.Y')),
+                                    ->formatStateUsing(fn ($state) => Carbon::parse($state)->format(AppHelper::DATE_FORMAT)),
                                 Column::make('sportEvent.name')->heading('Název události'),
                                 Column::make('sportEvent.alt_name')->heading('Alternativní název'),
                                 Column::make('userRaceProfile.reg_number')->heading('Registrace'),

@@ -145,7 +145,7 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                             return null;
                         }
 
-                        return 'Transakce novější: ' . Carbon::parse($data['date'])->format('d.m.Y');
+                        return 'Transakce novější: ' . Carbon::parse($data['date'])->format(AppHelper::DATE_FORMAT);
                     })->default(now()->subDays(7)),
                 SelectFilter::make('transaction_indicator')
                     ->label('Typ transakce')

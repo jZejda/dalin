@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEvents\RelationManagers;
 
+use App\Shared\Helpers\AppHelper;
 use App\Models\UserCredit;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -30,7 +31,7 @@ class UserCreditRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('created_at')
                     ->label('Vytvořeno')
-                    ->dateTime('d.m.Y'),
+                    ->dateTime(AppHelper::DATE_FORMAT),
                 TextColumn::make('userRaceProfile.UserRaceFullName')
                     ->label('Závodní profil')
                     ->searchable(),

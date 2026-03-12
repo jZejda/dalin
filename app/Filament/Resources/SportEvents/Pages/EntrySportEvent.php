@@ -202,7 +202,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->searchable(),
             TextColumn::make('created_at')
                 ->label('Vytvořeno')
-                ->dateTime('d. m. Y - H:i')
+                ->dateTime(AppHelper::DATE_TIME_FORMAT)
                 ->searchable()
                 ->sortable(),
         ];

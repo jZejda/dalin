@@ -1,7 +1,7 @@
 @php
     use App\Enums\AppRoles;
     use App\Models\SportEvent;
-    use App\Shared\Helpers\AppHelper;
+
 
     $record = SportEvent::query()->where('id', '=', 150)->first();
 @endphp
@@ -26,7 +26,7 @@
                     <div>
                         <h3 class="block font-bold text-gray-800 dark:text-white">{{ auth()->user()?->name }}</h3>
                         <p class="text-gray-600 dark:text-gray-400">Registrace
-                            od {{ \Carbon\Carbon::createFromFormat(AppHelper::MYSQL_DATE_TIME, auth()->user()?->created_at)->format('d.m.Y')}}
+                            od {{ \Carbon\Carbon::createFromFormat(\App\Shared\Helpers\AppHelper::MYSQL_DATE_TIME, auth()->user()?->created_at)->format(\App\Shared\Helpers\AppHelper::DATE_FORMAT)}}
                             na e-mail: {{ auth()->user()?->email }}</p>
                         <p class="mt-4">Aktuální role:</p>
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEvents\RelationManagers;
 
+use App\Shared\Helpers\AppHelper;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
 use Filament\Actions\ActionGroup;
@@ -69,7 +70,7 @@ class SportServicesRelationManager extends RelationManager
                 TextColumn::make('last_booking_date_time')
                     ->icon('heroicon-o-calendar')
                     ->label('Datum poslední objednávky')
-                    ->dateTime('d.m.Y H:i:s')
+                    ->dateTime(AppHelper::DATE_TIME_FULL_FORMAT)
                     ->sortable(),
                 TextColumn::make('unit_price')
                     ->label('Cena za jednotku')

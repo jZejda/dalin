@@ -227,7 +227,7 @@ class SportEvent extends Model
             $this->name.' | '.
             ($this->oris_id !== null ? '(ORIS ID: '.$this->oris_id.')' : '').
             ($this->last_calculate_cost !== null ? ' | (Náklady naposled : '.$this->last_calculate_cost->format(
-                'd.m.Y - H:i'
+                AppHelper::DATE_TIME_FORMAT
             ).')' : '');
     }
 }

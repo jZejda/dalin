@@ -5,7 +5,7 @@
     use App\Models\SportService;
     use App\Enums\AppRoles;
     use App\Services\OrisApiService;
-    use App\Shared\Helpers\AppHelper;use Carbon\Carbon;
+    use Carbon\Carbon;
 
     /** @var SportEvent $record */
     /** @var SportClass[] $classes **/
@@ -178,7 +178,7 @@
                                             <path d="M4 11l16 0"></path>
                                             <path d="M8 15h2v2h-2z"></path>
                                         </svg>
-                                        <span>{{ $record->date->format('d. m. Y') }}</span>
+                                        <span>{{ $record->date->format(\App\Shared\Helpers\AppHelper::DATE_FORMAT) }}</span>
                                     </li>
                                 @endif
                                 @if ($record->entry_date_1 !== null)
@@ -192,7 +192,7 @@
                                             <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
                                             <path d="M10 10l2 -2v8"></path>
                                         </svg>
-                                        <span>{{ $record->entry_date_1->format('d. m. Y H:i') }}</span>
+                                        <span>{{ $record->entry_date_1->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</span>
                                     </li>
                                 @endif
                                 @if ($record->entry_date_2 !== null)
@@ -207,7 +207,7 @@
                                             <path
                                                 d="M10 8h3a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 0 -1 1v2a1 1 0 0 0 1 1h3"></path>
                                         </svg>
-                                        <span>{{ $record->entry_date_2->format('d. m. Y H:i') }}</span>
+                                        <span>{{ $record->entry_date_2->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</span>
                                     </li>
                                 @endif
                                 @if ($record->entry_date_3 !== null)
@@ -222,7 +222,7 @@
                                             <path
                                                 d="M10 9a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1"></path>
                                         </svg>
-                                        <span>{{ $record->entry_date_3->format('d. m. Y H:i') }}</span>
+                                        <span>{{ $record->entry_date_3->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</span>
                                     </li>
                                 @endif
                             </ul>
@@ -297,7 +297,7 @@
                                 <dl class="text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
                                     @foreach($record->sportEventNews()->get() as $quickNews)
                                         <div class="flex flex-col pb-2">
-                                            <dt class="mb-1 text-gray-500 dark:text-gray-400">{{ Carbon::parse($quickNews->date)->format('d.m.Y - H:i') }}</dt>
+                                            <dt class="mb-1 text-gray-500 dark:text-gray-400">{{ Carbon::parse($quickNews->date)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</dt>
                                             <dd class="font-semibold">{{$quickNews->text}}</dd>
                                         </div>
                                     @endforeach
