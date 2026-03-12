@@ -488,19 +488,24 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         if ($this->record->oris_id !== null && $this->record->use_oris_for_entries) {
                             return $get('specific_response_class_id');
                         } else {
+                            /** @var SportClass[] $eventClasses */
                             $eventClasses = SportClass::where('sport_event_id', '=', $this->record->id)
                                 ->get();
 
                             $classes = [];
                             foreach ($eventClasses as $eventClass) {
                                 $classDefinitionName = SportClassDefinition::where('id', '=', $eventClass->class_definition_id)->first();
-                                $classes[$eventClass->id] = $classDefinitionName->classDefinitionFullLabel;
+                                $classes[$eventClass->id] = '<span class="font-medium">' . e($eventClass->name)
+                                    . '</span> <span class="text-gray-400"> | '
+                                    . e($classDefinitionName->classDefinitionFullLabel)
+                                    . '</span>';
                             }
 
                             return $classes;
                         }
                     })
                     ->searchable()
+                    ->allowHtml()
                     ->required()
                     ->loadingMessage('Nahrávám kategorie...'),
 
