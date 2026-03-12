@@ -385,7 +385,7 @@ final class OrisApiService
                     //$userCredit->balance = $this->getBalance($userRaceProfile->user, -(float)$entry->getFee());
                     //$userCredit->balance = -(float)$entry->getFee();
                     $userCredit->currency = UserCredit::CURRENCY_CZK;
-                    $userCredit->credit_type = UserCreditType::CacheOut;
+                    $userCredit->credit_type = UserCreditType::CashOut;
                     $userCredit->source = $source;
                     $userCredit->source_user_id = auth()->user()->id;
                     $userCredit->created_at = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);
@@ -408,7 +408,7 @@ final class OrisApiService
                     $userCredit->sport_event_id = $sportEvent->id;
                     $userCredit->amount = -(float) $entry->Fee;
                     $userCredit->currency = UserCredit::CURRENCY_CZK;
-                    $userCredit->credit_type = UserCreditType::CacheOut;
+                    $userCredit->credit_type = UserCreditType::CashOut;
                     $userCredit->source = UserCredit::SOURCE_USER;
                     $userCredit->source_user_id = auth()->user()->id;
                     $userCredit->created_at = Carbon::now()->format(AppHelper::MYSQL_DATE_TIME);

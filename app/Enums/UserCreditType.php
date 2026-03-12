@@ -10,7 +10,7 @@ use Override;
 
 enum UserCreditType: string implements HasColor, HasIcon
 {
-    case CacheOut = 'cacheOut';
+    case CashOut = 'cashOut';
     case UserDonation = 'userDonation';
     case MembershipFees = 'membershipFees';
     case TransferCreditBetweenUsers = 'transferCreditBetweenUsers';
@@ -22,7 +22,7 @@ enum UserCreditType: string implements HasColor, HasIcon
         $trKey = 'sport-event.type_enum_credit_type.';
 
         return [
-            'cacheOut' => __($trKey.self::CacheOut->value),
+            'cashOut' => __($trKey.self::CashOut->value),
             'userDonation' => __($trKey.self::UserDonation->value),
             'membershipFees' => __($trKey.self::MembershipFees->value),
             'transferCreditBetweenUsers' => __($trKey.self::TransferCreditBetweenUsers->value),
@@ -35,7 +35,7 @@ enum UserCreditType: string implements HasColor, HasIcon
     public function getIcon(): string
     {
         return match ($this) {
-            self::CacheOut => 'heroicon-m-arrow-trending-down',
+            self::CashOut => 'heroicon-m-arrow-trending-down',
             self::UserDonation => 'heroicon-m-arrow-trending-up',
             self::MembershipFees => 'heroicon-m-banknotes',
             self::TransferCreditBetweenUsers => 'heroicon-o-truck',
@@ -48,7 +48,7 @@ enum UserCreditType: string implements HasColor, HasIcon
     public function getColor(): string
     {
         return match ($this) {
-            self::CacheOut => 'danger',
+            self::CashOut => 'danger',
             self::UserDonation, self::TransferCreditBetweenUsers => 'success',
             self::MembershipFees, self::InitialDeposit, self::TransportBilling => 'gray',
         };
