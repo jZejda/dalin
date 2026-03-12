@@ -27,7 +27,7 @@
                 {{-- Cancelled banner --}}
                 @if($event->cancelled)
                     <div class="mt-4 bg-red-900/80 border border-red-500 text-red-100 rounded-lg px-4 py-3">
-                        <span class="font-bold text-lg">ZRUSENO</span>
+                        <span class="font-bold text-lg">ZRUŠENO</span>
                         @if($event->cancelled_reason)
                             <span class="ml-2">— {{ $event->cancelled_reason }}</span>
                         @endif
@@ -162,7 +162,7 @@
             {{-- 5. Entry description --}}
             @if($event->entry_desc)
                 <section>
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Popis prihlasek</h2>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Popis přihlášek</h2>
                     <div class="prose dark:prose-invert max-w-none text-gray-800 dark:text-gray-200">
                         {!! $event->entry_desc !!}
                     </div>
@@ -176,14 +176,14 @@
             {{-- 6. Entry deadlines --}}
             @if($event->entry_date_1)
                 <section>
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Terminy prihlasek</h2>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Termíny přihlášek</h2>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
-                                    <th class="px-4 py-3">Termin</th>
+                                    <th class="px-4 py-3">Termín</th>
                                     <th class="px-4 py-3">Datum</th>
-                                    <th class="px-4 py-3">Navyseni</th>
+                                    <th class="px-4 py-3">Navýšení</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -200,7 +200,7 @@
                                         <td class="px-4 py-2 text-gray-900 dark:text-white">{{ Carbon::parse($event->entry_date_2)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</td>
                                         <td class="px-4 py-2 text-gray-900 dark:text-white">
                                             @if($event->increase_entry_fee_2)
-                                                +{{ $event->increase_entry_fee_2 }} Kc
+                                                +{{ $event->increase_entry_fee_2 }} Kč
                                             @else
                                                 —
                                             @endif
@@ -213,7 +213,7 @@
                                         <td class="px-4 py-2 text-gray-900 dark:text-white">{{ Carbon::parse($event->entry_date_3)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</td>
                                         <td class="px-4 py-2 text-gray-900 dark:text-white">
                                             @if($event->increase_entry_fee_3)
-                                                +{{ $event->increase_entry_fee_3 }} Kc
+                                                +{{ $event->increase_entry_fee_3 }} Kč
                                             @else
                                                 —
                                             @endif
@@ -239,11 +239,11 @@
                             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th class="px-4 py-3">Nazev</th>
-                                        <th class="px-4 py-3">Vzdalenost</th>
-                                        <th class="px-4 py-3">Prevyseni</th>
+                                        <th class="px-4 py-3">Název</th>
+                                        <th class="px-4 py-3">Vzdálenost</th>
+                                        <th class="px-4 py-3">Převýšení</th>
                                         <th class="px-4 py-3">Kontrol</th>
-                                        <th class="px-4 py-3">Startovne</th>
+                                        <th class="px-4 py-3">Startovné</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -264,7 +264,7 @@
                                                 {{ $class->controls ?? '—' }}
                                             </td>
                                             <td class="px-4 py-2 text-gray-900 dark:text-white">
-                                                {{ $class->fee ? $class->fee . ' Kc' : '—' }}
+                                                {{ $class->fee ? $class->fee . ' Kč' : '—' }}
                                             </td>
                                         </tr>
                                     @endforeach
@@ -311,22 +311,22 @@
             {{-- 9. Services --}}
             @if($event->sportServices->count() > 0)
                 <section>
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Sluzby</h2>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Služby</h2>
                     <div class="relative overflow-hidden bg-white shadow-lg dark:bg-gray-800 sm:rounded-lg">
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th class="px-4 py-3">Nazev</th>
+                                        <th class="px-4 py-3">Název</th>
                                         <th class="px-4 py-3">Cena</th>
-                                        <th class="px-4 py-3">Dostupne</th>
+                                        <th class="px-4 py-3">Dostupné</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($event->sportServices as $service)
                                         <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                                             <td class="px-4 py-2 font-medium text-gray-900 dark:text-white">{{ $service->service_name_cz }}</td>
-                                            <td class="px-4 py-2 text-gray-900 dark:text-white">{{ $service->unit_price }} Kc</td>
+                                            <td class="px-4 py-2 text-gray-900 dark:text-white">{{ $service->unit_price }} Kč</td>
                                             <td class="px-4 py-2 text-gray-900 dark:text-white">{{ $service->qty_remaining ?? $service->qty_available ?? '—' }}</td>
                                         </tr>
                                     @endforeach
@@ -370,7 +370,7 @@
                     $iconString = isset($event->weather['weather'][0]['icon']) ? $event->weather['weather'][0]['icon'] : '';
                 @endphp
                 <section>
-                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Pocasi</h2>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Počasí</h2>
                     <div class="flex items-center gap-4 p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-gray-700 dark:text-gray-300">
                             @if($iconString === '01d' || $iconString === '01n')
@@ -439,7 +439,7 @@
                         @endif
                         @if($event->stages)
                             <div class="p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-                                <div class="text-xs text-gray-500 dark:text-gray-400 uppercase">Pocet etap</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 uppercase">Počet etap</div>
                                 <div class="text-lg font-bold text-gray-900 dark:text-white">{{ $event->stages }}</div>
                             </div>
                         @endif

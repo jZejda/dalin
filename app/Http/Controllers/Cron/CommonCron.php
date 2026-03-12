@@ -19,7 +19,7 @@ class CommonCron extends Controller
 {
     public function runHourly(): void
     {
-        /** @description Wather updaterun at 08 and 17 hours */
+        /** @description Weather update run at 08 and 17 hours */
         try {
             if ($this->runJob('weather_forecast')) {
                 Log::channel('site')->info('START WeatherForecast run cron at '.$this->getActualHour());

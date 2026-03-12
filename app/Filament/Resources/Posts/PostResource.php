@@ -70,7 +70,7 @@ class PostResource extends Resource implements HasShieldPermissions
                             ])->columns(1),
 
                             Section::make('Dodatečné informace')
-                                ->description('Editorial pro souhrn novinky - nepovinné - dostupné po rokliknutí')
+                                ->description('Editorial pro souhrn novinky - nepovinné - dostupné po rozkliknutí')
                                 ->schema([
                                     Grid::make()->schema([
                                         MarkdownEditor::make('editorial')
@@ -95,7 +95,7 @@ class PostResource extends Resource implements HasShieldPermissions
                                 ->offIcon('heroicon-s-user')
                                 ->default(true),
                             Select::make('user_id')
-                                ->label('Author')
+                                ->label('Autor')
                                 ->options(User::all()->pluck('name', 'id'))
                                 ->searchable()
                                 ->default(Auth::id())
@@ -220,7 +220,7 @@ class PostResource extends Resource implements HasShieldPermissions
             ->color('gray')
             ->label('Pošli e-mail')
             ->icon('heroicon-s-paper-airplane')
-            ->modalHeading('Pošle e-mailovou zprávu k novice')
+            ->modalHeading('Pošle e-mail k novince')
             ->modalDescription('E-mail je odeslán sepárátně každému uživateli zvlášť. Pokud zvolíte zaslat zprávu všem, bude tato odeslána bez ohledu na uživatelské preferenci.')
             ->modalSubmitActionLabel('Odeslat')
             ->visible(function (): bool {

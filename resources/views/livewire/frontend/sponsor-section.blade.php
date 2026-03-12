@@ -2,7 +2,7 @@
     <section class="pt-5 py-16">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="mb-20 text-center">
-                <h3 class="text-2xl text-gray-900 dark:text-gray-100 text-center font-bold">Za podpory pratnerů</h3>
+                <h3 class="text-2xl text-gray-900 dark:text-gray-100 text-center font-bold">Za podpory partnerů</h3>
             </div>
             <div class="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
                 <a href="https://www.orientacnisporty.cz/" target="_blank" class="flex justify-center items-center h-24 rounded-2xl">
@@ -121,7 +121,7 @@
                 </a>
                 <a href="https://www.lovcicky.cz/" target="_blank" class="flex justify-center items-center h-24 rounded-2xl">
 
-                    <img src="https://www.lovcicky.cz/data/editor/85cs_1.png?gcm_date=1347804408" alt="fdfsdf" width="100">
+                    <img src="https://www.lovcicky.cz/data/editor/85cs_1.png?gcm_date=1347804408" alt="Lovčičky" width="100">
 
                 </a>
             </div>

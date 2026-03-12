@@ -30,7 +30,7 @@
                                 <a href="https://mapy.orientacnisporty.cz/cs/clubs/abm" class="hover:underline ">Naše mapy</a>
                             </li>
                             <li>
-                                <a href="{{ url('stranka/poradane-zavody',) }}" class="hover:underline">Poradané závody</a>
+                                <a href="{{ url('stranka/poradane-zavody',) }}" class="hover:underline">Pořádané závody</a>
                             </li>
                             <li>
                                 <a href="#" class="hover:underline">Kalendář</a>

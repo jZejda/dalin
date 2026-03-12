@@ -2,7 +2,7 @@
 
 ## Hromadná zpráva
 
-Upozornění z interního systemu {{ Config::get('site-config.club.abbr') }} na vybrané uživatele systému.
+Upozornění z interního systému {{ Config::get('site-config.club.abbr') }} na vybrané uživatele systému.
 
 @component('mail::divider')
 Zpráva od uživatele **{{ $user->name }}**.

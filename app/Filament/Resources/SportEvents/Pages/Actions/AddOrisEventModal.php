@@ -95,7 +95,7 @@ class AddOrisEventModal
                         Grid::make()->schema([
                             Select::make('oris_id')
                                 ->label('ORIS ID')
-                                ->hint('Hledej podle kritérí na ORISu')
+                                ->hint('Hledej podle kritérií na ORISu')
                                 ->hintIcon('heroicon-m-exclamation-triangle')
                                 ->required()
                                 ->searchable()

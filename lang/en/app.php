@@ -8,7 +8,7 @@ return [
     | App
     |--------------------------------------------------------------------------
     |
-    | The following language lines contain the default App stings.
+    | The following language lines contain the default App strings.
     |
     */
 

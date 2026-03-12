@@ -74,7 +74,7 @@
                 </li>
                 <li>
                     <a href="{{ url('/stranka/odkazy') }}" class="hover:underline hover:text-blue-600 dark:hover:text-blue-500">
-                        Odkazy na orienťácká stránky
+                        Odkazy na orienťácké stránky
                     </a>
                 </li>
             </ul>

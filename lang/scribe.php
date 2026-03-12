@@ -65,7 +65,7 @@ return [
         "request_failed" => "Request failed with error",
         "error_help" => <<<TEXT
             Tip: Check that you're properly connected to the network.
-            If you're a maintainer of ths API, verify that your API is running and you've enabled CORS.
+            If you're a maintainer of this API, verify that your API is running and you've enabled CORS.
             You can check the Dev Tools console for debugging information.
             TEXT,
     ],

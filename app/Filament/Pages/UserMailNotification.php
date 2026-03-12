@@ -221,7 +221,7 @@ class UserMailNotification extends Page implements HasForms
     public function getBreadcrumbs(): array
     {
         return [
-            url('/admin/users') => 'Uzivatel',
+            url('/admin/users') => 'Uživatel',
             url()->current() => 'Nastavení',
         ];
     }
@@ -241,7 +241,7 @@ class UserMailNotification extends Page implements HasForms
                 Tab::make('E-mailové nastavení')
                     ->schema([
                         Section::make('Upozornění na Novinky')
-                            ->description('Zde můžete nastavit upozornění na novinky veřejné a noviny z členské sekce.')
+                            ->description('Zde si můžete nastavit upozornění na novinky veřejné a novinky z členské sekce.')
                             ->aside()
                             ->columns(1)
                             ->schema([

@@ -37,7 +37,7 @@
                         class="font-semibold text-gray-900 dark:text-white">{{ $orisApiResponse->params['note'] }}</span>
                 </li>
                 <li>
-                    Požeadavek na půjčení čipu: <span
+                    Požadavek na půjčení čipu: <span
                         class="font-semibold text-gray-900 dark:text-white">{{ $orisApiResponse->params['rentSI'] }}</span>
                 </li>
                 <li>

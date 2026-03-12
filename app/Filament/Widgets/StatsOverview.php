@@ -62,7 +62,7 @@ class StatsOverview extends BaseWidget
                 ->descriptionIcon($usersAmountCount >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->chart(Arr::pluck($usersAmountChartData, 'amount'))
                 ->color($usersAmountCount >= 0 ? 'success' : 'danger'),
-            Stat::make('Prihlášen do závodů', count($activeUserEntry))
+            Stat::make('Přihlášen do závodů', count($activeUserEntry))
                 ->description('Jsi přihlášen ' . count($activeUserEntry) . ' ve všech spravovaných profilech.'),
             Stat::make('Závodních profilů', $userProfilesCount)
                 ->description('Aktuálně spravuješ závodních profilů'),

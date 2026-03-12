@@ -25,13 +25,13 @@ final class ExportUserRaceProfileData
         return Action::make('makeExportUserRaceProfile')
             ->action(function (array $data): Response|BinaryFileResponse|null {
                 if ($data['export_type'] === self::ALL_REGISTRATIONS) {
-                    self::getNotificatinMessage();
+                    self::getNotificationMessage();
                     return (new UserRaceProfileController())->export(self::ALL_REGISTRATIONS);
                 } elseif ($data['export_type'] === self::ACTIVE_REGISTRATIONS) {
-                    self::getNotificatinMessage();
+                    self::getNotificationMessage();
                     return (new UserRaceProfileController())->export(self::ACTIVE_REGISTRATIONS);
                 } elseif ($data['export_type'] === self::DEACTIVATED_REGISTRATIONS) {
-                    self::getNotificatinMessage();
+                    self::getNotificationMessage();
                     return (new UserRaceProfileController())->export(self::DEACTIVATED_REGISTRATIONS);
                 } else {
                     return null;
@@ -43,7 +43,7 @@ final class ExportUserRaceProfileData
             ->modalHeading('Vytvoří exportní soubor podle zadání')
             ->modalDescription(function (): HtmlString {
                 return new HtmlString('Zvol požadovaný export. Je možné zvolit <strong>všechny registrace</strong> smazané i nesmazané</br>
-                Nebo pouze <strong>aktivní</strong> případně <strong>neaktní</strong>.');
+                Nebo pouze <strong>aktivní</strong> případně <strong>neaktivní</strong>.');
             })
             ->modalSubmitActionLabel('Exportovat')
             ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster, AppRoles::EventOrganizer, AppRoles::BillingSpecialist]))
@@ -63,11 +63,11 @@ final class ExportUserRaceProfileData
             ]);
     }
 
-    private static function getNotificatinMessage(): Notification
+    private static function getNotificationMessage(): Notification
     {
         return Notification::make()
             ->title('Export přihlášek proběhl v pořádku')
-            ->body('Souboru excelu přihlášených uživatelů otevřete z disku.')
+            ->body('Soubor Excel přihlášených uživatelů otevřete z disku.')
             ->success()
             ->seconds(15)
             ->send();

@@ -20,7 +20,7 @@ pro český region hlavně [ORIS](https://oris.ceskyorientak.cz/) systém pro au
 
 ## Show Demo
 
-⚡ Tento projek je využíván klubem [ABM Brno](https://abmbrno.cz/) Klub orientačního běhu ALFA Brno z.s.
+⚡ Tento projekt je využíván klubem [ABM Brno](https://abmbrno.cz/) Klub orientačního běhu ALFA Brno z.s.
 
 📘 Uživatelskou dokumentaci k projektu naleznete na [stránce nápovědy](https://jirizejda.cz/dalin/).
 
@@ -28,19 +28,19 @@ pro český region hlavně [ORIS](https://oris.ceskyorientak.cz/) systém pro au
 
 - PHP v8.4
 - MySql 8* a vyšší
-- [Laravel](https://laravel.com/) - PHP framework acctualy ve verzi 12.x
+- [Laravel](https://laravel.com/) - PHP framework actually ve verzi 12.x
 - [Filamentphp](https://filamentphp.com/) - ve verzi 5.x
 - [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework
-    - [FLowbite](https://flowbite.com/) - open-source tailwind css library
-- [Livewire](https://livewire.laravel.com/) - Livewire is a full-stack framework for non fronted programmers
+    - [Flowbite](https://flowbite.com/) - open-source tailwind css library
+- [Livewire](https://livewire.laravel.com/) - Livewire is a full-stack framework for non frontend programmers
 - [Alpine.Js](https://alpinejs.dev/) - lightweight, JavaScript framework
 
 ## Nastavení
 
-Pokud chcete lokálně vyvíjet tento ptojekt, můžete postupovat podle následujících kroků:
+Pokud chcete lokálně vyvíjet tento projekt, můžete postupovat podle následujících kroků:
 
 > [!NOTE]
-> Pro lokální vývoj prosím používejte 🐳 Docker containter.
+> Pro lokální vývoj prosím používejte 🐳 Docker container.
 > Stačí využívat připravené `make` příkazy pokrývající běžné příkazy při vývoji. Nápovědu získáte prostým zadáním `make` v příkazové řádce projektu
 
 1. Klonování repozitáře.
@@ -62,7 +62,7 @@ Pokud chcete lokálně vyvíjet tento ptojekt, můžete postupovat podle násled
 12. `npm run dev` - compile the assets
 11. Open `https://localhost` with browser.
 12. Open `https://localhost:8084` You can manage MySQL database in phpMyAdmin tool.
-13. Login into application under `http://localhost/admin/login` with credentilas from `database/seeders/UserTableSeeder.php`
+13. Login into application under `http://localhost/admin/login` with credentials from `database/seeders/UserTableSeeder.php`
 
 Doporučuji používat `make` bash nástroj ve výchozí složce projektu.
 

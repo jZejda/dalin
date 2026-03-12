@@ -24,7 +24,7 @@ return [
         'race_relation' => 'Relace na závod/akci',
 
         'create_heading' => 'Kategorie',
-        'create_description' => 'Kategorie slouží ke strukturování obsahu stránek. Například umožní vytvářet stránky jednoho závodu které spolu souvísí. Stránky v jedné kategorii mohou zobrazovat menu osatatních stránek v kategorii.'
+        'create_description' => 'Kategorie slouží ke strukturování obsahu stránek. Například umožní vytvářet stránky jednoho závodu které spolu souvisí. Stránky v jedné kategorii mohou zobrazovat menu ostatních stránek v kategorii.'
     ],
 
     'user_setting' => [

@@ -80,7 +80,7 @@
 
         @endphp
 
-        {{--Importatnt to take space--}}
+        {{--Important to take space--}}
         L.marker([{{$marker->lat}}, {{$marker->lng}}], {icon: {{$marker->markerType->value}}}).addTo(map).bindPopup('{!! $popupContent !!}');
 
         @endforeach

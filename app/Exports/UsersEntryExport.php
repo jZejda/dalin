@@ -62,7 +62,7 @@ class UsersEntryExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
     public function headings(): array
     {
         return [
-            'Uzivatel',
+            'Uživatel',
             'E-mail',
             'Příjmení',
             'Jméno',
@@ -72,7 +72,7 @@ class UsersEntryExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
             'Klubová poznámka',
             'Požadavky na start',
             'Čip',
-            'Pujcit cip',
+            'Půjčit čip',
         ];
     }
 

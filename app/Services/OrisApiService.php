@@ -468,7 +468,7 @@ final class OrisApiService
         return Http::get(self::ORIS_API_URL, $params)->throw();
     }
 
-    private function getBalance(User $user, float $amouth): float
+    private function getBalance(User $user, float $amount): float
     {
 
         /** @var UserCredit $lastCase */
@@ -479,7 +479,7 @@ final class OrisApiService
             ->first();
 
         if (! is_null($lastCase)) {
-            return $amouth;
+            return $amount;
         }
 
         return $lastCase?->balance;

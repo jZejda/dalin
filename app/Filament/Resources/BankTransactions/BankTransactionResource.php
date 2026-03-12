@@ -179,12 +179,12 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
 
     private static function getTableRowAddNoteAction(): Action
     {
-        return Action::make('Popis tranaskce')
+        return Action::make('Popis transakce')
             ->icon('heroicon-o-document-text')
             ->color('info')
             ->modalHeading('Upravit označení transakce')
             ->modalDescription(function (): HtmlString {
-                return new HtmlString('Pro lepší přehlednost můžeš na transkaci změnit <strong>popis</strong> a <strong>poznámku</strong>.</br>
+                return new HtmlString('Pro lepší přehlednost můžeš u transakce změnit <strong>popis</strong> a <strong>poznámku</strong>.</br>
                 Ostatní parametry transakce není možné upravovat. V případě že by to opravdu bylo potřeba, kontaktuj správce účtu klubu.');
             })
             ->modalIcon('heroicon-o-document-text')
@@ -203,7 +203,7 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
 
                 Notification::make()
                     ->title('Popis transakce')
-                    ->body('Uspěšně jsme změnili popis transakce.')
+                    ->body('Úspěšně jsme změnili popis transakce.')
                     ->success()
                     ->send();
             });
@@ -218,8 +218,8 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                 return 'Přidání transakce konkrétnímu uživateli s VS: ' . $bankTransaction->variable_symbol ?? '---';
             })
             ->modalDescription(function (): HtmlString {
-                return new HtmlString('Příchozí transkakce jsou uživateli <strong>pokud je správně uveden variabilní symbol</strong> automaticky přiřazeny.</br>
-                Zde je můžeš priřadit nebo zrušit ručně.');
+                return new HtmlString('Příchozí transakce jsou uživateli <strong>pokud je správně uveden variabilní symbol</strong> automaticky přiřazeny.</br>
+                Zde je můžeš přiřadit nebo zrušit ručně.');
             })
             ->modalIcon('heroicon-o-document-text')
             ->schema([
@@ -262,7 +262,7 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                 $userCreditNotes->saveOrFail();
 
                 Notification::make()
-                    ->title('Transkace')
+                    ->title('Transakce')
                     ->body('Příchozí kredit byl přiřazen uživateli')
                     ->success()
                     ->send();
