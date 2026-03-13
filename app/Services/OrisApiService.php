@@ -346,7 +346,7 @@ final class OrisApiService
     {
         $getParams = [
             'method' => 'getEventEntries',
-            'clubid' => 1, // TODO dej do params
+            'clubid' => config('site-config.club.abbr'),
             'eventid' => $sportEvent->oris_id,
         ];
         $orisResponse = $this->orisGetResponse($getParams);
