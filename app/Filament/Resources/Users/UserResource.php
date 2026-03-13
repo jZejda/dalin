@@ -231,7 +231,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->label('Nové heslo')
                     ->required()
                     ->readOnly()
-                    ->default(Str::random(10)),
+                    ->default(Str::random(12)),
 
             ])
             ->action(function (User $user, array $data): void {
