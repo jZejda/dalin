@@ -11,7 +11,12 @@
 |
 */
 
-uses(Tests\TestCase::class)->in('Feature', 'Unit', 'Frontend');
+use App\Models\User;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
+
+uses(Tests\TestCase::class, Illuminate\Foundation\Testing\RefreshDatabase::class)->in('Feature');
+uses(Tests\TestCase::class)->in('Unit', 'Frontend');
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +44,20 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function actingAsSuperAdmin(): User
 {
-    // ..
+    Role::firstOrCreate(['name' => 'super_admin', 'guard_name' => 'web']);
+    $user = User::factory()->create();
+    $user->assignRole('super_admin');
+
+    // Shield's define_via_gate is false, so register the bypass manually
+    \Illuminate\Support\Facades\Gate::before(
+        fn (object $u, string $ability): ?bool => $u->hasRole('super_admin') ? true : null
+    );
+
+    app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+    test()->actingAs($user);
+
+    return $user;
 }

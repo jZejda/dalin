@@ -55,7 +55,7 @@ class UserCredit extends Model
 
     public const string SOURCE_USER = 'user';
 
-    /** @var array<int, string> */
+    /** @var list<string> */
     protected $fillable = [
         'user_id',
         'related_user_id',

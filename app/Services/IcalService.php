@@ -39,7 +39,7 @@ final class IcalService
     {
         $icalEvents = [];
 
-        /** @var SportEvent[] $sportEvents */
+        /** @var Collection<int, SportEvent> $sportEvents */
         $sportEvents = $this->getEventByType($type);
 
         foreach ($sportEvents as $sportEvent) {

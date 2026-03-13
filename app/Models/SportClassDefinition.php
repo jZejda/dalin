@@ -28,6 +28,7 @@ class SportClassDefinition extends Model
 {
     use HasFactory;
 
+    /** @var list<string> */
     protected $fillable = [
         'oris_id',
         'sport_id',

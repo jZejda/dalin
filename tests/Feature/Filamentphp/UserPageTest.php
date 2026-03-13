@@ -1,27 +1,23 @@
 <?php
 
-namespace Tests\Feature\Filamentphp;
+declare(strict_types=1);
 
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Models\User;
 use Livewire\Livewire;
 
-beforeEach(function () {
-    $this->actingAs(
-        User::where('id', '=', 1)->first()
-    );
-});
-
 test('the application returns a successful response', function () {
-    $response = $this->get('/admin/users');
+    actingAsSuperAdmin();
 
-    $response->assertStatus(200);
+    $this->get('/admin/users')->assertStatus(200);
 });
 
 it('can load the relation manager', function () {
+    actingAsSuperAdmin();
+
     $user = User::factory()->create();
 
     Livewire::test(ListUsers::class)
-    ->assertOk()
-    ->assertCanSeeTableRecords([$user]);
+        ->assertOk()
+        ->assertCanSeeTableRecords([$user]);
 });

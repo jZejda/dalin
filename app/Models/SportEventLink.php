@@ -32,6 +32,7 @@ class SportEventLink extends Model
 {
     use HasFactory;
 
+    /** @var list<string> */
     protected $fillable = [
         'external_key',
         'sport_event_id',

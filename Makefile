@@ -12,7 +12,7 @@ COMPOSER = composer
 ARTISAN  = artisan
 PINT = ./vendor/bin/pint
 PHPSTAN = ./vendor/bin/phpstan
-PEST = ./vendor/bin/pest
+PEST = $(SAIL) $(ARTISAN) test
 NPM = npm
 
 # Misc

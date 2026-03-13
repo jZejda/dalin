@@ -65,6 +65,7 @@ class SportEvent extends Model
 {
     use HasFactory;
 
+    /** @var list<string> */
     protected $fillable = [
         'name',
         'alt_name',

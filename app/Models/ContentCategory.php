@@ -26,11 +26,7 @@ use Illuminate\Support\Carbon;
 
 class ContentCategory extends Model
 {
-    /**
-     * Fillable fields.
-     *
-     * @var array<int, string>
-     **/
+    /** @var list<string> */
     protected $fillable = [
         'title',
         'description',

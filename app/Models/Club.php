@@ -26,7 +26,7 @@ class Club extends Model
 {
     use HasFactory;
 
-    /** @var array<int, string> */
+    /** @var list<string> */
     protected $fillable = [
         'abbr',
         'name',
