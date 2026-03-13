@@ -13,7 +13,7 @@ DaLin makes it easy to manage orienteering club operations.
 The system uses an external API from the [ORIS](https://oris.ceskyorientak.cz/) system to automatically process members' race entries, download payments, etc.
 
 - [📢 &nbsp;Release Notes](https://jirizejda.cz/dalin/changelog/)
-- [✨ &nbsp;Used by AMB orienteering club](https://abmbrno.cz)
+- [✨ &nbsp;Used by ABM orienteering club](https://abmbrno.cz)
 
 > [!WARNING]
 > Pro dokumentaci v češtině prosím navštivte stránku níže.
