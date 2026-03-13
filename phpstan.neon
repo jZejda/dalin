@@ -23,7 +23,6 @@ parameters:
 
     excludePaths:
         - ./*/*/FileToBeExcluded.php
-        - ./app/Http/Controllers/TestController.php
         - ./app/Policies/*
 
     treatPhpDocTypesAsCertain: false
