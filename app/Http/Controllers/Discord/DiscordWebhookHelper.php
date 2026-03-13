@@ -13,13 +13,14 @@ final class DiscordWebhookHelper extends Controller
     public const string CONTENT_STATUS_UPDATE = 'update';
 
 
-    public static function getWebhookUrl(string $channelName): string
+    public static function getWebhookUrl(string $channelName): ?string
     {
-
-        return match ($channelName) {
+        $url = match ($channelName) {
             self::DISCORD_SPORT_EVENT_WEBHOOK_URL => config('site-config.discord.sport_event.webhook_url'),
             self::DISCORD_CONTENT_WEBHOOK_URL => config('site-config.discord.content.webhook_url'),
-            default => '',
+            default => null,
         };
+
+        return $url !== '' ? $url : null;
     }
 }
