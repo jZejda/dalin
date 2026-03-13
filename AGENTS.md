@@ -16,7 +16,7 @@ Orienteering club web application built with Laravel 12, PHP 8.4, Filament v5, T
 
 ### Directory Structure
 
-```
+```text
 app/
 ├── Console/          # Artisan commands
 ├── Enums/            # Backed string enums (HasColor, HasLabel contracts)
