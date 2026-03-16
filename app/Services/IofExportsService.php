@@ -210,7 +210,9 @@ final class IofExportsService
         $dom->formatOutput = true;
 
         // Load XML with namespace handling
-        @$dom->loadXML($xml);
+        if ($dom->loadXML($xml) === false) {
+            throw new \RuntimeException('Failed to parse generated XML.');
+        }
 
         // Get all Class elements
         $xpath = new \DOMXPath($dom);
@@ -220,7 +222,7 @@ final class IofExportsService
         $classIndex = 0;
 
         if ($classNodes === false) {
-            return $dom->saveXML() ?: '';
+            throw new \RuntimeException('XPath query for Class elements failed.');
         }
 
         foreach ($classNodes as $classNode) {
@@ -290,7 +292,12 @@ final class IofExportsService
             $classIndex++;
         }
 
-        return $dom->saveXML() ?: '';
+        $result = $dom->saveXML();
+        if ($result === false) {
+            throw new \RuntimeException('Failed to serialize XML document.');
+        }
+
+        return $result;
     }
 
     private function getSerializer(): Serializer

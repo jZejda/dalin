@@ -42,7 +42,7 @@ class FioBank implements ConnectorInterface
                     transactionIndicator: $this->getTransactionIndicator($transaction),
                     dateTime: Carbon::createFromFormat('Y-m-dO', $transaction->column0->value ?? '')?->setTime(0, 0, 0) ?? Carbon::now(),
                     amount: (float)$transaction->column1?->value,
-                    currency: $transaction->column5->value ?? 'CZK',
+                    currency: $transaction->column5?->value ?? 'CZK', // @phpstan-ignore nullsafe.neverNull
                     bankAccountIdentifier: $this->getBankAccountIdentifier($transaction),
                     variableSymbol: $transaction->column5?->value,
                     specificSymbol: null,

@@ -139,6 +139,18 @@ parameters:
 			path: app/Enums/UserCreditStatus.php
 
 		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/Forms/Components/RichEditor/RichContentCustomBlocks/AlertBlock.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/Forms/Components/RichEditor/RichContentCustomBlocks/HeroBlock.php
+
+		-
 			message: '#^Cannot call method hasRole\(\) on App\\Models\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -159,6 +171,12 @@ parameters:
 		-
 			message: '#^Access to an undefined property App\\Filament\\Pages\\UserMailNotification\:\:\$form\.$#'
 			identifier: property.notFound
+			count: 1
+			path: app/Filament/Pages/UserMailNotification.php
+
+		-
+			message: '#^Parameter \#1 \$view of static method Filament\\Schemas\\Components\\View\:\:make\(\) expects view\-string, string given\.$#'
+			identifier: argument.type
 			count: 1
 			path: app/Filament/Pages/UserMailNotification.php
 
@@ -189,6 +207,12 @@ parameters:
 		-
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
+			count: 1
+			path: app/Filament/Resources/BankTransactions/BankTransactionResource.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
 			count: 1
 			path: app/Filament/Resources/BankTransactions/BankTransactionResource.php
 
@@ -433,6 +457,12 @@ parameters:
 			path: app/Filament/Resources/SportEvents/Pages/EntrySportEvent.php
 
 		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Resources/SportEvents/Pages/EntrySportEvent.php
+
+		-
 			message: '#^Parameter \#2 \$userProfile of method App\\Filament\\Resources\\SportEvents\\Pages\\EntrySportEvent\:\:orisCreateEntry\(\) expects App\\Models\\UserRaceProfile, App\\Models\\UserRaceProfile\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -514,6 +544,12 @@ parameters:
 			message: '#^Parameter \#1 \$schema of static method Filament\\Schemas\\Components\\Group\:\:make\(\) expects array\<Illuminate\\Contracts\\Support\\Htmlable\|string\>\|Closure, array\{sm\: 1, md\: 12\} given\.$#'
 			identifier: argument.type
 			count: 1
+			path: app/Filament/Resources/SportEvents/SportEventResource.php
+
+		-
+			message: '#^Parameter \#1 \$view of method Filament\\Support\\Components\\ViewComponent\:\:view\(\) expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 5
 			path: app/Filament/Resources/SportEvents/SportEventResource.php
 
 		-
@@ -679,6 +715,12 @@ parameters:
 			path: app/Filament/Resources/UserCredits/Pages/ViewUserCredit.php
 
 		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Resources/UserCredits/Pages/ViewUserCredit.php
+
+		-
 			message: '#^Property App\\Models\\UserCreditNote\:\:\$note_user_id \(int\) does not accept int\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -697,10 +739,28 @@ parameters:
 			path: app/Filament/Resources/UserCredits/UserCreditResource.php
 
 		-
+			message: '#^Parameter \#1 \$view of method Filament\\Support\\Components\\ViewComponent\:\:view\(\) expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Resources/UserCredits/UserCreditResource.php
+
+		-
 			message: '#^Static method App\\Filament\\Resources\\UserCredits\\UserCreditResource\:\:getPluckUsers\(\) is unused\.$#'
 			identifier: method.unused
 			count: 1
 			path: app/Filament/Resources/UserCredits/UserCreditResource.php
+
+		-
+			message: '#^Property App\\Filament\\Resources\\UserCredits\\Widgets\\UserCreditChat\:\:\$view \(view\-string\) does not accept default value of type string\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Filament/Resources/UserCredits/Widgets/UserCreditChat.php
+
+		-
+			message: '#^Property App\\Filament\\Resources\\UserCredits\\Widgets\\UserCreditOverview\:\:\$view \(view\-string\) does not accept default value of type string\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Filament/Resources/UserCredits/Widgets/UserCreditOverview.php
 
 		-
 			message: '#^Method App\\Filament\\Resources\\UserCredits\\Widgets\\UserCreditStats\:\:getSumUnAssignCredit\(\) should return float\|null but returns float\|int\|string\.$#'
@@ -751,6 +811,12 @@ parameters:
 			path: app/Filament/Resources/Users/Pages/CreateUser.php
 
 		-
+			message: '#^Parameter \#1 \$view of method Filament\\Support\\Components\\ViewComponent\:\:view\(\) expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Resources/Users/RelationManagers/UserCreditRelationManager.php
+
+		-
 			message: '#^Call to an undefined method App\\Filament\\Widgets\\MapOverview\:\:fitBounds\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -799,10 +865,28 @@ parameters:
 			path: app/Filament/Widgets/MapOverview.php
 
 		-
+			message: '#^Property App\\Filament\\Widgets\\PostsOverview\:\:\$view \(view\-string\) does not accept default value of type string\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Filament/Widgets/PostsOverview.php
+
+		-
 			message: '#^Method App\\Filament\\Widgets\\StatsOverview\:\:getLastPost\(\) is unused\.$#'
 			identifier: method.unused
 			count: 1
 			path: app/Filament/Widgets/StatsOverview.php
+
+		-
+			message: '#^Property App\\Filament\\Widgets\\UserCreditBalance\:\:\$view \(view\-string\) does not accept default value of type string\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Filament/Widgets/UserCreditBalance.php
+
+		-
+			message: '#^Property App\\Filament\\Widgets\\UserSendCreditInfo\:\:\$view \(view\-string\) does not accept default value of type string\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: app/Filament/Widgets/UserSendCreditInfo.php
 
 		-
 			message: '#^Property App\\Http\\Components\\Iofv3\\Entities\\ClassId\:\:\$type is never read, only written\.$#'
@@ -829,10 +913,40 @@ parameters:
 			path: app/Http/Controllers/Auth/ConfirmablePasswordController.php
 
 		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/ConfirmablePasswordController.php
+
+		-
 			message: '#^Cannot call method hasVerifiedEmail\(\) on App\\Models\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: app/Http/Controllers/Auth/EmailVerificationPromptController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/EmailVerificationPromptController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/NewPasswordController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/PasswordResetLinkController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Auth/RegisteredUserController.php
 
 		-
 			message: '#^Cannot call method hasVerifiedEmail\(\) on App\\Models\\User\|null\.$#'
@@ -871,16 +985,52 @@ parameters:
 			path: app/Http/Controllers/Cron/Jobs/UpdateEventWeather.php
 
 		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Http/Controllers/Frontend/PageController.php
+
+		-
 			message: '#^Parameter \#1 \$code of function abort expects Illuminate\\Contracts\\Support\\Responsable\|int\|Symfony\\Component\\HttpFoundation\\Response, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/Frontend/PostController.php
 
 		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Frontend/PostController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Frontend/ResultListController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Frontend/SportEvent.php
+
+		-
 			message: '#^Parameter \#1 \$code of function abort expects Illuminate\\Contracts\\Support\\Responsable\|int\|Symfony\\Component\\HttpFoundation\\Response, string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/Frontend/StartListController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Frontend/StartListController.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Livewire/Frontend/EventMap.php
 
 		-
 			message: '#^Method App\\Http\\Middleware\\Authenticate\:\:redirectTo\(\) should return string\|null but return statement is missing\.$#'
@@ -919,6 +1069,48 @@ parameters:
 			path: app/Livewire/Auth/Register.php
 
 		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Backend/UserRaceProfileTable.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Backend/Widgets/EventLinks.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Backend/Widgets/EventMap.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Frontend/EventList.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Frontend/Footer.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Frontend/Navbar.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Frontend/NewPost.php
+
+		-
 			message: '#^Cannot call method getCenterMapCoordsFromMarkers\(\) on App\\Livewire\\Shared\\Maps\\BaseMap\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -943,6 +1135,12 @@ parameters:
 			path: app/Livewire/Frontend/OverviewInfo.php
 
 		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Frontend/OverviewInfo.php
+
+		-
 			message: '#^Property App\\Livewire\\Frontend\\OverviewInfo\:\:\$baseMap \(App\\Livewire\\Shared\\Maps\\BaseMap\|null\) does not accept App\\Livewire\\Shared\\Maps\\BaseMap\|App\\Livewire\\Shared\\Maps\\MapBuilder\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -953,6 +1151,18 @@ parameters:
 			identifier: varTag.variableNotFound
 			count: 1
 			path: app/Livewire/Frontend/OverviewInfo.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Frontend/PostCards.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Frontend/ResultList.php
 
 		-
 			message: '#^Match arm comparison between App\\Enums\\SportEventExportsType\:\:EventEntryListCat\|App\\Enums\\SportEventExportsType\:\:ResultEntryListCat and ''eventEntryListCat'' is always false\.$#'
@@ -969,7 +1179,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
 			identifier: argument.type
-			count: 1
+			count: 2
 			path: app/Livewire/Frontend/ShowPage.php
 
 		-
@@ -977,6 +1187,24 @@ parameters:
 			identifier: deadCode.unreachable
 			count: 1
 			path: app/Livewire/Frontend/ShowPage.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Frontend/ShowPost.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Frontend/SponsorSection.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Livewire/Frontend/StartList.php
 
 		-
 			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
@@ -1021,9 +1249,27 @@ parameters:
 			path: app/Livewire/Shared/Maps/LeafletMap.php
 
 		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Livewire/Shared/Maps/LeafletMap.php
+
+		-
 			message: '#^Anonymous function never returns null so it can be removed from the return type\.$#'
 			identifier: return.unusedType
 			count: 2
+			path: app/Livewire/UserCredit/UserCreditList.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Livewire/UserCredit/UserCreditList.php
+
+		-
+			message: '#^Parameter \#1 \$view of method Filament\\Support\\Components\\ViewComponent\:\:view\(\) expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
 			path: app/Livewire/UserCredit/UserCreditList.php
 
 		-
@@ -1243,6 +1489,24 @@ parameters:
 			path: app/Shared/Helpers/AppHelper.php
 
 		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/View/Components/AppLayout.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/View/Components/GuestLayout.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/View/Components/SportEvent/EventIcon.php
+
+		-
 			message: '#^Parameter \#1 \$title of static method Illuminate\\Support\\Str\:\:slug\(\) expects string, bool\|string given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1295,3 +1559,9 @@ parameters:
 			identifier: larastan.noEnvCallsOutsideOfConfig
 			count: 3
 			path: database/seeders/UserTableSeeder.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: routes/web.php

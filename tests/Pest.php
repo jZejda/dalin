@@ -15,7 +15,7 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
-uses(Tests\TestCase::class, Illuminate\Foundation\Testing\RefreshDatabase::class)->in('Feature');
+uses(Tests\TestCase::class, Illuminate\Foundation\Testing\DatabaseTransactions::class)->in('Feature');
 uses(Tests\TestCase::class)->in('Unit', 'Frontend');
 
 /*
