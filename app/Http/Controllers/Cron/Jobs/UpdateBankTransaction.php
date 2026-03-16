@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron\Jobs;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use App\Models\BankAccount;
 use App\Models\BankTransaction;
 use App\Services\Bank\BankAccountService;
@@ -12,7 +14,6 @@ use App\Services\Bank\Connector\MonetaBank;
 use App\Services\Bank\Connector\Transaction;
 use App\Services\Bank\MatchRules\ExtraMembershipFeesRule;
 use App\Shared\Helpers\BankTransactionHelper;
-use Carbon\Carbon;
 
 final class UpdateBankTransaction implements CommonCronJobs
 {
@@ -27,6 +28,11 @@ final class UpdateBankTransaction implements CommonCronJobs
                 BankAccount::FIO_BANK => FioBank::class,
                 default => null,
             };
+
+            if ($class === null) {
+                Log::channel('site')->warning("UpdateBankTransaction: unknown bank code '{$bankAccount->code}' for account ID {$bankAccount->id}, skipping.");
+                continue;
+            }
 
             $bankTransactions = (new $class())->getTransactions($bankAccount, $bankAccount->last_synced?->subMinutes(5));
 
