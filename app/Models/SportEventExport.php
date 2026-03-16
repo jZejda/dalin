@@ -33,6 +33,7 @@ class SportEventExport extends Model
 
     public const string FILE_XML_IOF_V3 = 'xml_iof_v3_file';
 
+    /** @var list<string> */
     protected $fillable = [
         'title',
         'slug',

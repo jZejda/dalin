@@ -152,8 +152,8 @@ final class OrisApiService
             $eventModel->event_type = SportEventType::Race->value;
             $eventModel->stages = EmptyType::stringNotEmpty($orisData->Stages) ? (int) $orisData->Stages : 0;
             $eventModel->multi_events = EmptyType::stringNotEmpty($orisData->MultiEvents) ? (int) $orisData->MultiEvents : 0;
-            $eventModel->stages = (! is_null($orisData->Stages) || (int) $orisData->Stages != 0) ? (int) $orisData->Stages : null;
-            $eventModel->parent_id = (! is_null($orisData->ParentID) || (int) $orisData->ParentID != 0) ? (int) $orisData->ParentID : null;
+            $eventModel->stages = ! is_null($orisData->Stages) ? (int) $orisData->Stages : null;
+            $eventModel->parent_id = ! is_null($orisData->ParentID) ? (int) $orisData->ParentID : null;
             if ($updateByCron) {
                 $eventModel->last_update = Carbon::now();
             }
@@ -629,7 +629,7 @@ final class OrisApiService
             }
             $sportEventNewItem->external_key = (int) $newItem->ID;
             $sportEventNewItem->text = $newItem->Text;
-            $sportEventNewItem->date = $newItemDate !== false ? $newItemDate : Carbon::now();
+            $sportEventNewItem->date = $newItemDate ?? Carbon::now();
 
             $sportEventNewItem->saveOrFail();
         }

@@ -72,7 +72,7 @@ class User extends Authenticatable implements FilamentUser
     public const string ROLE_MEMBER = 'member';
     public const string ROLE_REDACTOR = 'redactor';
 
-    /** @var array<int, string> */
+    /** @var list<string> */
     protected $fillable = [
         'name',
         'email',
@@ -81,7 +81,7 @@ class User extends Authenticatable implements FilamentUser
         'active',
     ];
 
-    /** @var array<int, string> */
+    /** @var list<string> */
     protected $hidden = [
         'password',
         'remember_token',

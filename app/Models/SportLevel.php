@@ -22,6 +22,7 @@ class SportLevel extends Model
 {
     use HasFactory;
 
+    /** @var list<string> */
     protected $fillable = [
         'oris_id',
         'short_name',

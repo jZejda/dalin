@@ -35,7 +35,7 @@ final class CsosExportsService
             $regNumber = mb_str_pad($regNumber, 8, ' ', STR_PAD_RIGHT);
 
             // Col 9-20: class_name (max 11 chars, left-align)
-            $className = $this->truncateString(Str::trim($userEntry->class_name) ?? '', 11);
+            $className = $this->truncateString(Str::trim($userEntry->class_name ?? ''), 11);
             $className = mb_str_pad($className, 11, ' ', STR_PAD_RIGHT);
 
             // Col 21-32: si (max 11 chars, right-align)

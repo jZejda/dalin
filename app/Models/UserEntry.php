@@ -39,6 +39,7 @@ class UserEntry extends Model
 {
     use HasFactory;
 
+    /** @var list<string> */
     protected $fillable = [
         'oris_entry_id',
         'sport_event_id',

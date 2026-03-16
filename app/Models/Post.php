@@ -46,7 +46,7 @@ class Post extends Model implements HasMedia
         'content_mode' => ContentFormat::class,
     ];
 
-    /* @var array<string> */
+    /** @var list<string> */
     protected $fillable = [
         'title',
         'content',

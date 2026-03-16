@@ -1,33 +1,29 @@
 <?php
 
-use App\Filament\Resources\Posts\PostResource;
-use App\Models\User;
+declare(strict_types=1);
 
-beforeEach(function () {
-    $this->actingAs(
-        User::where('id', '=', 1)->first()
-    );
-});
+use App\Filament\Resources\Posts\PostResource;
 
 test('the application returns a successful response', function () {
-    $response = $this->get('/admin/user-credits');
+    actingAsSuperAdmin();
 
-    $response->assertStatus(200);
+    $this->get('/admin/user-credits')->assertStatus(200);
 });
 
 test('the application returns a successful response credit', function () {
-    $response = $this->get('/admin/pages');
+    actingAsSuperAdmin();
 
-    $response->assertStatus(200);
+    $this->get('/admin/pages')->assertStatus(200);
 });
 
-
 test('the application returns a successful response posts', function () {
-    $response = $this->get('/admin/posts');
+    actingAsSuperAdmin();
 
-    $response->assertStatus(200);
+    $this->get('/admin/posts')->assertStatus(200);
 });
 
 it('can render page', function () {
+    actingAsSuperAdmin();
+
     $this->get(PostResource::getUrl('index'))->assertSuccessful();
 });

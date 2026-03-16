@@ -29,6 +29,7 @@ class UserCreditNote extends Model
 {
     use HasFactory;
 
+    /** @var list<string> */
     protected $fillable = [
         'user_id',
         'user_credit_id',

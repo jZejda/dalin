@@ -12,7 +12,7 @@ COMPOSER = composer
 ARTISAN  = artisan
 PINT = ./vendor/bin/pint
 PHPSTAN = ./vendor/bin/phpstan
-PEST = ./vendor/bin/pest
+PEST = $(SAIL) $(ARTISAN) test
 NPM = npm
 
 # Misc
@@ -79,7 +79,8 @@ art: ## List all Laravel commands or pass the parameter "c=" to run a given comm
 	@$(SAIL) $(ARTISAN) $(c)
 
 ## —— PHP-Pest test 🥰 —————————————————————————————————————————————————————————————————————————————————————————————————
-pest: ## ## Run the PHP Pest test
+pest: ## Run the PHP Pest test (migrates test database first)
+	@$(SAIL) $(ARTISAN) migrate --env=testing --force
 	@$(PEST)
 
 pest-drift: ## Run the PHP Pest test convert from UnitTest

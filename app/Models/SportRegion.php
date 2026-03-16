@@ -21,6 +21,7 @@ class SportRegion extends Model
 {
     use HasFactory;
 
+    /** @var list<string> */
     protected $fillable = [
         'short_name',
         'long_name',

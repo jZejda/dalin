@@ -19,6 +19,7 @@ use App\Models\SportEvent;
 use App\Models\SportEventExport;
 use App\Models\UserEntry;
 use DOMElement;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
@@ -89,7 +90,7 @@ final class IofExportsService
         $eventEntry = new EventEntry($sportEvent->name, $startTime);
 
         // Build PersonEntry array from active entries
-        /** @var UserEntry $userEntries */
+        /** @var Collection<int, UserEntry> $userEntries */
         $userEntries = UserEntry::query()
             ->where('sport_event_id', '=', $sportEvent->id)
             ->whereIn('entry_status', [EntryStatus::Create, EntryStatus::Edit])
@@ -107,7 +108,7 @@ final class IofExportsService
             $profile = $userEntry->userRaceProfile;
 
             // Build Person
-            $personId = $profile->oris_id ?? $profile->iof_id ?? (string) $profile->id;
+            $personId = (string) ($profile->oris_id ?? $profile->iof_id ?? $profile->id);
             $personName = new Name($profile->last_name, $profile->first_name);
             $person = new Person($personId, $personName);
 
@@ -147,7 +148,8 @@ final class IofExportsService
 
             // EntryTime
             $entryTime = $userEntry->entry_created?->format(\DateTimeInterface::ATOM) ??
-                         $userEntry->created_at->format(\DateTimeInterface::ATOM);
+                         $userEntry->created_at?->format(\DateTimeInterface::ATOM) ??
+                         Carbon::now()->format(\DateTimeInterface::ATOM);
 
             $personEntries[] = new PersonEntry(
                 $person,
@@ -208,7 +210,9 @@ final class IofExportsService
         $dom->formatOutput = true;
 
         // Load XML with namespace handling
-        @$dom->loadXML($xml);
+        if ($dom->loadXML($xml) === false) {
+            throw new \RuntimeException('Failed to parse generated XML.');
+        }
 
         // Get all Class elements
         $xpath = new \DOMXPath($dom);
@@ -217,6 +221,10 @@ final class IofExportsService
         $classNodes = $xpath->query('//ns:Class');
         $classIndex = 0;
 
+        if ($classNodes === false) {
+            throw new \RuntimeException('XPath query for Class elements failed.');
+        }
+
         foreach ($classNodes as $classNode) {
             /** @var DOMElement $classNode */
             if ($classIndex < count($classAttributesData)) {
@@ -224,13 +232,21 @@ final class IofExportsService
 
                 // Remove minAge and sex elements if they exist
                 $minAgeElements = $xpath->query('./ns:minAge', $classNode);
-                foreach ($minAgeElements as $element) {
-                    $element->parentNode->removeChild($element);
+                if ($minAgeElements !== false) {
+                    foreach ($minAgeElements as $element) {
+                        if ($element instanceof \DOMNode) {
+                            $element->parentNode?->removeChild($element);
+                        }
+                    }
                 }
 
                 $sexElements = $xpath->query('./ns:sex', $classNode);
-                foreach ($sexElements as $element) {
-                    $element->parentNode->removeChild($element);
+                if ($sexElements !== false) {
+                    foreach ($sexElements as $element) {
+                        if ($element instanceof \DOMNode) {
+                            $element->parentNode?->removeChild($element);
+                        }
+                    }
                 }
 
                 // Add minAge and sex attributes to Class element
@@ -243,30 +259,45 @@ final class IofExportsService
 
                 // Find Id element within this Class element
                 $idNodes = $xpath->query('./ns:Id', $classNode);
-                foreach ($idNodes as $idNode) {
-                    /** @var DOMElement $idNode */
-                    // Remove nested value and type elements if they exist
-                    $valueElements = $xpath->query('./ns:value', $idNode);
-                    foreach ($valueElements as $element) {
-                        $element->parentNode->removeChild($element);
+                if ($idNodes !== false) {
+                    foreach ($idNodes as $idNode) {
+                        /** @var DOMElement $idNode */
+                        // Remove nested value and type elements if they exist
+                        $valueElements = $xpath->query('./ns:value', $idNode);
+                        if ($valueElements !== false) {
+                            foreach ($valueElements as $element) {
+                                if ($element instanceof \DOMNode) {
+                                    $element->parentNode?->removeChild($element);
+                                }
+                            }
+                        }
+
+                        $typeElements = $xpath->query('./ns:type', $idNode);
+                        if ($typeElements !== false) {
+                            foreach ($typeElements as $element) {
+                                if ($element instanceof \DOMNode) {
+                                    $element->parentNode?->removeChild($element);
+                                }
+                            }
+                        }
+
+                        // Set text content of Id element
+                        $idNode->textContent = $data['idValue'];
+
+                        // Set type attribute on Id element
+                        $idNode->setAttribute('type', $data['idType']);
                     }
-
-                    $typeElements = $xpath->query('./ns:type', $idNode);
-                    foreach ($typeElements as $element) {
-                        $element->parentNode->removeChild($element);
-                    }
-
-                    // Set text content of Id element
-                    $idNode->textContent = $data['idValue'];
-
-                    // Set type attribute on Id element
-                    $idNode->setAttribute('type', $data['idType']);
                 }
             }
             $classIndex++;
         }
 
-        return $dom->saveXML();
+        $result = $dom->saveXML();
+        if ($result === false) {
+            throw new \RuntimeException('Failed to serialize XML document.');
+        }
+
+        return $result;
     }
 
     private function getSerializer(): Serializer
