@@ -5,7 +5,6 @@ use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\PostController;
 use App\Http\Controllers\Frontend\ResultListController;
 use App\Http\Controllers\Frontend\StartListController;
-use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserEntryController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -58,7 +57,6 @@ Route::prefix('admin')->group(function () {
     Route::get('/export/event-entry-csos/{eventId}', [UserEntryController::class, 'exportEntryListCsos'])->name('admin.export.event-entry-csos');
 })->middleware(['auth', 'verified']);
 
-Route::get('/admin/test', [TestController::class, 'test']);
 //Route::get('/admin/webhook', [DiscordRaceEventNotification::class, 'notification']);
 
 require __DIR__.'/auth.php';
