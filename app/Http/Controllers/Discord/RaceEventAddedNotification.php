@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 final class RaceEventAddedNotification extends Controller
 {
@@ -22,7 +23,7 @@ final class RaceEventAddedNotification extends Controller
         $this->status = $status;
     }
 
-    public function sendNotification(): PromiseInterface|Response
+    public function sendNotification(): PromiseInterface|Response|null
     {
 
         $raceEventOrisLink = '';
@@ -42,7 +43,14 @@ final class RaceEventAddedNotification extends Controller
             default => '',
         };
 
-        return Http::post(DiscordWebhookHelper::getWebhookUrl(DiscordWebhookHelper::DISCORD_SPORT_EVENT_WEBHOOK_URL), [
+        $url = DiscordWebhookHelper::getWebhookUrl(DiscordWebhookHelper::DISCORD_SPORT_EVENT_WEBHOOK_URL);
+
+        if ($url === null) {
+            Log::channel('site')->warning('RaceEventAddedNotification: Discord webhook URL is not configured, skipping.');
+            return null;
+        }
+
+        return Http::post($url, [
             'content' => $content,
             'embeds' => $embeds,
         ]);

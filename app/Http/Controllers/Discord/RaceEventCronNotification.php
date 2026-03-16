@@ -12,13 +12,14 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 final class RaceEventCronNotification extends Controller
 {
     /**
      * Run one per day
      */
-    public function notification(): PromiseInterface|Response
+    public function notification(): PromiseInterface|Response|null
     {
         $raceEventsToNotify = $this->getRaceEventData();
 
@@ -42,7 +43,14 @@ final class RaceEventCronNotification extends Controller
             }
         }
 
-        return Http::post(DiscordWebhookHelper::getWebhookUrl(DiscordWebhookHelper::DISCORD_CONTENT_WEBHOOK_URL), [
+        $url = DiscordWebhookHelper::getWebhookUrl(DiscordWebhookHelper::DISCORD_CONTENT_WEBHOOK_URL);
+
+        if ($url === null) {
+            Log::channel('site')->warning('RaceEventCronNotification: Discord webhook URL is not configured, skipping.');
+            return null;
+        }
+
+        return Http::post($url, [
             'content' => 'Závody u kterých se blíží termín přihlášek na **první termín**.',
             'embeds' => $embeds,
         ]);
