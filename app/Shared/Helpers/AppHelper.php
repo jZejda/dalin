@@ -9,6 +9,8 @@ use Illuminate\Support\Carbon;
 
 final class AppHelper
 {
+    public const int GENERATED_PASSWORD_LENGTH = 12;
+
     public const string DATE_TIME_FORMAT = 'd. m. Y H:i';
 
     public const string DATE_TIME_FULL_FORMAT = 'd. m. Y H:i:s';

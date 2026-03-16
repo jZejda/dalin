@@ -6,15 +6,17 @@ namespace App\Http\Controllers\Cron\Jobs;
 
 use App\Mail\UserPasswordSend;
 use App\Models\User;
+use App\Shared\Helpers\AppHelper;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserSendPassword
 {
     public function sendNewPassword(User $user, ?string $password = null, string $type = UserPasswordSend::ACTION_SEND_PASSWORD): void
     {
         if (is_null($password)) {
-            $password = substr(sha1((string)time()), 0, 10);
+            $password = Str::random(AppHelper::GENERATED_PASSWORD_LENGTH);
         }
 
         $user->password = Hash::make($password);
@@ -32,7 +34,7 @@ class UserSendPassword
 
         foreach ($users as $user) {
 
-            $password = substr(sha1((string)time()), 0, 10);
+            $password = Str::random(AppHelper::GENERATED_PASSWORD_LENGTH);
             $user->password = Hash::make($password);
             $user->saveOrFail();
 

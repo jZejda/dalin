@@ -79,7 +79,7 @@ class UserResource extends Resource implements HasShieldPermissions
                                 ->password()
                                 ->required()
                                 ->maxLength(255)
-                                ->default(Str::random(10))
+                                ->default(Str::random(AppHelper::GENERATED_PASSWORD_LENGTH))
                                 ->revealable()
                                 ->dehydrateStateUsing(static fn (?string $state): ?string => filled($state) ? Hash::make($state) : null)
                                 ->required(static fn (Page $livewire): bool => $livewire instanceof CreateUser)
@@ -231,7 +231,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->label('Nové heslo')
                     ->required()
                     ->readOnly()
-                    ->default(Str::random(10)),
+                    ->default(Str::random(AppHelper::GENERATED_PASSWORD_LENGTH)),
 
             ])
             ->action(function (User $user, array $data): void {
