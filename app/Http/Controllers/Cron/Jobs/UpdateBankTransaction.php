@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron\Jobs;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use App\Models\BankAccount;
 use App\Models\BankTransaction;
 use App\Services\Bank\BankAccountService;
@@ -12,8 +14,6 @@ use App\Services\Bank\Connector\MonetaBank;
 use App\Services\Bank\Connector\Transaction;
 use App\Services\Bank\MatchRules\ExtraMembershipFeesRule;
 use App\Shared\Helpers\BankTransactionHelper;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 final class UpdateBankTransaction implements CommonCronJobs
 {
