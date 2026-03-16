@@ -50,7 +50,7 @@ class Page extends Model implements HasMedia
         // content is handled by custom accessor/mutator
     ];
 
-
+    /** @var list<string> */
     protected $fillable = [
         'title',
         'content_category_id',
@@ -108,12 +108,16 @@ class Page extends Model implements HasMedia
     }
 
     /**
-     * Register media collections for RichEditor attachments
+     * Register the media collection used for rich-editor attachments.
+     *
+     * The collection is stored on the `rich-editor-attachments` disk and is configured to hold a single file.
+     *
+     * @return void
      */
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('rich-editor-attachments')
             ->useDisk('rich-editor-attachments')
-            ->singleFile(false);
+            ->singleFile();
     }
 }

@@ -76,6 +76,15 @@ final class OrisApiService
     }
 
     /**
+     * Create or update a SportEvent and its related entities from ORIS data for the given event ID.
+     *
+     * Fetches event data from ORIS, synchronizes the SportEvent record (creating it if missing) and updates associated
+     * classes, class definitions, services, links/documents, location markers, and news entries. When $updateByCron
+     * is true, the event's last_update timestamp is set.
+     *
+     * @param int $eventId The ORIS event identifier to synchronize.
+     * @param bool $updateByCron If true, mark the event's last_update timestamp (used for cron-driven updates).
+     * @return bool `true` on successful completion.
      * @throws Throwable
      */
     public function updateEvent(int $eventId, bool $updateByCron = false): bool
@@ -152,8 +161,8 @@ final class OrisApiService
             $eventModel->event_type = SportEventType::Race->value;
             $eventModel->stages = EmptyType::stringNotEmpty($orisData->Stages) ? (int) $orisData->Stages : 0;
             $eventModel->multi_events = EmptyType::stringNotEmpty($orisData->MultiEvents) ? (int) $orisData->MultiEvents : 0;
-            $eventModel->stages = (! is_null($orisData->Stages) || (int) $orisData->Stages != 0) ? (int) $orisData->Stages : null;
-            $eventModel->parent_id = (! is_null($orisData->ParentID) || (int) $orisData->ParentID != 0) ? (int) $orisData->ParentID : null;
+            $eventModel->stages = ! is_null($orisData->Stages) ? (int) $orisData->Stages : null;
+            $eventModel->parent_id = ! is_null($orisData->ParentID) ? (int) $orisData->ParentID : null;
             if ($updateByCron) {
                 $eventModel->last_update = Carbon::now();
             }
@@ -609,10 +618,12 @@ final class OrisApiService
     }
 
     /**
-     * @param  News[]  $news
-     *
-     * @throws Throwable
-     */
+         * Create or update SportEventNews records on the given event from ORIS news items.
+         *
+         * @param News[] $news Array of ORIS `News` items to apply to the event.
+         * @param SportEvent $eventModel Target event to which news items will be attached.
+         * @throws Throwable If persisting a SportEventNews record or date parsing fails.
+         */
     private function updateNews(array $news, SportEvent $eventModel): void
     {
         foreach ($news as $newItem) {
@@ -629,7 +640,7 @@ final class OrisApiService
             }
             $sportEventNewItem->external_key = (int) $newItem->ID;
             $sportEventNewItem->text = $newItem->Text;
-            $sportEventNewItem->date = $newItemDate !== false ? $newItemDate : Carbon::now();
+            $sportEventNewItem->date = $newItemDate ?? Carbon::now();
 
             $sportEventNewItem->saveOrFail();
         }

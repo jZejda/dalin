@@ -19,6 +19,7 @@ use App\Models\SportEvent;
 use App\Models\SportEventExport;
 use App\Models\UserEntry;
 use DOMElement;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
@@ -73,6 +74,15 @@ final class IofExportsService
         return $sportEventExport?->result_path;
     }
 
+    /**
+     * Generate an IOF EntryList XML document for the given sport event.
+     *
+     * Builds an EntryList containing event metadata and person entries derived from active user entries
+     * (statuses Create or Edit), enriches class and id metadata (minAge, sex, id type/value), and inserts
+     * IOF namespace and creator attributes before returning the final XML string.
+     *
+     * @param SportEvent $sportEvent The sport event to generate the EntryList for.
+     * @return string The finalized IOF EntryList XML.
     public function generateEntryListXml(SportEvent $sportEvent): string
     {
         // Build EventEntry
@@ -89,7 +99,7 @@ final class IofExportsService
         $eventEntry = new EventEntry($sportEvent->name, $startTime);
 
         // Build PersonEntry array from active entries
-        /** @var UserEntry $userEntries */
+        /** @var Collection<int, UserEntry> $userEntries */
         $userEntries = UserEntry::query()
             ->where('sport_event_id', '=', $sportEvent->id)
             ->whereIn('entry_status', [EntryStatus::Create, EntryStatus::Edit])
@@ -107,7 +117,7 @@ final class IofExportsService
             $profile = $userEntry->userRaceProfile;
 
             // Build Person
-            $personId = $profile->oris_id ?? $profile->iof_id ?? (string) $profile->id;
+            $personId = (string) ($profile->oris_id ?? $profile->iof_id ?? $profile->id);
             $personName = new Name($profile->last_name, $profile->first_name);
             $person = new Person($personId, $personName);
 
@@ -147,7 +157,8 @@ final class IofExportsService
 
             // EntryTime
             $entryTime = $userEntry->entry_created?->format(\DateTimeInterface::ATOM) ??
-                         $userEntry->created_at->format(\DateTimeInterface::ATOM);
+                         $userEntry->created_at?->format(\DateTimeInterface::ATOM) ??
+                         Carbon::now()->format(\DateTimeInterface::ATOM);
 
             $personEntries[] = new PersonEntry(
                 $person,
@@ -195,11 +206,16 @@ final class IofExportsService
     }
 
     /**
-     * Add attributes to Class and Id elements in XML
+     * Injects class-level age and sex attributes and normalizes Id elements inside IOF XML Class nodes.
      *
-     * @param string $xml The XML content
-     * @param array $classAttributesData Array of class attributes data for each Class element
-     * @return string Modified XML with attributes
+     * Removes any existing <minAge>/<sex> child elements, sets Class attributes `minAge` and `sex` when provided,
+     * and replaces Id element contents by removing nested `value`/`type` children, setting the Id element text
+     * to the provided idValue and the Id element attribute `type` to the provided idType for each Class in document order.
+     *
+     * @param string $xml The XML content containing IOF `Class` elements (expected to use the IOF v3 namespace).
+     * @param array[] $classAttributesData Ordered list of attribute data for each Class node. Each entry should be an
+     *     associative array with keys `minAge` (int|null), `sex` (string|null), `idValue` (string), and `idType` (string).
+     * @return string The modified XML as a string, or an empty string if serialization fails.
      */
     private function addClassAndIdAttributes(string $xml, array $classAttributesData): string
     {
@@ -217,6 +233,10 @@ final class IofExportsService
         $classNodes = $xpath->query('//ns:Class');
         $classIndex = 0;
 
+        if ($classNodes === false) {
+            return $dom->saveXML() ?: '';
+        }
+
         foreach ($classNodes as $classNode) {
             /** @var DOMElement $classNode */
             if ($classIndex < count($classAttributesData)) {
@@ -224,13 +244,21 @@ final class IofExportsService
 
                 // Remove minAge and sex elements if they exist
                 $minAgeElements = $xpath->query('./ns:minAge', $classNode);
-                foreach ($minAgeElements as $element) {
-                    $element->parentNode->removeChild($element);
+                if ($minAgeElements !== false) {
+                    foreach ($minAgeElements as $element) {
+                        if ($element instanceof \DOMNode) {
+                            $element->parentNode?->removeChild($element);
+                        }
+                    }
                 }
 
                 $sexElements = $xpath->query('./ns:sex', $classNode);
-                foreach ($sexElements as $element) {
-                    $element->parentNode->removeChild($element);
+                if ($sexElements !== false) {
+                    foreach ($sexElements as $element) {
+                        if ($element instanceof \DOMNode) {
+                            $element->parentNode?->removeChild($element);
+                        }
+                    }
                 }
 
                 // Add minAge and sex attributes to Class element
@@ -243,32 +271,51 @@ final class IofExportsService
 
                 // Find Id element within this Class element
                 $idNodes = $xpath->query('./ns:Id', $classNode);
-                foreach ($idNodes as $idNode) {
-                    /** @var DOMElement $idNode */
-                    // Remove nested value and type elements if they exist
-                    $valueElements = $xpath->query('./ns:value', $idNode);
-                    foreach ($valueElements as $element) {
-                        $element->parentNode->removeChild($element);
+                if ($idNodes !== false) {
+                    foreach ($idNodes as $idNode) {
+                        /** @var DOMElement $idNode */
+                        // Remove nested value and type elements if they exist
+                        $valueElements = $xpath->query('./ns:value', $idNode);
+                        if ($valueElements !== false) {
+                            foreach ($valueElements as $element) {
+                                if ($element instanceof \DOMNode) {
+                                    $element->parentNode?->removeChild($element);
+                                }
+                            }
+                        }
+
+                        $typeElements = $xpath->query('./ns:type', $idNode);
+                        if ($typeElements !== false) {
+                            foreach ($typeElements as $element) {
+                                if ($element instanceof \DOMNode) {
+                                    $element->parentNode?->removeChild($element);
+                                }
+                            }
+                        }
+
+                        // Set text content of Id element
+                        $idNode->textContent = $data['idValue'];
+
+                        // Set type attribute on Id element
+                        $idNode->setAttribute('type', $data['idType']);
                     }
-
-                    $typeElements = $xpath->query('./ns:type', $idNode);
-                    foreach ($typeElements as $element) {
-                        $element->parentNode->removeChild($element);
-                    }
-
-                    // Set text content of Id element
-                    $idNode->textContent = $data['idValue'];
-
-                    // Set type attribute on Id element
-                    $idNode->setAttribute('type', $data['idType']);
                 }
             }
             $classIndex++;
         }
 
-        return $dom->saveXML();
+        return $dom->saveXML() ?: '';
     }
 
+    /**
+     * Create a configured Symfony Serializer for XML and JSON handling.
+     *
+     * The serializer is initialized with array and object normalizers and a property
+     * info extractor (PhpDoc + Reflection) to support denormalization and type
+     * information when converting between XML/JSON and PHP objects.
+     *
+     * @return \Symfony\Component\Serializer\Serializer The configured serializer instance.
+     */
     private function getSerializer(): Serializer
     {
         $encoders = [new XmlEncoder(), new JsonEncoder()];

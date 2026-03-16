@@ -33,13 +33,21 @@ final class IcalService
     }
 
     /**
-     * @return Event[]
-     */
+         * Builds iCalendar Event objects for all sport events of the given type within the current and next year.
+         *
+         * For each SportEvent this creates an Event with name, description (including place, organizer(s), and region(s)),
+         * start/end timestamps (or full-day range when the event spans multiple stages and has a date_end),
+         * a unique identifier (prefers `oris_id` when present), creation date, address, geographic coordinates,
+         * and public classification.
+         *
+         * @param SportEventType $type The type of sport events to include (e.g., race or training).
+         * @return Event[] An array of populated Event instances representing the matching sport events.
+         */
     public function getEvents(SportEventType $type): array
     {
         $icalEvents = [];
 
-        /** @var SportEvent[] $sportEvents */
+        /** @var Collection<int, SportEvent> $sportEvents */
         $sportEvents = $this->getEventByType($type);
 
         foreach ($sportEvents as $sportEvent) {

@@ -23,7 +23,12 @@ class FioBank implements ConnectorInterface
     }
 
     /**
-     * @return Transaction[]|null
+     * Retrieve Transaction value objects for the given bank account starting from an optional date.
+     *
+     * @param BankAccount $bankAccount The bank account to fetch transactions for.
+     * @param Carbon|null $fromDate Optional start date to limit returned transactions; when omitted the account's last synced date or the start of the current month is used.
+     * @return Transaction[] An array of Transaction objects; empty if no transactions were found.
+     * @throws LogicException If a transaction is missing an external key.
      */
     public function getTransactions(BankAccount $bankAccount, ?Carbon $fromDate = null): ?array
     {
@@ -40,9 +45,9 @@ class FioBank implements ConnectorInterface
                 $transactions[] = new Transaction(
                     externalKey: (string)$transaction->column22->value,
                     transactionIndicator: $this->getTransactionIndicator($transaction),
-                    dateTime: Carbon::createFromFormat('Y-m-dO', $transaction->column0?->value ?? '')?->setTime(0, 0, 0) ?? Carbon::now(),
+                    dateTime: Carbon::createFromFormat('Y-m-dO', $transaction->column0->value ?? '')?->setTime(0, 0, 0) ?? Carbon::now(),
                     amount: (float)$transaction->column1?->value,
-                    currency: $transaction->column5?->value ?? 'CZK',
+                    currency: $transaction->column5->value ?? 'CZK',
                     bankAccountIdentifier: $this->getBankAccountIdentifier($transaction),
                     variableSymbol: $transaction->column5?->value,
                     specificSymbol: null,

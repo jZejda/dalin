@@ -11,6 +11,18 @@ use Illuminate\Support\Str;
 
 final class CsosExportsService
 {
+    /**
+     * Generate a fixed-width text list of user entries for the given sport event.
+     *
+     * Each line represents one entry with fields placed into fixed column ranges:
+     * reg_number (cols 0–8), class_name (cols 9–20), si (cols 21–32), full name
+     * as "last_name first_name" (cols 33–57), and note (cols 58+). Entries without
+     * a linked userRaceProfile are excluded; the note field uses the entry's note or
+     * "L" when the note is empty.
+     *
+     * @param SportEvent $sportEvent The sport event to generate the entry list for.
+     * @return string The assembled lines joined by newline characters.
+     */
     public function generateEntryListText(SportEvent $sportEvent): string
     {
         // Load UserEntry records with userRaceProfile relationship
@@ -35,7 +47,7 @@ final class CsosExportsService
             $regNumber = mb_str_pad($regNumber, 8, ' ', STR_PAD_RIGHT);
 
             // Col 9-20: class_name (max 11 chars, left-align)
-            $className = $this->truncateString(Str::trim($userEntry->class_name) ?? '', 11);
+            $className = $this->truncateString(Str::trim($userEntry->class_name ?? ''), 11);
             $className = mb_str_pad($className, 11, ' ', STR_PAD_RIGHT);
 
             // Col 21-32: si (max 11 chars, right-align)
