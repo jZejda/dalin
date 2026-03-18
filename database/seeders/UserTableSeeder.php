@@ -23,6 +23,7 @@ class UserTableSeeder extends Seeder
             'name' => env('ADMIN_USER_NAME', 'Admin'),
             'email' => env('ADMIN_USER_EMAIL', 'admin@example.com'),
             'password' => bcrypt(is_string($envPassword) ? $envPassword : 'secret'),
+            'active' => true,
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString(),
         ]);

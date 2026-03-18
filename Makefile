@@ -89,3 +89,10 @@ pest-drift: ## Run the PHP Pest test convert from UnitTest
 ## —— NPM 💖 ———————————————————————————————————————————————————————————————————————————————————————————————————————————
 npm-dev: ## Run the PHP Pest test convert from UnitTest
 	@$(SAIL) $(NPM) run dev
+
+## —— Demo 🎭 ——————————————————————————————————————————————————————————————————————————————————————————————————————————
+demo-reset: ## Full demo reset: migrate:fresh + DemoSeeder (requires DEMO_MODE=true in .env)
+	@$(SAIL) $(ARTISAN) demo:reset
+
+demo-seed: ## Run DemoSeeder only, without migrate:fresh (requires clean DB + DEMO_MODE=true in .env)
+	@$(SAIL) $(ARTISAN) db:seed --class=DemoSeeder --force

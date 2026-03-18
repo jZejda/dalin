@@ -36,6 +36,10 @@ final class UpdateBankTransaction implements CommonCronJobs
 
             $bankTransactions = (new $class())->getTransactions($bankAccount, $bankAccount->last_synced?->subMinutes(5));
 
+            if ($bankTransactions === null) {
+                continue;
+            }
+
             $this->storeTransactions($bankTransactions, $bankAccount->id);
 
             $bankAccount->last_synced = Carbon::now();
