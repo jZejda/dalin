@@ -26,6 +26,9 @@ class Kernel extends ConsoleKernel
         $schedule->job(new SendNewPostsEmailJob())->everyThirtyMinutes();
         $schedule->job(new SendSportEventEntryEndingEmailJob())->hourly();
 
+        if (config('demo.enabled')) {
+            $schedule->command('demo:reset')->dailyAt('00:00');
+        }
 
         // $schedule->job(new SportEventUpdateJob())->dailyAt('22:00');
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Cron\CommonCron;
+use App\Http\Controllers\Demo\DemoResetController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\PostController;
 use App\Http\Controllers\Frontend\ResultListController;
@@ -35,6 +36,8 @@ Route::get('/', function () {
 Route::get('/cron-scheduler/'.config('site-config.cron_url_key'), function () {
     Artisan::call('schedule:run');
 });
+
+Route::get('/demo-reset/'.config('demo.reset_url_key'), [DemoResetController::class, 'reset']);
 
 Route::get('/cron-hourly/'.config('site-config.cron_hourly.url_key'), [CommonCron::class, 'runHourly']);
 
