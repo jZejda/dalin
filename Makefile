@@ -37,12 +37,12 @@ bash: ## Connect to PHP container via bash so up and down arrows go to previous 
 	@$(SAIL) bash
 
 clear: ## Clear various caches
+	@$(SAIL) $(COMPOSER) dump-autoload
 	@$(SAIL) $(ARTISAN) route:clear
 	@$(SAIL) $(ARTISAN) view:clear
 	@$(SAIL) $(ARTISAN) config:clear
 	@$(SAIL) $(ARTISAN) clear-compiled
 	@$(SAIL) $(ARTISAN) permission:cache-reset
-	@$(SAIL) $(COMPOSER) dump-autoload
 	@$(SAIL) $(ARTISAN) optimize
 
 migrate-test-database: ## Migrate test database
