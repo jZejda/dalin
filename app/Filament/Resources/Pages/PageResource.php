@@ -213,7 +213,7 @@ class PageResource extends Resource implements HasShieldPermissions
                                 ->options(ContentFormat::class)
                                 ->default(ContentFormat::Markdown)
                                 ->reactive()
-                                ->disabled(fn ($context) => $context === 'edit' || !Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
+                                ->disabled(fn ($context) => $context === 'edit')
                                 ->required(),
 
                             Select::make('content_category_id')

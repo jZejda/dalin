@@ -436,7 +436,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                             $sportEvent = $this->record;
 
                             try {
-                                $userProfile = UserRaceProfile::where('id', '=', (int)$state)->first();
+                                $userProfile = UserRaceProfile::where('oris_id', '=', (int)$state)->first();
 
                                 $params = [
                                     'format' => 'json',
@@ -575,7 +575,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 ->label('Klubová poznámka')
                                 ->hint('Interní poznámka.'),
 
-                            Grid::make()->schema([
+                            Grid::make()->columnSpanFull()->schema([
                                 TextInput::make('requested_start')
                                     ->label('Požadovaný start')
                                     ->hint(function (): HtmlString {
