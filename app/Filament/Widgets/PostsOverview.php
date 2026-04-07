@@ -16,19 +16,14 @@ class PostsOverview extends Widget
 
     public function render(): View
     {
-        /**
-         * @var Post $lastPost
-         */
-        $lastPost = DB::table('posts')
+        $posts = DB::table('posts')
             ->where('private', '=', 1)
-            ->limit(1)
             ->orderByDesc('created_at')
-            ->first();
+            ->limit(5)
+            ->get();
 
         return view($this->view, [
-            'content_mode' => $lastPost->content_mode ?? 1,
-            'title' => $lastPost->title ?? '',
-            'content' => $lastPost->content ?? 'nic',
+            'posts' => $posts,
         ]);
     }
 
