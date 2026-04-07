@@ -32,7 +32,7 @@ class SportServicesRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                Grid::make()->schema([
+                Grid::make()->columnSpanFull()->schema([
                     TextInput::make('service_name_cz')
                         ->label('Název služby')
                         ->required(),

@@ -29,7 +29,7 @@
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 items-stretch gap-6">
 
             <!-- Card: Uživatel a jeho práva -->
-            <a class="group flex gap-y-6 w-full h-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 rounded-lg p-5 transition-all dark:hover:bg-white/[.075] dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+            <a class="group flex gap-y-6 w-full h-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 rounded-lg p-5 transition-all dark:hover:bg-white/[.075] dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ring-1 ring-gray-950/5 dark:ring-gray-400/20 shadow-sm"
                href="https://jirizejda.cz/dalin/napoveda/role-v-aplikaci.html" target="_blank">
                 <svg class="flex-shrink-0 w-8 h-8 text-gray-800 mt-0.5 me-6 dark:text-gray-200"
                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -54,7 +54,7 @@
                             @endforeach
                         </div>
                     </div>
-                    <p class="mt-4 inline-flex items-center gap-x-1 text-sm font-semibold text-gray-800 dark:text-gray-200">
+                    <p class="mt-3 inline-flex items-center gap-x-1 text-sm font-semibold text-gray-800 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
                         Zjistit více
                         <svg class="flex-shrink-0 w-4 h-4 transition ease-in-out group-hover:translate-x-1"
                              xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -66,59 +66,8 @@
             </a>
             <!-- End Card: Uživatel -->
 
-            <!-- Card: Verze aplikace (OB background) -->
-            <a class="group relative flex gap-y-6 w-full h-full rounded-lg p-5 transition-all overflow-hidden
-                      bg-amber-50 dark:bg-gray-800
-                      hover:bg-amber-100 dark:hover:bg-white/[.075]
-                      dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-               href="https://jirizejda.cz/dalin/changelog/" target="_blank">
-
-                {{-- OB decorative background --}}
-                <div class="pointer-events-none absolute inset-0 opacity-20 dark:opacity-10" aria-hidden="true">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-                        {{-- Vrstevnice (contour lines) --}}
-                        <path d="M-20,30 Q40,18 100,28 Q160,38 220,26" stroke="#92640a" stroke-width="1.5" fill="none"/>
-                        <path d="M-20,55 Q50,42 110,54 Q170,66 220,52" stroke="#92640a" stroke-width="1.5" fill="none"/>
-                        <path d="M-20,80 Q40,68 90,79 Q150,92 220,78" stroke="#92640a" stroke-width="1.5" fill="none"/>
-                        <path d="M-20,108 Q60,96 110,107 Q165,118 220,106" stroke="#92640a" stroke-width="1.5" fill="none"/>
-                        <path d="M-20,136 Q45,122 95,135 Q155,148 220,132" stroke="#92640a" stroke-width="1.5" fill="none"/>
-                        <path d="M-20,162 Q55,150 105,161 Q160,172 220,158" stroke="#92640a" stroke-width="1.5" fill="none"/>
-                        {{-- Kontrolní kružnice (control circle) --}}
-                        <circle cx="175" cy="75" r="28" stroke="#d9480f" stroke-width="2" fill="none"/>
-                        {{-- Křížek středu --}}
-                        <line x1="175" y1="64" x2="175" y2="86" stroke="#d9480f" stroke-width="1.5"/>
-                        <line x1="163" y1="75" x2="187" y2="75" stroke="#d9480f" stroke-width="1.5"/>
-                        {{-- Start trojúhelník --}}
-                        <polygon points="30,130 46,158 14,158" stroke="#d9480f" stroke-width="2" fill="none"/>
-                    </svg>
-                </div>
-
-                {{-- Content --}}
-                <svg class="relative flex-shrink-0 w-8 h-8 text-amber-800 mt-0.5 me-6 dark:text-gray-200"
-                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z"/>
-                </svg>
-
-                <div class="relative">
-                    <h3 class="block font-bold text-gray-800 dark:text-white">Aplikace</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Aktuální verze aplikace</p>
-                    <p class="mt-4 font-black text-4xl text-amber-800 dark:text-gray-400">12.0</p>
-                    <p class="mt-3 inline-flex items-center gap-x-1 text-sm font-semibold text-gray-800 dark:text-gray-200">
-                        Zjistit více
-                        <svg class="flex-shrink-0 w-4 h-4 transition ease-in-out group-hover:translate-x-1"
-                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m9 18 6-6-6-6"/>
-                        </svg>
-                    </p>
-                </div>
-            </a>
-            <!-- End Card: Verze aplikace -->
-
             <!-- Card: Moje nejbližší závody -->
-            <div class="flex flex-col w-full h-full bg-gray-100 dark:bg-gray-800 rounded-lg p-5">
+            <div class="flex flex-col w-full h-full bg-gray-100 dark:bg-gray-800 rounded-lg p-5 ring-1 ring-gray-950/5 dark:ring-gray-400/20 shadow-sm">
                 <div class="flex items-start gap-x-4 mb-4">
                     <svg class="flex-shrink-0 w-8 h-8 text-gray-800 mt-0.5 dark:text-gray-200"
                          xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -152,7 +101,7 @@
                                 <li class="flex items-start gap-3 p-3 bg-white dark:bg-gray-700/50 rounded-lg">
                                     <div class="flex-shrink-0 text-center min-w-[2.5rem]">
                                         <span class="block text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
-                                            {{ $event->date?->format('M') }}
+                                            {{ $event->date?->translatedFormat('M') }}
                                         </span>
                                         <span class="block text-lg font-black text-gray-800 dark:text-white leading-tight">
                                             {{ $event->date?->format('d') }}
@@ -176,7 +125,8 @@
                     <a href="{{ route('filament.admin.resources.user-entries.index') }}"
                        class="mt-3 inline-flex items-center gap-x-1 text-sm font-semibold text-gray-800 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
                         Všechny moje přihlášky
-                        <svg class="flex-shrink-0 w-4 h-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        <svg class="flex-shrink-0 w-4 h-4 transition ease-in-out group-hover:translate-x-1"
+                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="m9 18 6-6-6-6"/>
                         </svg>
@@ -184,6 +134,33 @@
                 @endif
             </div>
             <!-- End Card: Moje nejbližší závody -->
+
+            <!-- Card: Verze aplikace (OB background) -->
+            <a class="group relative flex gap-y-6 w-full h-full rounded-lg p-5 transition-all overflow-hidden
+                      bg-[url(https://abmbrno.cz/images/topography2.svg)] bg-yellow-300
+                      before:absolute before:inset-0 before:bg-transparent before:transition-colors hover:before:bg-black/10
+                      ring-1 ring-gray-950/5 shadow-sm
+                      focus:outline-none focus:ring-2 focus:ring-yellow-500"
+               href="https://docs.dalin.cz/changelog/" target="_blank">
+
+                {{-- Content --}}
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="relative flex-shrink-0 w-8 h-8 text-gray-900 mt-0.5 me-6 lucide lucide-pocket-knife-icon lucide-pocket-knife"><path d="M3 2v1c0 1 2 1 2 2S3 6 3 7s2 1 2 2-2 1-2 2 2 1 2 2"/><path d="M18 6h.01"/><path d="M6 18h.01"/><path d="M20.83 8.83a4 4 0 0 0-5.66-5.66l-12 12a4 4 0 1 0 5.66 5.66Z"/><path d="M18 11.66V22a4 4 0 0 0 4-4V6"/></svg>
+
+                <div class="relative">
+                    <h3 class="block font-bold text-gray-900">Aplikace</h3>
+                    <p class="text-gray-800">Aktuální verze aplikace</p>
+                    <p class="mt-4 font-black text-4xl text-gray-900">12.0</p>
+                    <p class="mt-3 inline-flex items-center gap-x-1 text-sm font-semibold text-gray-900">
+                        Zjistit více
+                        <svg class="flex-shrink-0 w-4 h-4 transition ease-in-out group-hover:translate-x-1"
+                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </p>
+                </div>
+            </a>
+            <!-- End Card: Verze aplikace -->
 
         </div>
     </div>

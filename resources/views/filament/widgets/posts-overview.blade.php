@@ -1,4 +1,5 @@
 @php
+    use App\Enums\ContentFormat;
     use Illuminate\Support\Str;
 @endphp
 <x-filament::widget>
@@ -17,10 +18,26 @@
                          x-transition:enter-start="opacity-0 translate-x-1"
                          x-transition:enter-end="opacity-100 translate-x-0"
                     >
-                        <div class="text-lg sm:text-xl font-bold tracking-tight mb-2">{{ $post->title }}</div>
-                        @if($post->content_mode === 1)
+                        <div class="text-lg sm:text-xl font-bold tracking-tight">{{ $post->title }}</div>
+                        <div class="flex items-center gap-3 mt-1 mb-2 text-xs text-gray-400 dark:text-gray-500">
+                            <span class="flex items-center gap-1">
+                                <svg class="w-3.5 h-3.5 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                {{ $post->updated_at->format('j. n. Y') }}
+                            </span>
+                            @if($post->user)
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                    {{ $post->user->name }}
+                                </span>
+                            @endif
+                        </div>
+                        @if($post->content_mode === ContentFormat::Html)
                             <div class="prose dark:prose-invert max-w-none">{!! $post->content !!}</div>
-                        @elseif($post->content_mode === 2)
+                        @elseif($post->content_mode === ContentFormat::Markdown)
                             <div class="prose dark:prose-invert max-w-none">{!! Str::markdown($post->content) !!}</div>
                         @endif
                     </div>
