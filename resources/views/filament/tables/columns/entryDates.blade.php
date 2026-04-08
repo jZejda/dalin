@@ -15,44 +15,40 @@ $tileClasses = function (Carbon $date): string {
     }
     return 'border border-dashed border-green-300 bg-green-50 text-green-700 dark:border-green-700 dark:bg-green-950 dark:text-green-300';
 };
+
+$feeClasses = function (Carbon $date): string {
+    $now = Carbon::now();
+    if ($now > $date) {
+        return 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500';
+    }
+    return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+};
 @endphp
 
-<div class="flex flex-nowrap">
+<div class="flex flex-col gap-0.5">
     @if ($sportEvent->entry_date_1 !== null)
-        <div class="text-xs px-1.5 py-1 m-1 rounded leading-tight {{ $tileClasses($sportEvent->entry_date_1) }}">
-{{--            <div class="font-semibold opacity-70">1.</div>--}}
-            <div class="font-medium">{{ $sportEvent->entry_date_1->format('d.m.y') }}</div>
-            <div>{{ $sportEvent->entry_date_1->format('H:i') }}</div>
+        <div class="text-xs px-2 py-0.5 rounded leading-tight w-26 flex items-center gap-1 {{ $tileClasses($sportEvent->entry_date_1) }}">
+            <span class="font-medium">{{ $sportEvent->entry_date_1->format('d.m.y') }}</span>
+            <span class="opacity-80">{{ $sportEvent->entry_date_1->format('H:i') }}</span>
         </div>
     @endif
 
     @if ($sportEvent->entry_date_2 !== null)
-        <div class="text-xs px-1.5 py-1 m-1 rounded leading-tight {{ $tileClasses($sportEvent->entry_date_2) }}">
-            <div class="font-semibold opacity-70">
-{{--                2.--}}
-            </div>
-            <div class="font-medium">{{ $sportEvent->entry_date_2->format('d.m.y') }}</div>
-            <div>
-                {{ $sportEvent->entry_date_2->format('H:i') }}
-                @if ($sportEvent->increase_entry_fee_2 !== null)
-                    <span class="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 px-0.5 rounded">+{{ $sportEvent->increase_entry_fee_2 }}%</span>
-                @endif
-            </div>
+        <div class="text-xs px-2 py-0.5 rounded leading-tight w-26 flex items-center gap-1 {{ $tileClasses($sportEvent->entry_date_2) }}">
+            <span class="font-medium">{{ $sportEvent->entry_date_2->format('d.m.y') }}</span>
+            <span class="opacity-80">{{ $sportEvent->entry_date_2->format('H:i') }}</span>
+            @if ($sportEvent->increase_entry_fee_2 !== null)
+                <span class="ml-3 px-0.5 rounded {{ $feeClasses($sportEvent->entry_date_2) }}">+{{ $sportEvent->increase_entry_fee_2 }}%</span>
+            @endif
         </div>
     @endif
-
     @if ($sportEvent->entry_date_3 !== null)
-        <div class="text-xs px-1.5 py-1 m-1 rounded leading-tight {{ $tileClasses($sportEvent->entry_date_3) }}">
-            <div class="font-semibold opacity-70">
-{{--                3.--}}
-            </div>
-            <div class="font-medium">{{ $sportEvent->entry_date_3->format('d.m.y') }}</div>
-            <div>
-                {{ $sportEvent->entry_date_3->format('H:i') }}
-                @if ($sportEvent->increase_entry_fee_3 !== null)
-                    <span class="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 px-0.5 rounded">+{{ $sportEvent->increase_entry_fee_3 }}%</span>
-                @endif
-            </div>
+        <div class="text-xs px-2 py-0.5 rounded leading-tight w-26 flex items-center gap-1 {{ $tileClasses($sportEvent->entry_date_3) }}">
+            <span class="font-medium">{{ $sportEvent->entry_date_3->format('d.m.y') }}</span>
+            <span class="opacity-80">{{ $sportEvent->entry_date_3->format('H:i') }}</span>
+            @if ($sportEvent->increase_entry_fee_3 !== null)
+                <span class="ml-2.5 px-0.5 rounded {{ $feeClasses($sportEvent->entry_date_3) }}">+{{ $sportEvent->increase_entry_fee_3 }}%</span>
+            @endif
         </div>
     @endif
 </div>

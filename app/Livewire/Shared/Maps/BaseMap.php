@@ -29,7 +29,7 @@ final class BaseMap
         $markers = $sportEvent->sportEventMarkers()->get();
 
         if ($this->mapBuilder !== null) {
-            if ($sportEvent->gps_lat !== null && $sportEvent->gps_lon !== null) {
+            if ($this->isValidCoordinate($sportEvent->gps_lat) && $this->isValidCoordinate($sportEvent->gps_lon)) {
                 $this->mapBuilder->addMarker(
                     (float) $sportEvent->gps_lat,
                     (float) $sportEvent->gps_lon,
@@ -44,6 +44,9 @@ final class BaseMap
             }
 
             foreach ($markers as $marker) {
+                if (! $this->isValidFloatCoordinate($marker->lat) || ! $this->isValidFloatCoordinate($marker->lon)) {
+                    continue;
+                }
                 $this->mapBuilder->addMarker(
                     $marker->lat,
                     $marker->lon,
@@ -71,7 +74,7 @@ final class BaseMap
         /** @var SportEvent $sportEvent */
         foreach ($sportEvents as $sportEvent) {
             if ($this->mapBuilder !== null) {
-                if ($sportEvent->gps_lat !== null && $sportEvent->gps_lon !== null) {
+                if ($this->isValidCoordinate($sportEvent->gps_lat) && $this->isValidCoordinate($sportEvent->gps_lon)) {
                     $this->mapBuilder->addMarker(
                         lat: (float) $sportEvent->gps_lat,
                         lng: (float) $sportEvent->gps_lon,
@@ -114,7 +117,7 @@ final class BaseMap
     public function calculateCenterMapFromEvent(SportEvent $sportEvent): array
     {
         $markers = [];
-        if ($sportEvent->gps_lat !== null && $sportEvent->gps_lon !== null) {
+        if ($this->isValidCoordinate($sportEvent->gps_lat) && $this->isValidCoordinate($sportEvent->gps_lon)) {
             $markers[] = [
                 'lat' => (float) $sportEvent->gps_lat,
                 'lon' => (float) $sportEvent->gps_lon,
@@ -124,6 +127,9 @@ final class BaseMap
         /** @var SportEventMarker[] $eventMarkers */
         $eventMarkers = $sportEvent->sportEventMarkers()->get();
         foreach ($eventMarkers as $eventMarker) {
+            if (! $this->isValidFloatCoordinate($eventMarker->lat) || ! $this->isValidFloatCoordinate($eventMarker->lon)) {
+                continue;
+            }
             $markers[] = [
                 'lat' => $eventMarker->lat,
                 'lon' => $eventMarker->lon,
@@ -195,10 +201,18 @@ final class BaseMap
     }
 
     /**
-     * Check if a coordinate is valid (not null and not zero).
+     * Check if a string coordinate is valid (not null and not zero).
      */
     private function isValidCoordinate(string|null $coordinate): bool
     {
-        return $coordinate !== null && $coordinate !== '0';
+        return $coordinate !== null && (float) $coordinate !== 0.0;
+    }
+
+    /**
+     * Check if a float coordinate is valid (not zero).
+     */
+    private function isValidFloatCoordinate(float $coordinate): bool
+    {
+        return $coordinate !== 0.0;
     }
 }
