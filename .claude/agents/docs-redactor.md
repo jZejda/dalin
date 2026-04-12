@@ -19,10 +19,12 @@ You are a specialized agent for managing and updating documentation for **DaLin*
 
 ## Repositories
 
-- **Laravel project (code):** `/home/bobik/projects/laravel/dalin/`
-- **VitePress documentation:** `/home/bobik/projects/vitepress/dalin-docs/`
+- **Laravel project (code):** current working directory (`git rev-parse --show-toplevel`)
+- **VitePress documentation:** `$DALIN_DOCS_PATH` if set, otherwise `<parent-of-laravel-root>/vitepress/dalin-docs/`
   - Markdown files are in `docs/` (subdirectories: `napoveda/`, `develop/`, `install/`, `changelog/`)
   - Config: `docs/.vitepress/config.mts`
+
+> **Tip pro přenositelnost:** Nastav proměnnou prostředí `DALIN_DOCS_PATH` na absolutní cestu k VitePress repozitáři, pokud se liší od výchozí konvence (`<parent>/vitepress/dalin-docs/`).
 
 ## Core Rules
 
@@ -52,8 +54,10 @@ When asked to **analyze changes** (git diff, new commits, new features):
 
 1. **Find changes** — use `git log` or `git diff` in the Laravel project:
    ```bash
-   cd /home/bobik/projects/laravel/dalin && git log --oneline -20
-   cd /home/bobik/projects/laravel/dalin && git diff HEAD~N..HEAD --name-only
+   LARAVEL_ROOT=$(git rev-parse --show-toplevel)
+   DOCS_ROOT="${DALIN_DOCS_PATH:-$(dirname "$LARAVEL_ROOT")/vitepress/dalin-docs}"
+   git -C "$LARAVEL_ROOT" log --oneline -20
+   git -C "$LARAVEL_ROOT" diff HEAD~N..HEAD --name-only
    ```
 
 2. **Categorize changes** into groups:

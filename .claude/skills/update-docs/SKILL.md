@@ -15,8 +15,8 @@ $ARGUMENTS
 
 Follow the standard workflow:
 
-1. **Find changes** using `git log` and `git diff` in `/home/bobik/projects/laravel/dalin/`
+1. **Find changes** using `git log` and `git diff` in the Laravel project root (`git rev-parse --show-toplevel`)
 2. **Categorize** what belongs in user docs (`docs/napoveda/`) vs. technical docs (`docs/develop/`, `docs/install/`) and the changelog
-3. **Read relevant existing documentation** in the VitePress repository at `/home/bobik/projects/vitepress/dalin-docs/`
+3. **Read relevant existing documentation** in the VitePress repository (`$DALIN_DOCS_PATH`, or `<parent-of-laravel-root>/vitepress/dalin-docs/` by default)
 4. **Propose concrete changes** (new pages, edits, changelog entries)
 5. **Wait for confirmation** before writing — unless the user explicitly said "go ahead and write" or "update directly"

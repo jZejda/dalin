@@ -300,7 +300,7 @@
                                     @foreach($record->sportEventNews()->get() as $quickNews)
                                         <div class="flex flex-col pb-2">
                                             <dt class="mb-1 text-gray-500 dark:text-gray-400 font-light">{{ Carbon::parse($quickNews->date)->format(AppHelper::DATE_TIME_FORMAT) }}</dt>
-                                            <dd class="font-normal">{!! $quickNews->text !!}</dd>
+                                            <dd class="font-normal">{{ $quickNews->text }}</dd>
                                         </div>
                                     @endforeach
                                 </dl>
