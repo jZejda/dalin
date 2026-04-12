@@ -32,7 +32,7 @@ class SportMarkersRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                Grid::make()->schema([
+                Grid::make()->columnSpanFull()->schema([
                     TextInput::make('label')
                         ->label('Název bodu')
                         ->required(),

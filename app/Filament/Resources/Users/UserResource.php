@@ -13,6 +13,7 @@ use Filament\Support\Enums\TextSize;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
 use App\Filament\Resources\Users\RelationManagers\UserCreditRelationManager;
+use App\Enums\AppRoles;
 use App\Filament\Resources\Users\RelationManagers\UserRaceProfilesRelationManager;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use Filament\Actions\Action;
@@ -72,7 +73,6 @@ class UserResource extends Resource implements HasShieldPermissions
                             TextInput::make('payer_variable_symbol')
                                 ->label('Variabilní symbol uživatele')
                                 ->helperText('Mělo by se jednat o první čísla registrace, tedy přesně 4 číslice.')
-                                ->numeric()
                                 ->minLength(4)
                                 ->maxLength(4),
                             TextInput::make('password')
@@ -107,6 +107,7 @@ class UserResource extends Resource implements HasShieldPermissions
                                 ->multiple()
                                 ->searchable()
                                 ->relationship('roles', 'name')
+                                ->getOptionLabelFromRecordUsing(fn ($record): string => AppRoles::tryFrom($record->name)?->getLabel() ?? $record->name)
                                 ->preload()
 //                            Select::make('permissions')
 //                                ->label('Oprávnění')

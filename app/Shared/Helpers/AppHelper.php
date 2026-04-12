@@ -11,11 +11,11 @@ final class AppHelper
 {
     public const int GENERATED_PASSWORD_LENGTH = 12;
 
-    public const string DATE_TIME_FORMAT = 'd. m. Y H:i';
+    public const string DATE_TIME_FORMAT = 'd.m.Y H:i';
 
-    public const string DATE_TIME_FULL_FORMAT = 'd. m. Y H:i:s';
+    public const string DATE_TIME_FULL_FORMAT = 'd.m.Y H:i:s';
 
-    public const string DATE_FORMAT = 'd. m. Y';
+    public const string DATE_FORMAT = 'd.m.Y';
 
     public const string MYSQL_DATE_TIME = 'Y-m-d H:i:s';
 

@@ -1,5 +1,5 @@
 @php
-    use App\Enums\UserParamType;use App\Models\User;use App\Shared\Helpers\EmptyType;
+    use App\Enums\UserParamType;use App\Models\User;use App\Shared\Helpers\AppHelper;use App\Shared\Helpers\EmptyType;
     use App\Models\SportEvent;
     use App\Models\SportClass;
     use App\Models\SportService;
@@ -117,21 +117,24 @@
                     @if($womensClasses->isNotEmpty())
                         <div class="mt-1">
                             @foreach($womensClasses as $class)
-                                <span class="bg-purple-100 text-purple-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">{{$class->name}}</span>
+                                <span
+                                    class="bg-purple-100 text-purple-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">{{$class->name}}</span>
                             @endforeach
                         </div>
                     @endif
                     @if($mensClasses->isNotEmpty())
                         <div class="mt-1">
                             @foreach($mensClasses as $class)
-                                <span class="bg-blue-100 text-blue-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{{$class->name}}</span>
+                                <span
+                                    class="bg-blue-100 text-blue-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{{$class->name}}</span>
                             @endforeach
                         </div>
                     @endif
                     @if($otherClasses->isNotEmpty())
                         <div class="mt-1">
                             @foreach($otherClasses as $class)
-                                <span class="bg-gray-100 text-gray-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">{{$class->name}}</span>
+                                <span
+                                    class="bg-gray-100 text-gray-800 text-sm font-medium px-1 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">{{$class->name}}</span>
                             @endforeach
                         </div>
                     @endif
@@ -161,71 +164,70 @@
                             </svg>
                             Termíny
                         </h3>
-                        <div class="text-gray-500 dark:text-gray-400 px-2">
-                            <ul class="ml-2">
-                                @if ($record->date !== null)
-                                    <li class="flex items-center space-x-2 border-b border-gray-400 dark:border-gray-700 border-dotted">
-                                        <!-- Icon -->
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                             class="icon icon-tabler icon-tabler-calendar-event" width="20" height="20"
-                                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path
-                                                d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
-                                            <path d="M16 3l0 4"></path>
-                                            <path d="M8 3l0 4"></path>
-                                            <path d="M4 11l16 0"></path>
-                                            <path d="M8 15h2v2h-2z"></path>
-                                        </svg>
-                                        <span>{{ $record->date->format(\App\Shared\Helpers\AppHelper::DATE_FORMAT) }}</span>
-                                    </li>
-                                @endif
-                                @if ($record->entry_date_1 !== null)
-                                    <li class="flex items-center space-x-2">
-                                        <!-- Icon -->
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                             class="icon icon-tabler icon-tabler-circle-number-1" width="20" height="20"
-                                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                                            <path d="M10 10l2 -2v8"></path>
-                                        </svg>
-                                        <span>{{ $record->entry_date_1->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</span>
-                                    </li>
-                                @endif
-                                @if ($record->entry_date_2 !== null)
-                                    <li class="flex items-center space-x-2">
-                                        <!-- Icon -->
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                             class="icon icon-tabler icon-tabler-circle-number-2" width="20" height="20"
-                                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                                            <path
-                                                d="M10 8h3a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 0 -1 1v2a1 1 0 0 0 1 1h3"></path>
-                                        </svg>
-                                        <span>{{ $record->entry_date_2->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</span>
-                                    </li>
-                                @endif
-                                @if ($record->entry_date_3 !== null)
-                                    <li class="flex items-center space-x-2">
-                                        <!-- Icon -->
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                             class="icon icon-tabler icon-tabler-circle-number-3" width="20" height="20"
-                                             viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
-                                            <path
-                                                d="M10 9a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1"></path>
-                                        </svg>
-                                        <span>{{ $record->entry_date_3->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</span>
-                                    </li>
-                                @endif
-                            </ul>
+                        <div class="px-2">
+                            @if ($record->date !== null)
+                                <div
+                                    class="flex items-center space-x-2 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         class="icon icon-tabler icon-tabler-calendar-event" width="18" height="18"
+                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path
+                                            d="M4 5m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path>
+                                        <path d="M16 3l0 4"></path>
+                                        <path d="M8 3l0 4"></path>
+                                        <path d="M4 11l16 0"></path>
+                                        <path d="M8 15h2v2h-2z"></path>
+                                    </svg>
+                                    <span class="text-sm">{{ $record->date->format(AppHelper::DATE_FORMAT) }}</span>
+                                </div>
+                            @endif
+
+                            @if ($record->entry_date_1 !== null)
+                                <li class="flex items-center space-x-2">
+                                    <!-- Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         class="icon icon-tabler icon-tabler-circle-number-1" width="20" height="20"
+                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+                                        <path d="M10 10l2 -2v8"></path>
+                                    </svg>
+                                    <span>{{ $record->entry_date_1->format(AppHelper::DATE_TIME_FORMAT) }}</span>
+                                </li>
+                            @endif
+                            @if ($record->entry_date_2 !== null)
+                                <li class="flex items-center space-x-2">
+                                    <!-- Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         class="icon icon-tabler icon-tabler-circle-number-2" width="20" height="20"
+                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+                                        <path
+                                            d="M10 8h3a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 0 -1 1v2a1 1 0 0 0 1 1h3"></path>
+                                    </svg>
+                                    <span>{{ $record->entry_date_2->format(AppHelper::DATE_TIME_FORMAT) }}</span>
+                                </li>
+                            @endif
+                            @if ($record->entry_date_3 !== null)
+                                <li class="flex items-center space-x-2">
+                                    <!-- Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         class="icon icon-tabler icon-tabler-circle-number-3" width="20" height="20"
+                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+                                        <path
+                                            d="M10 9a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2h2a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1"></path>
+                                    </svg>
+                                    <span>{{ $record->entry_date_3->format(AppHelper::DATE_TIME_FORMAT) }}</span>
+                                </li>
+                            @endif
                         </div>
                         <h3 class="mt-4 flex items-center mb-4 text-lg font-medium text-gray-900 dark:text-white">
                             <svg class="flex-shrink-0 mr-2 w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor"
@@ -297,8 +299,8 @@
                                 <dl class="text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
                                     @foreach($record->sportEventNews()->get() as $quickNews)
                                         <div class="flex flex-col pb-2">
-                                            <dt class="mb-1 text-gray-500 dark:text-gray-400">{{ Carbon::parse($quickNews->date)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}</dt>
-                                            <dd class="font-semibold">{{$quickNews->text}}</dd>
+                                            <dt class="mb-1 text-gray-500 dark:text-gray-400 font-light">{{ Carbon::parse($quickNews->date)->format(AppHelper::DATE_TIME_FORMAT) }}</dt>
+                                            <dd class="font-normal">{{ $quickNews->text }}</dd>
                                         </div>
                                     @endforeach
                                 </dl>

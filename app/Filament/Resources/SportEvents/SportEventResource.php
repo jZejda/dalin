@@ -111,7 +111,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->description(function (SportEvent $record) {
                         $dateEnd = $record->date_end;
                         if ($dateEnd !== null) {
-                            return $record->date->format('d').' - '.$record->date_end->format(AppHelper::DATE_FORMAT);
+                            return $record->date->format('d').'-'.$record->date_end->format(AppHelper::DATE_FORMAT);
                         }
 
                         return '';
@@ -125,13 +125,13 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->label('Př.')
                     ->view('filament.tables.columns.entry-user-counts'),
 
-                TextColumn::make('place')
-                    ->searchable()
-                    ->sortable()
-                    ->color('gray')
-                    ->label('Místo')
-                    ->limit(25, '...')
-                    ->alignLeft(),
+//                TextColumn::make('place')
+//                    ->searchable()
+//                    ->sortable()
+//                    ->color('gray')
+//                    ->label('Místo')
+//                    ->limit(25, '...')
+//                    ->alignLeft(),
 
                 ViewColumn::make('entries')
                     ->label('Termíny')

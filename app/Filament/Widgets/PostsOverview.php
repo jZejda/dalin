@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Widgets;
 
+use App\Enums\PostStatus;
 use App\Models\Post;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
 use Filament\Widgets\Widget;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\DB;
 
 class PostsOverview extends Widget
 {
@@ -16,19 +18,14 @@ class PostsOverview extends Widget
 
     public function render(): View
     {
-        /**
-         * @var Post $lastPost
-         */
-        $lastPost = DB::table('posts')
-            ->where('private', '=', 1)
-            ->limit(1)
+        $posts = Post::with('user')
+            ->where('private', PostStatus::Private)
             ->orderByDesc('created_at')
-            ->first();
+            ->limit(5)
+            ->get();
 
         return view($this->view, [
-            'content_mode' => $lastPost->content_mode ?? 1,
-            'title' => $lastPost->title ?? '',
-            'content' => $lastPost->content ?? 'nic',
+            'posts' => $posts,
         ]);
     }
 

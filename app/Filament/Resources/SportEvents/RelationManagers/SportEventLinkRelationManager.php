@@ -42,7 +42,7 @@ class SportEventLinkRelationManager extends RelationManager
                     ->label('Popis odkazu česky'),
                 TextInput::make('description_en')
                     ->label('Popis odkazu anglicky'),
-                Grid::make()->schema([
+                Grid::make()->columnSpanFull()->schema([
                     TextInput::make('source_url')
                         ->label('URL odkazu')
                         ->url()

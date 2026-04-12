@@ -40,7 +40,9 @@
                     <div class="px-2 py-2 sm:px3 lg:px-4 lg:py-0 mx-auto">
                         <!-- Centering wrapper -->
 
-                        <div class="relative flex flex-col py-4 md:py-2 bg-[url(https://abmbrno.cz/images/topography2.svg)] bg-yellow-300 text-yellow-500 shadow-md bg-clip-border rounded-xl">
+                        <div class="relative flex flex-col py-4 md:py-2 bg-yellow-300 text-yellow-500 shadow-md bg-clip-border rounded-xl"
+                             style="background-image: url('{{ asset('images/topography2.svq') }}')"
+>
                             <div class="p-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cw-12 h-12 mb-4 text-gray-900"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
                                 <h5 class="block mb-2 font-sans text-2xl antialiased font-semibold leading-snug tracking-normal !text-gray-800">
