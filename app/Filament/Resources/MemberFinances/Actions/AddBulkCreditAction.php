@@ -39,7 +39,6 @@ class AddBulkCreditAction
                     ->label(__('member-finance.common.amount'))
                     ->numeric()
                     ->required()
-                    ->minValue(0.01)
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('member-finance.common.amount_tooltip_bulk')),
                 MarkdownEditor::make('note')
                     ->label(__('member-finance.common.note'))

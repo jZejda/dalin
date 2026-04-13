@@ -6,6 +6,9 @@ namespace App\Filament\Resources\MemberFinances;
 
 use App\Enums\AppRoles;
 use App\Enums\UserParamType;
+use App\Filament\Resources\MemberFinances\Actions\AddBulkCreditAction;
+use App\Filament\Resources\MemberFinances\Actions\ExportMemberFinancesAction;
+use Filament\Support\Enums\TextSize;
 use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\MemberFinances\Pages\ListMemberFinances;
 use App\Filament\Resources\MemberFinances\Pages\ViewMemberFinance;
@@ -14,11 +17,12 @@ use App\Models\User;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
@@ -35,7 +39,7 @@ class MemberFinanceResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Správa Financí';
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-scale';
 
     protected static ?string $slug = 'member-finances';
 
@@ -88,6 +92,48 @@ class MemberFinanceResource extends Resource
         return false;
     }
 
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return $schema->columns(1)->components([
+            Grid::make(['default' => 1, 'md' => 2])->schema([
+                Section::make(__('member-finance.infolist.section_user'))
+                    ->icon('heroicon-o-user')
+                    ->schema([
+                        TextEntry::make('name')
+                            ->label(__('member-finance.infolist.name'))
+                            ->size(TextSize::Large)
+                            ->weight(FontWeight::Bold),
+                        TextEntry::make('email')
+                            ->label(__('member-finance.infolist.email'))
+                            ->icon('heroicon-o-envelope')
+                            ->copyable(),
+                    ]),
+
+                Section::make(__('member-finance.infolist.section_finance'))
+                    ->icon('heroicon-o-banknotes')
+                    ->schema([
+                        TextEntry::make('balance')
+                            ->label(__('member-finance.infolist.balance'))
+                            ->state(fn (User $record): float => floatval(
+                                $record->getParam(UserParamType::UserActualBalance) ?? 0
+                            ))
+                            ->money('CZK')
+                            ->size(TextSize::Large)
+                            ->weight(FontWeight::Bold)
+                            ->color(fn (User $record): string => floatval(
+                                $record->getParam(UserParamType::UserActualBalance) ?? 0
+                            ) >= 0 ? 'success' : 'danger'),
+                        TextEntry::make('payer_variable_symbol')
+                            ->label(__('member-finance.infolist.variable_symbol'))
+                            ->icon('heroicon-o-hashtag')
+                            ->copyable()
+                            ->placeholder('—'),
+                    ]),
+            ]),
+        ]);
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
@@ -129,31 +175,47 @@ class MemberFinanceResource extends Resource
                     'computed_balance' => DB::table('user_credits')
                         ->selectRaw('COALESCE(SUM(amount), 0)')
                         ->whereColumn('user_id', 'users.id'),
-                ]);
+                ])->with('userRaceProfiles');
             })
             ->columns([
                 TextColumn::make('name')
                     ->label(__('member-finance.table.name'))
+                    ->size(TextSize::Large)
+                    ->description(fn (User $record): HtmlString => new HtmlString(
+                        (string) view('components.user-race-profile-badges', [
+                            'profiles' => $record->userRaceProfiles->where('active', true),
+                            'size' => 'text-xs'
+                        ])
+                    ))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
                     ->label(__('member-finance.table.email'))
                     ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
                 TextColumn::make('payer_variable_symbol')
                     ->label(__('member-finance.table.variable_symbol'))
                     ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                IconColumn::make('active')
-                    ->label(__('member-finance.table.active'))
-                    ->boolean()
-                    ->sortable(),
+                    ->toggleable(),
                 TextColumn::make('computed_balance')
                     ->label(__('member-finance.table.balance'))
+                    ->size(TextSize::Large)
                     ->money('CZK')
                     ->color(fn (User $record): string => floatval($record->computed_balance ?? 0) >= 0 ? 'success' : 'danger')
                     ->sortable()
                     ->alignEnd(),
+                TextColumn::make('active')
+                    ->label(__('member-finance.table.active'))
+                    ->badge()
+                    ->formatStateUsing(fn (bool $state): string => $state
+                        ? __('member-finance.table.status_active')
+                        : __('member-finance.table.status_inactive'))
+                    ->icon(fn (bool $state): string => $state
+                        ? 'heroicon-o-check-circle'
+                        : 'heroicon-o-x-circle')
+                    ->color(fn (bool $state): string => $state ? 'success' : 'danger')
+                    ->alignCenter()
+                    ->sortable(),
             ])
             ->defaultSort('name', 'asc')
             ->defaultPaginationPageOption(25)
@@ -185,7 +247,10 @@ class MemberFinanceResource extends Resource
             ])
             ->recordUrl(fn (User $record): string => static::getUrl('view', ['record' => $record]))
             ->recordActions([])
-            ->toolbarActions([]);
+            ->toolbarActions([
+                AddBulkCreditAction::make(),
+                ExportMemberFinancesAction::make(),
+            ]);
     }
 
     public static function getRelations(): array

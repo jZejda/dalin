@@ -15,6 +15,15 @@ return [
     'label'            => 'Finance člena',
     'plural_label'     => 'Finance členů',
 
+    'infolist' => [
+        'section_user'     => 'Informace o uživateli',
+        'section_finance'  => 'Stav účtu',
+        'name'             => 'Jméno a příjmení',
+        'email'            => 'E-mail',
+        'balance'          => 'Aktuální zůstatek',
+        'variable_symbol'  => 'Variabilní symbol pro platby',
+    ],
+
     'form' => [
         'section_title'          => 'Informace o členovi',
         'name'                   => 'Jméno',
@@ -28,8 +37,10 @@ return [
         'name'             => 'Jméno',
         'email'            => 'E-mail',
         'variable_symbol'  => 'Variabilní symbol',
-        'active'           => 'Aktivní',
+        'active'           => 'Stav',
         'balance'          => 'Zůstatek',
+        'status_active'    => 'Aktivní',
+        'status_inactive'  => 'Neaktivní',
     ],
 
     'filters' => [
@@ -65,6 +76,17 @@ return [
             'type_donation'      => 'Vklad / dar',
             'type_initial'       => 'Počáteční vklad',
             'type_membership'    => 'Členský příspěvek',
+        ],
+
+        'export' => [
+            'label'           => 'Export do souboru',
+            'col_name'        => 'Jméno',
+            'col_email'       => 'E-mail',
+            'col_variable_symbol' => 'Variabilní symbol',
+            'col_balance'     => 'Zůstatek (CZK)',
+            'col_active'      => 'Aktivní',
+            'active_yes'      => 'Ano',
+            'active_no'       => 'Ne',
         ],
 
         'deduct' => [

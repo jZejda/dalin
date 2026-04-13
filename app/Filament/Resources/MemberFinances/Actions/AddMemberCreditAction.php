@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\MemberFinances\Actions;
 
 use App\Enums\UserCreditSource;
+use App\Filament\Resources\MemberFinances\MemberFinanceResource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Models\UserCredit;
@@ -47,6 +48,7 @@ class AddMemberCreditAction
                     ->label(__('member-finance.common.note'))
                     ->hint(__('member-finance.common.note_optional')),
             ])
+            ->successRedirectUrl(fn ($record) => MemberFinanceResource::getUrl('view', ['record' => $record]))
             ->action(function (array $data, $record): void {
                 $credit = new UserCredit();
                 $credit->user_id = $record->id;
@@ -106,6 +108,7 @@ class AddMemberCreditAction
                     ->label(__('member-finance.common.note'))
                     ->hint(__('member-finance.common.note_optional')),
             ])
+            ->successRedirectUrl(fn ($record) => MemberFinanceResource::getUrl('view', ['record' => $record]))
             ->action(function (array $data, $record): void {
                 $credit = new UserCredit();
                 $credit->user_id = $record->id;
