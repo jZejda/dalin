@@ -2,7 +2,11 @@
 
 namespace App\Filament\Resources\Users\RelationManagers;
 
+use App\Filament\Resources\UserCredits\UserCreditResource;
 use App\Shared\Helpers\AppHelper;
+use Filament\Actions\ActionGroup;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
@@ -127,8 +131,12 @@ class UserCreditRelationManager extends RelationManager
 //                Tables\Actions\CreateAction::make(),
             ])
             ->recordActions([
-//                Tables\Actions\EditAction::make(),
-//                Tables\Actions\DeleteAction::make(),
+                ActionGroup::make([
+                    ViewAction::make()
+                        ->url(fn (UserCredit $record): string => UserCreditResource::getUrl('view', ['record' => $record])),
+                    EditAction::make()
+                        ->url(fn (UserCredit $record): string => UserCreditResource::getUrl('edit', ['record' => $record])),
+                ]),
             ])
             ->toolbarActions([
                 ExportBulkAction::make('exportToFile')

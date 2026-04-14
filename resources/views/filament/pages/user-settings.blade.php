@@ -141,7 +141,7 @@
                       before:absolute before:inset-0 before:bg-transparent before:transition-colors hover:before:bg-black/10
                       ring-1 ring-gray-950/5 shadow-sm
                       focus:outline-none focus:ring-2 focus:ring-yellow-500"
-               style="background-image: url('{{ asset('images/topography2.svq') }}')"
+               style="background-image: url('{{ asset('images/topography2.svg') }}')"
                href="https://docs.dalin.cz/changelog/" target="_blank">
 
                 {{-- Content --}}

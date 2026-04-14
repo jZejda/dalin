@@ -157,14 +157,13 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->sortable(),
             TextColumn::make('userRaceProfile.UserRaceFullName')
                 ->label('Registrace')
-                ->badge()
-                ->color(static function ($state): string {
-                    if ($state === 'published') {
-                        return 'success';
-                    }
-
-                    return 'gray';
-                }),
+                ->html()
+                ->formatStateUsing(fn ($state, UserEntry $record): HtmlString => new HtmlString(
+                    (string) view('components.user-race-profile-badges', [
+                        'profiles' => collect([$record->userRaceProfile])->filter(),
+                        'size' => 'text-xs'
+                    ])
+                )),
             TextColumn::make('userRaceProfile.user.name')
                 ->label('Uživatel')
                 ->badge()
