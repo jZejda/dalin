@@ -35,6 +35,7 @@ class UserCreditNote extends Model
         'user_credit_id',
         'note_user_id',
         'note',
+        'internal',
         'params',
         'status',
     ];

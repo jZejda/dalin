@@ -17,6 +17,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class AddBulkCreditAction
 {
@@ -39,6 +40,7 @@ class AddBulkCreditAction
                     ->label(__('member-finance.common.amount'))
                     ->numeric()
                     ->required()
+                    ->minValue(0.01)
                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('member-finance.common.amount_tooltip_bulk')),
                 MarkdownEditor::make('note')
                     ->label(__('member-finance.common.note'))
@@ -47,31 +49,33 @@ class AddBulkCreditAction
             ->action(function (Collection $records, array $data): void {
                 $created = 0;
 
-                foreach ($records as $user) {
-                    /** @var User $user */
-                    $credit = new UserCredit();
-                    $credit->user_id = $user->id;
-                    $credit->amount = (float) $data['amount'];
-                    $credit->currency = UserCredit::CURRENCY_CZK;
-                    $credit->credit_type = UserCreditType::from($data['credit_type']);
-                    $credit->source = UserCreditSource::User->value;
-                    $credit->source_user_id = auth()->user()?->id;
-                    $credit->status = UserCreditStatus::Done;
-                    $credit->saveOrFail();
+                DB::transaction(function () use ($records, $data, &$created): void {
+                    foreach ($records as $user) {
+                        /** @var User $user */
+                        $credit = new UserCredit();
+                        $credit->user_id = $user->id;
+                        $credit->amount = (float)$data['amount'];
+                        $credit->currency = UserCredit::CURRENCY_CZK;
+                        $credit->credit_type = UserCreditType::from($data['credit_type']);
+                        $credit->source = UserCreditSource::User->value;
+                        $credit->source_user_id = auth()->user()?->id;
+                        $credit->status = UserCreditStatus::Done;
+                        $credit->saveOrFail();
 
-                    if (! EmptyType::stringEmpty($data['note'] ?? '')) {
-                        $note = new UserCreditNote();
-                        $note->user_credit_id = $credit->id;
-                        if (auth()->user()?->id !== null) {
-                            $note->note_user_id = auth()->user()->id;
+                        if (!EmptyType::stringEmpty($data['note'] ?? '')) {
+                            $note = new UserCreditNote();
+                            $note->user_credit_id = $credit->id;
+                            if (auth()->user()?->id !== null) {
+                                $note->note_user_id = auth()->user()->id;
+                            }
+                            $note->note = $data['note'];
+                            $note->internal = false;
+                            $note->saveOrFail();
                         }
-                        $note->note = $data['note'];
-                        $note->internal = false;
-                        $note->saveOrFail();
-                    }
 
-                    $created++;
-                }
+                        $created++;
+                    }
+                });
 
                 Notification::make()
                     ->title(__('member-finance.actions.bulk_credit.notification_title'))

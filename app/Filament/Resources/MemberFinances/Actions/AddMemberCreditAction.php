@@ -62,6 +62,7 @@ class AddMemberCreditAction
 
                 if (! EmptyType::stringEmpty($data['note'] ?? '')) {
                     $note = new UserCreditNote();
+                    $note->user_id = $record->id;
                     $note->user_credit_id = $credit->id;
                     if (auth()->user()?->id !== null) {
                         $note->note_user_id = auth()->user()->id;
@@ -122,6 +123,7 @@ class AddMemberCreditAction
 
                 if (! EmptyType::stringEmpty($data['note'] ?? '')) {
                     $note = new UserCreditNote();
+                    $note->user_id = $record->id;
                     $note->user_credit_id = $credit->id;
                     if (auth()->user()?->id !== null) {
                         $note->note_user_id = auth()->user()->id;
