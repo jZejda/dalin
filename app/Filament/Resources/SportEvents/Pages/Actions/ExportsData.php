@@ -82,7 +82,7 @@ class ExportsData
                             ->options([
                                 'userEntryXlsx' => 'Přihlášky | Excel (*.xlsx)',
                                 'IofV3EntryList' => 'Přihlášky | IOF XML v3 (*.xml) - EXPERIMENTAL',
-                                'CSOS' => 'Přihlášky | ČSOS (*.txt) - EXPERIMENTAL',
+                                'CSOS' => 'Přihlášky | ČSOS (*.txt)',
                             ])
                             ->required(),
                     ]),
