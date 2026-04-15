@@ -13,7 +13,7 @@
 Systém využívá v maximální míře různá napojení na ostatní automatizované systémy, 
 pro český region hlavně [ORIS](https://oris.ceskyorientak.cz/) systém pro automatizaci přihlášek na závody, stahování plateb, atd.
 
-- [📢 &nbsp;Informace k vydání](https://jirizejda.cz/dalin/changelog/)
+- [📢 &nbsp;Informace k vydání](https://docs.dalin.cz/changelog/)
 - [✨ &nbsp;Používá ABM klub orientačního běhu](https://abmbrno.cz)
 
 ![Dalin - Závody](https://jirizejda.cz/images/dalin.png)

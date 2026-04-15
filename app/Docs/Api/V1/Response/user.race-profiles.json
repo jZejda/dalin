@@ -1,0 +1,32 @@
+{
+    "data": [
+        {
+            "id": 101,
+            "reg_number": "A12-0001",
+            "first_name": "Jan",
+            "last_name": "Novak",
+            "full_name": "A12-0001 - Jan Novak",
+            "email": "jan.novak@example.com",
+            "phone": "+420777111222",
+            "gender": "M",
+            "active": true,
+            "active_until": "2026-12-31",
+            "created_at": "2025-01-15T10:22:00.000000Z",
+            "updated_at": "2026-02-01T08:10:44.000000Z"
+        },
+        {
+            "id": 102,
+            "reg_number": "A12-0002",
+            "first_name": "Petra",
+            "last_name": "Novakova",
+            "full_name": "A12-0002 - Petra Novakova",
+            "email": null,
+            "phone": null,
+            "gender": "F",
+            "active": false,
+            "active_until": "2024-12-31",
+            "created_at": "2024-03-10T09:00:00.000000Z",
+            "updated_at": "2025-01-03T11:18:19.000000Z"
+        }
+    ]
+}

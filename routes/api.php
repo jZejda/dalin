@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\PostController;
+use App\Http\Controllers\Api\V1\SportEventController;
+use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Ical\CalendarController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -24,8 +26,13 @@ Route::get('/feed/kalendar/zavody/all/', [CalendarController::class, 'raceCalend
 Route::get('/feed/kalendar/treninky/all/', [CalendarController::class, 'trainingCalendar'])
     ->middleware('throttle:30,1');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->prefix('user')->group(function (): void {
+    Route::get('/', function (Request $request) {
+        return $request->user();
+    });
+    Route::get('/race-profiles', [UserController::class, 'raceProfiles']);
+    Route::get('/entry', [UserController::class, 'entry']);
+    Route::get('/credit-balance', [UserController::class, 'creditBalance']);
 });
 
 // Posts API protected by x-apikey and role permission using spatie/permission ( OR Permission)
@@ -40,4 +47,6 @@ Route::prefix('v1')->middleware([
 
     Route::get('/page/list', [PageController::class, 'list']);
     Route::get('/page/{page}', [PageController::class, 'detail']);
+
+    Route::get('/sport-event/list', [SportEventController::class, 'list']);
 });
