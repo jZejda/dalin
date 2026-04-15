@@ -9,8 +9,10 @@ use App\Http\Controllers\Controller;
 use App\Models\SportClass;
 use App\Models\SportEvent;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Validation\Rule;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\QueryParam;
 use Knuckles\Scribe\Attributes\ResponseFromFile;
@@ -27,8 +29,16 @@ final class SportEventController extends Controller
     #[QueryParam('page', 'integer', description: 'Page number for pagination.', required: false, example: 1)]
     #[QueryParam('per_page', 'integer', description: 'Number of items per page. Defaults to 20.', required: false, example: 20)]
     #[ResponseFromFile('app/Docs/Api/V1/Response/sport-event.list.json', 200, description: 'Example Sport Event List')]
-    public function list(Request $request): JsonResource
+    public function list(Request $request): JsonResponse
     {
+        $request->validate([
+            'from'                => ['nullable', 'date_format:Y-m-d'],
+            'to'                  => ['nullable', 'date_format:Y-m-d'],
+            'event_type'          => ['nullable', Rule::in(array_column(SportEventType::cases(), 'value'))],
+            'class_definition_id' => ['nullable', 'integer'],
+            'per_page'            => ['nullable', 'integer', 'min:1', 'max:100'],
+        ]);
+
         $query = SportEvent::query()
             ->with(['sportClasses.classDefinition']);
 
@@ -102,6 +112,6 @@ final class SportEventController extends Controller
                 'category_component_description' => 'categories contains class definitions assigned to each event (SportClass -> SportClassDefinition).',
                 'event_type_component_description' => 'event_type contains both machine value and translated label.',
             ],
-        ]);
+        ])->response();
     }
 }

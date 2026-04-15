@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Enums\EntryStatus;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
+use App\Enums\UserParamType;
 use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserCredit;
@@ -499,7 +500,7 @@ test('credit-balance: amount is returned as float', function (): void {
 
 test('credit-balance: cached balance in UserParam is used when available', function (): void {
     // Pre-set param cache so the DB sum branch is skipped
-    $this->user->setParam(\App\Enums\UserParamType::UserActualBalance, 1234.56);
+    $this->user->setParam(UserParamType::UserActualBalance, 1234.56);
 
     $response = $this->actingAs($this->user)
         ->getJson('/api/user/credit-balance')

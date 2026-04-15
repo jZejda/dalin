@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\UserCredit;
 use App\Models\UserEntry;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,7 @@ final class UserController extends Controller
 {
     #[QueryParam('all', 'boolean', description: 'When true, includes both active and inactive race profiles. Defaults to false (active only).', required: false, example: false)]
     #[ResponseFromFile('app/Docs/Api/V1/Response/user.race-profiles.json', 200, description: 'Example User Race Profiles')]
-    public function raceProfiles(Request $request): JsonResource
+    public function raceProfiles(Request $request): JsonResponse
     {
         /** @var User $user */
         $user = $request->user();
@@ -68,7 +69,7 @@ final class UserController extends Controller
                 'updated_at' => $profile->updated_at,
             ]);
 
-        return JsonResource::collection($raceProfiles);
+        return JsonResource::collection($raceProfiles)->response();
     }
 
     #[QueryParam('from', 'string', description: 'Date from in Y-m-d format. Filters by sport event date.', required: false, example: '2026-01-01')]
@@ -76,8 +77,14 @@ final class UserController extends Controller
     #[QueryParam('page', 'integer', description: 'Page number for pagination.', required: false, example: 1)]
     #[QueryParam('per_page', 'integer', description: 'Number of items per page. Defaults to 20.', required: false, example: 20)]
     #[ResponseFromFile('app/Docs/Api/V1/Response/user.entry.list.json', 200, description: 'Example User Entry List')]
-    public function entry(Request $request): JsonResource
+    public function entry(Request $request): JsonResponse
     {
+        $request->validate([
+            'from'     => ['nullable', 'date_format:Y-m-d'],
+            'to'       => ['nullable', 'date_format:Y-m-d'],
+            'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
+        ]);
+
         /** @var User $user */
         $user = $request->user();
 
@@ -126,11 +133,11 @@ final class UserController extends Controller
             'updated_at' => $entry->updated_at,
         ]);
 
-        return JsonResource::collection($entries);
+        return JsonResource::collection($entries)->response();
     }
 
     #[ResponseFromFile('app/Docs/Api/V1/Response/user.credit-balance.json', 200, description: 'Example User Credit Balance')]
-    public function creditBalance(Request $request): JsonResource
+    public function creditBalance(Request $request): JsonResponse
     {
         /** @var User $user */
         $user = $request->user();
@@ -147,7 +154,7 @@ final class UserController extends Controller
         return JsonResource::make([
             'amount' => (float) $balance,
             'currency' => UserCredit::CURRENCY_CZK,
-            'updated_at' => now()->toDateTimeString(),
-        ]);
+            'updated_at' => null,
+        ])->response();
     }
 }
