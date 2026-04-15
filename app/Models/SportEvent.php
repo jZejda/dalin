@@ -144,6 +144,7 @@ class SportEvent extends Model
         return $this->hasOne(SportLevel::class, 'id', 'level_id');
     }
 
+    /** @return HasMany<SportClass, $this> */
     public function sportClasses(): HasMany
     {
         return $this->hasMany(SportClass::class, 'sport_event_id', 'id');

@@ -31,9 +31,9 @@
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
-    <script src="{{ asset("/vendor/scribe/js/tryitout-5.6.0.js") }}"></script>
+    <script src="{{ asset("/vendor/scribe/js/tryitout-5.9.0.js") }}"></script>
 
-    <script src="{{ asset("/vendor/scribe/js/theme-default-5.6.0.js") }}"></script>
+    <script src="{{ asset("/vendor/scribe/js/theme-default-5.9.0.js") }}"></script>
 
 </head>
 
@@ -73,7 +73,21 @@
                     <a href="#v1">V1</a>
                 </li>
                                     <ul id="tocify-subheader-v1" class="tocify-subheader">
-                                                    <li class="tocify-item level-2" data-unique="v1-post">
+                                                    <li class="tocify-item level-2" data-unique="v1-user">
+                                <a href="#v1-user">USER</a>
+                            </li>
+                                                            <ul id="tocify-subheader-v1-user" class="tocify-subheader">
+                                                                            <li class="tocify-item level-3" data-unique="v1-GETapi-user-race-profiles">
+                                            <a href="#v1-GETapi-user-race-profiles">GET api/user/race-profiles</a>
+                                        </li>
+                                                                            <li class="tocify-item level-3" data-unique="v1-GETapi-user-entry">
+                                            <a href="#v1-GETapi-user-entry">GET api/user/entry</a>
+                                        </li>
+                                                                            <li class="tocify-item level-3" data-unique="v1-GETapi-user-credit-balance">
+                                            <a href="#v1-GETapi-user-credit-balance">GET api/user/credit-balance</a>
+                                        </li>
+                                                                    </ul>
+                                                                                <li class="tocify-item level-2" data-unique="v1-post">
                                 <a href="#v1-post">POST</a>
                             </li>
                                                             <ul id="tocify-subheader-v1-post" class="tocify-subheader">
@@ -95,6 +109,14 @@
                                             <a href="#v1-GETapi-v1-page--page_id-">GET api/v1/page/{page_id}</a>
                                         </li>
                                                                     </ul>
+                                                                                <li class="tocify-item level-2" data-unique="v1-sport-event">
+                                <a href="#v1-sport-event">SPORT EVENT</a>
+                            </li>
+                                                            <ul id="tocify-subheader-v1-sport-event" class="tocify-subheader">
+                                                                            <li class="tocify-item level-3" data-unique="v1-GETapi-v1-sport-event-list">
+                                            <a href="#v1-GETapi-v1-sport-event-list">GET api/v1/sport-event/list</a>
+                                        </li>
+                                                                    </ul>
                                                                         </ul>
                             </ul>
             </div>
@@ -106,7 +128,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: December 2, 2025</li>
+        <li>Last updated: April 15, 2026</li>
     </ul>
 </div>
 
@@ -130,7 +152,586 @@ You can switch the language used with the tabs at the top right (or from the nav
 
     <p>APIs V1</p>
 
-                        <h2 id="v1-post">POST</h2>
+                        <h2 id="v1-user">USER</h2>
+                                        <p>
+                    <p>Authenticated user overview endpoints</p>
+                </p>
+                                        <h2 id="v1-GETapi-user-race-profiles">GET api/user/race-profiles</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-user-race-profiles">
+<blockquote>Example request:</blockquote>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://localhost/api/user/race-profiles';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'query' =&gt; [
+            'all' =&gt; '0',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/user/race-profiles?all=" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/user/race-profiles"
+);
+
+const params = {
+    "all": "0",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-user-race-profiles">
+            <blockquote>
+            <p>Example response (200, Example User Race Profiles):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 101,
+            &quot;reg_number&quot;: &quot;A12-0001&quot;,
+            &quot;first_name&quot;: &quot;Jan&quot;,
+            &quot;last_name&quot;: &quot;Novak&quot;,
+            &quot;full_name&quot;: &quot;A12-0001 - Jan Novak&quot;,
+            &quot;email&quot;: &quot;jan.novak@example.com&quot;,
+            &quot;phone&quot;: &quot;+420777111222&quot;,
+            &quot;gender&quot;: &quot;M&quot;,
+            &quot;active&quot;: true,
+            &quot;active_until&quot;: &quot;2026-12-31&quot;,
+            &quot;created_at&quot;: &quot;2025-01-15T10:22:00.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2026-02-01T08:10:44.000000Z&quot;
+        },
+        {
+            &quot;id&quot;: 102,
+            &quot;reg_number&quot;: &quot;A12-0002&quot;,
+            &quot;first_name&quot;: &quot;Petra&quot;,
+            &quot;last_name&quot;: &quot;Novakova&quot;,
+            &quot;full_name&quot;: &quot;A12-0002 - Petra Novakova&quot;,
+            &quot;email&quot;: null,
+            &quot;phone&quot;: null,
+            &quot;gender&quot;: &quot;F&quot;,
+            &quot;active&quot;: false,
+            &quot;active_until&quot;: &quot;2024-12-31&quot;,
+            &quot;created_at&quot;: &quot;2024-03-10T09:00:00.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2025-01-03T11:18:19.000000Z&quot;
+        }
+    ]
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-user-race-profiles" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-user-race-profiles"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-user-race-profiles"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-user-race-profiles" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-user-race-profiles">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of this API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-user-race-profiles" data-method="GET"
+      data-path="api/user/race-profiles"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-user-race-profiles', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-user-race-profiles"
+                    onclick="tryItOut('GETapi-user-race-profiles');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-user-race-profiles"
+                    onclick="cancelTryOut('GETapi-user-race-profiles');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-user-race-profiles"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/user/race-profiles</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-user-race-profiles"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-user-race-profiles"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>all</code></b>&nbsp;&nbsp;
+<small>boolean</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <label data-endpoint="GETapi-user-race-profiles" style="display: none">
+            <input type="radio" name="all"
+                   value="1"
+                   data-endpoint="GETapi-user-race-profiles"
+                   data-component="query"             >
+            <code>true</code>
+        </label>
+        <label data-endpoint="GETapi-user-race-profiles" style="display: none">
+            <input type="radio" name="all"
+                   value="0"
+                   data-endpoint="GETapi-user-race-profiles"
+                   data-component="query"             >
+            <code>false</code>
+        </label>
+    <br>
+<p>When true, includes both active and inactive race profiles. Defaults to false (active only). Example: <code>false</code></p>
+            </div>
+                </form>
+
+                    <h2 id="v1-GETapi-user-entry">GET api/user/entry</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-user-entry">
+<blockquote>Example request:</blockquote>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://localhost/api/user/entry';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'query' =&gt; [
+            'from' =&gt; '2026-01-01',
+            'to' =&gt; '2026-12-31',
+            'page' =&gt; '1',
+            'per_page' =&gt; '20',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/user/entry?from=2026-01-01&amp;to=2026-12-31&amp;page=1&amp;per_page=20" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/user/entry"
+);
+
+const params = {
+    "from": "2026-01-01",
+    "to": "2026-12-31",
+    "page": "1",
+    "per_page": "20",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-user-entry">
+            <blockquote>
+            <p>Example response (200, Example User Entry List):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 3451,
+            &quot;sport_event&quot;: {
+                &quot;id&quot;: 1201,
+                &quot;name&quot;: &quot;Mistrovstvi oblasti na kratke trati&quot;,
+                &quot;date&quot;: &quot;2026-05-16&quot;
+            },
+            &quot;race_profile&quot;: {
+                &quot;id&quot;: 101,
+                &quot;name&quot;: &quot;A12-0001 - Jan Novak&quot;
+            },
+            &quot;class_name&quot;: &quot;H21&quot;,
+            &quot;requested_start&quot;: &quot;10:30&quot;,
+            &quot;rent_si&quot;: false,
+            &quot;entry_stages&quot;: [
+                &quot;stage1&quot;
+            ],
+            &quot;entry_status&quot;: &quot;created&quot;,
+            &quot;entry_created&quot;: &quot;2026-05-01 20:15:00&quot;,
+            &quot;created_at&quot;: &quot;2026-05-01T20:15:00.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2026-05-01T20:15:00.000000Z&quot;
+        }
+    ],
+    &quot;links&quot;: {
+        &quot;first&quot;: &quot;http://localhost/api/user/entry?page=1&quot;,
+        &quot;last&quot;: null,
+        &quot;prev&quot;: null,
+        &quot;next&quot;: &quot;http://localhost/api/user/entry?page=2&quot;
+    },
+    &quot;meta&quot;: {
+        &quot;current_page&quot;: 1,
+        &quot;current_page_url&quot;: &quot;http://localhost/api/user/entry?page=1&quot;,
+        &quot;from&quot;: 1,
+        &quot;path&quot;: &quot;http://localhost/api/user/entry&quot;,
+        &quot;per_page&quot;: 20,
+        &quot;to&quot;: 1
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-user-entry" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-user-entry"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-user-entry"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-user-entry" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-user-entry">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of this API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-user-entry" data-method="GET"
+      data-path="api/user/entry"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-user-entry', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-user-entry"
+                    onclick="tryItOut('GETapi-user-entry');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-user-entry"
+                    onclick="cancelTryOut('GETapi-user-entry');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-user-entry"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/user/entry</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-user-entry"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-user-entry"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>from</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="from"                data-endpoint="GETapi-user-entry"
+               value="2026-01-01"
+               data-component="query">
+    <br>
+<p>Date from in Y-m-d format. Filters by sport event date. Example: <code>2026-01-01</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="to"                data-endpoint="GETapi-user-entry"
+               value="2026-12-31"
+               data-component="query">
+    <br>
+<p>Date to in Y-m-d format. Filters by sport event date. Example: <code>2026-12-31</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-user-entry"
+               value="1"
+               data-component="query">
+    <br>
+<p>Page number for pagination. Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-user-entry"
+               value="20"
+               data-component="query">
+    <br>
+<p>Number of items per page. Defaults to 20. Example: <code>20</code></p>
+            </div>
+                </form>
+
+                    <h2 id="v1-GETapi-user-credit-balance">GET api/user/credit-balance</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-user-credit-balance">
+<blockquote>Example request:</blockquote>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://localhost/api/user/credit-balance';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/user/credit-balance" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/user/credit-balance"
+);
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-user-credit-balance">
+            <blockquote>
+            <p>Example response (200, Example User Credit Balance):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: {
+        &quot;amount&quot;: 1250.5,
+        &quot;currency&quot;: &quot;CZK&quot;,
+        &quot;user_id&quot;: 15,
+        &quot;updated_at&quot;: &quot;2026-04-15 11:10:00&quot;
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-user-credit-balance" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-user-credit-balance"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-user-credit-balance"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-user-credit-balance" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-user-credit-balance">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of this API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-user-credit-balance" data-method="GET"
+      data-path="api/user/credit-balance"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-user-credit-balance', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-user-credit-balance"
+                    onclick="tryItOut('GETapi-user-credit-balance');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-user-credit-balance"
+                    onclick="cancelTryOut('GETapi-user-credit-balance');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-user-credit-balance"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/user/credit-balance</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-user-credit-balance"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-user-credit-balance"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                        </form>
+
+                                <h2 id="v1-post">POST</h2>
                                         <p>
                     <p>News</p>
                 </p>
@@ -193,6 +794,7 @@ const headers = {
     "Accept": "application/json",
 };
 
+
 fetch(url, {
     method: "GET",
     headers,
@@ -250,7 +852,7 @@ fetch(url, {
     <pre><code id="execution-error-message-GETapi-v1-post-list">
 
 Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+If you&#039;re a maintainer of this API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-post-list" data-method="GET"
@@ -404,6 +1006,7 @@ const headers = {
     "Accept": "application/json",
 };
 
+
 fetch(url, {
     method: "GET",
     headers,
@@ -498,7 +1101,7 @@ fetch(url, {
     <pre><code id="execution-error-message-GETapi-v1-post--post_id-">
 
 Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+If you&#039;re a maintainer of this API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-post--post_id-" data-method="GET"
@@ -639,6 +1242,7 @@ const headers = {
     "Accept": "application/json",
 };
 
+
 fetch(url, {
     method: "GET",
     headers,
@@ -696,7 +1300,7 @@ fetch(url, {
     <pre><code id="execution-error-message-GETapi-v1-page-list">
 
 Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+If you&#039;re a maintainer of this API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-page-list" data-method="GET"
@@ -874,6 +1478,7 @@ const headers = {
     "Accept": "application/json",
 };
 
+
 fetch(url, {
     method: "GET",
     headers,
@@ -984,7 +1589,7 @@ fetch(url, {
     <pre><code id="execution-error-message-GETapi-v1-page--page_id-">
 
 Tip: Check that you&#039;re properly connected to the network.
-If you&#039;re a maintainer of ths API, verify that your API is running and you&#039;ve enabled CORS.
+If you&#039;re a maintainer of this API, verify that your API is running and you&#039;ve enabled CORS.
 You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-page--page_id-" data-method="GET"
@@ -1057,6 +1662,285 @@ You can check the Dev Tools console for debugging information.</code></pre>
 <p>The ID of the page. Example: <code>1</code></p>
             </div>
                     </form>
+
+                                <h2 id="v1-sport-event">SPORT EVENT</h2>
+                                        <p>
+                    <p>Sport events and event category options</p>
+                </p>
+                                        <h2 id="v1-GETapi-v1-sport-event-list">GET api/v1/sport-event/list</h2>
+
+<p>
+</p>
+
+
+
+<span id="example-requests-GETapi-v1-sport-event-list">
+<blockquote>Example request:</blockquote>
+
+
+<div class="php-example">
+    <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$url = 'http://localhost/api/v1/sport-event/list';
+$response = $client-&gt;get(
+    $url,
+    [
+        'headers' =&gt; [
+            'Content-Type' =&gt; 'application/json',
+            'Accept' =&gt; 'application/json',
+        ],
+        'query' =&gt; [
+            'from' =&gt; '2026-01-01',
+            'to' =&gt; '2026-12-31',
+            'event_type' =&gt; 'race',
+            'class_definition_id' =&gt; '15',
+            'page' =&gt; '1',
+            'per_page' =&gt; '20',
+        ],
+    ]
+);
+$body = $response-&gt;getBody();
+print_r(json_decode((string) $body));</code></pre></div>
+
+
+<div class="bash-example">
+    <pre><code class="language-bash">curl --request GET \
+    --get "http://localhost/api/v1/sport-event/list?from=2026-01-01&amp;to=2026-12-31&amp;event_type=race&amp;class_definition_id=15&amp;page=1&amp;per_page=20" \
+    --header "Content-Type: application/json" \
+    --header "Accept: application/json"</code></pre></div>
+
+
+<div class="javascript-example">
+    <pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/v1/sport-event/list"
+);
+
+const params = {
+    "from": "2026-01-01",
+    "to": "2026-12-31",
+    "event_type": "race",
+    "class_definition_id": "15",
+    "page": "1",
+    "per_page": "20",
+};
+Object.keys(params)
+    .forEach(key =&gt; url.searchParams.append(key, params[key]));
+
+const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+
+fetch(url, {
+    method: "GET",
+    headers,
+}).then(response =&gt; response.json());</code></pre></div>
+
+</span>
+
+<span id="example-responses-GETapi-v1-sport-event-list">
+            <blockquote>
+            <p>Example response (200, Example Sport Event List):</p>
+        </blockquote>
+                <pre>
+
+<code class="language-json" style="max-height: 300px;">{
+    &quot;data&quot;: [
+        {
+            &quot;id&quot;: 1201,
+            &quot;name&quot;: &quot;Mistrovstvi oblasti na kratke trati&quot;,
+            &quot;date&quot;: &quot;2026-05-16&quot;,
+            &quot;entry_date&quot;: &quot;2026-05-08 23:59:59&quot;,
+            &quot;event_type&quot;: {
+                &quot;value&quot;: &quot;race&quot;,
+                &quot;label&quot;: &quot;Zavod&quot;
+            },
+            &quot;categories&quot;: [
+                {
+                    &quot;id&quot;: 15,
+                    &quot;name&quot;: &quot;H21&quot;
+                },
+                {
+                    &quot;id&quot;: 16,
+                    &quot;name&quot;: &quot;D21&quot;
+                }
+            ],
+            &quot;created_at&quot;: &quot;2026-03-01T10:20:11.000000Z&quot;,
+            &quot;updated_at&quot;: &quot;2026-03-05T15:42:00.000000Z&quot;
+        }
+    ],
+    &quot;links&quot;: {
+        &quot;first&quot;: &quot;http://localhost/api/v1/sport-event/list?page=1&quot;,
+        &quot;last&quot;: null,
+        &quot;prev&quot;: null,
+        &quot;next&quot;: &quot;http://localhost/api/v1/sport-event/list?page=2&quot;
+    },
+    &quot;meta&quot;: {
+        &quot;current_page&quot;: 1,
+        &quot;current_page_url&quot;: &quot;http://localhost/api/v1/sport-event/list?page=1&quot;,
+        &quot;from&quot;: 1,
+        &quot;path&quot;: &quot;http://localhost/api/v1/sport-event/list&quot;,
+        &quot;per_page&quot;: 20,
+        &quot;to&quot;: 1
+    },
+    &quot;components&quot;: {
+        &quot;event_type_options&quot;: {
+            &quot;race&quot;: &quot;Zavod&quot;,
+            &quot;training&quot;: &quot;Trenink&quot;,
+            &quot;trainingCamp&quot;: &quot;Soustredeni&quot;,
+            &quot;other&quot;: &quot;Ostatni&quot;
+        },
+        &quot;category_component_description&quot;: &quot;categories contains class definitions assigned to each event (SportClass -&gt; SportClassDefinition).&quot;,
+        &quot;event_type_component_description&quot;: &quot;event_type contains both machine value and translated label.&quot;
+    }
+}</code>
+ </pre>
+    </span>
+<span id="execution-results-GETapi-v1-sport-event-list" hidden>
+    <blockquote>Received response<span
+                id="execution-response-status-GETapi-v1-sport-event-list"></span>:
+    </blockquote>
+    <pre class="json"><code id="execution-response-content-GETapi-v1-sport-event-list"
+      data-empty-response-text="<Empty response>" style="max-height: 400px;"></code></pre>
+</span>
+<span id="execution-error-GETapi-v1-sport-event-list" hidden>
+    <blockquote>Request failed with error:</blockquote>
+    <pre><code id="execution-error-message-GETapi-v1-sport-event-list">
+
+Tip: Check that you&#039;re properly connected to the network.
+If you&#039;re a maintainer of this API, verify that your API is running and you&#039;ve enabled CORS.
+You can check the Dev Tools console for debugging information.</code></pre>
+</span>
+<form id="form-GETapi-v1-sport-event-list" data-method="GET"
+      data-path="api/v1/sport-event/list"
+      data-authed="0"
+      data-hasfiles="0"
+      data-isarraybody="0"
+      autocomplete="off"
+      onsubmit="event.preventDefault(); executeTryOut('GETapi-v1-sport-event-list', this);">
+    <h3>
+        Request&nbsp;&nbsp;&nbsp;
+                    <button type="button"
+                    style="background-color: #8fbcd4; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-tryout-GETapi-v1-sport-event-list"
+                    onclick="tryItOut('GETapi-v1-sport-event-list');">Try it out ⚡
+            </button>
+            <button type="button"
+                    style="background-color: #c97a7e; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-canceltryout-GETapi-v1-sport-event-list"
+                    onclick="cancelTryOut('GETapi-v1-sport-event-list');" hidden>Cancel 🛑
+            </button>&nbsp;&nbsp;
+            <button type="submit"
+                    style="background-color: #6ac174; padding: 5px 10px; border-radius: 5px; border-width: thin;"
+                    id="btn-executetryout-GETapi-v1-sport-event-list"
+                    data-initial-text="Send Request 💥"
+                    data-loading-text="⏱ Sending..."
+                    hidden>Send Request 💥
+            </button>
+            </h3>
+            <p>
+            <small class="badge badge-green">GET</small>
+            <b><code>api/v1/sport-event/list</code></b>
+        </p>
+                <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Content-Type"                data-endpoint="GETapi-v1-sport-event-list"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>Accept</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="Accept"                data-endpoint="GETapi-v1-sport-event-list"
+               value="application/json"
+               data-component="header">
+    <br>
+<p>Example: <code>application/json</code></p>
+            </div>
+                            <h4 class="fancy-heading-panel"><b>Query Parameters</b></h4>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>from</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="from"                data-endpoint="GETapi-v1-sport-event-list"
+               value="2026-01-01"
+               data-component="query">
+    <br>
+<p>Date from in Y-m-d format. Example: <code>2026-01-01</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="to"                data-endpoint="GETapi-v1-sport-event-list"
+               value="2026-12-31"
+               data-component="query">
+    <br>
+<p>Date to in Y-m-d format. Example: <code>2026-12-31</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>event_type</code></b>&nbsp;&nbsp;
+<small>string</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="event_type"                data-endpoint="GETapi-v1-sport-event-list"
+               value="race"
+               data-component="query">
+    <br>
+<p>Filter by event type category. Allowed values: race, training, trainingCamp, other. Example: <code>race</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>class_definition_id</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="class_definition_id"                data-endpoint="GETapi-v1-sport-event-list"
+               value="15"
+               data-component="query">
+    <br>
+<p>Filter events by category/class definition ID assigned to the event. Example: <code>15</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="page"                data-endpoint="GETapi-v1-sport-event-list"
+               value="1"
+               data-component="query">
+    <br>
+<p>Page number for pagination. Example: <code>1</code></p>
+            </div>
+                                    <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
+<small>integer</small>&nbsp;
+<i>optional</i> &nbsp;
+ &nbsp;
+                <input type="number" style="display: none"
+               step="any"               name="per_page"                data-endpoint="GETapi-v1-sport-event-list"
+               value="20"
+               data-component="query">
+    <br>
+<p>Number of items per page. Defaults to 20. Example: <code>20</code></p>
+            </div>
+                </form>
 
             
 
