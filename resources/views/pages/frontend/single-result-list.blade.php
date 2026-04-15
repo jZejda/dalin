@@ -66,15 +66,15 @@
                     <div class="mb-3">
                         @foreach($classResult as $class)
                             <button
-                                @click="selectedCategories.includes('{{ $class->getClass()->getName() }}') ? selectedCategories = selectedCategories.filter(c => c !== '{{ $class->getClass()->getName() }}') : selectedCategories.push('{{ $class->getClass()->getName() }}')"
-                                :class="selectedCategories.includes('{{ $class->getClass()->getName() }}') ? 'ring-2 ring-yellow-600 bg-yellow-500' : 'bg-yellow-300 hover:bg-yellow-400'"
+                                @click="selectedCategories.includes(@js($class->getClass()->getName())) ? selectedCategories = selectedCategories.filter(c => c !== @js($class->getClass()->getName())) : selectedCategories.push(@js($class->getClass()->getName()))"
+                                :class="selectedCategories.includes(@js($class->getClass()->getName())) ? 'ring-2 ring-yellow-600 bg-yellow-500' : 'bg-yellow-300 hover:bg-yellow-400'"
                                 class="text-gray-800 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center mr-1 mb-1">
                                 {{ $class->getClass()->getName() }}
                             </button>
                         @endforeach
                     </div>
                 @foreach($classResult as $class)
-                    <section x-show="selectedCategories.length === 0 || selectedCategories.includes('{{ $class->getClass()->getName() }}')"
+                    <section x-show="selectedCategories.length === 0 || selectedCategories.includes(@js($class->getClass()->getName()))"
                              x-transition:enter="transition ease-out duration-200"
                              x-transition:enter-start="opacity-0"
                              x-transition:enter-end="opacity-100"
@@ -147,10 +147,6 @@
                                                 </td>
                                                 <td class="hidden lg:table-cell px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     <div class="flex items-center">
-                                                        @php
-                                                            $startTime = \Carbon\Carbon::parse($person->getResult()->getStartTime(), 'Europe/Prague');
-                                                            $zeroTime = $startTime->diffInSeconds($sportEventExport->start_time);
-                                                        @endphp
                                                         {{\Carbon\Carbon::parse($person->getResult()->getStartTime(), 'Europe/Prague')->format('H:i:s')}}
                                                     </div>
                                                 </td>
