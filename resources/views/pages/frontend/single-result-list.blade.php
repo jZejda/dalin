@@ -40,38 +40,45 @@
     <div class="p-4 bg-white dark:bg-gray-900">
         <div class="container mx-auto">
             @if(!is_null($classResult) && count($eventAttributes) > 0)
-                {{--            <h4>{{$search}}</h4>--}}
+                <div x-data="{ selectedCategories: [] }">
+                    <div x-show="selectedCategories.length > 0"
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 -translate-y-2"
+                         x-transition:enter-end="opacity-100 translate-y-0"
+                         class="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 py-2 px-4 mb-6">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-sm text-gray-600 dark:text-gray-400 font-medium shrink-0">Vybrané kategorie:</span>
+                            <template x-for="cat in selectedCategories" :key="cat">
+                                <span class="inline-flex items-center bg-yellow-300 text-gray-800 text-xs font-medium px-2.5 py-1 rounded-full">
+                                    <span x-text="cat"></span>
+                                    <button @click="selectedCategories = selectedCategories.filter(c => c !== cat)" class="ml-1.5 text-gray-600 hover:text-gray-900">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    </button>
+                                </span>
+                            </template>
+                            <button @click="selectedCategories = []"
+                                    class="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 underline ml-2 shrink-0">
+                                Zobrazit vše
+                            </button>
+                        </div>
+                    </div>
 
-                {{--            <div>--}}
-                {{--                <label>Label</label>--}}
-                {{--                <input wire:model.live="message" type="text" name="message" value="Hello">--}}
-                {{--            </div>--}}
-                {{--            <div>{{$message}}</div>--}}
-                {{--            <div>@json($message)</div>--}}
-
-                {{--            <label for="search"></label><select id="search" wire:model.live="search">--}}
-                {{--                <option value="D10">D10</option>--}}
-                {{--                <option value="D12">D12</option>--}}
-                {{--            </select>--}}
-
-                {{--            <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>--}}
-                {{--            <select wire:model.live="search" id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">--}}
-                {{--                <option selected>Choose a country</option>--}}
-                {{--                <option value="D10">D10</option>--}}
-                {{--                <option value="D12">D12</option>--}}
-                {{--            </select>--}}
-
-                {{--            <div>Select: @json($search)</div>--}}
-
-
-
+                    <div class="mb-3">
+                        @foreach($classResult as $class)
+                            <button
+                                @click="selectedCategories.includes('{{ $class->getClass()->getName() }}') ? selectedCategories = selectedCategories.filter(c => c !== '{{ $class->getClass()->getName() }}') : selectedCategories.push('{{ $class->getClass()->getName() }}')"
+                                :class="selectedCategories.includes('{{ $class->getClass()->getName() }}') ? 'ring-2 ring-yellow-600 bg-yellow-500' : 'bg-yellow-300 hover:bg-yellow-400'"
+                                class="text-gray-800 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center mr-1 mb-1">
+                                {{ $class->getClass()->getName() }}
+                            </button>
+                        @endforeach
+                    </div>
                 @foreach($classResult as $class)
-                    <a href="{{url()->current()}}#{{$class->getClass()->getName()}}" class="text-gray-800 bg-yellow-300 hover:bg-yellow-400 font-medium rounded-lg text-sm px-3 py-2 text-center inline-flex items-center dark:hover:bg-yellow-100 mr-1 mb-1">
-                        {{ $class->getClass()->getName() }}
-                    </a>
-                @endforeach
-                @foreach($classResult as $class)
-                    <section class="app-front-content mt-5 sm:py-5">
+                    <section x-show="selectedCategories.length === 0 || selectedCategories.includes('{{ $class->getClass()->getName() }}')"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0"
+                             x-transition:enter-end="opacity-100"
+                             class="app-front-content mt-5 sm:py-5">
                         <div class="mx-auto max-w-screen-2xl">
                             <div class="relative overflow-hidden bg-white shadow-lg dark:bg-gray-800 sm:rounded-lg">
                                 <div class="text-gray-800 bg-yellow-300 flex flex-col px-4 pb-2 space-y-3 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 lg:space-x-4">
@@ -102,17 +109,17 @@
                                         <tr>
                                             <th class="px-4 py-3">#</th>
                                             <th class="px-4 py-3">Jméno</th>
-                                            <th class="hidden lg:block px-4 py-3">Klub</th>
+                                            <th class="hidden lg:table-cell px-4 py-3">Klub</th>
                                             <th class="px-4 py-3">Reg. číslo</th>
-                                            <th class="hidden lg:block px-4 py-3">Start</th>
+                                            <th class="hidden lg:table-cell px-4 py-3">Start</th>
                                             <th class="px-4 py-3">Cíl</th>
                                         </tr>
                                         </thead>
                                         <tbody>
 
                                         @foreach($class->getPersonResult() as $person)
-                                            <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                <td class="flex items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            <tr class="dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     {{ $person->getResult()->getPosition() }}
                                                 </td>
                                                 <td class="px-4 py-2">
@@ -126,7 +133,7 @@
                                                         </span>
                                                     @endif
                                                 </td>
-                                                <td class="hidden lg:block  px-4 py-2 text-gray-900 whitespace-nowrap dark:text-white">
+                                                <td class="hidden lg:table-cell  px-4 py-2 text-gray-900 whitespace-nowrap dark:text-white">
                                                     {{$person->getOrganisation()->getName()}}
                                                 </td>
                                                 <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -138,7 +145,7 @@
                                                         @endif
                                                     </div>
                                                 </td>
-                                                <td class="hidden lg:block px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <td class="hidden lg:table-cell px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     <div class="flex items-center">
                                                         @php
                                                             $startTime = \Carbon\Carbon::parse($person->getResult()->getStartTime(), 'Europe/Prague');
@@ -190,6 +197,7 @@
                         </div>
                     </section>
                 @endforeach
+                </div>
 
             @else
                 <section class="app-front-content">
