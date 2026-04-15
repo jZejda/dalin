@@ -147,7 +147,6 @@ final class UserController extends Controller
         return JsonResource::make([
             'amount' => (float) $balance,
             'currency' => UserCredit::CURRENCY_CZK,
-            'user_id' => $user->id,
             'updated_at' => now()->toDateTimeString(),
         ]);
     }
