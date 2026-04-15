@@ -100,6 +100,7 @@ class User extends Authenticatable implements FilamentUser
         $this->saveOrFail();
     }
 
+    /** @return HasMany<UserRaceProfile, $this> */
     public function userRaceProfiles(): HasMany
     {
         return $this->hasMany(UserRaceProfile::class, 'user_id', 'id');

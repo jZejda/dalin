@@ -975,7 +975,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/post/16';
+$url = 'http://localhost/api/v1/post/1';
 $response = $client-&gt;get(
     $url,
     [
@@ -991,14 +991,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/post/16" \
+    --get "http://localhost/api/v1/post/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/post/16"
+    "http://localhost/api/v1/post/1"
 );
 
 const headers = {
@@ -1168,10 +1168,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="post_id"                data-endpoint="GETapi-v1-post--post_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the post. Example: <code>16</code></p>
+<p>The ID of the post. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -1447,7 +1447,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/page/16';
+$url = 'http://localhost/api/v1/page/1';
 $response = $client-&gt;get(
     $url,
     [
@@ -1463,14 +1463,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/page/16" \
+    --get "http://localhost/api/v1/page/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/page/16"
+    "http://localhost/api/v1/page/1"
 );
 
 const headers = {
@@ -1656,10 +1656,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="page_id"                data-endpoint="GETapi-v1-page--page_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the page. Example: <code>16</code></p>
+<p>The ID of the page. Example: <code>1</code></p>
             </div>
                     </form>
 
