@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Mcp\Servers\DalinServer;
 use App\Models\UserCredit;
 use App\Observers\UserCreditObserver;
 use Filament\Facades\Filament;
+use Laravel\Mcp\Facades\Mcp;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\Vite;
@@ -32,6 +34,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // MCP server registration
+        Mcp::local('dalin', DalinServer::class);
+
         // Observer from EventServiceProvider
         UserCredit::observe(UserCreditObserver::class);
 

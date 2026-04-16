@@ -48,3 +48,6 @@ vendor/
 # Deploy
 deploy.php
 deploy.sh
+
+# MCP local config (contains API keys)
+.mcp.json
