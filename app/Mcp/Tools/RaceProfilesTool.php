@@ -18,7 +18,7 @@ class RaceProfilesTool extends Tool
 {
     public function handle(Request $request): Response
     {
-        $user = $this->resolveUser($request);
+        $user = $this->resolveUser();
 
         if ($user === null) {
             return Response::error('Parametr user_id je povinný nebo použijte HTTP transport s x-apikey autentizací.');
@@ -59,25 +59,14 @@ class RaceProfilesTool extends Tool
     public function schema(JsonSchema $schema): array
     {
         return [
-            'user_id'          => $schema->integer()->description('ID uživatele. Vyžadováno při stdio transportu.'),
             'include_inactive' => $schema->boolean()->description('Zahrnout i neaktivní profily (výchozí: false).'),
         ];
     }
 
-    private function resolveUser(Request $request): ?User
+    private function resolveUser(): ?User
     {
         $authUser = auth()->user();
-        if ($authUser instanceof User) {
-            return $authUser;
-        }
 
-        $userId = $request->get('user_id');
-        if ($userId === null) {
-            return null;
-        }
-
-        $found = User::find((int) $userId);
-
-        return $found instanceof User ? $found : null;
+        return $authUser instanceof User ? $authUser : null;
     }
 }

@@ -1,4 +1,6 @@
-///<?php
+<?php
+
+declare(strict_types=1);
 
 use App\Mcp\Servers\DalinServer;
 use Laravel\Mcp\Facades\Mcp;
