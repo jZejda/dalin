@@ -31,9 +31,9 @@ Route::prefix('v1/user')->middleware([
     'role:' . User::ROLE_MEMBER,
 ])->group(function (): void {
     //Route::get('/', [UserController::class, 'show']);
-    Route::get('/raceProfiles', [UserController::class, 'raceProfiles']);
+    Route::get('/race-profiles', [UserController::class, 'raceProfiles']);
     Route::get('/entry', [UserController::class, 'entry']);
-    Route::get('/creditBalance', [UserController::class, 'creditBalance']);
+    Route::get('/credit-balance', [UserController::class, 'creditBalance']);
 });
 
 // Posts API protected by x-apikey and role permission using spatie/permission ( OR Permission)
@@ -49,5 +49,5 @@ Route::prefix('v1')->middleware([
     Route::get('/page', [PageController::class, 'list']);
     Route::get('/page/{page}', [PageController::class, 'detail']);
 
-    Route::get('/sportEvent', [SportEventController::class, 'list']);
+    Route::get('/sport-event', [SportEventController::class, 'list']);
 });

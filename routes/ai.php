@@ -6,12 +6,12 @@ use App\Mcp\Servers\DalinServer;
 use Laravel\Mcp\Facades\Mcp;
 
 /**
- * HTTP transport pro MCP server DaLin.
+ * HTTP transport for the DaLin MCP server.
  *
- * Tento endpoint umožňuje vzdálený přístup k MCP serveru přes HTTP.
- * Chráněno middleware ApiKeyAuth (x-apikey hlavička).
+ *  This endpoint enables remote access to the MCP server via HTTP.
+ *  Protected by ApiKeyAuth middleware (x-apikey header).
  *
- * Konfigurace v .mcp.json klienta:
+ *  Configuration in the client's .mcp.json file:
  * {
  *   "mcpServers": {
  *     "dalin": {
