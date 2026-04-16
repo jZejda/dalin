@@ -23,6 +23,11 @@ use Knuckles\Scribe\Attributes\Subgroup;
 #[Subgroup('USER', 'Authenticated user overview endpoints')]
 final class UserController extends Controller
 {
+    public function show(Request $request): JsonResponse
+    {
+        return JsonResource::make($request->user())->response();
+    }
+
     #[QueryParam('all', 'boolean', description: 'When true, includes both active and inactive race profiles. Defaults to false (active only).', required: false, example: false)]
     #[ResponseFromFile('app/Docs/Api/V1/Response/user.race-profiles.json', 200, description: 'Example User Race Profiles')]
     public function raceProfiles(Request $request): JsonResponse
