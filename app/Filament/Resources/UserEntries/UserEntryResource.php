@@ -10,7 +10,6 @@ use Filament\Actions\DeleteBulkAction;
 use App\Filament\Resources\UserEntries\Pages\ListUserEntries;
 use App\Enums\EntryStatus;
 use App\Filament\Resources\UserEntries\InfoList\UserEntryOverview;
-use App\Models\SportClass;
 use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserEntry;
@@ -39,10 +38,10 @@ class UserEntryResource extends Resource implements HasShieldPermissions
     public static function getEloquentQuery(): Builder
     {
         if (Auth::user()?->hasRole('super_admin')) {
-            return UserEntry::query();
+            return UserEntry::query()->with(['sportEvent.sportClasses']);
         } else {
             $userRaceProfilesIds = (new User())->getUserRaceProfilesIds(Auth::user());
-            return UserEntry::query()->whereIn('user_race_profile_id', $userRaceProfilesIds);
+            return UserEntry::query()->with(['sportEvent.sportClasses'])->whereIn('user_race_profile_id', $userRaceProfilesIds);
         }
     }
 
@@ -69,10 +68,7 @@ class UserEntryResource extends Resource implements HasShieldPermissions
                 TextColumn::make('class_name')
                     ->label('Kategorie')
                     ->description(function (UserEntry $record): string {
-                        $sportClass = SportClass::query()
-                            ->where('sport_event_id', $record->sport_event_id)
-                            ->where('name', $record->class_name)
-                            ->first();
+                        $sportClass = $record->sportEvent?->sportClasses->firstWhere('name', $record->class_name);
                         if ($sportClass === null) {
                             return '';
                         }

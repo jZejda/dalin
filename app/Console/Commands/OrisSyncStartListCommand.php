@@ -22,20 +22,20 @@ class OrisSyncStartListCommand extends Command
         $sportEvent = SportEvent::query()->where('oris_id', $orisId)->first();
 
         if ($sportEvent === null) {
-            $this->error("Race  ORIS ID {$orisId} was not found in the database.");
+            $this->error("Závod s ORIS ID {$orisId} nebyl nalezen v databázi.");
             return Command::FAILURE;
         }
 
-        $this->info("I'm syncing the start list for: {$sportEvent->name} (ID: {$sportEvent->id}, ORIS ID: {$orisId})");
+        $this->info("Synchronizuji startovní listinu: {$sportEvent->name} (ID: {$sportEvent->id}, ORIS ID: {$orisId})");
 
         $result = $orisApiService->updateStartList($sportEvent->id);
 
         if ($result) {
-            $this->info('The start list has been successfully synchronized.');
+            $this->info('Startovní listina byla úspěšně synchronizována.');
             return Command::SUCCESS;
         }
 
-        $this->error('Synchronization failed — the ORIS API did not return a valid response (the race sheet may not have been published yet).');
+        $this->error('Synchronizace selhala — ORIS API nevrátilo platnou odpověď (startovní listina zatím nemusí být zveřejněna).');
         return Command::FAILURE;
     }
 }

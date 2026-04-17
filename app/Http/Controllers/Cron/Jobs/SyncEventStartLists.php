@@ -20,10 +20,14 @@ final class SyncEventStartLists implements CommonCronJobs
             ->whereHas('userEntry', fn ($q) => $q->whereNull('real_start'))
             ->get();
 
+        $service = new OrisApiService();
         foreach ($sportEvents as $sportEvent) {
-            $service = new OrisApiService();
-            $service->updateStartList($sportEvent->id);
-            Log::channel('site')->info('SyncStartList event ID: ' . $sportEvent->id . ' name: ' . $sportEvent->name);
+            try {
+                $service->updateStartList($sportEvent->id);
+                Log::channel('site')->info('SyncStartList event ID: ' . $sportEvent->id . ' name: ' . $sportEvent->name);
+            } catch (\Throwable $e) {
+                Log::channel('site')->warning('SyncStartList failed for event ID ' . $sportEvent->id . ' name: ' . $sportEvent->name . ': ' . $e->getMessage());
+            }
         }
     }
 }

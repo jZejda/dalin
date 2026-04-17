@@ -81,10 +81,6 @@ final class OrisApiService
                 continue;
             }
 
-            //            if($startEntry->RegNo === 'ABM7210') {
-            //                dd($raceProfile);
-            //            }
-
             UserEntry::query()
                 ->where('sport_event_id', $sportEventId)
                 ->where('user_race_profile_id', $raceProfile->id)
@@ -105,9 +101,8 @@ final class OrisApiService
         ];
         $orisResponse = $this->orisGetResponse($getParams);
 
-        $event = new OrisMethod();
-        if ($event->checkOrisResponse($orisResponse)) {
-            $orisData = $event->data($orisResponse);
+        if ($this->orisMethod->checkOrisResponse($orisResponse)) {
+            $orisData = $this->orisMethod->data($orisResponse);
 
             // Create|Update Event
             /** @var SportEvent $eventModel */
@@ -180,7 +175,7 @@ final class OrisApiService
             $eventModel->saveOrFail();
 
             // Create|Update Classes
-            $classes = $event->classes($orisResponse);
+            $classes = $this->orisMethod->classes($orisResponse);
             foreach ($classes as $class) {
                 $classModel = SportClass::query()
                     ->where('sport_event_id', '=', $eventModel->id)
@@ -213,7 +208,7 @@ final class OrisApiService
             }
 
             // Create|Update Services
-            $services = $event->services($orisResponse);
+            $services = $this->orisMethod->services($orisResponse);
             foreach ($services as $service) {
                 /** @var SportService $serviceModel */
                 $serviceModel = SportService::query()
@@ -236,8 +231,8 @@ final class OrisApiService
             }
 
             // Create|Update Links
-            $documents = $event->documents($orisResponse);
-            $links = $event->links($orisResponse);
+            $documents = $this->orisMethod->documents($orisResponse);
+            $links = $this->orisMethod->links($orisResponse);
 
             $activeLinksDocumentsIds = [];
             foreach ($documents as $document) {
@@ -251,13 +246,13 @@ final class OrisApiService
             $this->clearOldLinksDocuments($activeLinksDocumentsIds, $eventModel);
 
             // Create|Update locations alias markers
-            $markers = $event->locations($orisResponse);
+            $markers = $this->orisMethod->locations($orisResponse);
             $this->updateMarkers($markers, $eventModel);
 
             /**
              * @description Create|Update SportEventNews
              */
-            $news = $event->news($orisResponse);
+            $news = $this->orisMethod->news($orisResponse);
             $this->updateNews($news, $eventModel);
 
         }

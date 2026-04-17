@@ -42,6 +42,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
@@ -199,10 +200,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->label('Klubová poznámka')
                 ->limit(15)
                 ->tooltip(fn (UserEntry $record): string => $record->club_note ?? ''),
-//            TextColumn::make('requested_start')
-//                ->label('Poznámka')
-//                ->limit(15)
-//                ->tooltip(fn (UserEntry $record): string => $record->requested_start ?? ''),
             TextColumn::make('real_start')
                 ->label('Start v')
                 ->dateTime('H:i')
@@ -228,7 +225,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         ];
     }
 
-    public function table(\Filament\Tables\Table $table): \Filament\Tables\Table
+    public function table(Table $table): Table
     {
         return $table->recordClasses('!py-0');
     }
