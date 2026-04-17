@@ -154,6 +154,13 @@ return [
             'months' => ['*'],
             'days_in_week' => ['*'],
         ],
+        'mail_pre_race_summary' => [
+            'active' => true,
+            'hours' => ['*'],
+            'days_in_month' => ['*'],
+            'months' => ['*'],
+            'days_in_week' => ['*'],
+        ],
     ],
 
     'cron_url_key' => env('CRON_URL_KEY', 'cron_url_key'),

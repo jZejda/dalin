@@ -8,6 +8,7 @@ use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Cron\Jobs\EntryEndsToPay;
 use App\Http\Controllers\Cron\Jobs\ReportEmailEventWeeklyEndsBySport;
+use App\Http\Controllers\Cron\Jobs\ReportEmailPreRaceSummary;
 use App\Http\Controllers\Cron\Jobs\ReportEmailUserDebit;
 use App\Http\Controllers\Cron\Jobs\SyncEventStartLists;
 use App\Http\Controllers\Cron\Jobs\UpdateBankTransaction;
@@ -73,6 +74,17 @@ class CommonCron extends Controller
             }
         } catch (Exception $e) {
             Log::channel('site')->warning('ERROR ErrorMessage: '.$e->getMessage());
+        }
+
+        /** @description Send Mail pre-race summary */
+        try {
+            if ($this->runJob('mail_pre_race_summary')) {
+                Log::channel('site')->info('START MailPreRaceSummary run cron at '.$this->getActualHour());
+                new ReportEmailPreRaceSummary()->run();
+                Log::channel('site')->info('STOP  MailPreRaceSummary run cron at '.$this->getActualHour());
+            }
+        } catch (Exception $e) {
+            Log::channel('site')->warning('ERROR MailPreRaceSummary: '.$e->getMessage());
         }
 
         /** @description Sync event start lists from ORIS */

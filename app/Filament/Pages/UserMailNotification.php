@@ -16,6 +16,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
@@ -51,6 +52,10 @@ class UserMailNotification extends Page implements HasForms
 
     public array $week_report_by_sport = [];
 
+    public bool $pre_race_summary_enabled = false;
+    public int $pre_race_summary_days_before = 1;
+    public int $pre_race_summary_time_trigger = self::DEFAULT_TRIGGER_EVENT;
+
     public array $users_allow_sign_up_for_race = [];
 
     public array $event_filters = [];
@@ -73,6 +78,10 @@ class UserMailNotification extends Page implements HasForms
             $this->days_before_event_entry_ends = $mailNotification->options['days_before_event_entry_ends'] ?? 4;
 
             $this->week_report_by_sport = $mailNotification->options['week_report_by_sport'] ?? [];
+
+            $this->pre_race_summary_enabled = (bool) ($mailNotification->options['pre_race_summary_enabled'] ?? false);
+            $this->pre_race_summary_days_before = (int) ($mailNotification->options['pre_race_summary_days_before'] ?? 1);
+            $this->pre_race_summary_time_trigger = (int) ($mailNotification->options['pre_race_summary_time_trigger'] ?? self::DEFAULT_TRIGGER_EVENT);
         }
 
         $usersAllowSingUpForRace = UserSetting::where('user_id', '=', Auth::user()?->id)
@@ -191,6 +200,10 @@ class UserMailNotification extends Page implements HasForms
         $mailOptions['days_before_event_entry_ends'] = $this->days_before_event_entry_ends;
 
         $mailOptions['week_report_by_sport'] = $this->week_report_by_sport;
+
+        $mailOptions['pre_race_summary_enabled'] = $this->pre_race_summary_enabled;
+        $mailOptions['pre_race_summary_days_before'] = $this->pre_race_summary_days_before;
+        $mailOptions['pre_race_summary_time_trigger'] = $this->pre_race_summary_time_trigger;
         $this->storeMailOptions($mailOptions);
 
         /**
@@ -273,6 +286,28 @@ class UserMailNotification extends Page implements HasForms
                                     ->maxValue(14)
                                     ->minValue(1)
                                     ->default(4),
+                            ]),
+                        Section::make('Ostatní e-maily')
+                            ->description('Souhrný e-mail před závodem obsahuje informace o akci, startovní časy přihlášených závodníků a parametry jejich kategorií.')
+                            ->aside()
+                            ->columns(3)
+                            ->schema([
+                                Toggle::make('pre_race_summary_enabled')
+                                    ->label('Souhrn před závodem')
+                                    ->columnSpanFull()
+                                    ->default(false),
+                                TextInput::make('pre_race_summary_days_before')
+                                    ->label('Dnů před závodem')
+                                    ->numeric()
+                                    ->minValue(1)
+                                    ->maxValue(14)
+                                    ->default(1),
+                                TextInput::make('pre_race_summary_time_trigger')
+                                    ->label('Přibližná hodina odeslání')
+                                    ->numeric()
+                                    ->minValue(0)
+                                    ->maxValue(23)
+                                    ->default(self::DEFAULT_TRIGGER_EVENT),
                             ]),
                         Section::make('Souhrn závodů u kterých končí termín přihlášek následující týden')
                             ->description('V nastaveni definujete, které sporty budou v e-mailu souhrnně uvedeny. Souhrn obsahuje závody u kterých končí termín přihlášek následující týden.')
