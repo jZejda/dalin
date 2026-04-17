@@ -24,7 +24,7 @@ class CommonCron extends Controller
         try {
             if ($this->runJob('weather_forecast')) {
                 Log::channel('site')->info('START WeatherForecast run cron at '.$this->getActualHour());
-                (new UpdateEventWeather())->run();
+                new UpdateEventWeather()->run();
                 Log::channel('site')->info('STOP WeatherForecast run cron at '.$this->getActualHour());
             }
         } catch (Exception $e) {
@@ -35,7 +35,7 @@ class CommonCron extends Controller
         try {
             if ($this->runJob('event_update')) {
                 Log::channel('site')->info('START EventUpdates run cron at '.$this->getActualHour());
-                (new UpdateEvent())->run();
+                new UpdateEvent()->run();
                 Log::channel('site')->info('STOP EventUpdates run cron at '.$this->getActualHour());
             }
         } catch (Exception $e) {
@@ -46,7 +46,7 @@ class CommonCron extends Controller
         try {
             if ($this->runJob('mail_monthly_user_debit_report')) {
                 Log::channel('site')->info('START MailMonthlyUserDebitReport run cron at '.$this->getActualHour());
-                (new ReportEmailUserDebit())->run();
+                new ReportEmailUserDebit()->run();
                 Log::channel('site')->info('STOP  MailMonthlyUserDebitReport run cron at '.$this->getActualHour());
             }
         } catch (Exception $e) {
@@ -57,7 +57,7 @@ class CommonCron extends Controller
         try {
             if ($this->runJob('mail_weekly_user_event_summary')) {
                 Log::channel('site')->info('START MailWeeklyUserEventSummary run cron at '.$this->getActualHour());
-                (new ReportEmailEventWeeklyEndsBySport())->run();
+                new ReportEmailEventWeeklyEndsBySport()->run();
                 Log::channel('site')->info('STOP  MailWeeklyUserEventSummary run cron at '.$this->getActualHour());
             }
         } catch (Exception $e) {
@@ -68,7 +68,7 @@ class CommonCron extends Controller
         try {
             if ($this->runJob('mail_entry_ends_to_pay')) {
                 Log::channel('site')->info('START MailEntryEndsToPay run cron at '.$this->getActualHour());
-                (new EntryEndsToPay())->run();
+                new EntryEndsToPay()->run();
                 Log::channel('site')->info('STOP  MailEntryEndsToPay run cron at '.$this->getActualHour());
             }
         } catch (Exception $e) {
@@ -79,7 +79,7 @@ class CommonCron extends Controller
         try {
             if ($this->runJob('sync_event_start_lists')) {
                 Log::channel('site')->info('START SyncEventStartLists run cron at '.$this->getActualHour());
-                (new SyncEventStartLists())->run();
+                new SyncEventStartLists()->run();
                 Log::channel('site')->info('STOP SyncEventStartLists run cron at '.$this->getActualHour());
             }
         } catch (Exception $e) {
@@ -90,7 +90,7 @@ class CommonCron extends Controller
         try {
             if ($this->runJob('bank_transaction_sync')) {
                 Log::channel('site')->info('START Bank transaction at '.$this->getActualHour());
-                (new UpdateBankTransaction())->run();
+                new UpdateBankTransaction()->run();
                 Log::channel('site')->info('STOP Bank transaction at '.$this->getActualHour());
             }
         } catch (Exception $e) {
