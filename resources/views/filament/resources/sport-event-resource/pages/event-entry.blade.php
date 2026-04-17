@@ -286,7 +286,12 @@
                     <div class="mb-10">
                         <div class="app-front-content">
 
-                            @if(count($record->sportEventNews()->get()) > 0)
+                            @php
+                                $allNews = $record->sportEventNews()->orderByDesc('date')->get();
+                                $visibleNews = $allNews->take(6);
+                                $hiddenNews = $allNews->skip(6);
+                            @endphp
+                            @if($allNews->isNotEmpty())
                                 <h4 class="flex items-center mb-4 text-lg font-medium text-gray-900 dark:text-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                          stroke-width="1.5" stroke="currentColor"
@@ -296,15 +301,37 @@
                                     </svg>
                                     Rychlé novinky
                                 </h4>
-                                <dl class="text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
-                                    @foreach($record->sportEventNews()->get() as $quickNews)
-                                        <div class="flex flex-col pb-2">
-                                            <dt class="mb-1 text-gray-500 dark:text-gray-400 font-light">{{ Carbon::parse($quickNews->date)->format(AppHelper::DATE_TIME_FORMAT) }}</dt>
-                                            <dd class="font-normal">{{ html_entity_decode($quickNews->text) }}</dd>
-                                        </div>
-                                    @endforeach
-                                </dl>
-                                <hr>
+                                <div x-data="{ expanded: false }">
+                                    <dl class="text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700">
+                                        @foreach($visibleNews as $quickNews)
+                                            <div class="flex flex-col pb-2">
+                                                <dt class="mb-1 text-gray-500 dark:text-gray-400 font-light">{{ Carbon::parse($quickNews->date)->format(AppHelper::DATE_TIME_FORMAT) }}</dt>
+                                                <dd class="font-normal">{{ html_entity_decode($quickNews->text) }}</dd>
+                                            </div>
+                                        @endforeach
+                                        @if($hiddenNews->isNotEmpty())
+                                            <template x-if="expanded">
+                                                <div>
+                                                    @foreach($hiddenNews as $quickNews)
+                                                        <div class="flex flex-col pb-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                                                            <dt class="mb-1 text-gray-500 dark:text-gray-400 font-light">{{ Carbon::parse($quickNews->date)->format(AppHelper::DATE_TIME_FORMAT) }}</dt>
+                                                            <dd class="font-normal">{{ html_entity_decode($quickNews->text) }}</dd>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </template>
+                                        @endif
+                                    </dl>
+                                    @if($hiddenNews->isNotEmpty())
+                                        <button
+                                            type="button"
+                                            x-on:click="expanded = !expanded"
+                                            class="mt-2 text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium">
+                                            <span x-show="!expanded">Zobrazit další novinky ({{ $hiddenNews->count() }})</span>
+                                            <span x-show="expanded">Skrýt</span>
+                                        </button>
+                                    @endif
+                                </div>
                             @endif
 
                             <h4 class="flex items-center mb-4 text-lg font-medium text-gray-900 dark:text-white">

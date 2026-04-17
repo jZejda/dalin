@@ -147,6 +147,13 @@ return [
             'months' => ['*'],
             'days_in_week' => ['*'],
         ],
+        'sync_event_start_lists' => [
+            'active' => true,
+            'hours' => ['20'],
+            'days_in_month' => ['*'],
+            'months' => ['*'],
+            'days_in_week' => ['*'],
+        ],
     ],
 
     'cron_url_key' => env('CRON_URL_KEY', 'cron_url_key'),
