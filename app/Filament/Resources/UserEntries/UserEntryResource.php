@@ -38,10 +38,10 @@ class UserEntryResource extends Resource implements HasShieldPermissions
     public static function getEloquentQuery(): Builder
     {
         if (Auth::user()?->hasRole('super_admin')) {
-            return UserEntry::query();
+            return UserEntry::query()->with(['sportEvent.sportClasses']);
         } else {
             $userRaceProfilesIds = (new User())->getUserRaceProfilesIds(Auth::user());
-            return UserEntry::query()->whereIn('user_race_profile_id', $userRaceProfilesIds);
+            return UserEntry::query()->with(['sportEvent.sportClasses'])->whereIn('user_race_profile_id', $userRaceProfilesIds);
         }
     }
 
@@ -67,6 +67,18 @@ class UserEntryResource extends Resource implements HasShieldPermissions
                     }),
                 TextColumn::make('class_name')
                     ->label('Kategorie')
+                    ->description(function (UserEntry $record): string {
+                        $sportClass = $record->sportEvent?->sportClasses->firstWhere('name', $record->class_name);
+                        if ($sportClass === null) {
+                            return '';
+                        }
+                        $parts = array_filter([
+                            $sportClass->distance ? $sportClass->distance . 'km' : null,
+                            $sportClass->climbing ? $sportClass->climbing . 'm' : null,
+                            $sportClass->controls ? $sportClass->controls . 'k' : null,
+                        ]);
+                        return implode(' | ', $parts);
+                    })
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('userRaceProfile.UserRaceFullName')
@@ -76,8 +88,14 @@ class UserEntryResource extends Resource implements HasShieldPermissions
                     ->dateTime(AppHelper::DATE_FORMAT)
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('real_start')
+                    ->label('Start v')
+                    ->dateTime('H:i')
+                    ->placeholder('—'),
                 TextColumn::make('requested_start')
-                    ->label('Start v'),
+                    ->label('Poznámka')
+                    ->limit(20)
+                    ->tooltip(fn (UserEntry $record): string => $record->requested_start ?? ''),
                 IconColumn::make('rent_si')
                     ->label('Půjčít SI')
                     ->icon(fn (int $state): string => match ($state) {

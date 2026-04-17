@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Cron\Jobs\EntryEndsToPay;
 use App\Http\Controllers\Cron\Jobs\ReportEmailEventWeeklyEndsBySport;
 use App\Http\Controllers\Cron\Jobs\ReportEmailUserDebit;
+use App\Http\Controllers\Cron\Jobs\SyncEventStartLists;
 use App\Http\Controllers\Cron\Jobs\UpdateBankTransaction;
 use App\Http\Controllers\Cron\Jobs\UpdateEvent;
 use App\Http\Controllers\Cron\Jobs\UpdateEventWeather;
@@ -72,6 +73,17 @@ class CommonCron extends Controller
             }
         } catch (Exception $e) {
             Log::channel('site')->warning('ERROR ErrorMessage: '.$e->getMessage());
+        }
+
+        /** @description Sync event start lists from ORIS */
+        try {
+            if ($this->runJob('sync_event_start_lists')) {
+                Log::channel('site')->info('START SyncEventStartLists run cron at '.$this->getActualHour());
+                (new SyncEventStartLists())->run();
+                Log::channel('site')->info('STOP SyncEventStartLists run cron at '.$this->getActualHour());
+            }
+        } catch (Exception $e) {
+            Log::channel('site')->warning('ERROR SyncEventStartLists: '.$e->getMessage());
         }
 
         /** @description Bank Accounts sync */

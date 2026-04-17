@@ -42,6 +42,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
@@ -153,6 +154,21 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         return [
             TextColumn::make('class_name')
                 ->label('Kategorie')
+                ->description(function (UserEntry $record): string {
+                    $sportClass = SportClass::query()
+                        ->where('sport_event_id', $record->sport_event_id)
+                        ->where('name', $record->class_name)
+                        ->first();
+                    if ($sportClass === null) {
+                        return '';
+                    }
+                    $parts = array_filter([
+                        $sportClass->distance ? $sportClass->distance . 'km' : null,
+                        $sportClass->climbing ? $sportClass->climbing . 'm' : null,
+                        $sportClass->controls ? $sportClass->controls . 'k' : null,
+                    ]);
+                    return implode(' | ', $parts);
+                })
                 ->searchable()
                 ->sortable(),
             TextColumn::make('userRaceProfile.UserRaceFullName')
@@ -163,30 +179,31 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                         'profiles' => collect([$record->userRaceProfile])->filter(),
                         'size' => 'text-xs'
                     ])
-                )),
-            TextColumn::make('userRaceProfile.user.name')
-                ->label('Uživatel')
-                ->badge()
-                ->color(static function ($state): string {
-                    if ($state === Auth::user()?->name) {
-                        return 'success';
+                ))
+                ->description(function (UserEntry $record): HtmlString {
+                    $name = $record->userRaceProfile?->user?->name;
+                    if ($name === null) {
+                        return new HtmlString('');
                     }
-
-                    return 'gray';
+                    $isCurrentUser = $name === Auth::user()?->name;
+                    $classes = $isCurrentUser
+                        ? 'inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                        : 'inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
+                    return new HtmlString('<span class="' . $classes . '">' . e($name) . '</span>');
                 })
                 ->searchable(),
             TextColumn::make('note')
-                ->label('Poznámka')
+                ->label('Interní poznámka')
                 ->limit(15)
                 ->tooltip(fn (UserEntry $record): string => $record->note ?? ''),
             TextColumn::make('club_note')
                 ->label('Klubová poznámka')
                 ->limit(15)
                 ->tooltip(fn (UserEntry $record): string => $record->club_note ?? ''),
-            TextColumn::make('requested_start')
+            TextColumn::make('real_start')
                 ->label('Start v')
-                ->limit(15)
-                ->tooltip(fn (UserEntry $record): string => $record->requested_start ?? ''),
+                ->dateTime('H:i')
+                ->placeholder('—'),
             TextColumn::make('rent_si')
                 ->label('Půjčit čip'),
             TextColumn::make('entry_stages')
@@ -201,10 +218,16 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->searchable(),
             TextColumn::make('created_at')
                 ->label('Vytvořeno')
-                ->dateTime(AppHelper::DATE_TIME_FORMAT)
+                ->date('d.m.Y')
+                ->description(fn (UserEntry $record): string => $record->created_at?->format('H:i') ?? '')
                 ->searchable()
                 ->sortable(),
         ];
+    }
+
+    public function table(Table $table): Table
+    {
+        return $table->recordClasses('!py-0');
     }
 
     public function getTableRecordsPerPage(): ?int
