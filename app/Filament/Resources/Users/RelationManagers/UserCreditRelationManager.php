@@ -107,7 +107,8 @@ class UserCreditRelationManager extends RelationManager
             ->filters([
                 SelectFilter::make('sport_event_id')
                     ->label('Závod')
-                    ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id')),
+                    ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id'))
+                    ->default(fn (): ?int => request()->integer('sport_event_id') ?: null),
                 Filter::make('created_at')
                     ->schema([
                         DatePicker::make('created_from')
