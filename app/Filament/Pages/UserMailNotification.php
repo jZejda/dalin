@@ -26,6 +26,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Services\CalendarTokenService;
 
 class UserMailNotification extends Page implements HasForms
 {
@@ -58,6 +59,9 @@ class UserMailNotification extends Page implements HasForms
     public ?string $api_key = null;
     public bool $has_api_key = false;
     public bool $show_api_key = false;
+
+    public ?string $calendar_token = null;
+    public bool $has_calendar_token = false;
 
     public function mount(): void
     {
@@ -102,6 +106,11 @@ class UserMailNotification extends Page implements HasForms
         if ($this->has_api_key && $user?->api_key_hash !== null) {
             $this->api_key = $user->api_key_hash;
             $this->show_api_key = true;
+        }
+
+        $this->has_calendar_token = $user->calendar_token !== null;
+        if ($this->has_calendar_token) {
+            $this->calendar_token = $user->calendar_token;
         }
     }
     public function generateApiKey(): void
@@ -170,6 +179,70 @@ class UserMailNotification extends Page implements HasForms
             ->title('Zkopírováno')
             ->success()
             ->body('API klíč byl zkopírován do schránky.')
+            ->send();
+    }
+
+    public function generateCalendarToken(): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $service = new CalendarTokenService();
+        $this->calendar_token = $service->generate($user);
+        $this->has_calendar_token = true;
+
+        Notification::make()
+            ->title('Kalendářový token vygenerován')
+            ->success()
+            ->body('Nový token byl úspěšně vygenerován.')
+            ->send();
+    }
+
+    public function regenerateCalendarToken(): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $service = new CalendarTokenService();
+        $this->calendar_token = $service->regenerate($user);
+        $this->has_calendar_token = true;
+
+        Notification::make()
+            ->title('Kalendářový token přegenerován')
+            ->success()
+            ->body('Starý token byl zneplatněn. Nový token byl úspěšně vygenerován.')
+            ->send();
+    }
+
+    public function revokeCalendarToken(): void
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $service = new CalendarTokenService();
+        $service->revoke($user);
+        $this->calendar_token = null;
+        $this->has_calendar_token = false;
+
+        Notification::make()
+            ->title('Kalendářový token zrušen')
+            ->success()
+            ->body('Token byl úspěšně zrušen.')
+            ->send();
+    }
+
+    public function copyCalendarToken(): void
+    {
+        Notification::make()
+            ->title('Zkopírováno')
+            ->success()
+            ->body('Kalendářový token byl zkopírován do schránky.')
+            ->send();
+    }
+
+    public function copyCalendarUrl(): void
+    {
+        Notification::make()
+            ->title('Zkopírováno')
+            ->success()
+            ->body('Adresa kalendářového kanálu byla zkopírována do schránky.')
             ->send();
     }
 
@@ -346,6 +419,16 @@ class UserMailNotification extends Page implements HasForms
                                         'showApiKey' => $this->show_api_key,
                                         'apiKey' => $this->api_key,
                                     ])
+                            ]),
+                    ]),
+
+                Tab::make('Kalendář')
+                    ->schema([
+                        Section::make('Správa kalendářového tokenu')
+                            ->description('Kalendářový token slouží pro přístup k vašim osobním iCalendar kanálům.')
+                            ->aside()
+                            ->schema([
+                                View::make('filament.pages.components.calendar-token-manager')
                             ]),
                     ]),
             ])
