@@ -17,14 +17,17 @@
 
                         <div>
                             {!!
-                                QrCode::size(120)->generate('SPD*1.0*RN:'
-                                . config('site-config.club.abbr')
-                                . '*ACC:'
-                                . config('site-config.club.iban')
-                                . '*CC:CZK*X-VS:'
-                                . config('site-config.club.extra_membership_fees_prefix')
-                                . Auth::user()->payer_variable_symbol
-                                . '*MSG:MIMORADNY CLENSKY VKLAD')
+                                QrCode::size(120)
+                                    ->backgroundColor(255, 255, 255)
+                                    ->margin(1)
+                                    ->generate('SPD*1.0*RN:'
+                                    . config('site-config.club.abbr')
+                                    . '*ACC:'
+                                    . config('site-config.club.iban')
+                                    . '*CC:CZK*X-VS:'
+                                    . config('site-config.club.extra_membership_fees_prefix')
+                                    . Auth::user()->payer_variable_symbol
+                                    . '*MSG:MIMORADNY CLENSKY VKLAD')
                             !!}
                         </div>
                         @endif
