@@ -36,7 +36,7 @@ test('address method is called instead of addressName to emit LOCATION property'
     expect($found)->toBeTrue();
 });
 
-test('null coordinates are handled safely without producing GEO property', function () {
+test('null coordinates do not produce GEO property in iCal output', function () {
     DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
     SportEvent::factory()->create([
@@ -54,19 +54,14 @@ test('null coordinates are handled safely without producing GEO property', funct
     $events = $service->getEvents(SportEventType::Training);
 
     expect($events)->not->toBeEmpty();
-    
-    $allEventsValid = true;
+
     foreach ($events as $event) {
-        $output = $event->toString();
-        if ($output === '' || empty($output)) {
-            $allEventsValid = false;
-            break;
-        }
+        expect($event->toString())->not->toContain('GEO:0;0');
+        expect($event->toString())->not->toContain('GEO:0.0;0.0');
     }
-    expect($allEventsValid)->toBeTrue();
 });
 
-test('coordinates method is called when coordinates are not null', function () {
+test('real coordinates produce GEO property in iCal output', function () {
     DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
     SportEvent::factory()->create([
@@ -81,8 +76,16 @@ test('coordinates method is called when coordinates are not null', function () {
     DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
     $service = new IcalService();
-    
-    expect(function () use ($service) {
-        $service->getEvents(SportEventType::Race);
-    })->not->toThrow(Exception::class);
+    $events = $service->getEvents(SportEventType::Race);
+
+    expect($events)->not->toBeEmpty();
+
+    $found = false;
+    foreach ($events as $event) {
+        if (str_contains($event->toString(), 'GEO:')) {
+            $found = true;
+            break;
+        }
+    }
+    expect($found)->toBeTrue();
 });
