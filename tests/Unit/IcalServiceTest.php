@@ -89,3 +89,30 @@ test('real coordinates produce GEO property in iCal output', function () {
     }
     expect($found)->toBeTrue();
 });
+
+test('event includes URL property linking to event detail page', function () {
+    DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
+    $sportEvent = SportEvent::factory()->create([
+        'event_type' => SportEventType::Race,
+        'date' => Carbon::now()->addDay(),
+        'cancelled' => false,
+        'discipline_id' => null,
+    ]);
+
+    DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+    $service = new IcalService();
+    $events = $service->getEvents(SportEventType::Race);
+
+    expect($events)->not->toBeEmpty();
+
+    $found = false;
+    foreach ($events as $event) {
+        if (str_contains($event->toString(), '/admin/sport-events/')) {
+            $found = true;
+            break;
+        }
+    }
+    expect($found)->toBeTrue();
+});

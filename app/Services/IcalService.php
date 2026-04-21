@@ -95,7 +95,8 @@ final class IcalService
                 ->startsAt($dateFrom)
                 ->endsAt($dateEnd)
                 ->address($sportEvent->place ?? 'N/A')
-                ->classification(Classification::public());
+                ->classification(Classification::public())
+                ->url(route('filament.admin.resources.sport-events.entry', ['record' => $sportEvent->id]));
 
             if ($sportEvent->gps_lat !== null && $sportEvent->gps_lon !== null) {
                 $event->coordinates((float) $sportEvent->gps_lat, (float) $sportEvent->gps_lon);
