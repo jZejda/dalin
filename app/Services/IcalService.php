@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\EntryStatus;
 use App\Enums\SportEventType;
 use App\Models\SportEvent;
+use App\Models\User;
+use App\Models\UserEntry;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Spatie\IcalendarGenerator\Components\Calendar;
@@ -32,15 +35,33 @@ final class IcalService
             ->event($this->getEvents(SportEventType::Training));
     }
 
+    public function getPersonalRaceCalendar(User $user): Calendar
+    {
+        return Calendar::create()
+            ->name(config('site-config.club.abbr').' - Moje závody')
+            ->description('Kalendař závodů na tento a následujici rok — pouze akce kde jsi přihlášen/a.')
+            ->event($this->getEvents(SportEventType::Race, $user));
+    }
+
+    public function getPersonalTrainingCalendar(User $user): Calendar
+    {
+        return Calendar::create()
+            ->name(config('site-config.club.abbr').' - Moje tréninky')
+            ->description('Kalendař tréninků na tento a následujici rok — pouze akce kde jsi přihlášen/a.')
+            ->event($this->getEvents(SportEventType::Training, $user));
+    }
+
     /**
      * @return Event[]
      */
-    public function getEvents(SportEventType $type): array
+    public function getEvents(SportEventType $type, ?User $user = null): array
     {
         $icalEvents = [];
 
         /** @var Collection<int, SportEvent> $sportEvents */
-        $sportEvents = $this->getEventByType($type);
+        $sportEvents = $user !== null
+            ? $this->getEventsByUser($user, $type)
+            : $this->getEventByType($type);
 
         foreach ($sportEvents as $sportEvent) {
 
@@ -111,6 +132,26 @@ final class IcalService
     private function getEventByType(SportEventType $type): Collection
     {
         return SportEvent::query()
+            ->where('event_type', '=', $type)
+            ->where('date', '>', Carbon::now()->startOfYear())
+            ->where('date', '<', Carbon::now()->endOfYear()->addYear())
+            ->where('cancelled', false)
+            ->get();
+    }
+
+    /**
+     * @return Collection<int, SportEvent>
+     */
+    private function getEventsByUser(User $user, SportEventType $type): Collection
+    {
+        $profileIds = $user->userRaceProfiles()->pluck('id');
+        $sportEventIds = UserEntry::query()
+            ->whereIn('user_race_profile_id', $profileIds)
+            ->where('entry_status', '!=', EntryStatus::Cancel)
+            ->pluck('sport_event_id');
+
+        return SportEvent::query()
+            ->whereIn('id', $sportEventIds)
             ->where('event_type', '=', $type)
             ->where('date', '>', Carbon::now()->startOfYear())
             ->where('date', '<', Carbon::now()->endOfYear()->addYear())
