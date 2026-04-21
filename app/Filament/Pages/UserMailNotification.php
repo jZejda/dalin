@@ -424,8 +424,8 @@ class UserMailNotification extends Page implements HasForms
 
                 Tab::make('Kalendář')
                     ->schema([
-                        Section::make('Správa kalendářového tokenu')
-                            ->description('Kalendářový token slouží pro přístup k vašim osobním iCalendar kanálům.')
+                        Section::make('Kalendářové feedy')
+                            ->description('Veřejné feedy jsou dostupné bez přihlášení. Osobní feedy vyžadují vygenerování tokenu a zobrazují pouze vaše závody a tréninky. Feedy lze přidat do Google Calendar, Apple Calendar a dalších aplikací podporujících iCal.')
                             ->aside()
                             ->schema([
                                 View::make('filament.pages.components.calendar-token-manager')

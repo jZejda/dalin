@@ -1,4 +1,61 @@
 <div class="space-y-4">
+    <!-- Public calendar feeds -->
+    <div class="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
+        <div class="flex items-center gap-2 mb-3">
+            <svg class="w-5 h-5 text-success-600 dark:text-success-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"></path>
+            </svg>
+            <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                Veřejné kalendáře
+            </span>
+        </div>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            Veřejné iCal feedy jsou dostupné bez přihlášení. Přidejte je do Google Calendar, Apple Calendar nebo jiné aplikace.
+        </p>
+
+        <div class="space-y-3">
+            <div>
+                <label class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
+                    Závody (races)
+                </label>
+                <div class="flex gap-2">
+                    <div class="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-2 font-mono text-xs break-all">
+                        {{ url('/api/feed/kalendar/zavody/all/') }}
+                    </div>
+                    <button
+                        type="button"
+                        onclick="navigator.clipboard.writeText('{{ url('/api/feed/kalendar/zavody/all/') }}'); $wire.call('copyCalendarUrl')"
+                        class="flex-shrink-0 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <label class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 block">
+                    Tréninky (trainings)
+                </label>
+                <div class="flex gap-2">
+                    <div class="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-2 font-mono text-xs break-all">
+                        {{ url('/api/feed/kalendar/treninky/all/') }}
+                    </div>
+                    <button
+                        type="button"
+                        onclick="navigator.clipboard.writeText('{{ url('/api/feed/kalendar/treninky/all/') }}'); $wire.call('copyCalendarUrl')"
+                        class="flex-shrink-0 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @if($this->has_calendar_token)
         <div class="space-y-3">
             <div class="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
