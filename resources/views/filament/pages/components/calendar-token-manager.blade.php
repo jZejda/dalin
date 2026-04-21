@@ -1,3 +1,10 @@
+@php
+    $publicRacesUrl = url('/api/feed/kalendar/zavody/all/');
+    $publicTrainingsUrl = url('/api/feed/kalendar/treninky/all/');
+    $publicRacesWebcal = str_replace(['https://', 'http://'], 'webcal://', $publicRacesUrl);
+    $publicTrainingsWebcal = str_replace(['https://', 'http://'], 'webcal://', $publicTrainingsUrl);
+@endphp
+
 <div class="space-y-4">
     <!-- Public calendar feeds -->
     <div class="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
@@ -31,6 +38,28 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                         </svg>
                     </button>
+                    <a
+                        href="{{ $publicRacesWebcal }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Přidat do kalendáře"
+                        class="flex-shrink-0 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </a>
+                    <a
+                        href="https://calendar.google.com/calendar/render?cid={{ urlencode($publicRacesWebcal) }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Přidat do Google Kalendáře"
+                        class="flex-shrink-0 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+                    >
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.316 5.684H24v12.632h-5.684V5.684zM5.684 24v-5.684h12.632V24H5.684zM18.316 5.684V0H5.684v5.684h12.632zM5.684 18.316H0V5.684h5.684v12.632zM7.895 14.947l1.5-1.263c.5-.421.868-.789.868-1.342 0-.71-.553-1.237-1.368-1.237-.658 0-1.132.316-1.5.816l-1.21-.816c.553-.816 1.395-1.395 2.763-1.395 1.605 0 2.763.947 2.763 2.316 0 .947-.5 1.658-1.289 2.316l-.921.763h2.289v1.421H7.895v-1.579zm6.658-3.684l-1.132.816-.71-1.079 2.184-1.579h1.289v8.5h-1.631v-6.658z"></path>
+                        </svg>
+                    </a>
                 </div>
             </div>
 
@@ -51,12 +80,40 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                         </svg>
                     </button>
+                    <a
+                        href="{{ $publicTrainingsWebcal }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Přidat do kalendáře"
+                        class="flex-shrink-0 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </a>
+                    <a
+                        href="https://calendar.google.com/calendar/render?cid={{ urlencode($publicTrainingsWebcal) }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Přidat do Google Kalendáře"
+                        class="flex-shrink-0 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+                    >
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.316 5.684H24v12.632h-5.684V5.684zM5.684 24v-5.684h12.632V24H5.684zM18.316 5.684V0H5.684v5.684h12.632zM5.684 18.316H0V5.684h5.684v12.632zM7.895 14.947l1.5-1.263c.5-.421.868-.789.868-1.342 0-.71-.553-1.237-1.368-1.237-.658 0-1.132.316-1.5.816l-1.21-.816c.553-.816 1.395-1.395 2.763-1.395 1.605 0 2.763.947 2.763 2.316 0 .947-.5 1.658-1.289 2.316l-.921.763h2.289v1.421H7.895v-1.579zm6.658-3.684l-1.132.816-.71-1.079 2.184-1.579h1.289v8.5h-1.631v-6.658z"></path>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
     @if($this->has_calendar_token)
+        @php
+            $privateRacesUrl = url('/api/feed/kalendar/zavody/me') . '/' . $this->calendar_token;
+            $privateTrainingsUrl = url('/api/feed/kalendar/treninky/me') . '/' . $this->calendar_token;
+            $privateRacesWebcal = str_replace(['https://', 'http://'], 'webcal://', $privateRacesUrl);
+            $privateTrainingsWebcal = str_replace(['https://', 'http://'], 'webcal://', $privateTrainingsUrl);
+        @endphp
         <div class="space-y-3">
             <div class="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg p-4">
                 <div class="flex items-center gap-2 mb-3">
@@ -89,6 +146,28 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                                 </svg>
                             </button>
+                            <a
+                                href="{{ $privateRacesWebcal }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="Přidat do kalendáře"
+                                class="flex-shrink-0 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </a>
+                            <a
+                                href="https://calendar.google.com/calendar/render?cid={{ urlencode($privateRacesWebcal) }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="Přidat do Google Kalendáře"
+                                class="flex-shrink-0 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+                            >
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M18.316 5.684H24v12.632h-5.684V5.684zM5.684 24v-5.684h12.632V24H5.684zM18.316 5.684V0H5.684v5.684h12.632zM5.684 18.316H0V5.684h5.684v12.632zM7.895 14.947l1.5-1.263c.5-.421.868-.789.868-1.342 0-.71-.553-1.237-1.368-1.237-.658 0-1.132.316-1.5.816l-1.21-.816c.553-.816 1.395-1.395 2.763-1.395 1.605 0 2.763.947 2.763 2.316 0 .947-.5 1.658-1.289 2.316l-.921.763h2.289v1.421H7.895v-1.579zm6.658-3.684l-1.132.816-.71-1.079 2.184-1.579h1.289v8.5h-1.631v-6.658z"></path>
+                                </svg>
+                            </a>
                         </div>
                     </div>
 
@@ -109,6 +188,28 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                                 </svg>
                             </button>
+                            <a
+                                href="{{ $privateTrainingsWebcal }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="Přidat do kalendáře"
+                                class="flex-shrink-0 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                            </a>
+                            <a
+                                href="https://calendar.google.com/calendar/render?cid={{ urlencode($privateTrainingsWebcal) }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="Přidat do Google Kalendáře"
+                                class="flex-shrink-0 px-3 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+                            >
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M18.316 5.684H24v12.632h-5.684V5.684zM5.684 24v-5.684h12.632V24H5.684zM18.316 5.684V0H5.684v5.684h12.632zM5.684 18.316H0V5.684h5.684v12.632zM7.895 14.947l1.5-1.263c.5-.421.868-.789.868-1.342 0-.71-.553-1.237-1.368-1.237-.658 0-1.132.316-1.5.816l-1.21-.816c.553-.816 1.395-1.395 2.763-1.395 1.605 0 2.763.947 2.763 2.316 0 .947-.5 1.658-1.289 2.316l-.921.763h2.289v1.421H7.895v-1.579zm6.658-3.684l-1.132.816-.71-1.079 2.184-1.579h1.289v8.5h-1.631v-6.658z"></path>
+                                </svg>
+                            </a>
                         </div>
                     </div>
                 </div>
