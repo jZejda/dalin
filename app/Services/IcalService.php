@@ -94,9 +94,12 @@ final class IcalService
                 ->createdAt($sportEvent->date)
                 ->startsAt($dateFrom)
                 ->endsAt($dateEnd)
-                ->addressName($sportEvent->place ?? 'N/A')
-                ->coordinates((float) $sportEvent->gps_lat, (float) $sportEvent->gps_lon)
+                ->address($sportEvent->place ?? 'N/A')
                 ->classification(Classification::public());
+
+            if ($sportEvent->gps_lat !== null && $sportEvent->gps_lon !== null) {
+                $event->coordinates((float) $sportEvent->gps_lat, (float) $sportEvent->gps_lon);
+            }
 
             if ($fullDay) {
                 $event->fullDay();
