@@ -128,7 +128,7 @@ final class OrisApiService
 
             /** @description Not update if the event exists */
             if ($newEvent) {
-                $eventModel->name = $orisData->Name ?? 'N/A';
+                $eventModel->name = $orisData->Name;
             }
             $eventModel->oris_id = $eventId;
             $eventModel->date = $orisData->Date;

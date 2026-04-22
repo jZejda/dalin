@@ -35,7 +35,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withSchedule(function (Schedule $schedule) {
-        $schedule->command('queue:work --stop-when-empty')->everyFiveMinutes();
+        $schedule->exec(PHP_BINARY . ' ' . base_path('artisan') . ' queue:work --stop-when-empty')->everyFiveMinutes();
         $schedule->job(new SendNewPostsEmailJob())->everyThirtyMinutes();
         $schedule->job(new SendSportEventEntryEndingEmailJob())->hourly();
     })
