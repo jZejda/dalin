@@ -155,6 +155,7 @@ class SportEvent extends Model
         return $this->hasMany(SportService::class, 'sport_event_id', 'id');
     }
 
+    /** @return HasMany<UserEntry, $this> */
     public function userEntry(): HasMany
     {
         return $this->HasMany(UserEntry::class, 'sport_event_id', 'id');

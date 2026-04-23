@@ -141,7 +141,6 @@ final class OrisApiService
 
             $eventModel->entry_date_1 = strlen($orisData->EntryDate1) !== 0 ? $orisData->EntryDate1 : null;
 
-            //dd(!$eventModel->dont_update_excluded);
             if ($newEvent || ! $eventModel->dont_update_excluded) {
                 $eventModel->entry_date_2 = strlen($orisData->EntryDate2) !== 0 ? $orisData->EntryDate2 : null;
                 $eventModel->entry_date_3 = strlen($orisData->EntryDate3) !== 0 ? $orisData->EntryDate3 : null;
