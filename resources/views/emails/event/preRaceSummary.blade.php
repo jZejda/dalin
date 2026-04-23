@@ -7,9 +7,11 @@
 
 ## Souhrn před závodem: {{ $event->name }}
 
----
+{{ $event->alt_name }}
 
+@component('mail::divider')
 ### Informace o akci
+@endcomponent
 
 @component('mail::table')
 | | |
@@ -26,8 +28,8 @@
 ### Závodní profily
 
 @component('mail::table')
-| Reg. číslo | Jméno | Kategorie | Start | +min | Délka | Kontroly | Převýšení |
-|:---|:---|:---|:---|:---|:---|:---|:---|
+| Reg. číslo | Jméno | Kategorie | +min | Délka | Kontroly | Převýšení |
+|:---|:---|:---|:---|:---|:---|:---|
 @foreach($entries as $entry)
 @php
     $profile = $entry->userRaceProfile;
@@ -45,7 +47,7 @@
     }
     $sportClass = $event->sportClasses->firstWhere('class_definition_id', $entry->class_definition_id);
 @endphp
-| {{ $profile?->reg_number ?? '–' }} | {{ $profile?->first_name }} {{ $profile?->last_name }} | {{ $entry->class_name ?? '–' }} | {{ $startDisplay ?? '–' }} | {{ $relativeMinutes !== null ? ($relativeMinutes >= 0 ? '+'.$relativeMinutes : $relativeMinutes) : '–' }} | {{ $sportClass?->distance ? $sportClass->distance.' km' : '–' }} | {{ $sportClass?->controls ?? '–' }} | {{ $sportClass?->climbing ? $sportClass->climbing.' m' : '–' }} |
+| {{ $profile?->reg_number ?? '–' }} | {{ $profile?->first_name }} {{ $profile?->last_name }} | {{ $entry->class_name ?? '–' }} | {{ $relativeMinutes !== null ? ($relativeMinutes >= 0 ? '+'.$relativeMinutes : $relativeMinutes) : '–' }} | {{ $sportClass?->distance ? $sportClass->distance.' km' : '–' }} | {{ $sportClass?->controls ?? '–' }} | {{ $sportClass?->climbing ? $sportClass->climbing.' m' : '–' }} |
 @endforeach
 @endcomponent
 
@@ -68,7 +70,7 @@
 | Název | Odkaz |
 |:---|:---|
 @foreach($event->sportEventLinks as $link)
-| {{ $link->name_cz ?? $link->name_en ?? '–' }} | @if($link->source_url)[{{ $link->name_cz ?? $link->source_url }}]({{ $link->source_url }})@else–@endif |
+| {{ $link->name_cz ?? $link->description_cz ?? '–' }} | @if($link->source_url)[{{ $link->name_cz ?? $link->source_url }}]({{ $link->source_url }})@else–@endif |
 @endforeach
 @endcomponent
 @endif

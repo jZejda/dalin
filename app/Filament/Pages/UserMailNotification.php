@@ -287,6 +287,15 @@ class UserMailNotification extends Page implements HasForms
                                     ->minValue(1)
                                     ->default(4),
                             ]),
+                        Section::make('Souhrn závodů u kterých končí termín přihlášek následující týden')
+                            ->description('V nastaveni definujete, které sporty budou v e-mailu souhrnně uvedeny. Souhrn obsahuje závody u kterých končí termín přihlášek následující týden.')
+                            ->aside()
+                            ->columns(2)
+                            ->schema([
+                                CheckboxList::make('week_report_by_sport')
+                                    ->label('Sport')
+                                    ->options(SportList::all()->pluck('short_name', 'id')),
+                            ]),
                         Section::make('Ostatní e-maily')
                             ->description('Souhrný e-mail před závodem obsahuje informace o akci, startovní časy přihlášených závodníků a parametry jejich kategorií.')
                             ->aside()
@@ -308,15 +317,6 @@ class UserMailNotification extends Page implements HasForms
                                     ->minValue(0)
                                     ->maxValue(23)
                                     ->default(self::DEFAULT_TRIGGER_EVENT),
-                            ]),
-                        Section::make('Souhrn závodů u kterých končí termín přihlášek následující týden')
-                            ->description('V nastaveni definujete, které sporty budou v e-mailu souhrnně uvedeny. Souhrn obsahuje závody u kterých končí termín přihlášek následující týden.')
-                            ->aside()
-                            ->columns(2)
-                            ->schema([
-                                CheckboxList::make('week_report_by_sport')
-                                    ->label('Sport')
-                                    ->options(SportList::all()->pluck('short_name', 'id')),
                             ]),
                     ]),
 
