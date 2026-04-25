@@ -1,6 +1,5 @@
 @php
     use App\Services\OrisApiService;
-    use Illuminate\Support\Carbon;
 @endphp
 
 <x-mail::message>
@@ -36,14 +35,19 @@
     $startRaw = $entry->requested_start ?? ($entry->real_start?->format('H:i:s'));
     $startDisplay = $startRaw ? \Illuminate\Support\Str::substr($startRaw, 0, 5) : null;
     $relativeMinutes = null;
+    $parseTimeToMinutes = static function (string $time): ?int {
+        $parts = explode(':', trim($time));
+        if (count($parts) < 2) {
+            return null;
+        }
+        return (int) $parts[0] * 60 + (int) $parts[1];
+    };
     if ($startRaw !== null && $event->start_time !== null) {
-        try {
-            $fmt = strlen(trim($startRaw)) === 5 ? 'H:i' : 'H:i:s';
-            $fmtEvent = strlen(trim($event->start_time)) === 5 ? 'H:i' : 'H:i:s';
-            $entryCarbon = Carbon::createFromFormat($fmt, trim($startRaw));
-            $eventCarbon = Carbon::createFromFormat($fmtEvent, trim($event->start_time));
-            $relativeMinutes = (int) $eventCarbon->diffInMinutes($entryCarbon, false);
-        } catch (\Exception) {}
+        $entryMinutes = $parseTimeToMinutes($startRaw);
+        $eventMinutes = $parseTimeToMinutes($event->start_time);
+        if ($entryMinutes !== null && $eventMinutes !== null) {
+            $relativeMinutes = $entryMinutes - $eventMinutes;
+        }
     }
     $sportClass = $event->sportClasses->firstWhere('class_definition_id', $entry->class_definition_id);
 @endphp

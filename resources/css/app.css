@@ -53,6 +53,10 @@
     @apply mt-0;
 }
 
+.app-front-content .lead {
+    font-size: 1.2em;
+}
+
 .app-front-content img {
     max-width: 600px;
     height: auto;
@@ -192,8 +196,8 @@
 
 @media (min-width: 768px) {
     .app-front-content .grid-layout {
-        @apply grid;
-        grid-template-columns: 1fr 1fr;
+        display: grid;
+        grid-template-columns: var(--cols, 1fr 1fr);
         gap: 1rem;
     }
 }
@@ -204,8 +208,7 @@
 
 @media (min-width: 768px) {
     .app-front-content .grid-layout-col {
-        @apply block;
-        width: 100%;
+        grid-column: var(--col-span, auto);
     }
 }
 

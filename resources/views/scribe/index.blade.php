@@ -128,7 +128,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: April 23, 2026</li>
+        <li>Last updated: April 24, 2026</li>
     </ul>
 </div>
 
@@ -381,8 +381,8 @@ $response = $client-&gt;get(
             'per_page' =&gt; '20',
         ],
         'json' =&gt; [
-            'from' =&gt; '2026-04-23',
-            'to' =&gt; '2026-04-23',
+            'from' =&gt; '2026-04-24',
+            'to' =&gt; '2026-04-24',
             'per_page' =&gt; 1,
         ],
     ]
@@ -397,8 +397,8 @@ print_r(json_decode((string) $body));</code></pre></div>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"from\": \"2026-04-23\",
-    \"to\": \"2026-04-23\",
+    \"from\": \"2026-04-24\",
+    \"to\": \"2026-04-24\",
     \"per_page\": 1
 }"
 </code></pre></div>
@@ -424,8 +424,8 @@ const headers = {
 };
 
 let body = {
-    "from": "2026-04-23",
-    "to": "2026-04-23",
+    "from": "2026-04-24",
+    "to": "2026-04-24",
     "per_page": 1
 };
 
@@ -613,10 +613,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-user-entry"
-               value="2026-04-23"
+               value="2026-04-24"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-04-23</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-04-24</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
@@ -625,10 +625,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="to"                data-endpoint="GETapi-v1-user-entry"
-               value="2026-04-23"
+               value="2026-04-24"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-04-23</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-04-24</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
@@ -1501,7 +1501,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/page/16';
+$url = 'http://localhost/api/v1/page/1';
 $response = $client-&gt;get(
     $url,
     [
@@ -1517,14 +1517,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/page/16" \
+    --get "http://localhost/api/v1/page/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/page/16"
+    "http://localhost/api/v1/page/1"
 );
 
 const headers = {
@@ -1710,10 +1710,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="number" style="display: none"
                step="any"               name="page_id"                data-endpoint="GETapi-v1-page--page_id-"
-               value="16"
+               value="1"
                data-component="url">
     <br>
-<p>The ID of the page. Example: <code>16</code></p>
+<p>The ID of the page. Example: <code>1</code></p>
             </div>
                     </form>
 
@@ -1751,8 +1751,8 @@ $response = $client-&gt;get(
             'per_page' =&gt; '20',
         ],
         'json' =&gt; [
-            'from' =&gt; '2026-04-23',
-            'to' =&gt; '2026-04-23',
+            'from' =&gt; '2026-04-24',
+            'to' =&gt; '2026-04-24',
             'class_definition_id' =&gt; 16,
             'per_page' =&gt; 22,
         ],
@@ -1768,8 +1768,8 @@ print_r(json_decode((string) $body));</code></pre></div>
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"from\": \"2026-04-23\",
-    \"to\": \"2026-04-23\",
+    \"from\": \"2026-04-24\",
+    \"to\": \"2026-04-24\",
     \"class_definition_id\": 16,
     \"per_page\": 22
 }"
@@ -1798,8 +1798,8 @@ const headers = {
 };
 
 let body = {
-    "from": "2026-04-23",
-    "to": "2026-04-23",
+    "from": "2026-04-24",
+    "to": "2026-04-24",
     "class_definition_id": 16,
     "per_page": 22
 };
@@ -2022,10 +2022,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-sport-event"
-               value="2026-04-23"
+               value="2026-04-24"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-04-23</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-04-24</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
@@ -2034,10 +2034,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="to"                data-endpoint="GETapi-v1-sport-event"
-               value="2026-04-23"
+               value="2026-04-24"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-04-23</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-04-24</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>event_type</code></b>&nbsp;&nbsp;
