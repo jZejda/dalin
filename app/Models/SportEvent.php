@@ -65,6 +65,26 @@ class SportEvent extends Model
 {
     use HasFactory;
 
+    protected static function booted(): void
+    {
+        static::created(function (self $sportEvent): void {
+            if (! $sportEvent->isRelayDiscipline()) {
+                return;
+            }
+
+            RelayTeam::query()->firstOrCreate(
+                [
+                    'sport_event_id' => $sportEvent->id,
+                    'name' => 'Štafeta 1',
+                ],
+                [
+                    'relay_type' => $sportEvent->sportDiscipline?->short_name ?? 'ST',
+                    'slots_count' => 3,
+                ]
+            );
+        });
+    }
+
     /** @var list<string> */
     protected $fillable = [
         'name',
@@ -155,6 +175,12 @@ class SportEvent extends Model
         return $this->hasMany(SportService::class, 'sport_event_id', 'id');
     }
 
+    /** @return HasMany<RelayTeam, $this> */
+    public function relayTeams(): HasMany
+    {
+        return $this->hasMany(RelayTeam::class, 'sport_event_id', 'id');
+    }
+
     /** @return HasMany<UserEntry, $this> */
     public function userEntry(): HasMany
     {
@@ -232,5 +258,20 @@ class SportEvent extends Model
             ($this->last_calculate_cost !== null ? ' | (Náklady naposled : '.$this->last_calculate_cost->format(
                 AppHelper::DATE_TIME_FORMAT
             ).')' : '');
+    }
+
+    public function isRelayDiscipline(): bool
+    {
+        if ($this->relationLoaded('sportDiscipline') && $this->sportDiscipline !== null) {
+            return $this->sportDiscipline->isRelayDiscipline();
+        }
+
+        if ($this->discipline_id === null) {
+            return false;
+        }
+
+        $discipline = SportDiscipline::query()->find($this->discipline_id);
+
+        return $discipline?->isRelayDiscipline() ?? false;
     }
 }

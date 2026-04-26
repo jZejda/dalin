@@ -34,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @property-read SportClassDefinition|null $sportClassDefinition
  * @property-read SportEvent|null $sportEvent
  * @property-read UserRaceProfile|null $userRaceProfile
+ * @property-read RelayTeamMember|null $relayTeamMember
  */
 class UserEntry extends Model
 {
@@ -80,5 +81,10 @@ class UserEntry extends Model
     public function userRaceProfile(): HasOne
     {
         return $this->hasOne(UserRaceProfile::class, 'id', 'user_race_profile_id');
+    }
+
+    public function relayTeamMember(): HasOne
+    {
+        return $this->hasOne(RelayTeamMember::class, 'user_entry_id', 'id');
     }
 }
