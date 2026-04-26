@@ -21,4 +21,12 @@ use Illuminate\Support\Carbon;
 class SportDiscipline extends Model
 {
     use HasFactory;
+
+    /** @var list<string> */
+    public const RELAY_SHORT_NAMES = ['ST', 'SS', 'DR'];
+
+    public function isRelayDiscipline(): bool
+    {
+        return in_array($this->short_name, self::RELAY_SHORT_NAMES, true);
+    }
 }
