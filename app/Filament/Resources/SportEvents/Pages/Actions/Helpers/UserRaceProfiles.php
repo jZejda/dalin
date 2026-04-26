@@ -54,6 +54,10 @@ class UserRaceProfiles
             //Non ORIS race
             $relevantUserRaceProfile = $this->getRelevantRaceProfiles($registerAnyone);
 
+            if ($sportEvent->isRelayDiscipline()) {
+                return $this->formatProfilesWithStyling($relevantUserRaceProfile, 'id');
+            }
+
             // Has allready signed
             $userRaceProfiles = DB::table('user_race_profiles as urp')
                 ->select(['urp.id'])

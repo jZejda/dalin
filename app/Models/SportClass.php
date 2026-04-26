@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
@@ -53,4 +54,9 @@ class SportClass extends Model
         return $this->hasOne(SportClassDefinition::class, 'id', 'class_definition_id');
     }
 
+    /** @return HasMany<RelayTeam, $this> */
+    public function relayTeams(): HasMany
+    {
+        return $this->hasMany(RelayTeam::class, 'sport_class_id', 'id');
+    }
 }
