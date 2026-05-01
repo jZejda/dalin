@@ -148,7 +148,19 @@ parameters:
 			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
 			identifier: argument.type
 			count: 2
+			path: app/Filament/Forms/Components/RichEditor/RichContentCustomBlocks/ContentDividerBlock.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
 			path: app/Filament/Forms/Components/RichEditor/RichContentCustomBlocks/HeroBlock.php
+
+		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/Forms/Components/RichEditor/RichContentCustomBlocks/SimpleDividerBlock.php
 
 		-
 			message: '#^Cannot call method hasRole\(\) on App\\Models\\User\|null\.$#'

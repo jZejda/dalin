@@ -5,6 +5,8 @@ use App\Enums\ContentFormat;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\HeroBlock;
 use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ContentDividerBlock;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\SimpleDividerBlock;
 
     /** @var Page $page */
 ?>
@@ -38,6 +40,8 @@ use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
                 {!! RichContentRenderer::make($page->content)->customBlocks([
                         HeroBlock::class,
                         AlertBlock::class,
+                        ContentDividerBlock::class,
+                        SimpleDividerBlock::class,
                     ])
                     ->fileAttachmentsDisk('rich-editor-attachments')
                     ->fileAttachmentsVisibility('public')

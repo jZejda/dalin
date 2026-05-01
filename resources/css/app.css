@@ -10,7 +10,7 @@
 }
 
 .app-front-content h2 {
-    @apply mt-6 mb-4 text-3xl font-extrabold dark:text-white font-extrabold leading-none tracking-tight;
+    @apply mt-6 mb-4 text-3xl font-extrabold dark:text-white leading-none tracking-tight;
 }
 
 .app-front-content h3 {
@@ -75,11 +75,11 @@
 }
 
 .app-front-content table th {
-    @apply border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-left font-semibold dark:text-white;
+    @apply border-y border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-left font-semibold dark:text-white;
 }
 
 .app-front-content table td {
-    @apply border border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-white;
+    @apply border-y border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-white;
 }
 
 .app-front-content table tr:nth-child(even) {
@@ -218,11 +218,11 @@
 }
 
 .app-front-content .table-auto th {
-    @apply border border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-left font-semibold dark:text-white;
+    @apply border-y border-gray-300 dark:border-gray-600 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-left font-semibold dark:text-white;
 }
 
 .app-front-content .table-auto td {
-    @apply border border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-white;
+    @apply border-y border-gray-300 dark:border-gray-600 px-4 py-2 dark:text-white;
 }
 
 .app-front-content .table-auto tr:nth-child(even) {
@@ -363,6 +363,81 @@
 
 .alert-preview-default .alert-preview-type {
     @apply bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200;
+}
+
+/* Content Divider Block Styles */
+.content-divider-block {
+    @apply my-8;
+}
+
+.content-divider-separator {
+    font-size: 0.75rem;
+    @apply block uppercase font-semibold tracking-widest text-yellow-500 dark:text-yellow-400 mb-1;
+}
+
+.content-divider-heading {
+    font-size: 2rem;
+    @apply block font-bold text-gray-800 dark:text-gray-100 leading-none m-0 p-0;
+}
+
+.app-front-content .content-divider-heading {
+    @apply mt-0 mb-0;
+}
+
+.content-divider-line {
+    @apply h-0.5 bg-yellow-500 dark:bg-yellow-400 mt-2;
+}
+
+/* Content Divider Preview Styles */
+.content-divider-preview {
+    @apply border-2 border-dashed border-gray-200 dark:border-gray-700 px-3 pt-3 pb-2 rounded my-2;
+}
+
+.content-divider-preview-separator {
+    font-size: 0.6rem;
+    @apply block uppercase font-semibold tracking-widest text-yellow-500 dark:text-yellow-400 mb-0.5;
+}
+
+.content-divider-preview-heading {
+    font-size: 1rem;
+    @apply block font-bold text-gray-800 dark:text-gray-100 leading-none;
+}
+
+.content-divider-preview-line {
+    @apply h-0.5 bg-yellow-500 dark:bg-yellow-400 mt-1.5;
+}
+
+/* Simple Divider Block Styles */
+.simple-divider-block,
+.simple-divider-preview {
+    @apply flex items-center gap-3 my-4;
+}
+
+.simple-divider-marker {
+    width: 2rem;
+    height: 2rem;
+    @apply shrink-0;
+}
+
+.simple-divider-marker-left {
+    fill: white;
+}
+
+.dark .simple-divider-marker-left {
+    fill: #111827;
+}
+
+.simple-divider-marker-number {
+    fill: #374151;
+}
+
+.dark .simple-divider-marker-number {
+    fill: white;
+}
+
+.simple-divider-heading {
+    font-size: 1.6rem;
+    @apply text-gray-700 dark:text-gray-300 tracking-tighter font-bold;
 }
 
 @tailwind utilities;

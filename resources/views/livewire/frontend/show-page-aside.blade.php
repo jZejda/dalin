@@ -1,7 +1,13 @@
 @php
     use App\Models\Page;
+    use App\Enums\ContentFormat;
     use App\Shared\Entities\FrontendLinks;
     use App\Models\SportEventExport;
+    use Filament\Forms\Components\RichEditor\RichContentRenderer;
+    use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\HeroBlock;
+    use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
+    use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ContentDividerBlock;
+    use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\SimpleDividerBlock;
 
     /** @var Page $page */
     /** @var Page[] $relatedPages */
@@ -58,7 +64,21 @@
             </aside>
             <main role="main" class="w-full sm:w-2/3 md:w-3/4 px-4 app-front-content">
                 <article class="pt-0">
-                    <p class="dark:text-white">{{ Markdown::parse($page->content) }}</p>
+                    @if($page->content_format === ContentFormat::Html)
+                        <p class="dark:text-white">{!! $page->content !!}</p>
+                    @elseif($page->content_format === ContentFormat::TipTapJson)
+                        {!! RichContentRenderer::make($page->content)->customBlocks([
+                                HeroBlock::class,
+                                AlertBlock::class,
+                                ContentDividerBlock::class,
+                                SimpleDividerBlock::class,
+                            ])
+                            ->fileAttachmentsDisk('rich-editor-attachments')
+                            ->fileAttachmentsVisibility('public')
+                            ->toUnsafeHtml() !!}
+                    @else
+                        <p class="dark:text-white">{{ Markdown::parse($page->content) }}</p>
+                    @endif
                 </article>
             </main>
         </div>

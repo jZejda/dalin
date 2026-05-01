@@ -1,6 +1,12 @@
 @php
     use Carbon\Carbon;
-    use App\Models\Page
+    use App\Models\Page;
+    use App\Enums\ContentFormat;
+    use Filament\Forms\Components\RichEditor\RichContentRenderer;
+    use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\HeroBlock;
+    use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
+    use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ContentDividerBlock;
+    use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\SimpleDividerBlock;
 
     /** @var Page $page */
 @endphp
@@ -14,10 +20,12 @@
 <div class="py-4 md:py-8 bg-[url(https://abmbrno.cz/images/topography1.svg)] bg-slate-950 text-gray-700 dark:text-gray-300">
     <div class="container mx-auto">
         <div class="ml-3 text-2xl md:text-4xl bg-gradient-to-r from-yellow-400 to-amber-200 inline-block text-transparent bg-clip-text font-extrabold">
-            @if($page->content_format === 1)
+            @if($page->content_format === ContentFormat::Html)
                 {!! $page->title !!}
-            @elseif($page->content_format === 2)
+            @elseif($page->content_format === ContentFormat::Markdown)
                 {{ Markdown::parse($page->title) }}
+            @else
+                {{ $page->title }}
             @endif
         </div>
 
@@ -26,12 +34,22 @@
 
 <div class="container mx-auto app-front-content mb-10">
     <div class="mx-5">
-        @if($page->content_format === 1)
+        @if($page->content_format === ContentFormat::Html)
             <p>{!! $page->content !!}</p>
-        @elseif($page->content_format === 2)
+        @elseif($page->content_format === ContentFormat::TipTapJson)
+            {!! RichContentRenderer::make($page->content)->customBlocks([
+                    HeroBlock::class,
+                    AlertBlock::class,
+                    ContentDividerBlock::class,
+                    SimpleDividerBlock::class,
+                ])
+                ->fileAttachmentsDisk('rich-editor-attachments')
+                ->fileAttachmentsVisibility('public')
+                ->toUnsafeHtml() !!}
+        @else
             <p>{{ Markdown::parse($page->content) }}</p>
         @endif
-    </div>Na stránkách závodu byly zveřejneny ukázky mapy.
+    </div>
 
     <div class="mt-10 mx-5">
         <figcaption class="flex items-center mt-6 space-x-3">

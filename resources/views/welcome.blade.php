@@ -46,14 +46,14 @@
                             <div class="p-6">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cw-12 h-12 mb-4 text-gray-900"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
                                 <h5 class="block mb-2 font-sans text-2xl antialiased font-semibold leading-snug tracking-normal !text-gray-800">
-                                    12. Jihomoravská liga v orientačním běhu
+                                    07. Jihomoravská liga v orientačním běhu
                                 </h5>
                                 <p class="!text-gray-900">
-                                    Pořádáme závod oblastního žebříčku na klasické trati dne 12.10.2024.
+                                    Pořádáme závod oblastního žebříčku na klasické trati dne 23.05.2026.
                                 </p>
                             </div>
                             <div class="p-6 pt-0">
-                                <a href="https://abmbrno.cz/stranka/12-jml-2024-lovcicky" target="_blank" class="inline-block">
+                                <a href="https://abmbrno.cz/stranka/7-jihomoravska-liga-2026-novinky" target="_blank" class="inline-block">
                                     <button
                                         class="flex items-center gap-2 px-4 py-2 font-sans text-xs font-bold text-center text-gray-900 uppercase align-middle transition-all rounded-lg select-none disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none hover:bg-gray-900/50 active:bg-gray-900/10"
                                         type="button">

@@ -7,6 +7,8 @@ namespace App\Filament\Resources\Pages;
 use App\Shared\Helpers\AppHelper;
 use App\Enums\AppRoles;
 use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ContentDividerBlock;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\SimpleDividerBlock;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -93,6 +95,8 @@ class PageResource extends Resource implements HasShieldPermissions
                                             ->customBlocks([
                                                 HeroBlock::class,
                                                 AlertBlock::class,
+                                                ContentDividerBlock::class,
+                                                SimpleDividerBlock::class,
                                             ])
                                             ->required()
                                             ->json()
@@ -162,7 +166,7 @@ class PageResource extends Resource implements HasShieldPermissions
                                                 ['undo', 'redo', 'lead', 'small', 'textColor', 'customBlocks'],
                                             ])->floatingToolbars([
                                                 'paragraph' => [
-                                                    'bold', 'italic', 'underline', 'strike', 'subscript', 'superscript',
+                                                    'bold', 'italic', 'underline', 'strike', 'subscript', 'superscript', 'code', 'grid', 'gridDelete', 'lead',
                                                 ],
 //                                                'heading' => [
 //                                                    'h1', 'h2', 'h3',
