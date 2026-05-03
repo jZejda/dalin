@@ -246,6 +246,15 @@ class UserMailNotification extends Page implements HasForms
             ->send();
     }
 
+    public function copyCalendarUrlFailed(): void
+    {
+        Notification::make()
+            ->title('Chyba')
+            ->danger()
+            ->body('Adresu se nepodařilo zkopírovat do schránky.')
+            ->send();
+    }
+
     public function submit(): void
     {
         /** @var \Filament\Schemas\Schema $form */
