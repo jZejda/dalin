@@ -40,6 +40,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property bool $active
  * @property string|null $remember_token
  * @property string|null $api_key_hash
+ * @property string|null $calendar_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read string $user_identification
@@ -79,6 +80,7 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'payer_variable_symbol',
         'active',
+        'calendar_token',
     ];
 
     /** @var list<string> */
@@ -86,6 +88,7 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'remember_token',
         'api_key_hash',
+        'calendar_token',
     ];
 
     /** @var array<string, string> */

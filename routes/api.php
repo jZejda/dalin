@@ -25,6 +25,12 @@ Route::get('/feed/kalendar/zavody/all/', [CalendarController::class, 'raceCalend
 Route::get('/feed/kalendar/treninky/all/', [CalendarController::class, 'trainingCalendar'])
     ->middleware('throttle:30,1');
 
+Route::get('/feed/kalendar/zavody/me/{token}', [CalendarController::class, 'personalRaceCalendar'])
+    ->middleware('throttle:30,1');
+
+Route::get('/feed/kalendar/treninky/me/{token}', [CalendarController::class, 'personalTrainingCalendar'])
+    ->middleware('throttle:30,1');
+
 // User API protected by x-apikey and member role
 Route::prefix('v1/user')->middleware([
     'apikey',
