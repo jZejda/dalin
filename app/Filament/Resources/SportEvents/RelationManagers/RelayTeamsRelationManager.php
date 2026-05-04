@@ -65,7 +65,7 @@ class RelayTeamsRelationManager extends RelationManager
                     ->label('Typ')
                     ->options([
                         'ST' => 'Štafeta',
-                        'SS' => 'Sprintová štafeta',Vyber závodní profil, vyhledej vhodné
+                        'SS' => 'Sprintová štafeta',
                         'DR' => 'Družstva',
                     ])
                     ->required(),
