@@ -22,6 +22,11 @@ class RelayTeamMember extends Model
 {
     use HasFactory;
 
+    /** @var array<string, string> */
+    protected $casts = [
+        'slot' => 'integer',
+    ];
+
     /** @var list<string> */
     protected $fillable = [
         'relay_team_id',

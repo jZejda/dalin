@@ -64,6 +64,12 @@ class SportClassesRelationManager extends RelationManager
                     ->numeric()
                     ->inputMode('decimal')
                     ->minValue(0),
+                TextInput::make('legs')
+                    ->label('Počet úseků štafety')
+                    ->numeric()
+                    ->integer()
+                    ->minValue(1),
+
             ]);
     }
 
@@ -82,6 +88,7 @@ class SportClassesRelationManager extends RelationManager
                 TextColumn::make('climbing')->label('Stoupání'),
                 TextColumn::make('controls')->label('Kontrol'),
                 TextColumn::make('fee')->label('Cena'),
+                TextColumn::make('legs')->label('Úseků'),
             ])
             ->filters([
                 //
