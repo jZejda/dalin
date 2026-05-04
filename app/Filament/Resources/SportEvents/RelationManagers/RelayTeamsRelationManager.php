@@ -12,6 +12,7 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
@@ -31,24 +32,9 @@ class RelayTeamsRelationManager extends RelationManager
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            Grid::make()->schema([
+            Grid::make()->columnSpanFull()->schema([
                 TextInput::make('name')
                     ->label('Název týmu')
-                    ->required(),
-                TextInput::make('slots_count')
-                    ->label('Počet míst')
-                    ->required()
-                    ->numeric()
-                    ->minValue(1)
-                    ->maxValue(10)
-                    ->default(3),
-                Select::make('relay_type')
-                    ->label('Typ')
-                    ->options([
-                        'ST' => 'Štafeta',
-                        'SS' => 'Sprintová štafeta',
-                        'DR' => 'Družstva',
-                    ])
                     ->required(),
                 Select::make('sport_class_id')
                     ->label('Kategorie')
@@ -56,10 +42,40 @@ class RelayTeamsRelationManager extends RelationManager
                         return SportClass::query()
                             ->where('sport_event_id', $this->getOwnerRecord()->id)
                             ->orderBy('name')
-                            ->pluck('name', 'id')
+                            ->get(['id', 'name', 'legs'])
+                            ->mapWithKeys(fn (SportClass $class): array => [
+                                $class->id => $class->legs !== null
+                                    ? $class->name.' | úseků: '.$class->legs
+                                    : $class->name,
+                            ])
                             ->toArray();
-                    })
-                    ->searchable(),
+                    })->required()
+                    ->searchable()
+                    ->live()
+                    ->afterStateUpdated(function (Set $set, ?int $state): void {
+                        if ($state === null) {
+                            return;
+                        }
+                        $legs = SportClass::find($state)?->legs;
+                        if ($legs !== null) {
+                            $set('slots_count', $legs);
+                        }
+                    }),
+                Select::make('relay_type')
+                    ->label('Typ')
+                    ->options([
+                        'ST' => 'Štafeta',
+                        'SS' => 'Sprintová štafeta',Vyber závodní profil, vyhledej vhodné
+                        'DR' => 'Družstva',
+                    ])
+                    ->required(),
+                TextInput::make('slots_count')
+                    ->label('Počet úseků')
+                    ->required()
+                    ->numeric()
+                    ->minValue(1)
+                    ->maxValue(10)
+                    ->default(3),
             ])->columns(2),
         ]);
     }
@@ -77,7 +93,7 @@ class RelayTeamsRelationManager extends RelationManager
                 TextColumn::make('relay_type')
                     ->label('Typ'),
                 TextColumn::make('slots_count')
-                    ->label('Míst'),
+                    ->label('Úseků'),
                 TextColumn::make('occupied_slots')
                     ->label('Obsazeno')
                     ->state(fn (RelayTeam $record): int => $record->members()->whereNotNull('user_race_profile_id')->count()),

@@ -14,6 +14,7 @@ readonly class Classes
         public string $Controls,
         public ClassDefinition $ClassDefinition,
         public string $Fee,
+        public string $Legs,
     ) {
     }
 }

@@ -22,6 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $climbing
  * @property string|null $controls
  * @property float|null $fee
+ * @property int|null $legs
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read SportClassDefinition|null $classDefinition
@@ -42,6 +43,7 @@ class SportClass extends Model
         'climbing',
         'controls',
         'fee',
+        'legs',
     ];
 
     public function sportEvent(): HasOne
