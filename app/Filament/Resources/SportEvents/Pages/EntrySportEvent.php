@@ -281,21 +281,8 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     if (EmptyType::intNotEmpty($record->oris_entry_id)) {
                         $eventOrisId = $record->sportEvent->oris_id;
 
-                        $params = [
-                            'entryid' => $record->oris_entry_id,
-                        ];
-
-                        $guzzleClient = new GuzzleClient();
-                        $clientResponse = $guzzleClient->create()->request('POST', 'API', $guzzleClient->generateMultipartForm(GuzzleClient::METHOD_DELETE_ENTRY, $params));
-
-                        $response = new ManageEntry();
-                        $orisResponse = $response->data($clientResponse->getBody()->getContents());
-
-                        //                    +Method: "deleteEntry"
-                        //                    +Format: "json"
-                        //                    +Status: "OK"
-                        //                    +ExportCreated: "2023-03-08 23:31:58"
-                        //                    +Data: null
+                        $orisResponse = (new \App\Services\SportEvents\Entries\OrisEntryClient())
+                            ->deleteEntry((int) $record->oris_entry_id);
 
                         if ($orisResponse->Status === 'OK') {
 
@@ -729,51 +716,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
     private function orisCreateEntry(array $entryData, UserRaceProfile $userProfile, SportEvent $sportEvent): CreateEntry
     {
-        $requiredParams = [
-            'clubuser' => $userProfile->club_user_id ?? '',
-            'class' => $entryData['classId'],
-        ];
-
-        $allOptionalParams = [
-            'si' => $entryData['si'],
-            'note' => $entryData['note'],
-            'clubnote' => $entryData['club_note'],
-            'rent_si' => $entryData['rent_si'],
-            'requested_start' => $entryData['requested_start'],
-        ];
-
-        if (isset($entryData['entry_stages'])) {
-            for ($stage = 1; $stage <= $sportEvent->stages; $stage++) {
-                if (in_array('stage'.$stage, $entryData['entry_stages'])) {
-                    $allOptionalParams['stage'.$stage] = '1';
-                }
-
-                /**
-                 * @description
-                 * else block is not necessary For ORIS is important if you send stageX with any value 1 or.
-                 * the result is the same
-                 * $allOptionalParams['stage' . $stage] = '0';
-                 */
-            }
-        }
-
-        $optionalParams = [];
-        foreach ($allOptionalParams as $key => $value) {
-            if (! is_null($value)) {
-                $optionalParams[$key] = $value;
-            }
-        }
-
-        $params = array_merge($requiredParams, $optionalParams);
-
-        $guzzleClient = new GuzzleClient();
-        $clientResponse = $guzzleClient->create()->request('POST', 'API', $guzzleClient->generateMultipartForm(GuzzleClient::METHOD_CREATE_ENTRY, $params));
-
-        $response = new ManageEntry();
-
-        return $response->data($clientResponse->getBody()->getContents());
-        //dd($orisResponse->getStatus() === 'OK'); funguje cekni jestli jsi dostal OK
-        //dd($orisResponse->getData()?->getEntry()->getID()); //funguje ID prihlasky
+        return (new \App\Services\SportEvents\Entries\OrisEntryClient())->createEntry($entryData, $userProfile, $sportEvent);
     }
 
     /**
@@ -820,101 +763,26 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         array $data,
         ?CreateEntry $orisResponse = null
     ): ?UserEntry {
-        if ($userRaceProfile === null || $sportClass === null || $sportClass->classDefinition === null) {
-            return null;
-        }
-
-        $entry = new UserEntry();
-        if ($isOrisEvent) {
-            $entry->oris_entry_id = $orisResponse->Data->Entry->ID ?? null;
-        }
-        $entry->sport_event_id = $sportEvent->id;
-        $entry->user_race_profile_id = $userRaceProfile->id;
-        $entry->class_definition_id = $sportClass->classDefinition?->id;
-        $entry->class_name = $sportClass->name ?? 'N/A';
-        $entry->note = $data['note'];
-        $entry->club_note = $data['club_note'];
-        $entry->requested_start = $data['requested_start'];
-        $entry->si = $data['si'];
-        $entry->rent_si = $data['rent_si'] ?? 0;
-        $entry->entry_created = Carbon::now();
-        $entry->entry_status = EntryStatus::Create;
-        if (isset($data['entry_stages'])) {
-            $entry->entry_stages = $data['entry_stages'];
-        }
-
-        if ($entry->saveOrFail()) {
-            return $entry;
-        }
-
-        return null;
+        return (new \App\Services\SportEvents\Entries\EntryPersister())->persist(
+            $isOrisEvent, $sportEvent, $userRaceProfile, $sportClass, $data, $orisResponse
+        );
     }
 
     private function storeRelayUserEntry(SportEvent $sportEvent, ?UserRaceProfile $userRaceProfile, array $data): bool
     {
-        if ($userRaceProfile === null || ! isset($data['relayTeamMemberId'])) {
-            return false;
-        }
-
-        return DB::transaction(function () use ($data, $sportEvent, $userRaceProfile): bool {
-            $relayTeamMember = RelayTeamMember::query()
-                ->where('id', (int) $data['relayTeamMemberId'])
-                ->whereNull('user_entry_id')
-                ->with(['relayTeam.sportClass.classDefinition'])
-                ->lockForUpdate()
-                ->first();
-
-            if ($relayTeamMember === null || $relayTeamMember->relayTeam->sport_event_id !== $sportEvent->id) {
-                return false;
-            }
-
-            $sportClass = $relayTeamMember->relayTeam->sportClass;
-            $entry = $this->storeUserEntry(false, $sportEvent, $userRaceProfile, $sportClass, $data);
-
-            if ($entry === null) {
-                return false;
-            }
-
-            $relayTeamMember->user_race_profile_id = $userRaceProfile->id;
-            $relayTeamMember->user_entry_id = $entry->id;
-
-            return $relayTeamMember->saveOrFail();
-        });
+        return (new \App\Services\SportEvents\Entries\RelaySlotManager())->reserveSlot(
+            $sportEvent, $userRaceProfile, $data, new \App\Services\SportEvents\Entries\EntryPersister()
+        );
     }
 
     private function releaseRelaySlot(UserEntry $userEntry): void
     {
-        $relayTeamMember = $userEntry->relayTeamMember;
-        if ($relayTeamMember === null) {
-            return;
-        }
-
-        $relayTeamMember->user_race_profile_id = null;
-        $relayTeamMember->user_entry_id = null;
-        $relayTeamMember->save();
+        (new \App\Services\SportEvents\Entries\RelaySlotManager())->releaseSlot($userEntry);
     }
 
     /** @return Collection<int, string> */
     private function getAvailableRelayMemberSlots(SportEvent $sportEvent): Collection
     {
-        return RelayTeamMember::query()
-            ->whereNull('user_entry_id')
-            ->whereHas('relayTeam', fn (Builder $query): Builder => $query->where('sport_event_id', $sportEvent->id))
-            ->with(['relayTeam', 'relayTeam.sportClass'])
-            ->get()
-            ->sortBy([
-                fn (RelayTeamMember $member) => $member->relayTeam->name,
-                fn (RelayTeamMember $member) => $member->slot,
-            ])
-            ->mapWithKeys(function (RelayTeamMember $member): array {
-                $teamName = $member->relayTeam->name;
-                $category = $member->relayTeam->sportClass?->name;
-                $label = '<span class="font-medium">' . e($teamName) . ' - slot ' . e((string) $member->slot) . '</span>';
-                if ($category !== null) {
-                    $label .= ' <span class="text-gray-400">| ' . e($category) . '</span>';
-                }
-
-                return [$member->id => $label];
-            });
+        return (new \App\Services\SportEvents\Entries\RelaySlotManager())->availableSlots($sportEvent);
     }
 }

@@ -16,18 +16,18 @@ use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserEntry;
 use App\Models\UserRaceProfile;
+use App\Services\SportEvents\Entries\EntryPersister;
+use App\Services\SportEvents\Entries\RelaySlotManager;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 /**
- * Charakterizační testy pro EntrySportEvent privátní metody.
+ * Charakterizační testy pro EntrySportEvent.
  *
- * Tyto testy zafixovávají STÁVAJÍCÍ chování před refaktorem.
- * Po refaktoru budou tyto testy přepsané proti extrahovaným službám.
- *
- * Testují přes Reflection, protože metody jsou private – po jejich
- * extrakci do samostatných tříd bude testování přímé.
+ * storeUserEntry sekce volají ExtractPersister přímo.
+ * Ostatní sekce volají přes Reflection na stránce (budou aktualizovány
+ * průběžně jak se extrahují do samostatných služeb).
  */
 function invokeOnEntryPage(string $method, array $args = [], ?SportEvent $record = null): mixed
 {
@@ -104,18 +104,13 @@ beforeEach(function (): void {
 });
 
 // =====================================================================
-// 1.2  storeUserEntry – non-ORIS
+// 1.2  EntryPersister – non-ORIS
 // =====================================================================
-describe('storeUserEntry (non-ORIS)', function (): void {
+describe('EntryPersister (non-ORIS)', function (): void {
     test('creates UserEntry with all expected fields', function (): void {
-        $entry = invokeOnEntryPage('storeUserEntry', [
-            false,
-            $this->event,
-            $this->raceProfile,
-            $this->sportClass,
-            $this->validEntryData,
-            null,
-        ]);
+        $entry = (new EntryPersister())->persist(
+            false, $this->event, $this->raceProfile, $this->sportClass, $this->validEntryData,
+        );
 
         expect($entry)->toBeInstanceOf(UserEntry::class)
             ->and($entry->exists)->toBeTrue()
@@ -136,26 +131,26 @@ describe('storeUserEntry (non-ORIS)', function (): void {
     test('persists entry_stages when provided', function (): void {
         $data = $this->validEntryData + ['entry_stages' => ['stage1', 'stage2']];
 
-        $entry = invokeOnEntryPage('storeUserEntry', [
-            false, $this->event, $this->raceProfile, $this->sportClass, $data, null,
-        ]);
+        $entry = (new EntryPersister())->persist(
+            false, $this->event, $this->raceProfile, $this->sportClass, $data,
+        );
 
         expect($entry->entry_stages)->toBe(['stage1', 'stage2']);
     });
 
     test('returns null when userRaceProfile is missing', function (): void {
-        $entry = invokeOnEntryPage('storeUserEntry', [
-            false, $this->event, null, $this->sportClass, $this->validEntryData, null,
-        ]);
+        $entry = (new EntryPersister())->persist(
+            false, $this->event, null, $this->sportClass, $this->validEntryData,
+        );
 
         expect($entry)->toBeNull()
             ->and(UserEntry::query()->where('sport_event_id', $this->event->id)->count())->toBe(0);
     });
 
     test('returns null when sportClass is missing', function (): void {
-        $entry = invokeOnEntryPage('storeUserEntry', [
-            false, $this->event, $this->raceProfile, null, $this->validEntryData, null,
-        ]);
+        $entry = (new EntryPersister())->persist(
+            false, $this->event, $this->raceProfile, null, $this->validEntryData,
+        );
 
         expect($entry)->toBeNull()
             ->and(UserEntry::query()->where('sport_event_id', $this->event->id)->count())->toBe(0);
@@ -165,18 +160,18 @@ describe('storeUserEntry (non-ORIS)', function (): void {
         $data = $this->validEntryData;
         unset($data['rent_si']);
 
-        $entry = invokeOnEntryPage('storeUserEntry', [
-            false, $this->event, $this->raceProfile, $this->sportClass, $data, null,
-        ]);
+        $entry = (new EntryPersister())->persist(
+            false, $this->event, $this->raceProfile, $this->sportClass, $data,
+        );
 
         expect($entry->rent_si)->toBeFalse();
     });
 });
 
 // =====================================================================
-// 1.3  storeUserEntry – ORIS
+// 1.3  EntryPersister – ORIS
 // =====================================================================
-describe('storeUserEntry (ORIS)', function (): void {
+describe('EntryPersister (ORIS)', function (): void {
     test('sets oris_entry_id from ORIS response', function (): void {
         $orisResponse = new CreateEntry(
             Method: 'createEntry',
@@ -186,14 +181,9 @@ describe('storeUserEntry (ORIS)', function (): void {
             Data: new Data(Entry: new OrisEntry(ID: 9876543)),
         );
 
-        $entry = invokeOnEntryPage('storeUserEntry', [
-            true,
-            $this->event,
-            $this->raceProfile,
-            $this->sportClass,
-            $this->validEntryData,
-            $orisResponse,
-        ]);
+        $entry = (new EntryPersister())->persist(
+            true, $this->event, $this->raceProfile, $this->sportClass, $this->validEntryData, $orisResponse,
+        );
 
         expect($entry)->toBeInstanceOf(UserEntry::class)
             ->and($entry->oris_entry_id)->toBe(9876543);
@@ -208,14 +198,9 @@ describe('storeUserEntry (ORIS)', function (): void {
             Data: null,
         );
 
-        $entry = invokeOnEntryPage('storeUserEntry', [
-            true,
-            $this->event,
-            $this->raceProfile,
-            $this->sportClass,
-            $this->validEntryData,
-            $orisResponse,
-        ]);
+        $entry = (new EntryPersister())->persist(
+            true, $this->event, $this->raceProfile, $this->sportClass, $this->validEntryData, $orisResponse,
+        );
 
         expect($entry)->toBeInstanceOf(UserEntry::class)
             ->and($entry->oris_entry_id)->toBeNull();
@@ -254,14 +239,15 @@ describe('storeRelayUserEntry', function (): void {
     });
 
     test('reserves a free slot and binds UserEntry + UserRaceProfile', function (): void {
-        $result = invokeOnEntryPage('storeRelayUserEntry', [
+        $result = (new RelaySlotManager())->reserveSlot(
             $this->relayEvent,
             $this->raceProfile,
             ['relayTeamMemberId' => $this->freeSlot->id] + $this->validEntryData,
-        ]);
+            new EntryPersister(),
+        );
 
         $this->freeSlot->refresh();
-        $entry = UserEntry::query()->latest('id')->first();
+        $entry = UserEntry::query()->where('sport_event_id', $this->relayEvent->id)->latest('id')->first();
 
         expect($result)->toBeTrue()
             ->and($this->freeSlot->user_race_profile_id)->toBe($this->raceProfile->id)
@@ -282,11 +268,12 @@ describe('storeRelayUserEntry', function (): void {
         $this->freeSlot->user_entry_id = $existingEntry->id;
         $this->freeSlot->saveOrFail();
 
-        $result = invokeOnEntryPage('storeRelayUserEntry', [
+        $result = (new RelaySlotManager())->reserveSlot(
             $this->relayEvent,
             $this->raceProfile,
             ['relayTeamMemberId' => $this->freeSlot->id] + $this->validEntryData,
-        ]);
+            new EntryPersister(),
+        );
 
         expect($result)->toBeFalse();
     });
@@ -302,31 +289,31 @@ describe('storeRelayUserEntry', function (): void {
         $otherTeam = RelayTeam::query()->where('sport_event_id', $otherRelayEvent->id)->firstOrFail();
         $otherSlot = $otherTeam->members()->first();
 
-        $result = invokeOnEntryPage('storeRelayUserEntry', [
+        $result = (new RelaySlotManager())->reserveSlot(
             $this->relayEvent,
             $this->raceProfile,
             ['relayTeamMemberId' => $otherSlot->id] + $this->validEntryData,
-        ]);
+            new EntryPersister(),
+        );
 
         expect($result)->toBeFalse();
     });
 
     test('returns false when relayTeamMemberId is missing', function (): void {
-        $result = invokeOnEntryPage('storeRelayUserEntry', [
-            $this->relayEvent,
-            $this->raceProfile,
-            $this->validEntryData,
-        ]);
+        $result = (new RelaySlotManager())->reserveSlot(
+            $this->relayEvent, $this->raceProfile, $this->validEntryData, new EntryPersister(),
+        );
 
         expect($result)->toBeFalse();
     });
 
     test('returns false when userRaceProfile is null', function (): void {
-        $result = invokeOnEntryPage('storeRelayUserEntry', [
+        $result = (new RelaySlotManager())->reserveSlot(
             $this->relayEvent,
             null,
             ['relayTeamMemberId' => $this->freeSlot->id] + $this->validEntryData,
-        ]);
+            new EntryPersister(),
+        );
 
         expect($result)->toBeFalse();
     });
@@ -361,7 +348,7 @@ describe('releaseRelaySlot', function (): void {
         $slot->user_entry_id = $entry->id;
         $slot->saveOrFail();
 
-        invokeOnEntryPage('releaseRelaySlot', [$entry->fresh()]);
+        (new RelaySlotManager())->releaseSlot($entry->fresh());
 
         $slot->refresh();
         expect($slot->user_entry_id)->toBeNull()
@@ -380,7 +367,7 @@ describe('releaseRelaySlot', function (): void {
         ]);
 
         // should not throw
-        invokeOnEntryPage('releaseRelaySlot', [$entry]);
+        (new RelaySlotManager())->releaseSlot($entry);
 
         expect(true)->toBeTrue();
     });
@@ -425,7 +412,7 @@ describe('getAvailableRelayMemberSlots', function (): void {
         $taken->user_entry_id = $takenEntry->id;
         $taken->saveOrFail();
 
-        $slots = invokeOnEntryPage('getAvailableRelayMemberSlots', [$event]);
+        $slots = (new RelaySlotManager())->availableSlots($event);
 
         // teamA: slots 1, 3 free; teamB: slots 1, 2 free → 4 total
         expect($slots)->toHaveCount(4);
@@ -455,8 +442,8 @@ describe('getAvailableRelayMemberSlots', function (): void {
             'sport_id' => 1,
         ]);
 
-        $slotsA = invokeOnEntryPage('getAvailableRelayMemberSlots', [$eventA]);
-        $slotsB = invokeOnEntryPage('getAvailableRelayMemberSlots', [$eventB]);
+        $slotsA = (new RelaySlotManager())->availableSlots($eventA);
+        $slotsB = (new RelaySlotManager())->availableSlots($eventB);
 
         expect($slotsA)->toHaveCount(3)
             ->and($slotsB)->toHaveCount(3)
