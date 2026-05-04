@@ -20,6 +20,7 @@ return new class () extends Migration {
             $table->string('distance')->nullable();
             $table->string('climbing')->nullable();
             $table->string('controls')->nullable();
+            $table->tinyInteger('legs')->unsigned()->nullable();
             $table->double('fee')->nullable();
 
             $table->timestamps();
