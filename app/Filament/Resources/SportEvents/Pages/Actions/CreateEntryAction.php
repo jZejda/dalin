@@ -90,6 +90,9 @@ class CreateEntryAction
                 ->searchable()
                 ->afterStateUpdated(function (string $state, Set $set) use ($sportEvent): void {
                     if (! ($sportEvent->oris_id !== null && $sportEvent->use_oris_for_entries)) {
+                        $userProfile = UserRaceProfile::find((int) $state);
+                        $set('si', $userProfile?->si);
+
                         return;
                     }
 

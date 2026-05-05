@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\SportEvents\Pages\Table;
 
 use App\Models\SportClass;
+use App\Models\SportEvent;
 use App\Models\UserEntry;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Support\Facades\Auth;
@@ -13,8 +14,10 @@ use Illuminate\Support\HtmlString;
 class EntriesTableColumns
 {
     /** @return list<TextColumn> */
-    public static function make(): array
+    public static function make(SportEvent $sportEvent): array
     {
+        $isRelay = $sportEvent->isRelayDiscipline();
+
         return [
             TextColumn::make('class_name')
                 ->label('Kategorie')
@@ -46,7 +49,8 @@ class EntriesTableColumns
 
                     return $slot !== null ? $state.' (slot '.$slot.')' : $state;
                 })
-                ->placeholder('—'),
+                ->placeholder('—')
+                ->visible($isRelay),
             TextColumn::make('userRaceProfile.UserRaceFullName')
                 ->label('Registrace')
                 ->html()

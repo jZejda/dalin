@@ -123,7 +123,10 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
     protected function getTableColumns(): array
     {
-        return EntriesTableColumns::make();
+        /** @var SportEvent $sportEvent */
+        $sportEvent = $this->record;
+
+        return EntriesTableColumns::make($sportEvent);
     }
 
     public function table(Table $table): Table

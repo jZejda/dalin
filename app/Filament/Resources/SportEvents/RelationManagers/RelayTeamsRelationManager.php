@@ -75,7 +75,8 @@ class RelayTeamsRelationManager extends RelationManager
                     ->numeric()
                     ->minValue(1)
                     ->maxValue(10)
-                    ->default(3),
+                    ->default(3)
+                    ->readOnly(),
             ])->columns(2),
         ]);
     }
