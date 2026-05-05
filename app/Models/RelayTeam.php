@@ -46,11 +46,13 @@ class RelayTeam extends Model
         'slots_count',
     ];
 
+    /** @return BelongsTo<SportEvent, $this> */
     public function sportEvent(): BelongsTo
     {
         return $this->belongsTo(SportEvent::class, 'sport_event_id', 'id');
     }
 
+    /** @return BelongsTo<SportClass, $this> */
     public function sportClass(): BelongsTo
     {
         return $this->belongsTo(SportClass::class, 'sport_class_id', 'id');

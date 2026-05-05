@@ -165,4 +165,3 @@ test('non relay event hides profile when already entered', function (): void {
 
     expect($profiles->keys()->contains($this->raceProfile->id))->toBeFalse();
 });
-

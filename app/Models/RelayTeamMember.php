@@ -35,16 +35,19 @@ class RelayTeamMember extends Model
         'user_entry_id',
     ];
 
+    /** @return BelongsTo<RelayTeam, $this> */
     public function relayTeam(): BelongsTo
     {
         return $this->belongsTo(RelayTeam::class, 'relay_team_id', 'id');
     }
 
+    /** @return BelongsTo<UserRaceProfile, $this> */
     public function userRaceProfile(): BelongsTo
     {
         return $this->belongsTo(UserRaceProfile::class, 'user_race_profile_id', 'id');
     }
 
+    /** @return BelongsTo<UserEntry, $this> */
     public function userEntry(): BelongsTo
     {
         return $this->belongsTo(UserEntry::class, 'user_entry_id', 'id');

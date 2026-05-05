@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\SportEvents\Entries;
 
+use App\Models\RelayTeam;
 use App\Models\RelayTeamMember;
 use App\Models\SportEvent;
 use App\Models\UserEntry;
@@ -40,11 +41,12 @@ class RelaySlotManager
                 ->lockForUpdate()
                 ->first();
 
-            if ($relayTeamMember === null || $relayTeamMember->relayTeam->sport_event_id !== $sportEvent->id) {
+            $relayTeam = $relayTeamMember?->relayTeam;
+            if ($relayTeamMember === null || $relayTeam === null || $relayTeam->sport_event_id !== $sportEvent->id) {
                 return false;
             }
 
-            $sportClass = $relayTeamMember->relayTeam->sportClass;
+            $sportClass = $relayTeam->sportClass;
             $entry = $persister->persist(false, $sportEvent, $userRaceProfile, $sportClass, $data);
 
             if ($entry === null) {
@@ -76,7 +78,7 @@ class RelaySlotManager
     /**
      * Return free relay member slots for the given event, ordered by team name + slot.
      *
-     * @return Collection<int, string>
+     * @return Collection<int, non-falsy-string>
      */
     public function availableSlots(SportEvent $sportEvent): Collection
     {
@@ -86,12 +88,16 @@ class RelaySlotManager
             ->with(['relayTeam', 'relayTeam.sportClass'])
             ->get()
             ->sortBy([
-                fn (RelayTeamMember $member) => $member->relayTeam->name,
+                fn (RelayTeamMember $member): string => $member->relayTeam instanceof RelayTeam ? $member->relayTeam->name : '',
                 fn (RelayTeamMember $member) => $member->slot,
             ])
             ->mapWithKeys(function (RelayTeamMember $member): array {
-                $teamName = $member->relayTeam->name;
-                $category = $member->relayTeam->sportClass?->name;
+                $relayTeam = $member->relayTeam;
+                if (! ($relayTeam instanceof RelayTeam)) {
+                    return [];
+                }
+                $teamName = $relayTeam->name;
+                $category = $relayTeam->sportClass?->name;
                 $label = '<span class="font-medium">'.e($teamName).' - slot '.e((string) $member->slot).'</span>';
                 if ($category !== null) {
                     $label .= ' <span class="text-gray-400">| '.e($category).'</span>';

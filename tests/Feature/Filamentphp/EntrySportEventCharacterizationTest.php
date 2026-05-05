@@ -8,7 +8,6 @@ use App\Http\Components\Oris\Response\CreateEntry;
 use App\Http\Components\Oris\Response\Entity\EntryData\Data;
 use App\Http\Components\Oris\Response\Entity\EntryData\Entry as OrisEntry;
 use App\Models\RelayTeam;
-use App\Models\RelayTeamMember;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
 use App\Models\SportDiscipline;
@@ -16,9 +15,11 @@ use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserEntry;
 use App\Models\UserRaceProfile;
+use App\Filament\Resources\SportEvents\Pages\Actions\DeleteEntryAction;
+use App\Services\SportEvents\Entries\DeleteResult;
+use App\Services\SportEvents\Entries\EntryDeleter;
 use App\Services\SportEvents\Entries\EntryPersister;
 use App\Services\SportEvents\Entries\RelaySlotManager;
-use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -31,7 +32,7 @@ use Spatie\Permission\PermissionRegistrar;
  */
 function invokeOnEntryPage(string $method, array $args = [], ?SportEvent $record = null): mixed
 {
-    $page = new EntrySportEvent;
+    $page = new EntrySportEvent();
 
     if ($record !== null) {
         $page->record = $record;
@@ -51,7 +52,7 @@ function ensureRoleExists(string $roleName): void
 
 function makeRelayDiscipline(string $shortName = 'ST', string $longName = 'Štafety'): SportDiscipline
 {
-    $discipline = new SportDiscipline;
+    $discipline = new SportDiscipline();
     $discipline->short_name = $shortName;
     $discipline->long_name = $longName;
     $discipline->saveOrFail();
@@ -109,7 +110,11 @@ beforeEach(function (): void {
 describe('EntryPersister (non-ORIS)', function (): void {
     test('creates UserEntry with all expected fields', function (): void {
         $entry = (new EntryPersister())->persist(
-            false, $this->event, $this->raceProfile, $this->sportClass, $this->validEntryData,
+            false,
+            $this->event,
+            $this->raceProfile,
+            $this->sportClass,
+            $this->validEntryData,
         );
 
         expect($entry)->toBeInstanceOf(UserEntry::class)
@@ -132,7 +137,11 @@ describe('EntryPersister (non-ORIS)', function (): void {
         $data = $this->validEntryData + ['entry_stages' => ['stage1', 'stage2']];
 
         $entry = (new EntryPersister())->persist(
-            false, $this->event, $this->raceProfile, $this->sportClass, $data,
+            false,
+            $this->event,
+            $this->raceProfile,
+            $this->sportClass,
+            $data,
         );
 
         expect($entry->entry_stages)->toBe(['stage1', 'stage2']);
@@ -140,7 +149,11 @@ describe('EntryPersister (non-ORIS)', function (): void {
 
     test('returns null when userRaceProfile is missing', function (): void {
         $entry = (new EntryPersister())->persist(
-            false, $this->event, null, $this->sportClass, $this->validEntryData,
+            false,
+            $this->event,
+            null,
+            $this->sportClass,
+            $this->validEntryData,
         );
 
         expect($entry)->toBeNull()
@@ -149,7 +162,11 @@ describe('EntryPersister (non-ORIS)', function (): void {
 
     test('returns null when sportClass is missing', function (): void {
         $entry = (new EntryPersister())->persist(
-            false, $this->event, $this->raceProfile, null, $this->validEntryData,
+            false,
+            $this->event,
+            $this->raceProfile,
+            null,
+            $this->validEntryData,
         );
 
         expect($entry)->toBeNull()
@@ -161,7 +178,11 @@ describe('EntryPersister (non-ORIS)', function (): void {
         unset($data['rent_si']);
 
         $entry = (new EntryPersister())->persist(
-            false, $this->event, $this->raceProfile, $this->sportClass, $data,
+            false,
+            $this->event,
+            $this->raceProfile,
+            $this->sportClass,
+            $data,
         );
 
         expect($entry->rent_si)->toBeFalse();
@@ -182,7 +203,12 @@ describe('EntryPersister (ORIS)', function (): void {
         );
 
         $entry = (new EntryPersister())->persist(
-            true, $this->event, $this->raceProfile, $this->sportClass, $this->validEntryData, $orisResponse,
+            true,
+            $this->event,
+            $this->raceProfile,
+            $this->sportClass,
+            $this->validEntryData,
+            $orisResponse,
         );
 
         expect($entry)->toBeInstanceOf(UserEntry::class)
@@ -199,7 +225,12 @@ describe('EntryPersister (ORIS)', function (): void {
         );
 
         $entry = (new EntryPersister())->persist(
-            true, $this->event, $this->raceProfile, $this->sportClass, $this->validEntryData, $orisResponse,
+            true,
+            $this->event,
+            $this->raceProfile,
+            $this->sportClass,
+            $this->validEntryData,
+            $orisResponse,
         );
 
         expect($entry)->toBeInstanceOf(UserEntry::class)
@@ -301,7 +332,10 @@ describe('storeRelayUserEntry', function (): void {
 
     test('returns false when relayTeamMemberId is missing', function (): void {
         $result = (new RelaySlotManager())->reserveSlot(
-            $this->relayEvent, $this->raceProfile, $this->validEntryData, new EntryPersister(),
+            $this->relayEvent,
+            $this->raceProfile,
+            $this->validEntryData,
+            new EntryPersister(),
         );
 
         expect($result)->toBeFalse();
@@ -509,7 +543,7 @@ describe('hideDeleteAction', function (): void {
         $eventMaster->assignRole('event_master');
         $this->actingAs($eventMaster);
 
-        $result = invokeOnEntryPage('hideDeleteAction', [$this->ownerEntry], $this->event);
+        $result = (new DeleteEntryAction())->shouldHide($this->ownerEntry);
 
         expect($result)->toBeFalse();
     });
@@ -519,7 +553,7 @@ describe('hideDeleteAction', function (): void {
         $organizer->assignRole('event_organizer');
         $this->actingAs($organizer);
 
-        $result = invokeOnEntryPage('hideDeleteAction', [$this->ownerEntry], $this->event);
+        $result = (new DeleteEntryAction())->shouldHide($this->ownerEntry);
 
         expect($result)->toBeFalse();
     });
@@ -528,7 +562,7 @@ describe('hideDeleteAction', function (): void {
         $this->user->assignRole('member');
         $this->actingAs($this->user);
 
-        $result = invokeOnEntryPage('hideDeleteAction', [$this->ownerEntry], $this->event);
+        $result = (new DeleteEntryAction())->shouldHide($this->ownerEntry);
 
         expect($result)->toBeFalse();
     });
@@ -538,7 +572,7 @@ describe('hideDeleteAction', function (): void {
         $otherUser->assignRole('member');
         $this->actingAs($otherUser);
 
-        $result = invokeOnEntryPage('hideDeleteAction', [$this->ownerEntry], $this->event);
+        $result = (new DeleteEntryAction())->shouldHide($this->ownerEntry);
 
         expect($result)->toBeTrue();
     });
@@ -550,8 +584,68 @@ describe('hideDeleteAction', function (): void {
         $this->ownerEntry->entry_status = EntryStatus::Cancel;
         $this->ownerEntry->saveOrFail();
 
-        $result = invokeOnEntryPage('hideDeleteAction', [$this->ownerEntry->fresh()], $this->event);
+        $result = (new DeleteEntryAction())->shouldHide($this->ownerEntry->fresh());
 
         expect($result)->toBeTrue();
+    });
+});
+
+// =====================================================================
+// 2.5  EntryDeleter
+// =====================================================================
+describe('EntryDeleter', function (): void {
+
+    test('cancels a non-ORIS entry and returns success', function (): void {
+        $entry = UserEntry::query()->create([
+            'sport_event_id' => $this->event->id,
+            'class_definition_id' => $this->classDefinition->id,
+            'user_race_profile_id' => $this->raceProfile->id,
+            'class_name' => 'H21',
+            'entry_status' => EntryStatus::Create->value,
+            'rent_si' => false,
+            'entry_created' => now(),
+            'oris_entry_id' => null,
+        ]);
+
+        $result = EntryDeleter::make()->delete($entry);
+
+        $entry->refresh();
+        expect($result)->toBeInstanceOf(DeleteResult::class)
+            ->and($result->success)->toBeTrue()
+            ->and($result->wasOrisEntry)->toBeFalse()
+            ->and($entry->entry_status)->toBe(EntryStatus::Cancel);
+    });
+
+    test('releases relay slot when deleting relay entry', function (): void {
+        $relayDiscipline = makeRelayDiscipline('ST', 'Štafety del');
+        $relayEvent = SportEvent::factory()->create([
+            'use_oris_for_entries' => false,
+            'oris_id' => null,
+            'cancelled' => false,
+            'discipline_id' => $relayDiscipline->id,
+            'sport_id' => 1,
+        ]);
+
+        $team = \App\Models\RelayTeam::query()->where('sport_event_id', $relayEvent->id)->firstOrFail();
+        $slot = $team->members()->first();
+
+        $entry = UserEntry::query()->create([
+            'sport_event_id' => $relayEvent->id,
+            'class_definition_id' => $this->classDefinition->id,
+            'user_race_profile_id' => $this->raceProfile->id,
+            'class_name' => 'H21',
+            'entry_status' => EntryStatus::Create->value,
+            'rent_si' => false,
+            'entry_created' => now(),
+        ]);
+        $slot->user_race_profile_id = $this->raceProfile->id;
+        $slot->user_entry_id = $entry->id;
+        $slot->saveOrFail();
+
+        EntryDeleter::make()->delete($entry->fresh());
+
+        $slot->refresh();
+        expect($slot->user_entry_id)->toBeNull()
+            ->and($slot->user_race_profile_id)->toBeNull();
     });
 });

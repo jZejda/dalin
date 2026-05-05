@@ -37,7 +37,7 @@ class EntryPersister
         $entry = new UserEntry();
 
         if ($isOrisEvent) {
-            $entry->oris_entry_id = $orisResponse?->Data?->Entry?->ID ?? null;
+            $entry->oris_entry_id = $orisResponse?->Data?->Entry?->ID;
         }
 
         $entry->sport_event_id = $sportEvent->id;

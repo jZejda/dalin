@@ -40,7 +40,7 @@ class RelayTeamsRelationManager extends RelationManager
                     ->label('Kategorie')
                     ->options(function (): array {
                         return SportClass::query()
-                            ->where('sport_event_id', $this->getOwnerRecord()->id)
+                            ->where('sport_event_id', $this->getOwnerRecord()->getKey())
                             ->orderBy('name')
                             ->get(['id', 'name', 'legs'])
                             ->mapWithKeys(fn (SportClass $class): array => [

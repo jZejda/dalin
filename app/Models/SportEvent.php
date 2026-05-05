@@ -78,7 +78,7 @@ class SportEvent extends Model
                     'name' => 'Štafeta 1',
                 ],
                 [
-                    'relay_type' => $sportEvent->sportDiscipline?->short_name ?? 'ST',
+                    'relay_type' => $sportEvent->sportDiscipline->short_name ?? 'ST',
                     'slots_count' => 3,
                 ]
             );
@@ -154,6 +154,7 @@ class SportEvent extends Model
         }
     }
 
+    /** @return HasOne<SportDiscipline, $this> */
     public function sportDiscipline(): HasOne
     {
         return $this->hasOne(SportDiscipline::class, 'id', 'discipline_id');
