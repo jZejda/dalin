@@ -65,26 +65,6 @@ class SportEvent extends Model
 {
     use HasFactory;
 
-    protected static function booted(): void
-    {
-        static::created(function (self $sportEvent): void {
-            if (! $sportEvent->isRelayDiscipline()) {
-                return;
-            }
-
-            RelayTeam::query()->firstOrCreate(
-                [
-                    'sport_event_id' => $sportEvent->id,
-                    'name' => 'Štafeta 1',
-                ],
-                [
-                    'relay_type' => $sportEvent->sportDiscipline->short_name ?? 'ST',
-                    'slots_count' => 3,
-                ]
-            );
-        });
-    }
-
     /** @var list<string> */
     protected $fillable = [
         'name',
