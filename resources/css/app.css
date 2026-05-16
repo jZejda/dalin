@@ -440,4 +440,68 @@
     @apply text-gray-700 dark:text-gray-300 tracking-tighter font-bold;
 }
 
+/* Table Block Styles */
+.table-block {
+    @apply my-4;
+}
+
+.table-block-title {
+    @apply text-lg font-semibold mb-2 m-0;
+}
+
+.table-block-scroll {
+    @apply overflow-x-auto;
+}
+
+.table-block-table {
+    @apply w-full border-collapse text-sm;
+}
+
+.table-block-table thead th {
+    @apply bg-gray-100 dark:bg-gray-800 text-left font-semibold px-3 py-2 border-b border-gray-300 dark:border-gray-700;
+}
+
+.table-block-table tbody td {
+    @apply px-3 py-2 border-b border-gray-200 dark:border-gray-800 align-top;
+}
+
+.table-block-striped tbody tr:nth-child(even) td {
+    @apply bg-gray-50 dark:bg-gray-900/40;
+}
+
+.table-block-compact thead th,
+.table-block-compact tbody td {
+    @apply px-2 py-1;
+}
+
+.app-front-content .table-block-table tr:hover td {
+    @apply bg-gray-100 dark:bg-gray-800;
+}
+
+/* Table Block Preview (editor) */
+.table-preview {
+    @apply border border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-3 my-2;
+}
+
+.table-preview-title {
+    @apply text-base font-semibold mb-2 m-0;
+}
+
+.table-preview-table {
+    @apply w-full border-collapse text-xs;
+}
+
+.table-preview-table th,
+.table-preview-table td {
+    @apply px-2 py-1 border-b border-gray-200 dark:border-gray-800 text-left;
+}
+
+.table-preview-table th {
+    @apply bg-gray-100 dark:bg-gray-800 font-semibold;
+}
+
+.table-preview-more {
+    @apply text-xs text-gray-500 dark:text-gray-400 mt-2 italic;
+}
+
 @tailwind utilities;

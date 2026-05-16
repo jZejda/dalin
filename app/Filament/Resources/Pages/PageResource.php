@@ -6,9 +6,7 @@ namespace App\Filament\Resources\Pages;
 
 use App\Shared\Helpers\AppHelper;
 use App\Enums\AppRoles;
-use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
-use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ContentDividerBlock;
-use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\SimpleDividerBlock;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\RichContentBlocks;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -24,7 +22,6 @@ use App\Filament\Resources\Pages\Pages\EditPage;
 use App\Filament\Resources\Pages\Pages\ViewPage;
 use App\Enums\ContentFormat;
 use App\Enums\PageStatus;
-use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\HeroBlock;
 use App\Models\ContentCategory;
 use App\Models\Page;
 use App\Models\User;
@@ -92,12 +89,7 @@ class PageResource extends Resource implements HasShieldPermissions
                                     return [
                                         RichEditor::make('content')
                                             ->label('Obsah')
-                                            ->customBlocks([
-                                                HeroBlock::class,
-                                                AlertBlock::class,
-                                                ContentDividerBlock::class,
-                                                SimpleDividerBlock::class,
-                                            ])
+                                            ->customBlocks(RichContentBlocks::all())
                                             ->required()
                                             ->json()
                                             ->fileAttachmentsDisk('rich-editor-attachments')

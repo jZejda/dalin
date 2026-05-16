@@ -3,10 +3,7 @@ use Carbon\Carbon;
 use App\Models\Page;
 use App\Enums\ContentFormat;
 use Filament\Forms\Components\RichEditor\RichContentRenderer;
-use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\HeroBlock;
-use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\AlertBlock;
-use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\ContentDividerBlock;
-use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\SimpleDividerBlock;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\RichContentBlocks;
 
     /** @var Page $page */
 ?>
@@ -37,12 +34,8 @@ use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\SimpleDivid
             @elseif($page->content_format === ContentFormat::Markdown)
                 <p>{{ Markdown::parse($page->content) }}</p>
             @elseif($page->content_format === ContentFormat::TipTapJson)
-                {!! RichContentRenderer::make($page->content)->customBlocks([
-                        HeroBlock::class,
-                        AlertBlock::class,
-                        ContentDividerBlock::class,
-                        SimpleDividerBlock::class,
-                    ])
+                {!! RichContentRenderer::make($page->content)
+                    ->customBlocks(RichContentBlocks::all())
                     ->fileAttachmentsDisk('rich-editor-attachments')
                     ->fileAttachmentsVisibility('public')
                     ->toUnsafeHtml() !!}

@@ -163,6 +163,12 @@ parameters:
 			path: app/Filament/Forms/Components/RichEditor/RichContentCustomBlocks/SimpleDividerBlock.php
 
 		-
+			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Filament/Forms/Components/RichEditor/RichContentCustomBlocks/TableBlock.php
+
+		-
 			message: '#^Cannot call method hasRole\(\) on App\\Models\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
