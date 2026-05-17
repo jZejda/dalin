@@ -2,7 +2,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .app-front-content p {
-    @apply pb-4 dark:text-white;
+    @apply pb-2 dark:text-white;
 }
 
 .app-front-content h1 {
@@ -63,7 +63,7 @@
 }
 
 .app-front-content hr {
-   @apply py-4;
+   @apply py-4 border-gray-300 dark:border-gray-600;
 }
 
 .app-front-content td {
