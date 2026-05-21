@@ -78,14 +78,14 @@
                                             <th class="px-4 py-3">Jméno</th>
                                             <th class="px-4 py-3">Reg. číslo</th>
                                             <th class="px-4 py-3">SI čip</th>
-                                            <th class=" hidden lg:block px-4 py-3">Klub</th>
+                                            <th class="hidden lg:table-cell px-4 py-3">Klub</th>
                                         </tr>
                                         </thead>
                                         <tbody>
 
                                         @foreach($class->getPersonStart() as $person)
                                             <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                <td class="flex items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     {{\Carbon\Carbon::parse($person->getStart()->getStartTime(), 'Europe/Prague')->format('H:i:s')}}
                                                     {{--                                                {{$person->getStart()->getStartTime()}}--}}
                                                 </td>
@@ -119,7 +119,7 @@
                                                 <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                     {{$person->getStart()->getControlCard()}}
                                                 </td>
-                                                <td class="hidden lg:block  px-4 py-2 text-gray-900 whitespace-nowrap dark:text-white">
+                                                <td class="hidden lg:table-cell px-4 py-2 text-gray-900 whitespace-nowrap dark:text-white">
                                                     {{$person->getOrganisation()->getName()}}
                                                 </td>
                                             </tr>
