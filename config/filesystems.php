@@ -47,7 +47,7 @@ return [
         'events' => [
             'driver' => 'local',
             'root' => storage_path('app/public/events'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL').'/storage/events',
             'visibility' => 'public',
             'throw' => false,
         ],

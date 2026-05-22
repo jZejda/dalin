@@ -44,6 +44,7 @@ Route::get('/cron-hourly/'.config('site-config.cron_hourly.url_key'), [CommonCro
 Route::get('/novinka/{id}', [PostController::class, 'post']);
 Route::get('/stranka/{slug}', [PageController::class, 'page']);
 Route::get('/startovka/{slug}', [StartListController::class, 'singleStartList']);
+Route::get('/startovka/{slug}/bez-vakantu', [StartListController::class, 'downloadWithoutVakant']);
 Route::get('/vysledky/{slug}', [ResultListController::class, 'singleResultList']);
 
 Route::get('/akce/{id}', [\App\Http\Controllers\Frontend\SportEvent::class, 'singleEvent'])

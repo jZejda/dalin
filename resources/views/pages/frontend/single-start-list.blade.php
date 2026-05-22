@@ -6,6 +6,7 @@
  * @var App\Http\Components\Iofv3\Entities\ClassStart[] $classStart
  * @var App\Models\SportEventExport $sportEventExport
  * @var App\Http\Components\Iofv3\Entities\Attributes[] $eventAttributes
+ * @var string|null $xmlUrl
  */
 
 ?>
@@ -22,9 +23,21 @@
                     {{ $eventName }}
                 </div>
                 <div>
-                    <div class="mt-0 pt-0 ml-3">
-                        <span class="text-gray-400 text-md font-normal"> {{\Carbon\Carbon::parse($eventAttributes[0]->getCreateTime(), 'Europe/Prague')->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT)}} | </span>
-                        <span class="text-gray-400 text-md font-normal">{{$eventAttributes[0]->getCreator()}} </span>
+                    <div class="mt-0 pt-0 ml-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+                        <span class="text-gray-400 text-md font-normal">{{\Carbon\Carbon::parse($eventAttributes[0]->getCreateTime(), 'Europe/Prague')->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT)}} | </span>
+                        <span class="text-gray-400 text-md font-normal">{{$eventAttributes[0]->getCreator()}}</span>
+                        @if(!is_null($xmlUrl))
+                            <a href="{{ $xmlUrl }}" download
+                               class="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-yellow-300 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                Stáhnout XML (IOF v3)
+                            </a>
+                            <a href="{{ url()->current() }}/bez-vakantu"
+                               class="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-yellow-300 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                Stáhnout XML bez vakantů
+                            </a>
+                        @endif
                     </div>
                 </div>
             @else
