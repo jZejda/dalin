@@ -40,7 +40,7 @@ class RelayTeamsRelationManager extends RelationManager
                     ->label('Kategorie')
                     ->options(function (): array {
                         return SportClass::query()
-                            ->where('sport_event_id', $this->getOwnerRecord()->id)
+                            ->where('sport_event_id', $this->getOwnerRecord()->getKey())
                             ->orderBy('name')
                             ->get(['id', 'name', 'legs'])
                             ->mapWithKeys(fn (SportClass $class): array => [
@@ -52,11 +52,11 @@ class RelayTeamsRelationManager extends RelationManager
                     })->required()
                     ->searchable()
                     ->live()
-                    ->afterStateUpdated(function (Set $set, ?int $state): void {
+                    ->afterStateUpdated(function (Set $set, int|string|null $state): void {
                         if ($state === null) {
                             return;
                         }
-                        $legs = SportClass::find($state)?->legs;
+                        $legs = SportClass::find((int) $state)?->legs;
                         if ($legs !== null) {
                             $set('slots_count', $legs);
                         }
@@ -65,7 +65,7 @@ class RelayTeamsRelationManager extends RelationManager
                     ->label('Typ')
                     ->options([
                         'ST' => 'Štafeta',
-                        'SS' => 'Sprintová štafeta',Vyber závodní profil, vyhledej vhodné
+                        'SS' => 'Sprintová štafeta',
                         'DR' => 'Družstva',
                     ])
                     ->required(),

@@ -12,9 +12,20 @@ use App\Models\UserCredit;
 use App\Models\UserEntry;
 use App\Models\UserRaceProfile;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 beforeEach(function (): void {
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+    Role::findOrCreate(User::ROLE_MEMBER);
+
     $this->user = User::factory()->create(['active' => true]);
+    $this->user->assignRole(User::ROLE_MEMBER);
+
+    // API klíč: middleware ApiKeyAuth porovnává hlavičku x-apikey přímo s users.api_key_hash
+    $apiKey = hash('sha256', 'test-api-key-'.$this->user->id);
+    $this->user->forceFill(['api_key_hash' => $apiKey])->save();
+    $this->headers = ['x-apikey' => $apiKey];
 
     $this->raceProfile = UserRaceProfile::create([
         'user_id'    => $this->user->id,
@@ -27,23 +38,23 @@ beforeEach(function (): void {
 });
 
 // ---------------------------------------------------------------------------
-// GET /api/user/race-profiles
+// GET /api/v1/user/race-profiles
 // ---------------------------------------------------------------------------
 
 test('race-profiles: unauthenticated request is rejected with 401', function (): void {
-    $this->getJson('/api/user/race-profiles')
+    $this->getJson('/api/v1/user/race-profiles')
         ->assertUnauthorized();
 });
 
 test('race-profiles: authenticated user gets HTTP 200', function (): void {
-    $this->actingAs($this->user)
-        ->getJson('/api/user/race-profiles')
+    $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/race-profiles')
         ->assertOk();
 });
 
 test('race-profiles: response contains expected keys for each profile', function (): void {
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/race-profiles')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/race-profiles')
         ->assertOk();
 
     $profile = $response->json('data.0');
@@ -75,8 +86,8 @@ test('race-profiles: returns only active profiles by default', function (): void
         'active'     => false,
     ]);
 
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/race-profiles')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/race-profiles')
         ->assertOk();
 
     $profiles = $response->json('data');
@@ -95,8 +106,8 @@ test('race-profiles: ?all=true returns both active and inactive profiles', funct
         'active'     => false,
     ]);
 
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/race-profiles?all=true')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/race-profiles?all=true')
         ->assertOk();
 
     expect($response->json('data'))->toHaveCount(2);
@@ -112,8 +123,8 @@ test('race-profiles: ?all=false behaves the same as default (active only)', func
         'active'     => false,
     ]);
 
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/race-profiles?all=false')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/race-profiles?all=false')
         ->assertOk();
 
     expect($response->json('data'))->toHaveCount(1);
@@ -130,8 +141,8 @@ test('race-profiles: user sees only their own profiles, not other users profiles
         'active'     => true,
     ]);
 
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/race-profiles')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/race-profiles')
         ->assertOk();
 
     expect($response->json('data'))->toHaveCount(1)
@@ -139,41 +150,44 @@ test('race-profiles: user sees only their own profiles, not other users profiles
 });
 
 test('race-profiles: user with no profiles gets empty data array', function (): void {
-    $emptyUser = User::factory()->create();
+    $emptyUser = User::factory()->create(['active' => true]);
+    $emptyUser->assignRole(User::ROLE_MEMBER);
+    $emptyUserApiKey = hash('sha256', 'test-api-key-'.$emptyUser->id);
+    $emptyUser->forceFill(['api_key_hash' => $emptyUserApiKey])->save();
 
-    $response = $this->actingAs($emptyUser)
-        ->getJson('/api/user/race-profiles')
+    $response = $this->withHeaders(['x-apikey' => $emptyUserApiKey])
+        ->getJson('/api/v1/user/race-profiles')
         ->assertOk();
 
     expect($response->json('data'))->toBeEmpty();
 });
 
 test('race-profiles: full_name is composed from reg_number first_name and last_name', function (): void {
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/race-profiles')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/race-profiles')
         ->assertOk();
 
     expect($response->json('data.0.full_name'))->toBe('ABB0001 - Jan Novák');
 });
 
 // ---------------------------------------------------------------------------
-// GET /api/user/entry
+// GET /api/v1/user/entry
 // ---------------------------------------------------------------------------
 
 test('entry: unauthenticated request is rejected with 401', function (): void {
-    $this->getJson('/api/user/entry')
+    $this->getJson('/api/v1/user/entry')
         ->assertUnauthorized();
 });
 
 test('entry: authenticated user gets HTTP 200', function (): void {
-    $this->actingAs($this->user)
-        ->getJson('/api/user/entry')
+    $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/entry')
         ->assertOk();
 });
 
 test('entry: response is paginated using simplePaginate', function (): void {
-    $this->actingAs($this->user)
-        ->getJson('/api/user/entry')
+    $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/entry')
         ->assertOk()
         ->assertJsonStructure([
             'data',
@@ -182,8 +196,8 @@ test('entry: response is paginated using simplePaginate', function (): void {
 });
 
 test('entry: user with no entries gets empty data array', function (): void {
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/entry')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/entry')
         ->assertOk();
 
     expect($response->json('data'))->toBeEmpty();
@@ -209,8 +223,8 @@ test('entry: returns entries linked to user race profiles', function (): void {
 
     DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/entry')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/entry')
         ->assertOk();
 
     expect($response->json('data'))->toHaveCount(1)
@@ -239,8 +253,8 @@ test('entry: response item contains expected keys', function (): void {
 
     DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-    $item = $this->actingAs($this->user)
-        ->getJson('/api/user/entry')
+    $item = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/entry')
         ->assertOk()
         ->json('data.0');
 
@@ -288,8 +302,8 @@ test('entry: ?from filter excludes events before given date', function (): void 
 
     $from = now()->toDateString();
 
-    $response = $this->actingAs($this->user)
-        ->getJson("/api/user/entry?from={$from}")
+    $response = $this->withHeaders($this->headers)
+        ->getJson("/api/v1/user/entry?from={$from}")
         ->assertOk();
 
     expect($response->json('data'))->toHaveCount(1)
@@ -324,8 +338,8 @@ test('entry: ?to filter excludes events after given date', function (): void {
 
     $to = now()->addDays(10)->toDateString();
 
-    $response = $this->actingAs($this->user)
-        ->getJson("/api/user/entry?from=2000-01-01&to={$to}")
+    $response = $this->withHeaders($this->headers)
+        ->getJson("/api/v1/user/entry?from=2000-01-01&to={$to}")
         ->assertOk();
 
     expect($response->json('data'))->toHaveCount(1)
@@ -349,8 +363,8 @@ test('entry: ?per_page parameter controls page size', function (): void {
 
     DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/entry?per_page=2')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/entry?per_page=2')
         ->assertOk();
 
     expect($response->json('data'))->toHaveCount(2);
@@ -382,8 +396,8 @@ test('entry: does not return entries belonging to other user', function (): void
 
     DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/entry')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/entry')
         ->assertOk();
 
     expect($response->json('data'))->toBeEmpty();
@@ -415,8 +429,8 @@ test('entry: default filter shows only entries from today onwards', function ():
 
     DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/entry')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/entry')
         ->assertOk();
 
     // Without 'from' param, defaults to today — past event should be excluded
@@ -425,23 +439,23 @@ test('entry: default filter shows only entries from today onwards', function ():
 });
 
 // ---------------------------------------------------------------------------
-// GET /api/user/credit-balance
+// GET /api/v1/user/credit-balance
 // ---------------------------------------------------------------------------
 
 test('credit-balance: unauthenticated request is rejected with 401', function (): void {
-    $this->getJson('/api/user/credit-balance')
+    $this->getJson('/api/v1/user/credit-balance')
         ->assertUnauthorized();
 });
 
 test('credit-balance: authenticated user gets HTTP 200', function (): void {
-    $this->actingAs($this->user)
-        ->getJson('/api/user/credit-balance')
+    $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/credit-balance')
         ->assertOk();
 });
 
 test('credit-balance: response contains amount, currency and updated_at keys', function (): void {
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/credit-balance')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/credit-balance')
         ->assertOk();
 
     expect($response->json('data'))
@@ -449,16 +463,16 @@ test('credit-balance: response contains amount, currency and updated_at keys', f
 });
 
 test('credit-balance: currency is CZK', function (): void {
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/credit-balance')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/credit-balance')
         ->assertOk();
 
     expect($response->json('data.currency'))->toBe(UserCredit::CURRENCY_CZK);
 });
 
 test('credit-balance: amount is zero when user has no credits', function (): void {
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/credit-balance')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/credit-balance')
         ->assertOk();
 
     expect($response->json('data.amount'))->toEqual(0);
@@ -483,16 +497,16 @@ test('credit-balance: amount reflects sum of user credits', function (): void {
         'credit_type' => UserCreditType::InitialDeposit,
     ]);
 
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/credit-balance')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/credit-balance')
         ->assertOk();
 
     expect($response->json('data.amount'))->toEqual(350);
 });
 
 test('credit-balance: amount is returned as float', function (): void {
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/credit-balance')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/credit-balance')
         ->assertOk();
 
     expect($response->json('data.amount'))->toBeNumeric();
@@ -502,8 +516,8 @@ test('credit-balance: cached balance in UserParam is used when available', funct
     // Pre-set param cache so the DB sum branch is skipped
     $this->user->setParam(UserParamType::UserActualBalance, 1234.56);
 
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/credit-balance')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/credit-balance')
         ->assertOk();
 
     expect($response->json('data.amount'))->toBe(1234.56);
@@ -521,8 +535,8 @@ test('credit-balance: does not show balance of another user', function (): void 
         'credit_type' => UserCreditType::InitialDeposit,
     ]);
 
-    $response = $this->actingAs($this->user)
-        ->getJson('/api/user/credit-balance')
+    $response = $this->withHeaders($this->headers)
+        ->getJson('/api/v1/user/credit-balance')
         ->assertOk();
 
     expect($response->json('data.amount'))->toEqual(0);

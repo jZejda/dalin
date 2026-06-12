@@ -25,6 +25,12 @@ class SportDiscipline extends Model
     /** @var list<string> */
     public const RELAY_SHORT_NAMES = ['ST', 'SS', 'DR'];
 
+    /** @var list<string> */
+    protected $fillable = [
+        'short_name',
+        'long_name',
+    ];
+
     public function isRelayDiscipline(): bool
     {
         return in_array($this->short_name, self::RELAY_SHORT_NAMES, true);

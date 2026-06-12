@@ -26,6 +26,12 @@ class UserRaceProfiles
             return new Collection();
         }
 
+        // ORIS API neumí štafetové přihlášky – štafety se přihlašují vždy jen interně,
+        // proto musí být options klíčované interním id i u ORIS závodů.
+        if ($sportEvent->isRelayDiscipline()) {
+            return $this->formatProfilesWithStyling($this->getRelevantRaceProfiles($registerAnyone), 'id');
+        }
+
         if ((!is_null($sportEvent->oris_id) && $sportEvent->use_oris_for_entries)) {
 
             //vyselektuje relevatni profily pro uzivatel
@@ -53,10 +59,6 @@ class UserRaceProfiles
         } else {
             //Non ORIS race
             $relevantUserRaceProfile = $this->getRelevantRaceProfiles($registerAnyone);
-
-            if ($sportEvent->isRelayDiscipline()) {
-                return $this->formatProfilesWithStyling($relevantUserRaceProfile, 'id');
-            }
 
             // Has allready signed
             $userRaceProfiles = DB::table('user_race_profiles as urp')
