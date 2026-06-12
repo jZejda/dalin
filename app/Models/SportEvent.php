@@ -65,26 +65,6 @@ class SportEvent extends Model
 {
     use HasFactory;
 
-    protected static function booted(): void
-    {
-        static::created(function (self $sportEvent): void {
-            if (! $sportEvent->isRelayDiscipline()) {
-                return;
-            }
-
-            RelayTeam::query()->firstOrCreate(
-                [
-                    'sport_event_id' => $sportEvent->id,
-                    'name' => 'Štafeta 1',
-                ],
-                [
-                    'relay_type' => $sportEvent->sportDiscipline?->short_name ?? 'ST',
-                    'slots_count' => 3,
-                ]
-            );
-        });
-    }
-
     /** @var list<string> */
     protected $fillable = [
         'name',
@@ -154,6 +134,7 @@ class SportEvent extends Model
         }
     }
 
+    /** @return HasOne<SportDiscipline, $this> */
     public function sportDiscipline(): HasOne
     {
         return $this->hasOne(SportDiscipline::class, 'id', 'discipline_id');
@@ -262,16 +243,6 @@ class SportEvent extends Model
 
     public function isRelayDiscipline(): bool
     {
-        if ($this->relationLoaded('sportDiscipline') && $this->sportDiscipline !== null) {
-            return $this->sportDiscipline->isRelayDiscipline();
-        }
-
-        if ($this->discipline_id === null) {
-            return false;
-        }
-
-        $discipline = SportDiscipline::query()->find($this->discipline_id);
-
-        return $discipline?->isRelayDiscipline() ?? false;
+        return $this->sportDiscipline?->isRelayDiscipline() ?? false;
     }
 }

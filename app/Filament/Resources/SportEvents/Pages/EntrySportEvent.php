@@ -374,7 +374,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     } else {
                         Notification::make()
                             ->title('Přihlášku se nepodařilo vytvořit')
-                            ->body('Vybraný tým je pravděpodobně již obsazen nebo neexistuje.')
+                            ->body('Vybrané místo je již obsazené, neexistuje, nebo je závodník v týmu už zařazen.')
                             ->warning()
                             ->seconds(8)
                             ->send();
@@ -391,9 +391,9 @@ class EntrySportEvent extends Page implements HasForms, HasTable
 
                     if ($orisResponse->Status === 'OK') {
 
-                    $entry = $this->storeUserEntry(true, $sportEvent, $userRaceProfile, $sportClass, $data, $orisResponse);
+                        $entry = $this->storeUserEntry(true, $sportEvent, $userRaceProfile, $sportClass, $data, $orisResponse);
 
-                    if ($entry !== null) {
+                        if ($entry !== null) {
                             Notification::make()
                                 ->title('Přihláška  '.$userRaceProfile?->user_race_full_name.' do kategorie: '.$sportClass?->name)
                                 ->body('Přihlášku si zkontroluj na stránkách závodu přímo v ORISu.')
@@ -496,6 +496,11 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                                 return;
                             }
 
+                            // Štafety se do ORISu nepřihlašují a state je interní id profilu, ne oris_id.
+                            if ($sportEvent->isRelayDiscipline()) {
+                                return;
+                            }
+
                             try {
                                 $userProfile = UserRaceProfile::where('oris_id', '=', (int)$state)->first();
 
@@ -567,18 +572,21 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                     })
                     ->searchable()
                     ->allowHtml()
-                    ->required(fn (): bool => ! $this->record->isRelayDiscipline())
-                    ->visible(fn (): bool => ! $this->record->isRelayDiscipline())
+                    ->required(fn (): bool => ! $this->isRelayEvent())
+                    ->visible(fn (): bool => ! $this->isRelayEvent())
                     ->loadingMessage('Nahrávám kategorie...'),
                 Select::make('relayTeamMemberId')
                     ->label('Volné místo v týmu')
                     ->options(function (): Collection {
-                        return $this->getAvailableRelayMemberSlots($this->record);
+                        /** @var SportEvent $sportEvent */
+                        $sportEvent = $this->record;
+
+                        return $this->getAvailableRelayMemberSlots($sportEvent);
                     })
                     ->allowHtml()
                     ->searchable()
-                    ->required(fn (): bool => $this->record->isRelayDiscipline())
-                    ->visible(fn (): bool => $this->record->isRelayDiscipline()),
+                    ->required(fn (): bool => $this->isRelayEvent())
+                    ->visible(fn (): bool => $this->isRelayEvent()),
 
                 Grid::make()->schema([
                     TextInput::make('si')
@@ -830,7 +838,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         }
         $entry->sport_event_id = $sportEvent->id;
         $entry->user_race_profile_id = $userRaceProfile->id;
-        $entry->class_definition_id = $sportClass->classDefinition?->id;
+        $entry->class_definition_id = $sportClass->classDefinition->id;
         $entry->class_name = $sportClass->name ?? 'N/A';
         $entry->note = $data['note'];
         $entry->club_note = $data['club_note'];
@@ -864,11 +872,25 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 ->lockForUpdate()
                 ->first();
 
-            if ($relayTeamMember === null || $relayTeamMember->relayTeam->sport_event_id !== $sportEvent->id) {
+            if ($relayTeamMember === null) {
                 return false;
             }
 
-            $sportClass = $relayTeamMember->relayTeam->sportClass;
+            $relayTeam = $relayTeamMember->relayTeam;
+            if ($relayTeam->sport_event_id !== $sportEvent->id) {
+                return false;
+            }
+
+            // Stejný profil může běžet ve více týmech, ale ne dvakrát v jednom týmu.
+            $profileAlreadyInTeam = $relayTeam->members()
+                ->where('user_race_profile_id', $userRaceProfile->id)
+                ->exists();
+
+            if ($profileAlreadyInTeam) {
+                return false;
+            }
+
+            $sportClass = $relayTeam->sportClass;
             $entry = $this->storeUserEntry(false, $sportEvent, $userRaceProfile, $sportClass, $data);
 
             if ($entry === null) {
@@ -894,7 +916,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         $relayTeamMember->save();
     }
 
-    /** @return Collection<int, string> */
+    /** @return Collection<int, non-falsy-string> */
     private function getAvailableRelayMemberSlots(SportEvent $sportEvent): Collection
     {
         return RelayTeamMember::query()
@@ -906,15 +928,25 @@ class EntrySportEvent extends Page implements HasForms, HasTable
                 fn (RelayTeamMember $member) => $member->relayTeam->name,
                 fn (RelayTeamMember $member) => $member->slot,
             ])
-            ->mapWithKeys(function (RelayTeamMember $member): array {
-                $teamName = $member->relayTeam->name;
-                $category = $member->relayTeam->sportClass?->name;
-                $label = '<span class="font-medium">' . e($teamName) . ' - slot ' . e((string) $member->slot) . '</span>';
-                if ($category !== null) {
-                    $label .= ' <span class="text-gray-400">| ' . e($category) . '</span>';
-                }
+            ->mapWithKeys(
+                function (RelayTeamMember $member): array {
+                    $teamName = $member->relayTeam->name;
+                    $category = $member->relayTeam->sportClass?->name;
+                    $label = '<span class="font-medium">' . e($teamName) . ' - slot ' . e((string) $member->slot) . '</span>';
+                    if ($category !== null) {
+                        $label .= ' <span class="text-gray-400">| ' . e($category) . '</span>';
+                    }
 
-                return [$member->id => $label];
-            });
+                    return [$member->id => $label];
+                }
+            );
+    }
+
+    private function isRelayEvent(): bool
+    {
+        /** @var SportEvent $sportEvent */
+        $sportEvent = $this->record;
+
+        return $sportEvent->isRelayDiscipline();
     }
 }
