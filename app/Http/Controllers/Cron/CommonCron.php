@@ -15,12 +15,17 @@ use App\Http\Controllers\Cron\Jobs\UpdateBankTransaction;
 use App\Http\Controllers\Cron\Jobs\UpdateEvent;
 use App\Http\Controllers\Cron\Jobs\UpdateEventWeather;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Context;
 use Illuminate\Support\Facades\Log;
 
 class CommonCron extends Controller
 {
     public function runHourly(): void
     {
+        // Mark every mail dispatched by the hourly cron as cron-triggered.
+        // Context propagates into queued mailables, so ->queue() is covered too.
+        Context::add('mail_source', ['type' => 'cron']);
+
         /** @description Weather update run at 08 and 17 hours */
         try {
             if ($this->runJob('weather_forecast')) {
