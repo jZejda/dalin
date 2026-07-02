@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\MailLogs\Pages;
+namespace App\Filament\Clusters\Config\Resources\MailLogs\Pages;
 
-use App\Filament\Resources\MailLogs\MailLogResource;
+use App\Filament\Clusters\Config\Resources\MailLogs\MailLogResource;
 use Filament\Resources\Pages\ListRecords;
 
 class ListMailLogs extends ListRecords

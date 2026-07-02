@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\MailLogs;
+namespace App\Filament\Clusters\Config\Resources\MailLogs;
 
 use App\Enums\MailSource;
-use App\Filament\Resources\MailLogs\Pages\ListMailLogs;
+use App\Filament\Clusters\Config\ConfigCluster;
+use App\Filament\Clusters\Config\Resources\MailLogs\Pages\ListMailLogs;
 use App\Models\MailLog;
 use App\Shared\Helpers\AppHelper;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -24,9 +25,9 @@ class MailLogResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = MailLog::class;
 
-    protected static ?int $navigationSort = 90;
+    protected static ?string $cluster = ConfigCluster::class;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Správa';
+    protected static ?int $navigationSort = 90;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-envelope';
 
