@@ -203,6 +203,8 @@ final class OrisApiService
                 $classModel->climbing = $class->Climbing;
                 $classModel->controls = $class->Controls;
                 $classModel->fee = (float) $class->Fee;
+                $legsValue = $class->Legs;
+                $classModel->legs = is_numeric($legsValue) ? (int) $legsValue : null;
                 $classModel->saveOrFail();
             }
 

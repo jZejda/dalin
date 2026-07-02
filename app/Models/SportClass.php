@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
@@ -21,6 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $climbing
  * @property string|null $controls
  * @property float|null $fee
+ * @property int|null $legs
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read SportClassDefinition|null $classDefinition
@@ -41,6 +43,7 @@ class SportClass extends Model
         'climbing',
         'controls',
         'fee',
+        'legs',
     ];
 
     public function sportEvent(): HasOne
@@ -53,4 +56,9 @@ class SportClass extends Model
         return $this->hasOne(SportClassDefinition::class, 'id', 'class_definition_id');
     }
 
+    /** @return HasMany<RelayTeam, $this> */
+    public function relayTeams(): HasMany
+    {
+        return $this->hasMany(RelayTeam::class, 'sport_class_id', 'id');
+    }
 }

@@ -28,6 +28,7 @@ use App\Filament\Resources\SportEvents\RelationManagers\SportMarkersRelationMana
 use App\Filament\Resources\SportEvents\RelationManagers\SportServicesRelationManager;
 use App\Filament\Resources\SportEvents\RelationManagers\UserCreditRelationManager;
 use App\Filament\Resources\SportEvents\RelationManagers\UserEntryRelationManager;
+use App\Filament\Resources\SportEvents\RelationManagers\RelayTeamsRelationManager;
 use App\Models\Club;
 use App\Models\SportDiscipline;
 use App\Models\SportEvent;
@@ -478,6 +479,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
         return [
             UserEntryRelationManager::class,
             SportClassesRelationManager::class,
+            RelayTeamsRelationManager::class,
             SportServicesRelationManager::class,
             SportMarkersRelationManager::class,
             SportEventLinkRelationManager::class,

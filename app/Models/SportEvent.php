@@ -134,6 +134,7 @@ class SportEvent extends Model
         }
     }
 
+    /** @return HasOne<SportDiscipline, $this> */
     public function sportDiscipline(): HasOne
     {
         return $this->hasOne(SportDiscipline::class, 'id', 'discipline_id');
@@ -153,6 +154,12 @@ class SportEvent extends Model
     public function sportServices(): HasMany
     {
         return $this->hasMany(SportService::class, 'sport_event_id', 'id');
+    }
+
+    /** @return HasMany<RelayTeam, $this> */
+    public function relayTeams(): HasMany
+    {
+        return $this->hasMany(RelayTeam::class, 'sport_event_id', 'id');
     }
 
     /** @return HasMany<UserEntry, $this> */
@@ -232,5 +239,20 @@ class SportEvent extends Model
             ($this->last_calculate_cost !== null ? ' | (Náklady naposled : '.$this->last_calculate_cost->format(
                 AppHelper::DATE_TIME_FORMAT
             ).')' : '');
+    }
+
+    public function isRelayDiscipline(): bool
+    {
+        if ($this->relationLoaded('sportDiscipline') && $this->sportDiscipline !== null) {
+            return $this->sportDiscipline->isRelayDiscipline();
+        }
+
+        if ($this->discipline_id === null) {
+            return false;
+        }
+
+        $discipline = SportDiscipline::query()->find($this->discipline_id);
+
+        return $discipline?->isRelayDiscipline() ?? false;
     }
 }
