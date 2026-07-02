@@ -39,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Observer from EventServiceProvider
         UserCredit::observe(UserCreditObserver::class);
+        // Outgoing e-mails are logged via App\Listeners\LogSentMail
+        // (auto-discovered listener on the MessageSent event).
 
         // Rate limiting from RouteServiceProvider
         RateLimiter::for('api', function (Request $request) {

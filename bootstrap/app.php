@@ -27,6 +27,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo('/dashboard');
 
+        // Attribute mails dispatched during a web request to the logged-in user
+        $middleware->web(append: [
+            \App\Http\Middleware\CaptureMailSource::class,
+        ]);
+
         $middleware->alias([
             'apikey' => \App\Http\Middleware\ApiKeyAuth::class,
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
