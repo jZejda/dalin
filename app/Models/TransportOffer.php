@@ -122,6 +122,23 @@ class TransportOffer extends Model
     }
 
     /**
+     * Nejvyšší počet míst, o který lze požádat v některém ze směrů.
+     */
+    public function maxRequestableSeats(): int
+    {
+        $freeSeats = [];
+
+        if ($this->direction->coversThere()) {
+            $freeSeats[] = $this->freeSeatsFor(TransportDirection::There);
+        }
+        if ($this->direction->coversBack()) {
+            $freeSeats[] = $this->freeSeatsFor(TransportDirection::Back);
+        }
+
+        return $freeSeats === [] ? 0 : max($freeSeats);
+    }
+
+    /**
      * Scope a query to only include active offers.
      *
      * @param  Builder<TransportOffer>  $query
