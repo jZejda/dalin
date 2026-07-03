@@ -22,6 +22,8 @@ return [
 
     'event_type' => 'Typ akcí',
 
+    'transport_type' => 'Typ dopravy',
+
     'event_news' => [
         'content' => 'Obsah novinky',
         'date' => 'Datum novinky',

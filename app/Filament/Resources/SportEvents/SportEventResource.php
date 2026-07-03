@@ -20,6 +20,7 @@ use App\Filament\Resources\SportEvents\Pages\EditSportEvent;
 use App\Filament\Resources\SportEvents\Pages\ViewSportEvent;
 use App\Filament\Resources\SportEvents\Pages\EntrySportEvent;
 use App\Enums\AppRoles;
+use App\Enums\SportEventTransportType;
 use App\Enums\SportEventType;
 use App\Filament\Resources\SportEvents\RelationManagers\SportClassesRelationManager;
 use App\Filament\Resources\SportEvents\RelationManagers\SportEventLinkRelationManager;
@@ -29,6 +30,7 @@ use App\Filament\Resources\SportEvents\RelationManagers\SportServicesRelationMan
 use App\Filament\Resources\SportEvents\RelationManagers\UserCreditRelationManager;
 use App\Filament\Resources\SportEvents\RelationManagers\UserEntryRelationManager;
 use App\Filament\Resources\SportEvents\RelationManagers\RelayTeamsRelationManager;
+use App\Models\AppSetting;
 use App\Models\Club;
 use App\Models\SportDiscipline;
 use App\Models\SportEvent;
@@ -341,6 +343,13 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                         ->label(__('sport-event.event_type'))
                                         ->options(SportEventType::enumArray())
                                         ->default(SportEventType::Race->value),
+
+                                    Select::make('transport_type')
+                                        ->label(__('sport-event.transport_type'))
+                                        ->options(SportEventTransportType::enumArray())
+                                        ->default(SportEventTransportType::SelfOnly->value)
+                                        ->required()
+                                        ->visible(fn (): bool => AppSetting::isTransportModuleEnabled()),
 
                                     TextInput::make('name')
                                         ->label('Název závodu/akce')

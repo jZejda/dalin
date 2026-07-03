@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Models\AppSetting;
+use App\Models\SportEvent;
+use App\Models\SportList;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Support\Facades\Cache;
@@ -41,6 +43,39 @@ it('renders my vehicles page for member when module is enabled', function (): vo
 
     $this->get('/admin/my-vehicle-list')->assertOk();
 });
+
+it('shows transport type select on sport event form when module is enabled', function (): void {
+    AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, true);
+
+    actingAsSuperAdmin();
+    $sportEvent = createTransportTestSportEvent();
+
+    $this->get('/admin/sport-events/'.$sportEvent->id.'/edit')
+        ->assertOk()
+        ->assertSee(__('sport-event.transport_type'));
+});
+
+it('hides transport type select on sport event form when module is disabled', function (): void {
+    AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, false);
+
+    actingAsSuperAdmin();
+    $sportEvent = createTransportTestSportEvent();
+
+    $this->get('/admin/sport-events/'.$sportEvent->id.'/edit')
+        ->assertOk()
+        ->assertDontSee(__('sport-event.transport_type'));
+});
+
+function createTransportTestSportEvent(): SportEvent
+{
+    $sportList = SportList::query()->create(['short_name' => 'OB']);
+
+    return SportEvent::factory()->create([
+        'sport_id' => $sportList->id,
+        'discipline_id' => null,
+        'use_oris_for_entries' => false,
+    ]);
+}
 
 it('denies my vehicles page when module is disabled', function (): void {
     AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, false);
