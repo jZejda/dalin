@@ -19,6 +19,7 @@ use App\Filament\Resources\SportEvents\Pages\CreateSportEvent;
 use App\Filament\Resources\SportEvents\Pages\EditSportEvent;
 use App\Filament\Resources\SportEvents\Pages\ViewSportEvent;
 use App\Filament\Resources\SportEvents\Pages\EntrySportEvent;
+use App\Filament\Resources\SportEvents\Pages\TransportSportEvent;
 use App\Enums\AppRoles;
 use App\Enums\SportEventTransportType;
 use App\Enums\SportEventType;
@@ -505,6 +506,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
             'edit' => EditSportEvent::route('/{record}/edit'),
             'view' => ViewSportEvent::route('/{record}'),
             'entry' => EntrySportEvent::route('/{record}/entry'),
+            'transport' => TransportSportEvent::route('/{record}/transport'),
         ];
     }
 
