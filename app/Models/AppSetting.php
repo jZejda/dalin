@@ -24,6 +24,8 @@ class AppSetting extends Model
 
     public const string TRANSPORT_MODULE_ENABLED = 'transport.enabled';
 
+    public const string EVENT_PAYMENTS_MODULE_ENABLED = 'event_payments.enabled';
+
     /** @var list<string> */
     protected $fillable = [
         'key',
@@ -70,6 +72,11 @@ class AppSetting extends Model
     public static function isTransportModuleEnabled(): bool
     {
         return self::boolean(self::TRANSPORT_MODULE_ENABLED);
+    }
+
+    public static function isEventPaymentsModuleEnabled(): bool
+    {
+        return self::boolean(self::EVENT_PAYMENTS_MODULE_ENABLED);
     }
 
     private static function cacheKey(string $key): string

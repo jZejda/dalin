@@ -37,6 +37,15 @@ class UserCreditRelationManager extends RelationManager
 
     protected static ?string $title = 'Finance';
 
+    /**
+     * Disable lazy loading so the relation manager mounts within the initial
+     * HTTP request. This lets us read query string parameters (e.g.
+     * `?sport_event_id=`) from the parent page URL when applying default
+     * table filters; lazy-loaded relation managers mount in a separate
+     * Livewire XHR that no longer carries those query params.
+     */
+    protected static bool $isLazy = false;
+
     public array $data_list = [
         'calc_columns' => [
             'amount',
@@ -107,7 +116,8 @@ class UserCreditRelationManager extends RelationManager
             ->filters([
                 SelectFilter::make('sport_event_id')
                     ->label('Závod')
-                    ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id')),
+                    ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id'))
+                    ->default(fn (): ?int => request()->integer('sport_event_id') ?: null),
                 Filter::make('created_at')
                     ->schema([
                         DatePicker::make('created_from')

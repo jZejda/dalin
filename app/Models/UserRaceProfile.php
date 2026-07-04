@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
@@ -36,6 +38,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read string $user_race_full_name
  * @property-read User|null $user
+ * @property-read Collection<int, UserEntry> $userEntries
+ * @property-read Collection<int, UserCredit> $userCredits
  */
 class UserRaceProfile extends Model
 {
@@ -79,4 +83,13 @@ class UserRaceProfile extends Model
         return "{$this->reg_number} - {$this->first_name} {$this->last_name}";
     }
 
+    public function userEntries(): HasMany
+    {
+        return $this->hasMany(UserEntry::class, 'user_race_profile_id', 'id');
+    }
+
+    public function userCredits(): HasMany
+    {
+        return $this->hasMany(UserCredit::class, 'user_race_profile_id', 'id');
+    }
 }

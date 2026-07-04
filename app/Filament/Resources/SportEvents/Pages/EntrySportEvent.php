@@ -5,37 +5,27 @@ declare(strict_types=1);
 namespace App\Filament\Resources\SportEvents\Pages;
 
 use App\Enums\AppRoles;
-use App\Enums\EntryStatus;
 use App\Enums\SportEventTransportType;
 use App\Filament\Resources\SportEvents\Pages\Actions\CreateEntryAction;
-use App\Filament\Resources\SportEvents\Pages\Actions\DeleteEntryAction;
 use App\Filament\Resources\SportEvents\Pages\Actions\EntrySendMail;
 use App\Filament\Resources\SportEvents\Pages\Actions\EntryUpdateEvent;
 use App\Filament\Resources\SportEvents\Pages\Actions\ExportsData;
-use App\Filament\Resources\SportEvents\Pages\Table\EntriesTableColumns;
 use App\Filament\Resources\SportEvents\SportEventResource;
 use App\Models\AppSetting;
 use App\Models\SportEvent;
 use App\Models\User;
-use App\Models\UserEntry;
 use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Resources\Pages\Page;
-use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class EntrySportEvent extends Page implements HasForms, HasTable
+class EntrySportEvent extends Page implements HasForms
 {
     use InteractsWithForms;
     use InteractsWithRecord;
-    use InteractsWithTable;
 
     public string|int|null|Model $record;
 
@@ -48,7 +38,7 @@ class EntrySportEvent extends Page implements HasForms, HasTable
     public function booted(): void
     {
         // @todo refactor check Filament::user ability.
-        if (! Auth::user()?->hasRole(User::ROLE_MEMBER.'|'.User::ROLE_EVENT_MASTER.'|'.User::ROLE_SUPER_ADMIN)) {
+        if (! Auth::user()?->hasRole(User::ROLE_MEMBER.'|'.User::ROLE_EVENT_MASTER.'|'.User::ROLE_SUPER_ADMIN.'|'.AppRoles::BillingSpecialist->value)) {
             $this->notify('warning', __('filament-shield::filament-shield.forbidden'));
             $this->beforeShieldRedirects();
             redirect($this->getShieldRedirectPath());
@@ -124,56 +114,6 @@ class EntrySportEvent extends Page implements HasForms, HasTable
         }
 
         return $defaultActions;
-    }
-
-    protected function getTableQuery(): Builder
-    {
-        /** @var SportEvent $sportEvent */
-        $sportEvent = $this->record;
-
-        return UserEntry::where('sport_event_id', '=', $sportEvent->id);
-    }
-
-    protected function getTableColumns(): array
-    {
-        /** @var SportEvent $sportEvent */
-        $sportEvent = $this->record;
-
-        return EntriesTableColumns::make($sportEvent);
-    }
-
-    public function table(Table $table): Table
-    {
-        return $table->recordClasses('!py-0');
-    }
-
-    public function getTableRecordsPerPage(): ?int
-    {
-        return 50;
-    }
-
-    protected function getDefaultTableSortColumn(): ?string
-    {
-        return 'created_at';
-    }
-
-    protected function getDefaultTableSortDirection(): ?string
-    {
-        return 'asc';
-    }
-
-    protected function getTableFilters(): array
-    {
-        return [
-            SelectFilter::make('entry_status')
-                ->options(EntryStatus::enumArray())->multiple()
-                ->default([EntryStatus::Create->value, EntryStatus::Edit->value]),
-        ];
-    }
-
-    protected function getTableActions(): array
-    {
-        return [(new DeleteEntryAction())->make()];
     }
 
     public function getHeaderWidgetsColumns(): int|array

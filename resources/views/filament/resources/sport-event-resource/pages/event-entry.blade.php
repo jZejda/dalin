@@ -366,8 +366,48 @@
         {{--        </div>--}}
     </form>
 
-    <div>
-        {{ $this->table }}
+    @php
+        $paymentsModuleEnabled = \App\Models\AppSetting::isEventPaymentsModuleEnabled();
+    @endphp
+
+    <div x-data="{ tab: 'entries' }" class="space-y-4">
+        @if ($paymentsModuleEnabled)
+        <div class="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-700">
+            <button
+                type="button"
+                x-on:click="tab = 'entries'"
+                :class="tab === 'entries'
+                    ? 'border-primary-600 text-primary-600 dark:text-primary-400 dark:border-primary-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
+                class="inline-flex items-center gap-2 px-4 py-2 -mb-px border-b-2 text-sm font-medium transition">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                </svg>
+                Přihlášky
+            </button>
+            <button
+                type="button"
+                x-on:click="tab = 'payments'"
+                :class="tab === 'payments'
+                    ? 'border-primary-600 text-primary-600 dark:text-primary-400 dark:border-primary-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
+                class="inline-flex items-center gap-2 px-4 py-2 -mb-px border-b-2 text-sm font-medium transition">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+                </svg>
+                Platby / Finance
+            </button>
+        </div>
+        @endif
+
+        <div x-show="tab === 'entries'" x-cloak>
+            @livewire(\App\Livewire\SportEvent\EntryList::class, ['sportEvent' => $record])
+        </div>
+        @if ($paymentsModuleEnabled)
+        <div x-show="tab === 'payments'" x-cloak>
+            @livewire(\App\Livewire\SportEvent\RaceProfilePaymentList::class, ['sportEvent' => $record])
+        </div>
+        @endif
     </div>
 
 </x-filament::page>
