@@ -33,9 +33,12 @@ class Settings extends Page implements HasForms
 
     public bool $transport_enabled = false;
 
+    public bool $event_payments_enabled = false;
+
     public function mount(): void
     {
         $this->transport_enabled = AppSetting::isTransportModuleEnabled();
+        $this->event_payments_enabled = AppSetting::isEventPaymentsModuleEnabled();
     }
 
     protected function getFormSchema(): array
@@ -48,15 +51,23 @@ class Settings extends Page implements HasForms
                         ->label('Modul doprava je zapnutý')
                         ->helperText('Vypnutí modulu skryje dopravu v celé aplikaci, uložená data zůstanou zachována.'),
                 ]),
+            Section::make('Modul Platby u závodů')
+                ->description('Po zapnutí modulu se na detailu závodu zobrazí záložka Platby / Finance se správou plateb závodních profilů.')
+                ->schema([
+                    Toggle::make('event_payments_enabled')
+                        ->label('Modul plateb u závodů je zapnutý')
+                        ->helperText('Vypnutí modulu skryje záložku plateb na detailu závodu, uložená data zůstanou zachována.'),
+                ]),
         ];
     }
 
     public function submit(): void
     {
         AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, $this->transport_enabled);
+        AppSetting::set(AppSetting::EVENT_PAYMENTS_MODULE_ENABLED, $this->event_payments_enabled);
 
         Notification::make()
-            ->title('Nastavení dopravy uloženo')
+            ->title('Nastavení uloženo')
             ->success()
             ->send();
     }

@@ -366,7 +366,12 @@
         {{--        </div>--}}
     </form>
 
+    @php
+        $paymentsModuleEnabled = \App\Models\AppSetting::isEventPaymentsModuleEnabled();
+    @endphp
+
     <div x-data="{ tab: 'entries' }" class="space-y-4">
+        @if ($paymentsModuleEnabled)
         <div class="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-700">
             <button
                 type="button"
@@ -393,13 +398,16 @@
                 Platby / Finance
             </button>
         </div>
+        @endif
 
         <div x-show="tab === 'entries'" x-cloak>
             @livewire(\App\Livewire\SportEvent\EntryList::class, ['sportEvent' => $record])
         </div>
+        @if ($paymentsModuleEnabled)
         <div x-show="tab === 'payments'" x-cloak>
             @livewire(\App\Livewire\SportEvent\RaceProfilePaymentList::class, ['sportEvent' => $record])
         </div>
+        @endif
     </div>
 
 </x-filament::page>
