@@ -31,7 +31,9 @@ class DeleteEntryAction
             ->color(fn (UserEntry $userEntry): string => Auth::user()?->id === $userEntry->userRaceProfile?->user?->id ? 'danger' : 'warning')
             ->label('Odhlásit')
             ->icon('heroicon-o-trash')
-            ->disabled(fn (UserEntry $record): bool => $record->sportEvent instanceof \App\Models\SportEvent && AppHelper::allowModifyUserEntry($record->sportEvent))
+            ->disabled(fn (UserEntry $record): bool => $record->sportEvent instanceof \App\Models\SportEvent
+                && AppHelper::allowModifyUserEntry($record->sportEvent)
+                && ! AppHelper::allowModifyUserEntryAfterDeadline($record->sportEvent))
             ->modalHeading(function (UserEntry $record): string {
                 $profile = $record->userRaceProfile;
                 $name = $profile instanceof \App\Models\UserRaceProfile ? $profile->user_race_full_name : '';

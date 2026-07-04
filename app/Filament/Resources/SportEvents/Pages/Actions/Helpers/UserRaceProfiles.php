@@ -22,7 +22,7 @@ class UserRaceProfiles
         $sportEvent = $model;
         $relevantUserRaceProfile = new Collection();
 
-        if (AppHelper::allowModifyUserEntry($sportEvent)) {
+        if (AppHelper::allowModifyUserEntry($sportEvent) && ! AppHelper::allowModifyUserEntryAfterDeadline($sportEvent)) {
             return new Collection();
         }
 

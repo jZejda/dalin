@@ -63,6 +63,10 @@
                             <span
                                 class="align-top bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Zrušeno</span>
                         @endif
+                        @if (AppHelper::allowModifyUserEntry($record) && AppHelper::allowModifyUserEntryAfterDeadline($record))
+                            <span
+                                class="align-top bg-amber-100 text-amber-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-amber-900 dark:text-amber-300">Přihlášky po termínu — režim správce</span>
+                        @endif
                         @if (EmptyType::intNotEmpty($record->oris_id))
                             <span class="font-thin">| {{ $record->oris_id }}</span>
                         @endif

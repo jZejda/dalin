@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Shared\Helpers;
 
+use App\Enums\AppRoles;
 use App\Models\SportEvent;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 final class AppHelper
 {
@@ -45,6 +47,23 @@ final class AppHelper
         }
 
         return false;
+    }
+
+    /**
+     * U závodů, které nepoužívají ORIS přihlášky, mohou pověřené role
+     * přihlašovat a odhlašovat závodníky i po termínu přihlášek.
+     */
+    public static function allowModifyUserEntryAfterDeadline(SportEvent $sportEvent): bool
+    {
+        if ($sportEvent->oris_id !== null && $sportEvent->use_oris_for_entries) {
+            return false;
+        }
+
+        return Auth::user()?->hasRole([
+            AppRoles::SuperAdmin,
+            AppRoles::EventMaster,
+            AppRoles::EventOrganizer,
+        ]) ?? false;
     }
 
     public static function getPageHelpUrl(string $finalUriPage): string
