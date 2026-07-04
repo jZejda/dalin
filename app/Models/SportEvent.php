@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\EntryStatus;
+use App\Enums\SportEventTransportType;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\AppHelper;
 use Illuminate\Contracts\Database\Eloquent\Builder;
@@ -34,6 +35,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $discipline_id
  * @property int|null $level_id
  * @property SportEventType|null $event_type
+ * @property SportEventTransportType $transport_type
  * @property bool $use_oris_for_entries
  * @property bool|null $ranking
  * @property float|null $ranking_coefficient
@@ -85,6 +87,7 @@ class SportEvent extends Model
         'ranking',
         'ranking_coefficient',
         'event_type',
+        'transport_type',
         'entry_date_1',
         'entry_date_2',
         'entry_date_3',
@@ -121,6 +124,7 @@ class SportEvent extends Model
         'weather' => 'array',
         'dont_update_excluded' => 'boolean',
         'event_type' => SportEventType::class,
+        'transport_type' => SportEventTransportType::class,
     ];
 
     public function lastEntryDate(): ?Carbon

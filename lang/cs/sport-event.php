@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\EntryStatus;
+use App\Enums\SportEventTransportType;
 use App\Enums\SportEventType;
 use App\Enums\SportEventMarkerType;
 use App\Enums\SportEventLinkType;
@@ -20,6 +21,8 @@ return [
     */
 
     'event_type' => 'Typ akcí',
+
+    'transport_type' => 'Typ dopravy',
 
     'event_news' => [
         'content' => 'Obsah novinky',
@@ -47,6 +50,13 @@ return [
         SportEventType::Training->value => 'Trénink',
         SportEventType::TrainingCamp->value => 'Soustředění',
         SportEventType::Other->value => 'Ostatní',
+    ],
+
+    'transport_type_enum' => [
+        SportEventTransportType::ClubOnly->value => 'Doprava zajištěna klubem',
+        SportEventTransportType::Combined->value => 'Kombinovaná (klub + vlastní)',
+        SportEventTransportType::SelfOnly->value => 'Vlastní doprava',
+        SportEventTransportType::None->value => 'Bez dopravy',
     ],
 
     'type_enum_markers' => [

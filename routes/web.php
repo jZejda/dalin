@@ -50,6 +50,11 @@ Route::get('/vysledky/{slug}', [ResultListController::class, 'singleResultList']
 Route::get('/akce/{id}', [\App\Http\Controllers\Frontend\SportEvent::class, 'singleEvent'])
     ->name('sport-event.show');
 
+Route::get('/doprava/zadost/{transportRequest}/{decision}', \App\Http\Controllers\TransportRequestDecisionController::class)
+    ->whereIn('decision', ['approve', 'reject'])
+    ->middleware('signed')
+    ->name('transport-request.decision');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
