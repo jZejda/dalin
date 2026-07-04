@@ -84,10 +84,7 @@ class ServiceOrderList extends Component implements HasActions, HasForms, HasTab
                         : 'warning'),
                 TextColumn::make('status')
                     ->label('Stav')
-                    ->badge()
-                    ->formatStateUsing(fn (ServiceOrderStatus $state): string => $state->label())
-                    ->color(fn (ServiceOrderStatus $state): string => $state->color())
-                    ->icon(fn (ServiceOrderStatus $state): string => $state->icon()),
+                    ->badge(),
                 TextColumn::make('note')
                     ->label('Poznámka')
                     ->limit(30)

@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum ServiceOrderStatus: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
+use Override;
+
+enum ServiceOrderStatus: string implements HasColor, HasIcon, HasLabel
 {
     case Ordered = 'ordered';
     case Cancelled = 'cancelled';
@@ -20,12 +25,14 @@ enum ServiceOrderStatus: string
         ];
     }
 
-    public function label(): string
+    #[Override]
+    public function getLabel(): string
     {
         return __('sport-event.service_order_status_enum.'.$this->value);
     }
 
-    public function color(): string
+    #[Override]
+    public function getColor(): string
     {
         return match ($this) {
             self::Ordered => 'warning',
@@ -34,7 +41,8 @@ enum ServiceOrderStatus: string
         };
     }
 
-    public function icon(): string
+    #[Override]
+    public function getIcon(): string
     {
         return match ($this) {
             self::Ordered => 'heroicon-o-shopping-bag',
