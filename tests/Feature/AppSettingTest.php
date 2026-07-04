@@ -34,6 +34,29 @@ it('refreshes cached value after update', function (): void {
     expect(AppSetting::boolean('some.flag'))->toBeFalse();
 });
 
+it('overrides club config with values saved in app settings', function (): void {
+    config()->set('site-config.club.full_name', 'KLUB ABC');
+    config()->set('site-config.club.user_credit_limit', -2000);
+
+    AppSetting::set(AppSetting::CLUB_FULL_NAME, 'Orientační klub Testov');
+    AppSetting::set(AppSetting::CLUB_USER_CREDIT_LIMIT, -500);
+
+    AppSetting::applyClubConfigOverrides();
+
+    expect(config('site-config.club.full_name'))->toBe('Orientační klub Testov')
+        ->and(config('site-config.club.user_credit_limit'))->toBe(-500);
+});
+
+it('keeps config file defaults for club settings that were never saved', function (): void {
+    config()->set('site-config.club.iban', 'CZ6508000000192000145399');
+    config()->set('site-config.club.technical_email', 'tech@example.com');
+
+    AppSetting::applyClubConfigOverrides();
+
+    expect(config('site-config.club.iban'))->toBe('CZ6508000000192000145399')
+        ->and(config('site-config.club.technical_email'))->toBe('tech@example.com');
+});
+
 it('reports transport module state', function (): void {
     expect(AppSetting::isTransportModuleEnabled())->toBeFalse();
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Mcp\Servers\DalinServer;
+use App\Models\AppSetting;
 use App\Models\UserCredit;
 use App\Observers\UserCreditObserver;
 use Filament\Facades\Filament;
@@ -34,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Club settings from the admin panel override config/site-config.php;
+        // rescue() covers fresh installs where app_settings does not exist yet.
+        rescue(static fn () => AppSetting::applyClubConfigOverrides(), report: false);
+
         // MCP server registration
         Mcp::local('dalin', DalinServer::class);
 
