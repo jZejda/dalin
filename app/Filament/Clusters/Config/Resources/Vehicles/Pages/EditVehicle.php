@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Clusters\Transport\Resources\Vehicles\Pages;
+namespace App\Filament\Clusters\Config\Resources\Vehicles\Pages;
 
-use App\Filament\Clusters\Transport\Resources\Vehicles\VehicleResource;
+use App\Filament\Clusters\Config\Resources\Vehicles\VehicleResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 

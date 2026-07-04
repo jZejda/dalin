@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\VehicleType;
+
 return [
 
     /*
@@ -14,6 +16,7 @@ return [
 
     'name' => 'Název',
     'brand' => 'Značka',
+    'type' => 'Typ vozidla',
     'description' => 'Popis',
     'seats' => 'Počet míst',
     'operator' => 'Provozovatel',
@@ -22,7 +25,16 @@ return [
     'price_per_km' => 'Cena za km',
     'price_per_km_suffix' => 'Kč/km',
     'active' => 'Aktivní',
+    'is_default' => 'Výchozí vozidlo',
+    'is_default_helper' => 'Toto vozidlo se při nabízení dopravy předvyplní automaticky.',
     'owner' => 'Vlastník',
+
+    'type_enum' => [
+        VehicleType::PassengerCar->value => 'Osobní automobil',
+        VehicleType::Van->value => 'Dodávka',
+        VehicleType::Bus->value => 'Autobus',
+        VehicleType::Plane->value => 'Letadlo',
+    ],
 
     'club_vehicle' => 'Klubové vozidlo',
     'club_vehicles' => 'Klubová vozidla',

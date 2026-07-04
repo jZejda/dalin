@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Clusters\Transport\Resources\Vehicles;
+namespace App\Filament\Clusters\Config\Resources\Vehicles;
 
-use App\Filament\Clusters\Transport\Resources\Vehicles\Pages\CreateVehicle;
-use App\Filament\Clusters\Transport\Resources\Vehicles\Pages\EditVehicle;
-use App\Filament\Clusters\Transport\Resources\Vehicles\Pages\ListVehicles;
-use App\Filament\Clusters\Transport\TransportCluster;
+use App\Filament\Clusters\Config\ConfigCluster;
+use App\Filament\Clusters\Config\Resources\Vehicles\Pages\CreateVehicle;
+use App\Filament\Clusters\Config\Resources\Vehicles\Pages\EditVehicle;
+use App\Filament\Clusters\Config\Resources\Vehicles\Pages\ListVehicles;
+use App\Enums\VehicleType;
 use App\Models\Vehicle;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
@@ -22,6 +24,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,7 +34,7 @@ class VehicleResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Vehicle::class;
 
-    protected static ?string $cluster = TransportCluster::class;
+    protected static ?string $cluster = ConfigCluster::class;
 
     protected static ?int $navigationSort = 20;
 
@@ -81,7 +84,12 @@ class VehicleResource extends Resource implements HasShieldPermissions
                 TextInput::make('brand')
                     ->label(__('vehicle.brand'))
                     ->maxLength(255),
-            ])->columns(2),
+                Select::make('type')
+                    ->label(__('vehicle.type'))
+                    ->options(VehicleType::enumArray())
+                    ->default(VehicleType::PassengerCar->value)
+                    ->required(),
+            ])->columns(3),
             Grid::make()->schema([
                 TextInput::make('seats')
                     ->label(__('vehicle.seats'))
@@ -106,9 +114,14 @@ class VehicleResource extends Resource implements HasShieldPermissions
             Textarea::make('description')
                 ->label(__('vehicle.description'))
                 ->rows(3),
-            Toggle::make('active')
-                ->label(__('vehicle.active'))
-                ->default(true),
+            Grid::make()->schema([
+                Toggle::make('active')
+                    ->label(__('vehicle.active'))
+                    ->default(true),
+                Toggle::make('is_default')
+                    ->label(__('vehicle.is_default'))
+                    ->helperText(__('vehicle.is_default_helper')),
+            ])->columns(2),
         ];
     }
 
@@ -120,6 +133,9 @@ class VehicleResource extends Resource implements HasShieldPermissions
             ->filters([
                 TernaryFilter::make('active')
                     ->label(__('vehicle.active')),
+                SelectFilter::make('type')
+                    ->label(__('vehicle.type'))
+                    ->options(VehicleType::enumArray()),
             ])
             ->recordActions([
                 EditAction::make(),
@@ -147,6 +163,11 @@ class VehicleResource extends Resource implements HasShieldPermissions
                 ->sortable()
                 ->searchable()
                 ->placeholder('—'),
+            TextColumn::make('type')
+                ->label(__('vehicle.type'))
+                ->badge()
+                ->formatStateUsing(fn (VehicleType $state): string => $state->label())
+                ->icon(fn (VehicleType $state): string => $state->icon()),
             TextColumn::make('seats')
                 ->label(__('vehicle.seats'))
                 ->sortable(),
@@ -164,6 +185,9 @@ class VehicleResource extends Resource implements HasShieldPermissions
                 ->placeholder('—'),
             IconColumn::make('active')
                 ->label(__('vehicle.active'))
+                ->boolean(),
+            IconColumn::make('is_default')
+                ->label(__('vehicle.is_default'))
                 ->boolean(),
         ];
     }

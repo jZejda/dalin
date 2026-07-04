@@ -23,21 +23,21 @@ it('renders club vehicles resource for super admin', function (): void {
 
     Vehicle::factory()->create();
 
-    $this->get('/admin/transport/vehicles')->assertOk();
-    $this->get('/admin/transport/vehicles/create')->assertOk();
+    $this->get('/admin/config/vehicles')->assertOk();
+    $this->get('/admin/config/vehicles/create')->assertOk();
 });
 
 it('renders transport settings page for super admin', function (): void {
     actingAsSuperAdmin();
 
-    $this->get('/admin/transport/transport-settings')->assertOk();
+    $this->get('/admin/config/settings')->assertOk();
 });
 
 it('denies club vehicles resource to plain member', function (): void {
     $member = User::factory()->create(['active' => true]);
     $this->actingAs($member);
 
-    $this->get('/admin/transport/vehicles')->assertForbidden();
+    $this->get('/admin/config/vehicles')->assertForbidden();
 });
 
 it('renders my vehicles page for member when module is enabled', function (): void {

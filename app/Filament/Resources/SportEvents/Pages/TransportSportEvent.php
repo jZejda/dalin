@@ -219,10 +219,13 @@ class TransportSportEvent extends Page implements HasForms, HasTable
      */
     private function offerFormComponents(): array
     {
+        $defaultVehicle = $this->defaultVehicle();
+
         return [
             Select::make('vehicle_id')
                 ->label(__('transport.vehicle'))
                 ->options($this->vehicleOptions())
+                ->default($defaultVehicle?->id)
                 ->required()
                 ->live()
                 ->afterStateUpdated(function (Set $set, ?string $state): void {
@@ -245,6 +248,7 @@ class TransportSportEvent extends Page implements HasForms, HasTable
                 ->numeric()
                 ->minValue(1)
                 ->maxValue(100)
+                ->default($defaultVehicle?->seats)
                 ->required(),
             TextInput::make('distance_km')
                 ->label(__('transport.distance_km'))
@@ -258,6 +262,18 @@ class TransportSportEvent extends Page implements HasForms, HasTable
                 ->suffix(__('transport.contribution_suffix'))
                 ->helperText(__('transport.contribution_helper')),
         ];
+    }
+
+    /**
+     * Výchozí vozidlo přihlášeného uživatele, kterým se předvyplní nabídka.
+     */
+    private function defaultVehicle(): ?Vehicle
+    {
+        return Vehicle::query()
+            ->ownedBy((int) Auth::id())
+            ->active()
+            ->default()
+            ->first();
     }
 
     /**

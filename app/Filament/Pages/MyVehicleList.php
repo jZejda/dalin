@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages;
 
-use App\Filament\Clusters\Transport\Resources\Vehicles\VehicleResource;
+use App\Filament\Clusters\Config\Resources\Vehicles\VehicleResource;
 use App\Models\AppSetting;
 use App\Models\Vehicle;
 use Filament\Actions\CreateAction;

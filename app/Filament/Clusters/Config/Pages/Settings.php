@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Clusters\Transport\Pages;
+namespace App\Filament\Clusters\Config\Pages;
 
-use App\Filament\Clusters\Transport\TransportCluster;
+use App\Filament\Clusters\Config\ConfigCluster;
 use App\Models\AppSetting;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms\Components\Toggle;
@@ -14,22 +14,22 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 
-class TransportSettings extends Page implements HasForms
+class Settings extends Page implements HasForms
 {
     use HasPageShield;
     use InteractsWithForms;
 
-    protected static ?string $cluster = TransportCluster::class;
+    protected static ?string $cluster = ConfigCluster::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-    protected static ?string $navigationLabel = 'Nastavení dopravy';
+    protected static ?string $navigationLabel = 'Nastavení';
 
-    protected static ?string $title = 'Nastavení dopravy';
+    protected static ?string $title = 'Nastavení';
 
     protected static ?int $navigationSort = 10;
 
-    protected string $view = 'filament.clusters.transport.pages.transport-settings';
+    protected string $view = 'filament.clusters.config.pages.settings';
 
     public bool $transport_enabled = false;
 
