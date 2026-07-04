@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\SportEvents\Pages;
+namespace App\Livewire\SportEvent;
 
 use App\Enums\AppRoles;
 use App\Enums\SportEventTransportType;
 use App\Enums\TransportDirection;
-use App\Filament\Resources\SportEvents\SportEventResource;
-use App\Models\AppSetting;
 use App\Models\SportEvent;
 use App\Models\TransportOffer;
 use App\Models\TransportRequest;
@@ -16,6 +14,8 @@ use App\Models\User;
 use App\Models\Vehicle;
 use App\Services\TransportRequestService;
 use Filament\Actions\Action;
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -24,74 +24,34 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
-use Filament\Resources\Pages\Concerns\InteractsWithRecord;
-use Filament\Resources\Pages\Page;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Locked;
+use Livewire\Component;
 
-class TransportSportEvent extends Page implements HasForms, HasTable
+class TransportList extends Component implements HasActions, HasForms, HasTable
 {
+    use InteractsWithActions;
     use InteractsWithForms;
-    use InteractsWithRecord;
     use InteractsWithTable;
 
-    public string|int|null|Model $record;
-
-    protected static string $resource = SportEventResource::class;
-
-    protected string $view = 'filament.resources.sport-event-resource.pages.event-transport';
-
-    public function mount(string|int $record): void
-    {
-        $this->record = $this->resolveRecord($record);
-
-        abort_unless(
-            Auth::user()?->hasRole(User::ROLE_MEMBER.'|'.User::ROLE_EVENT_MASTER.'|'.User::ROLE_SUPER_ADMIN) === true,
-            403
-        );
-
-        abort_unless($this->transportAvailable(), 404);
-    }
-
-    public function getTitle(): string
-    {
-        /** @var SportEvent $sportEvent */
-        $sportEvent = $this->record;
-
-        return __('transport.page_title').' - '.$sportEvent->name;
-    }
-
-    protected function getHeaderActions(): array
-    {
-        /** @var SportEvent $sportEvent */
-        $sportEvent = $this->record;
-
-        return [
-            Action::make('back_to_entry')
-                ->label('Zpět na přihlášky')
-                ->icon('heroicon-o-arrow-left')
-                ->color('gray')
-                ->url(SportEventResource::getUrl('entry', ['record' => $sportEvent])),
-        ];
-    }
+    #[Locked]
+    public SportEvent $sportEvent;
 
     public function table(Table $table): Table
     {
-        /** @var SportEvent $sportEvent */
-        $sportEvent = $this->record;
-
         return $table
             ->query(
                 TransportOffer::query()
-                    ->forEvent($sportEvent->id)
+                    ->forEvent($this->sportEvent->id)
                     ->with(['user', 'vehicle', 'requests'])
                     ->where(function (Builder $query): void {
                         $query->where('active', '=', true)
@@ -136,7 +96,7 @@ class TransportSportEvent extends Page implements HasForms, HasTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->headerActions([
-                $this->offerCreateAction($sportEvent),
+                $this->offerCreateAction(),
             ])
             ->recordActions([
                 Action::make('requestSeat')
@@ -189,12 +149,12 @@ class TransportSportEvent extends Page implements HasForms, HasTable
             ->emptyStateDescription(__('transport.empty_offers_description'))
             ->emptyStateIcon('heroicon-o-truck')
             ->emptyStateActions([
-                $this->offerCreateAction($sportEvent),
+                $this->offerCreateAction(),
             ])
             ->paginated([10, 25, 50]);
     }
 
-    private function offerCreateAction(SportEvent $sportEvent): CreateAction
+    private function offerCreateAction(): CreateAction
     {
         return CreateAction::make()
             ->model(TransportOffer::class)
@@ -204,9 +164,9 @@ class TransportSportEvent extends Page implements HasForms, HasTable
             ->icon('heroicon-o-plus')
             ->visible(fn (): bool => $this->canOfferTransport())
             ->schema($this->offerFormComponents())
-            ->mutateDataUsing(function (array $data) use ($sportEvent): array {
+            ->mutateDataUsing(function (array $data): array {
                 $data['user_id'] = Auth::id();
-                $data['sport_event_id'] = $sportEvent->id;
+                $data['sport_event_id'] = $this->sportEvent->id;
 
                 return $data;
             });
@@ -284,16 +244,13 @@ class TransportSportEvent extends Page implements HasForms, HasTable
      */
     private function vehicleOptions(): array
     {
-        /** @var SportEvent $sportEvent */
-        $sportEvent = $this->record;
-
         $options = Vehicle::query()
             ->ownedBy((int) Auth::id())
             ->active()
             ->orderBy('name')
             ->pluck('name', 'id');
 
-        if ($sportEvent->transport_type->allowsClubVehicles() && $this->canManageClubTransport()) {
+        if ($this->sportEvent->transport_type->allowsClubVehicles() && $this->canManageClubTransport()) {
             $clubOptions = Vehicle::query()
                 ->club()
                 ->active()
@@ -329,12 +286,9 @@ class TransportSportEvent extends Page implements HasForms, HasTable
      */
     public function getRequestsForMyOffersProperty(): Collection
     {
-        /** @var SportEvent $sportEvent */
-        $sportEvent = $this->record;
-
         return TransportRequest::query()
-            ->whereHas('transportOffer', function (Builder $query) use ($sportEvent): void {
-                $query->where('sport_event_id', '=', $sportEvent->id)
+            ->whereHas('transportOffer', function (Builder $query): void {
+                $query->where('sport_event_id', '=', $this->sportEvent->id)
                     ->where('user_id', '=', Auth::id());
             })
             ->with(['user', 'transportOffer.vehicle'])
@@ -349,13 +303,10 @@ class TransportSportEvent extends Page implements HasForms, HasTable
      */
     public function getMyRequestsProperty(): Collection
     {
-        /** @var SportEvent $sportEvent */
-        $sportEvent = $this->record;
-
         return TransportRequest::query()
             ->where('user_id', '=', Auth::id())
-            ->whereHas('transportOffer', function (Builder $query) use ($sportEvent): void {
-                $query->where('sport_event_id', '=', $sportEvent->id);
+            ->whereHas('transportOffer', function (Builder $query): void {
+                $query->where('sport_event_id', '=', $this->sportEvent->id);
             })
             ->with(['transportOffer.user', 'transportOffer.vehicle'])
             ->orderByDesc('created_at')
@@ -398,10 +349,7 @@ class TransportSportEvent extends Page implements HasForms, HasTable
 
     private function canOfferTransport(): bool
     {
-        /** @var SportEvent $sportEvent */
-        $sportEvent = $this->record;
-
-        if ($sportEvent->transport_type === SportEventTransportType::ClubOnly) {
+        if ($this->sportEvent->transport_type === SportEventTransportType::ClubOnly) {
             return $this->canManageClubTransport();
         }
 
@@ -413,12 +361,11 @@ class TransportSportEvent extends Page implements HasForms, HasTable
         return Auth::user()?->hasRole([AppRoles::SuperAdmin, AppRoles::ClubAdmin, AppRoles::EventMaster]) ?? false;
     }
 
-    private function transportAvailable(): bool
+    public function render(): View
     {
-        /** @var SportEvent $sportEvent */
-        $sportEvent = $this->record;
+        /** @var view-string $template */
+        $template = 'livewire.sport-event.transport-list';
 
-        return AppSetting::isTransportModuleEnabled()
-            && $sportEvent->transport_type !== SportEventTransportType::None;
+        return view($template);
     }
 }

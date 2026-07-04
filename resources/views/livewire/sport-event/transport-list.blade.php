@@ -1,4 +1,4 @@
-<x-filament::page>
+<div class="space-y-4">
     {{ $this->table }}
 
     @if($this->requestsForMyOffers->isNotEmpty())
@@ -71,4 +71,4 @@
             </div>
         </x-filament::section>
     @endif
-</x-filament::page>
+</div>
