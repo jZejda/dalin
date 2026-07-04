@@ -26,6 +26,8 @@ class AppSetting extends Model
 
     public const string EVENT_PAYMENTS_MODULE_ENABLED = 'event_payments.enabled';
 
+    public const string SERVICE_ORDERS_MODULE_ENABLED = 'service_orders.enabled';
+
     /** @var list<string> */
     protected $fillable = [
         'key',
@@ -77,6 +79,11 @@ class AppSetting extends Model
     public static function isEventPaymentsModuleEnabled(): bool
     {
         return self::boolean(self::EVENT_PAYMENTS_MODULE_ENABLED);
+    }
+
+    public static function isServiceOrdersModuleEnabled(): bool
+    {
+        return self::boolean(self::SERVICE_ORDERS_MODULE_ENABLED);
     }
 
     private static function cacheKey(string $key): string

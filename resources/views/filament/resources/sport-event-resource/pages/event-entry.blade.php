@@ -368,10 +368,12 @@
 
     @php
         $paymentsModuleEnabled = \App\Models\AppSetting::isEventPaymentsModuleEnabled();
+        $serviceOrdersEnabled = \App\Models\AppSetting::isServiceOrdersModuleEnabled() && count($services) > 0;
+        $showTabBar = $paymentsModuleEnabled || $serviceOrdersEnabled;
     @endphp
 
     <div x-data="{ tab: 'entries' }" class="space-y-4">
-        @if ($paymentsModuleEnabled)
+        @if ($showTabBar)
         <div class="flex flex-wrap gap-2 border-b border-gray-200 dark:border-gray-700">
             <button
                 type="button"
@@ -385,6 +387,7 @@
                 </svg>
                 Přihlášky
             </button>
+            @if ($paymentsModuleEnabled)
             <button
                 type="button"
                 x-on:click="tab = 'payments'"
@@ -397,6 +400,21 @@
                 </svg>
                 Platby / Finance
             </button>
+            @endif
+            @if ($serviceOrdersEnabled)
+            <button
+                type="button"
+                x-on:click="tab = 'services'"
+                :class="tab === 'services'
+                    ? 'border-primary-600 text-primary-600 dark:text-primary-400 dark:border-primary-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'"
+                class="inline-flex items-center gap-2 px-4 py-2 -mb-px border-b-2 text-sm font-medium transition">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007Z" />
+                </svg>
+                Doplňkové služby
+            </button>
+            @endif
         </div>
         @endif
 
@@ -406,6 +424,12 @@
         @if ($paymentsModuleEnabled)
         <div x-show="tab === 'payments'" x-cloak>
             @livewire(\App\Livewire\SportEvent\RaceProfilePaymentList::class, ['sportEvent' => $record])
+        </div>
+        @endif
+        @if ($serviceOrdersEnabled)
+        <div x-show="tab === 'services'" x-cloak class="space-y-4">
+            @livewire(\App\Livewire\SportEvent\ServiceList::class, ['sportEvent' => $record])
+            @livewire(\App\Livewire\SportEvent\ServiceOrderList::class, ['sportEvent' => $record])
         </div>
         @endif
     </div>

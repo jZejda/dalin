@@ -13,6 +13,9 @@ class GuzzleClient
     public const string METHOD_CREATE_ENTRY = 'createEntry';
     public const string METHOD_UPDATE_ENTRY = 'updateEntry';
     public const string METHOD_DELETE_ENTRY = 'deleteEntry';
+    public const string METHOD_CREATE_SERVICE_ENTRY = 'createServiceEntry';
+    public const string METHOD_UPDATE_SERVICE_ENTRY = 'updateServiceEntry';
+    public const string METHOD_DELETE_SERVICE_ENTRY = 'deleteServiceEntry';
 
     public function create(): Client
     {

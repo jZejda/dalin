@@ -7,6 +7,7 @@ use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use App\Enums\AppRoles;
+use App\Enums\UserCreditType;
 use App\Models\User;
 use App\Models\UserCredit;
 use App\Models\UserCreditNote;
@@ -87,6 +88,11 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
                         return null;
                     })
                     ->summarize(Sum::make())->money('CZK')->label('Celkem'),
+                TextColumn::make('credit_type')
+                    ->label('Typ platby')
+                    ->badge()
+                    ->formatStateUsing(fn (UserCreditType $state): string => UserCreditType::enumArray()[$state->value] ?? $state->value)
+                    ->description(fn (UserCredit $record): ?string => $record->sportService?->service_name_cz),
                 ViewColumn::make('user_entry')
                     ->label('Komentářů')
                     ->view('filament.tables.columns.user-credit-comments-count'),
