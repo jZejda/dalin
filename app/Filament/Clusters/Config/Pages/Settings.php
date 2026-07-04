@@ -35,10 +35,13 @@ class Settings extends Page implements HasForms
 
     public bool $event_payments_enabled = false;
 
+    public bool $service_orders_enabled = false;
+
     public function mount(): void
     {
         $this->transport_enabled = AppSetting::isTransportModuleEnabled();
         $this->event_payments_enabled = AppSetting::isEventPaymentsModuleEnabled();
+        $this->service_orders_enabled = AppSetting::isServiceOrdersModuleEnabled();
     }
 
     protected function getFormSchema(): array
@@ -58,6 +61,13 @@ class Settings extends Page implements HasForms
                         ->label('Modul plateb u závodů je zapnutý')
                         ->helperText('Vypnutí modulu skryje záložku plateb na detailu závodu, uložená data zůstanou zachována.'),
                 ]),
+            Section::make('Modul Doplňkové služby')
+                ->description('Po zapnutí modulu si členové mohou na detailu závodu objednávat doplňkové služby (ubytování, nocleh apod.) včetně termínů plateb. Při vypnutém modulu je vidět jen náhled nabízených služeb.')
+                ->schema([
+                    Toggle::make('service_orders_enabled')
+                        ->label('Modul doplňkových služeb je zapnutý')
+                        ->helperText('Vypnutí modulu skryje záložku objednávek na detailu závodu, uložená data zůstanou zachována.'),
+                ]),
         ];
     }
 
@@ -65,6 +75,7 @@ class Settings extends Page implements HasForms
     {
         AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, $this->transport_enabled);
         AppSetting::set(AppSetting::EVENT_PAYMENTS_MODULE_ENABLED, $this->event_payments_enabled);
+        AppSetting::set(AppSetting::SERVICE_ORDERS_MODULE_ENABLED, $this->service_orders_enabled);
 
         Notification::make()
             ->title('Nastavení uloženo')

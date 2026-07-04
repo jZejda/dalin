@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\EntryStatus;
+use App\Enums\ServiceOrderStatus;
 use App\Enums\SportEventTransportType;
 use App\Enums\SportEventType;
 use App\Enums\SportEventMarkerType;
@@ -43,6 +44,13 @@ return [
         UserCreditType::TransferCreditBetweenUsers->value => 'Přesun mezi uživateli',
         UserCreditType::InitialDeposit->value => 'Počáteční vklad',
         UserCreditType::TransportBilling->value => 'Cestovní vyúčtování',
+        UserCreditType::ServiceFee->value => 'Doplňková služba',
+    ],
+
+    'service_order_status_enum' => [
+        ServiceOrderStatus::Ordered->value => 'Objednáno',
+        ServiceOrderStatus::Cancelled->value => 'Zrušeno',
+        ServiceOrderStatus::Billed->value => 'Vyúčtováno',
     ],
 
     'type_enum' => [

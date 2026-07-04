@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
@@ -24,6 +26,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read SportEvent|null $sportEvent
+ * @property-read Collection<int, SportServicePaymentDate> $paymentDates
+ * @property-read Collection<int, SportServiceOrder> $serviceOrders
  */
 class SportService extends Model
 {
@@ -47,4 +51,13 @@ class SportService extends Model
         return $this->hasOne(SportEvent::class, 'id', 'sport_event_id');
     }
 
+    public function paymentDates(): HasMany
+    {
+        return $this->hasMany(SportServicePaymentDate::class, 'sport_service_id', 'id');
+    }
+
+    public function serviceOrders(): HasMany
+    {
+        return $this->hasMany(SportServiceOrder::class, 'sport_service_id', 'id');
+    }
 }
