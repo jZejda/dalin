@@ -1,0 +1,2035 @@
+openapi: 3.0.3
+info:
+  title: ORIS API
+  version: 1.0.0
+  description: |-
+    Neoficiální OpenAPI specifikace ORIS API (informační systém Českého svazu orientačních sportů), sestavená podle oficiální dokumentace https://oris.orientacnisporty.cz/API.
+
+    API je ve skutečnosti jediný endpoint `/API/`, kde se volaná metoda určuje query parametrem `method`. Pro přehlednost je zde každá metoda uvedena jako samostatná cesta ve tvaru `/API/?method=<název>` – parametr `method` proto není deklarován samostatně, je součástí cesty. (Query string v klíči cesty je mimo striktní OpenAPI standard, dokumentační nástroje jej však běžně zobrazí správně.)
+
+    **Formát odpovědi:** primárně `json`; podporovány jsou i `xml` a `xml2` (xml2 vrací stejné názvy XML nódů pro opakující se hodnoty).
+
+    Není-li uvedeno jinak, komunikace probíhá GET požadavkem. Metody označené jako POST přijímají parametry ve formě `application/x-www-form-urlencoded`.
+externalDocs:
+  description: Oficiální dokumentace ORIS API
+  url: https://oris.orientacnisporty.cz/API
+servers:
+- url: https://oris.orientacnisporty.cz
+- url: https://oris.ceskyorientak.cz
+tags:
+- name: Závody a kalendář
+  description: Kalendář závodů a detailní informace o závodech.
+- name: Přihlášky
+  description: Čtení a správa přihlášek závodníků na závody.
+- name: Doplňkové služby
+  description: Objednávky doplňkových služeb k závodům (ubytování, strava, …).
+- name: Výsledky a startovky
+  description: Výsledky, rankingové výsledky, startovní listiny a mezičasy.
+- name: Kluby
+  description: Informace o klubech ČSOS, hostování a přestupy.
+- name: Osoby a členství
+  description: Osoby, registrace a členství v klubech.
+- name: Správa klubu
+  description: Administrativní operace vyžadující klubový klíč.
+- name: Systém a číselníky
+  description: Verze systému, číselníky a definice kategorií.
+paths:
+  /API/?method=getCSOSClubList:
+    get:
+      tags:
+      - Kluby
+      operationId: getCSOSClubList
+      summary: Seznam všech klubů v ČSOS
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getCSOSClubList`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getClub:
+    get:
+      tags:
+      - Kluby
+      operationId: getClub
+      summary: Informace o konkrétním klubu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=json&method=getClub&id=1`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: id
+        in: query
+        required: true
+        description: číslo nebo zkratka klubu (viz getCSOSClubList)
+        schema:
+          type: string
+      - name: eventkey
+        in: query
+        required: false
+        description: bezpečnostní klíč závodu pro kluby jednorázových přihlášek
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getEventList:
+    get:
+      tags:
+      - Závody a kalendář
+      operationId: getEventList
+      summary: Kalendář závodů
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: |-
+        **Pozn.:** Lze použít i getEventListVersions se stejnými parametry (vrací pouze ID a verzi záznamu)
+
+        Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getEventList`
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: all
+        in: query
+        required: false
+        description: pokud je nastaveno all=1 pak zobrazí i ostatní závody mimo oficiální kalendář
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+      - name: name
+        in: query
+        required: false
+        description: část názvu závodu
+        schema:
+          type: string
+      - name: sport
+        in: query
+        required: false
+        description: id sportu ... 1=OB, 2=LOB, 3=MTBO, 4=TRAIL (lze zadat více hodnot oddělených čárkou)
+        schema:
+          type: string
+          example: '1'
+      - name: rg
+        in: query
+        required: false
+        description: zkratka regionu např. HA, P, MSK, ...
+        schema:
+          type: string
+      - name: level
+        in: query
+        required: false
+        description: id úrovně (lze zadat více hodnot oddělených čárkou)
+        schema:
+          type: string
+      - name: datefrom
+        in: query
+        required: false
+        description: datum od ve formátu RRRR-MM-DD (pokud není zadáno, pak se používá první den aktuálního
+          roku)
+        schema:
+          type: string
+          format: date
+          example: '2026-01-01'
+      - name: dateto
+        in: query
+        required: false
+        description: datum do ve formátu RRRR-MM-DD (pokud není zadáno, pak se používá poslední den aktuálního
+          roku)
+        schema:
+          type: string
+          format: date
+          example: '2026-01-01'
+      - name: club
+        in: query
+        required: false
+        description: id pořádajícího klubu
+        schema:
+          type: integer
+      - name: myClubId
+        in: query
+        required: false
+        description: id klubu pro zobrazení počtu přihlášek a výsledků
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getEventListVersions:
+    get:
+      tags:
+      - Závody a kalendář
+      operationId: getEventListVersions
+      summary: Kalendář závodů – pouze ID a verze záznamu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: |-
+        Přijímá stejné parametry jako getEventList, vrací pouze ID a verzi záznamu. Hodí se pro efektivní zjištění změn v kalendáři.
+
+        Příklad: `https://oris.ceskyorientak.cz/API/?format=json&method=getEventListVersions`
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: all
+        in: query
+        required: false
+        description: pokud je nastaveno all=1 pak zobrazí i ostatní závody mimo oficiální kalendář
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+      - name: name
+        in: query
+        required: false
+        description: část názvu závodu
+        schema:
+          type: string
+      - name: sport
+        in: query
+        required: false
+        description: id sportu ... 1=OB, 2=LOB, 3=MTBO, 4=TRAIL (lze zadat více hodnot oddělených čárkou)
+        schema:
+          type: string
+          example: '1'
+      - name: rg
+        in: query
+        required: false
+        description: zkratka regionu např. HA, P, MSK, ...
+        schema:
+          type: string
+      - name: level
+        in: query
+        required: false
+        description: id úrovně (lze zadat více hodnot oddělených čárkou)
+        schema:
+          type: string
+      - name: datefrom
+        in: query
+        required: false
+        description: datum od ve formátu RRRR-MM-DD (pokud není zadáno, pak se používá první den aktuálního
+          roku)
+        schema:
+          type: string
+          format: date
+          example: '2026-01-01'
+      - name: dateto
+        in: query
+        required: false
+        description: datum do ve formátu RRRR-MM-DD (pokud není zadáno, pak se používá poslední den aktuálního
+          roku)
+        schema:
+          type: string
+          format: date
+          example: '2026-01-01'
+      - name: club
+        in: query
+        required: false
+        description: id pořádajícího klubu
+        schema:
+          type: integer
+      - name: myClubId
+        in: query
+        required: false
+        description: id klubu pro zobrazení počtu přihlášek a výsledků
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getEvent:
+    get:
+      tags:
+      - Závody a kalendář
+      operationId: getEvent
+      summary: Kompletní informace o konkrétním závodu včetně kategorií
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getEvent&id=2252`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: id
+        in: query
+        required: true
+        description: ORIS id závodu (viz getEventList)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getEventEntries:
+    get:
+      tags:
+      - Přihlášky
+      operationId: getEventEntries
+      summary: Seznam přihlášek pro daný závod (možno i pro konkrétní kategorii)
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: |-
+        **Volitelná autorizace** pro zobrazení klubové poznámky: `username` + `password`.
+
+        **Pozn.:** Pozn. filtr na klub nelze kombinovat s kategorií
+
+        Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getEventEntries&eventid=2077`
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: eventid
+        in: query
+        required: true
+        description: ORIS id závodu (viz getEventList)
+        schema:
+          type: integer
+      - name: classid
+        in: query
+        required: false
+        description: ORIS id kategorie
+        schema:
+          type: integer
+      - name: classname
+        in: query
+        required: false
+        description: název kategorie
+        schema:
+          type: string
+      - name: clubid
+        in: query
+        required: false
+        description: číslo nebo zkratka klubu (viz getCSOSClubList)
+        schema:
+          type: string
+      - name: entrystop
+        in: query
+        required: false
+        description: termín přihlášek (číslo 1-3)
+        schema:
+          type: integer
+      - name: entrystopout
+        in: query
+        required: false
+        description: mimo termín přihlášek (číslo 1-3)
+        schema:
+          type: integer
+      - name: username
+        in: query
+        required: false
+        description: (autorizace) přihlašovací jméno uživatele
+        schema:
+          type: string
+      - name: password
+        in: query
+        required: false
+        description: (autorizace) heslo uživatele
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getUserEventEntries:
+    get:
+      tags:
+      - Přihlášky
+      operationId: getUserEventEntries
+      summary: Seznam přihlášek pro danou osobu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: |-
+        **Volitelná autorizace** pro zobrazení klubové poznámky: `username` + `password`.
+
+        Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getUserEventEntries&userid=224`
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: userid
+        in: query
+        required: true
+        description: ORIS id osoby (viz getUser)
+        schema:
+          type: integer
+      - name: datefrom
+        in: query
+        required: false
+        description: datum od ve formátu RRRR-MM-DD
+        schema:
+          type: string
+          format: date
+          example: '2026-01-01'
+      - name: dateto
+        in: query
+        required: false
+        description: datum do ve formátu RRRR-MM-DD
+        schema:
+          type: string
+          format: date
+          example: '2026-01-01'
+      - name: username
+        in: query
+        required: false
+        description: (autorizace) přihlašovací jméno uživatele
+        schema:
+          type: string
+      - name: password
+        in: query
+        required: false
+        description: (autorizace) heslo uživatele
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getEventServiceEntries:
+    get:
+      tags:
+      - Doplňkové služby
+      operationId: getEventServiceEntries
+      summary: Seznam objednávek doplňkových služeb pro daný závod
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getEventServiceEntries&eventid=2320`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: eventid
+        in: query
+        required: true
+        description: ORIS id závodu (viz getEventList)
+        schema:
+          type: integer
+      - name: clubid
+        in: query
+        required: false
+        description: číslo nebo zkratka klubu (viz getCSOSClubList)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getEventResults:
+    get:
+      tags:
+      - Výsledky a startovky
+      operationId: getEventResults
+      summary: Seznam výsledků pro daný závod (možno i pro konkrétní kategorii)
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: |-
+        **Pozn.:** Pozn. filtr na klub nelze kombinovat s kategorií
+
+        Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getEventResults&eventid=2077`
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: eventid
+        in: query
+        required: true
+        description: ORIS id závodu (viz getEventList)
+        schema:
+          type: integer
+      - name: classid
+        in: query
+        required: false
+        description: ORIS id kategorie
+        schema:
+          type: integer
+      - name: classname
+        in: query
+        required: false
+        description: název kategorie
+        schema:
+          type: string
+      - name: clubid
+        in: query
+        required: false
+        description: číslo nebo zkratka klubu (viz getCSOSClubList)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getEventRankResults:
+    get:
+      tags:
+      - Výsledky a startovky
+      operationId: getEventRankResults
+      summary: Seznam rankingových výsledků pro daný závod (možno i pro konkrétní kategorii)
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getEventRankResults&eventid=6302`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: eventid
+        in: query
+        required: true
+        description: ORIS id závodu (viz getEventList)
+        schema:
+          type: integer
+      - name: classid
+        in: query
+        required: false
+        description: ORIS id kategorie
+        schema:
+          type: integer
+      - name: classname
+        in: query
+        required: false
+        description: název kategorie
+        schema:
+          type: string
+      - name: type
+        in: query
+        required: false
+        description: id typu rankingu (viz getRankingTypes)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getEventStartLists:
+    get:
+      tags:
+      - Výsledky a startovky
+      operationId: getEventStartLists
+      summary: Vrací startovku pro daný závod (možno i pro konkrétní kategorii)
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: |-
+        **Pozn.:** Pozn. filtr na klub nelze kombinovat s kategorií
+
+        Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getEventStartLists&eventid=2077`
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: eventid
+        in: query
+        required: true
+        description: ORIS id závodu (viz getEventList)
+        schema:
+          type: integer
+      - name: classid
+        in: query
+        required: false
+        description: ORIS id kategorie
+        schema:
+          type: integer
+      - name: classname
+        in: query
+        required: false
+        description: název kategorie
+        schema:
+          type: string
+      - name: clubid
+        in: query
+        required: false
+        description: číslo nebo zkratka klubu (viz getCSOSClubList)
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getUser:
+    get:
+      tags:
+      - Osoby a členství
+      operationId: getUser
+      summary: Vrací ID a jméno osoby
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getUser&rgnum=AOP7601`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: rgnum
+        in: query
+        required: true
+        description: aktuálně platné registrační číslo
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getRegistration:
+    get:
+      tags:
+      - Osoby a členství
+      operationId: getRegistration
+      summary: Seznam registrace
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getRegistration&sport=1&year=2014`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: sport
+        in: query
+        required: true
+        description: id sportu ... 1=OB, 2=LOB, 3=MTBO, 4=TRAIL
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+      - name: year
+        in: query
+        required: true
+        description: rok
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getClubUsers:
+    get:
+      tags:
+      - Kluby
+      operationId: getClubUsers
+      summary: Seznam členství v klubech pro konkrétního uživatele
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getClubUsers&user=5186`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: user
+        in: query
+        required: true
+        description: id uživatele
+        schema:
+          type: integer
+      - name: date
+        in: query
+        required: false
+        description: pouze platná členství k danému datu
+        schema:
+          type: string
+          format: date
+          example: '2026-01-01'
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getValidClasses:
+    get:
+      tags:
+      - Přihlášky
+      operationId: getValidClasses
+      summary: Seznam kategorií platných pro konkrétního člena klubu v daném závodě
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getValidClasses&clubuser=5425&comp=2328`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: clubuser
+        in: query
+        required: true
+        description: id členství v klubu
+        schema:
+          type: integer
+      - name: comp
+        in: query
+        required: true
+        description: id závodu
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=createEntry:
+    post:
+      tags:
+      - Přihlášky
+      operationId: createEntry
+      summary: Přihlášení závodníka na závod
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: '**Autorizace:** vyžaduje buď `username` + `password`, nebo `clubkey`.'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: přihlašovací jméno uživatele odesílajícího přihlášku (autorizace – viz
+                    popis operace)
+                password:
+                  type: string
+                  description: heslo uživatele odesílajícího přihlášku (autorizace – viz popis operace)
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                    (autorizace – viz popis operace)
+                clubuser:
+                  type: integer
+                  description: id člena klubu
+                class:
+                  type: integer
+                  description: id kategorie
+                si:
+                  type: integer
+                  description: SI čip (není-li parametr použit, tak se použije SI čip z ORISu)
+                note:
+                  type: string
+                  description: poznámka
+                clubnote:
+                  type: string
+                  description: klubová poznámka
+                requested_start:
+                  type: string
+                  description: požadovaný start
+                rent_si:
+                  type: integer
+                  enum:
+                  - 0
+                  - 1
+                  description: zapůjčení SI čipu (1=ano)
+                iofid:
+                  type: integer
+                  description: IOF ID závodníka (číslo)
+                stageX:
+                  type: integer
+                  enum:
+                  - 0
+                  - 1
+                  description: 'přihláška pro X-tou etapu vícedenních závodů (parametr se používa opakovaně)
+                    (kde X je 1..počet etap vícedenního závodu - hodnota 1=přihlásit, 0=nepřihlásit) Zástupný
+                    název: skutečné parametry jsou stage1, stage2, … stageN podle počtu etap vícedenního
+                    závodu.'
+                entrystatus:
+                  type: integer
+                  description: termín přihlášek, parametr je brán v potaz pouze pokud má uživatel práva
+                    editovat závod
+              required:
+              - clubuser
+              - class
+              anyOf:
+              - required:
+                - username
+                - password
+              - required:
+                - clubkey
+  /API/?method=updateEntry:
+    post:
+      tags:
+      - Přihlášky
+      operationId: updateEntry
+      summary: Aktualizace přihlášky závodníka na závod
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: '**Autorizace:** vyžaduje buď `username` + `password`, nebo `clubkey`.'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: přihlašovací jméno uživatele odesílajícího přihlášku (autorizace – viz
+                    popis operace)
+                password:
+                  type: string
+                  description: heslo uživatele odesílajícího přihlášku (autorizace – viz popis operace)
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                    (autorizace – viz popis operace)
+                entryid:
+                  type: integer
+                  description: id přihlášky
+                class:
+                  type: integer
+                  description: id kategorie
+                si:
+                  type: integer
+                  description: SI čip (není-li parametr použit, tak se použije SI čip z ORISu)
+                note:
+                  type: string
+                  description: poznámka
+                clubnote:
+                  type: string
+                  description: klubová poznámka
+                requested_start:
+                  type: string
+                  description: požadovaný start
+                rent_si:
+                  type: integer
+                  enum:
+                  - 0
+                  - 1
+                  description: zapůjčení SI čipu (1=ano)
+                iofid:
+                  type: integer
+                  description: IOF ID závodníka (číslo)
+                stageX:
+                  type: integer
+                  enum:
+                  - 0
+                  - 1
+                  description: 'přihláška pro X-tou etapu vícedenních závodů (parametr se používa opakovaně)
+                    (kde X je 1..počet etap vícedenního závodu - hodnota 1=přihlásit, 0=nepřihlásit) Zástupný
+                    název: skutečné parametry jsou stage1, stage2, … stageN podle počtu etap vícedenního
+                    závodu.'
+                entrystatus:
+                  type: integer
+                  description: termín přihlášek, parametr je brán v potaz pouze pokud má uživatel práva
+                    editovat závod
+              required:
+              - entryid
+              anyOf:
+              - required:
+                - username
+                - password
+              - required:
+                - clubkey
+  /API/?method=deleteEntry:
+    post:
+      tags:
+      - Přihlášky
+      operationId: deleteEntry
+      summary: Odhlášení závodníka ze závodu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: '**Autorizace:** vyžaduje buď `username` + `password`, nebo `clubkey`.'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: přihlašovací jméno uživatele rušícího přihlášku (autorizace – viz popis
+                    operace)
+                password:
+                  type: string
+                  description: heslo uživatele rušícího přihlášku (autorizace – viz popis operace)
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                    (autorizace – viz popis operace)
+                entryid:
+                  type: integer
+                  description: id přihlášky
+              required:
+              - entryid
+              anyOf:
+              - required:
+                - username
+                - password
+              - required:
+                - clubkey
+  /API/?method=createServiceEntry:
+    post:
+      tags:
+      - Doplňkové služby
+      operationId: createServiceEntry
+      summary: Objednání doplňkové služby
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: '**Autorizace:** vyžaduje buď `username` + `password`, nebo `clubkey`.'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: přihlašovací jméno uživatele objednávajícího službu (autorizace – viz popis
+                    operace)
+                password:
+                  type: string
+                  description: heslo uživatele objednávajícího službu (autorizace – viz popis operace)
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                    (autorizace – viz popis operace)
+                clubuser:
+                  type: integer
+                  description: id člena klubu
+                service:
+                  type: integer
+                  description: id doplňkové služby
+                qty:
+                  type: integer
+                  description: množství
+                note:
+                  type: string
+                  description: poznámka
+              required:
+              - clubuser
+              - service
+              - qty
+              anyOf:
+              - required:
+                - username
+                - password
+              - required:
+                - clubkey
+  /API/?method=updateServiceEntry:
+    post:
+      tags:
+      - Doplňkové služby
+      operationId: updateServiceEntry
+      summary: Aktualizace objednávky doplňkové služby
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: '**Autorizace:** vyžaduje buď `username` + `password`, nebo `clubkey`.'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: přihlašovací jméno uživatele objednávajícího službu (autorizace – viz popis
+                    operace)
+                password:
+                  type: string
+                  description: heslo uživatele objednávajícího službu (autorizace – viz popis operace)
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                    (autorizace – viz popis operace)
+                serviceentryid:
+                  type: integer
+                  description: id objednávky doplňkové služby
+                qty:
+                  type: integer
+                  description: množství
+                note:
+                  type: string
+                  description: poznámka
+              required:
+              - serviceentryid
+              anyOf:
+              - required:
+                - username
+                - password
+              - required:
+                - clubkey
+  /API/?method=deleteServiceEntry:
+    post:
+      tags:
+      - Doplňkové služby
+      operationId: deleteServiceEntry
+      summary: Zrušení objednávky doplňkové služby
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: '**Autorizace:** vyžaduje buď `username` + `password`, nebo `clubkey`.'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: přihlašovací jméno uživatele rušícího službu (autorizace – viz popis operace)
+                password:
+                  type: string
+                  description: heslo uživatele rušícího službu (autorizace – viz popis operace)
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                    (autorizace – viz popis operace)
+                serviceentryid:
+                  type: integer
+                  description: id objednávky doplňkové služby
+              required:
+              - serviceentryid
+              anyOf:
+              - required:
+                - username
+                - password
+              - required:
+                - clubkey
+  /API/?method=getEventBalance:
+    get:
+      tags:
+      - Závody a kalendář
+      operationId: getEventBalance
+      summary: Seznam vyúčtování pro daný závod po jednotlivých klubech
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getEventBalance&eventid=2077`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: eventid
+        in: query
+        required: true
+        description: ORIS id závodu (viz getEventList)
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getVersion:
+    get:
+      tags:
+      - Systém a číselníky
+      operationId: getVersion
+      summary: Informace o aktuální verzi ORISu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getVersion`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getList:
+    get:
+      tags:
+      - Systém a číselníky
+      operationId: getList
+      summary: Číselníky v ORISu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getList&list=sport`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: list
+        in: query
+        required: true
+        description: 'Název číselníku. Hodnoty: `region` – regiony, `discipline` – disciplíny, `sport`
+          – sporty, `level` – úrovně, `sourcetype` – typy souborů / odkazů, `clubcontacttype` – typy ostatních
+          klubových kontaktů.'
+        schema:
+          type: string
+          enum:
+          - region
+          - discipline
+          - sport
+          - level
+          - sourcetype
+          - clubcontacttype
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getClassDefinitions:
+    get:
+      tags:
+      - Systém a číselníky
+      operationId: getClassDefinitions
+      summary: Definice kategorií
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getClassDefinitions&sport=1`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: sport
+        in: query
+        required: true
+        description: id sportu ... 1=OB, 2=LOB, 3=MTBO, 4=TRAIL
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getSplits:
+    get:
+      tags:
+      - Výsledky a startovky
+      operationId: getSplits
+      summary: Mezičasy kategorie
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getSplits&classid=103880`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: classid
+        in: query
+        required: true
+        description: id kategorie
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getClubEntryRights:
+    post:
+      tags:
+      - Správa klubu
+      operationId: getClubEntryRights
+      summary: Přihlašovací práva v rámci klubu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+              required:
+              - clubkey
+  /API/?method=setClubEntryRights:
+    post:
+      tags:
+      - Správa klubu
+      operationId: setClubEntryRights
+      summary: Nastavení přihlašovacích práv v rámci klubu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                clubuser:
+                  type: integer
+                  description: id člena klubu
+                self:
+                  type: integer
+                  enum:
+                  - 0
+                  - 1
+                  description: právo přihlašovat sám sebe, hodnota 0 nebo 1 (0 = nemá právo, 1 = má právo)
+                other:
+                  type: integer
+                  enum:
+                  - 0
+                  - 1
+                  description: právo přihlašovat ostatní, hodnota 0 nebo 1 (0 = nemá právo, 1 = má právo)
+              required:
+              - clubkey
+              - clubuser
+              - self
+              - other
+  /API/?method=createEventPayment:
+    post:
+      tags:
+      - Správa klubu
+      operationId: createEventPayment
+      summary: Zadání platby závodu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                eventkey:
+                  type: string
+                  description: bezpečnostní klíč závodu ze stránky závodu
+                clubid:
+                  type: string
+                  description: identifikátor klubu - číslo klubu dle adresáře, zkratka nebo variabilní
+                    symbol
+                amount:
+                  type: number
+                  description: částka
+                paymentdate:
+                  type: string
+                  format: date
+                  example: '2026-01-01'
+                  description: datum platby ve formátu RRRR-MM-DD
+                regnum:
+                  type: string
+                  description: registrační číslo, na které se platba vztahuje
+                note:
+                  type: string
+                  description: poznámka
+                bankaccount:
+                  type: string
+                  description: číslo účtu (neveřejná informace)
+                orgnote:
+                  type: string
+                  description: poznámka pořadatele (neveřejná informace)
+              required:
+              - eventkey
+              - clubid
+              - amount
+  /API/?method=getClubUserList:
+    post:
+      tags:
+      - Osoby a členství
+      operationId: getClubUserList
+      summary: Seznam členů klubu se všemi informacemi
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+              required:
+              - clubkey
+  /API/?method=createPerson:
+    post:
+      tags:
+      - Osoby a členství
+      operationId: createPerson
+      summary: Vytvoř osobu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                firstname:
+                  type: string
+                  description: jméno
+                lastname:
+                  type: string
+                  description: příjmení
+                birthday:
+                  type: string
+                  format: date
+                  example: '2026-01-01'
+                  description: datum narození ve formátu RRRR-MM-DD
+                gender:
+                  type: string
+                  enum:
+                  - M
+                  - F
+                  description: pohlaví, M = muž, F = žena
+                email:
+                  type: string
+                  description: emailová adresa
+                nationality:
+                  type: string
+                  description: národnost (dvoupísmený kód ISO 3166 https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes,
+                    Česko = CZ)
+                street:
+                  type: string
+                  description: ulice a číslo popisné bydliště
+                city:
+                  type: string
+                  description: město bydliště
+                zip:
+                  type: string
+                  description: PSČ bydliště
+                country:
+                  type: string
+                  description: země bydliště (dvoupísmený kód ISO 3166 https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes,
+                    Česko = CZ)
+                persnum:
+                  type: string
+                  description: rodné číslo - povinné pouze pro českou národnost (nationality=CZ), ve formatu
+                    xxxxxx/xxxx
+                phone:
+                  type: string
+                  description: telefon
+                gpslon:
+                  type: string
+                  description: zeměpisná délka adresy bydliště
+                gpslat:
+                  type: string
+                  description: zeměpisná šířka adresy bydliště
+                si:
+                  type: integer
+                  description: číslo SI čipu 1
+                si2:
+                  type: integer
+                  description: číslo SI čipu 2
+                si3:
+                  type: integer
+                  description: číslo SI čipu 3
+                sisport:
+                  type: integer
+                  description: číslo sportu pro SI čip 1 (0 = vše, 1-4 konkrétní sporty)
+                sisport2:
+                  type: integer
+                  description: číslo sportu pro SI čip 2 (0 = vše, 1-4 konkrétní sporty)
+                sisport3:
+                  type: integer
+                  description: číslo sportu pro SI čip 3 (0 = vše, 1-4 konkrétní sporty) (v původní dokumentaci
+                    chybně uvedeno podruhé jako sisport)
+                sitype:
+                  type: integer
+                  description: typ SI čipu 1 (0 = vše, 1 = SI kontaktní, 2 = SI bezkontaktní, 3 = SI bezkon.
+                    BS11, 5 = ToePunch)
+                sitype2:
+                  type: integer
+                  description: typ SI čipu 2 (0 = vše, 1 = SI kontaktní, 2 = SI bezkontaktní, 3 = SI bezkon.
+                    BS11, 5 = ToePunch)
+                sitype3:
+                  type: integer
+                  description: typ SI čipu 3 (0 = vše, 1 = SI kontaktní, 2 = SI bezkontaktní, 3 = SI bezkon.
+                    BS11, 5 = ToePunch)
+                iofid:
+                  type: integer
+                  description: IOF ID
+              required:
+              - clubkey
+              - firstname
+              - lastname
+              - birthday
+              - gender
+              - email
+              - nationality
+              - street
+              - city
+              - zip
+              - country
+              - persnum
+  /API/?method=editPerson:
+    post:
+      tags:
+      - Osoby a členství
+      operationId: editPerson
+      summary: Editace osoby
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                userid:
+                  type: integer
+                  description: ID osoby
+                firstname:
+                  type: string
+                  description: jméno
+                lastname:
+                  type: string
+                  description: příjmení
+                email:
+                  type: string
+                  description: emailová adresa
+                street:
+                  type: string
+                  description: ulice a číslo popisné bydliště
+                city:
+                  type: string
+                  description: město bydliště
+                zip:
+                  type: string
+                  description: PSČ bydliště
+                country:
+                  type: string
+                  description: země bydliště (dvoupísmený kód ISO 3166 https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes,
+                    Česko = CZ)
+                phone:
+                  type: string
+                  description: telefon
+                gpslon:
+                  type: string
+                  description: zeměpisná délka adresy bydliště
+                gpslat:
+                  type: string
+                  description: zeměpisná šířka adresy bydliště
+                si:
+                  type: integer
+                  description: číslo SI čipu 1
+                si2:
+                  type: integer
+                  description: číslo SI čipu 2
+                si3:
+                  type: integer
+                  description: číslo SI čipu 3
+                sisport:
+                  type: integer
+                  description: číslo sportu pro SI čip 1 (0 = vše, 1-4 konkrétní sporty)
+                sisport2:
+                  type: integer
+                  description: číslo sportu pro SI čip 2 (0 = vše, 1-4 konkrétní sporty)
+                sisport3:
+                  type: integer
+                  description: číslo sportu pro SI čip 3 (0 = vše, 1-4 konkrétní sporty) (v původní dokumentaci
+                    chybně uvedeno podruhé jako sisport)
+                sitype:
+                  type: integer
+                  description: typ SI čipu 1 (0 = vše, 1 = SI kontaktní, 2 = SI bezkontaktní, 3 = SI bezkon.
+                    BS11, 5 = ToePunch)
+                sitype2:
+                  type: integer
+                  description: typ SI čipu 2 (0 = vše, 1 = SI kontaktní, 2 = SI bezkontaktní, 3 = SI bezkon.
+                    BS11, 5 = ToePunch)
+                sitype3:
+                  type: integer
+                  description: typ SI čipu 3 (0 = vše, 1 = SI kontaktní, 2 = SI bezkontaktní, 3 = SI bezkon.
+                    BS11, 5 = ToePunch)
+                iofid:
+                  type: integer
+                  description: IOF ID
+              required:
+              - clubkey
+              - userid
+              - firstname
+              - lastname
+              - email
+              - street
+              - city
+              - zip
+              - country
+  /API/?method=createClubUser:
+    post:
+      tags:
+      - Osoby a členství
+      operationId: createClubUser
+      summary: Vytvoř člena klubu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                userid:
+                  type: integer
+                  description: ID osoby
+                memberfrom:
+                  type: string
+                  format: date
+                  example: '2026-01-01'
+                  description: datum členství od ve formátu RRRR-MM-DD
+                memberto:
+                  type: string
+                  format: date
+                  example: '2026-01-01'
+                  description: datum členství do ve formátu RRRR-MM-DD
+                regnum:
+                  type: string
+                  description: registrační číslo
+              required:
+              - clubkey
+              - userid
+              - memberfrom
+              - memberto
+              - regnum
+  /API/?method=editClubUser:
+    post:
+      tags:
+      - Osoby a členství
+      operationId: editClubUser
+      summary: Edituj člena klubu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                clubuserid:
+                  type: integer
+                  description: ID členství v klubu
+                memberfrom:
+                  type: string
+                  format: date
+                  example: '2026-01-01'
+                  description: datum členství od ve formátu RRRR-MM-DD
+                memberto:
+                  type: string
+                  format: date
+                  example: '2026-01-01'
+                  description: datum členství do ve formátu RRRR-MM-DD
+              required:
+              - clubkey
+              - clubuserid
+              - memberfrom
+              - memberto
+  /API/?method=createUserLogin:
+    post:
+      tags:
+      - Osoby a členství
+      operationId: createUserLogin
+      summary: Vytvoř uživatele v ORISu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                clubkey:
+                  type: string
+                  description: bezpečnostní klíč klubu ze stránky klubu (přístupné pro vedoucí klubu)
+                userid:
+                  type: integer
+                  description: ID osoby
+              required:
+              - clubkey
+              - userid
+  /API/?method=getClubHosting:
+    get:
+      tags:
+      - Kluby
+      operationId: getClubHosting
+      summary: Seznam všech hostování
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml2&method=getClubHosting&sport=1&year=2025`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: sport
+        in: query
+        required: true
+        description: id sportu ... 1=OB, 2=LOB, 3=MTBO, 4=TRAIL
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+      - name: year
+        in: query
+        required: true
+        description: rok
+        schema:
+          type: integer
+      - name: clubid
+        in: query
+        required: false
+        description: id klubu
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getClubChange:
+    get:
+      tags:
+      - Kluby
+      operationId: getClubChange
+      summary: Seznam všech přestupů
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml2&method=getClubChange&sport=1&year=2025`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: sport
+        in: query
+        required: true
+        description: id sportu ... 1=OB, 2=LOB, 3=MTBO, 4=TRAIL
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+      - name: year
+        in: query
+        required: true
+        description: rok
+        schema:
+          type: integer
+      - name: clubid
+        in: query
+        required: false
+        description: id klubu
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Callback'
+  /API/?method=getRankingTypes:
+    get:
+      tags:
+      - Výsledky a startovky
+      operationId: getRankingTypes
+      summary: Definice typů rankingu
+      responses:
+        '200':
+          description: Úspěšná odpověď ve standardní obálce ORIS API. Chyby jsou signalizovány hodnotou
+            pole `Status` (jiná než `OK`).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+            application/xml:
+              schema:
+                type: object
+                description: Odpověď při `format=xml` nebo `format=xml2` (xml2 vrací stejné názvy XML
+                  nódů pro opakující se hodnoty). Struktura odpovídá JSON obálce.
+      description: 'Příklad: `https://oris.ceskyorientak.cz/API/?format=xml&method=getRankingTypes&sport=1`'
+      parameters:
+      - $ref: '#/components/parameters/Format'
+      - name: sport
+        in: query
+        required: true
+        description: id sportu ... 1=OB, 2=LOB, 3=MTBO, 4=TRAIL
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+      - $ref: '#/components/parameters/Callback'
+components:
+  parameters:
+    Format:
+      name: format
+      in: query
+      required: true
+      description: Formát odpovědi. Primární je `json`; `xml` a `xml2` jsou podporovány (xml2 vrací stejné
+        názvy XML nódů pro opakující se hodnoty).
+      schema:
+        type: string
+        enum:
+        - json
+        - xml
+        - xml2
+        default: json
+    Callback:
+      name: callback
+      in: query
+      required: false
+      description: Název JSONP callback funkce pro cross-domain volání (pouze pro `format=json`).
+      schema:
+        type: string
+  schemas:
+    ApiResponse:
+      type: object
+      description: Standardní obálka odpovědi ORIS API (format=json).
+      properties:
+        Data:
+          description: Vlastní data odpovědi – struktura závisí na volané metodě. Opakující se záznamy
+            jsou vráceny jako objekt s klíči typu `Event_123`, `Feature_1` apod.
+        Format:
+          type: string
+          example: json
+        Status:
+          type: string
+          example: OK
+          description: '`OK` při úspěchu.'
+        ExportCreated:
+          type: string
+          example: '2026-07-03 15:46:31'
+          description: Datum a čas vytvoření odpovědi.
+        Method:
+          type: string
+          example: getVersion
+          description: Název volané metody.
