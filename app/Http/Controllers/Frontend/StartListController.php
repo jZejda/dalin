@@ -84,13 +84,22 @@ class StartListController extends Controller
         $xpath->registerNamespace('iof', 'http://www.orienteering.org/datastandard/3.0');
         $vakants = $xpath->query('//iof:PersonStart[iof:Person/iof:Name/iof:Family[text()="Vakant"] or iof:Organisation/iof:Name[text()="Vakant"]]');
 
-        foreach ($vakants as $node) {
-            $node->parentNode->removeChild($node);
+        if ($vakants !== false) {
+            foreach ($vakants as $node) {
+                if ($node instanceof \DOMNode) {
+                    $node->parentNode?->removeChild($node);
+                }
+            }
         }
 
         $filename = pathinfo($resource, PATHINFO_FILENAME) . '-bez-vakantu.xml';
 
-        return response($dom->saveXML(), 200, [
+        $xml = $dom->saveXML();
+        if ($xml === false) {
+            abort(500);
+        }
+
+        return response($xml, 200, [
             'Content-Type' => 'application/xml',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ]);

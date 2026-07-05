@@ -57,9 +57,7 @@ class AddOrisEventModal
             ->modalDescription('Přidá do systému zvolený závod s daty které aktuálně poskytuje ORIS')
             ->modalSubmitActionLabel('Přidej závod')
             ->visible(
-                auth()->user() !== null
-                    ? auth()->user()?->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster])
-                    : false
+                auth()->user() !== null && auth()->user()->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster])
             )
             ->schema([
                 Grid::make(2)

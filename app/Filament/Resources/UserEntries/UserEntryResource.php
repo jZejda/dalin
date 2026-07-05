@@ -63,7 +63,7 @@ class UserEntryResource extends Resource implements HasShieldPermissions
                     ->url(fn (UserEntry $record): string => route('filament.admin.resources.sport-events.entry', ['record' => $record->sport_event_id]))
                     ->sortable(query: function (Builder $query, string $direction): Builder {
                         return $query
-                            ->orderBy('sport_events.name', $direction);
+                            ->orderBy('sport_events.name', $direction === 'desc' ? 'desc' : 'asc');
                     }),
                 TextColumn::make('class_name')
                     ->label('Kategorie')

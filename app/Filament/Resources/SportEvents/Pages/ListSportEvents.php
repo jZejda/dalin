@@ -119,7 +119,11 @@ class ListSportEvents extends ListRecords
             return [];
         }
 
-        $filters = $filtersSetting->options['event_filters'] ?? [];
+        $filters = $filtersSetting->options['event_filters'];
+        if (!is_array($filters)) {
+            return [];
+        }
+
         if (!empty($filters)) {
             usort($filters, fn ($a, $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
         }
