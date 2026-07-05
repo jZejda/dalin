@@ -97,38 +97,7 @@ function actingAsMember(): User
     return $member;
 }
 
-it('renders transport page for member when module is enabled', function (): void {
-    AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, true);
-    actingAsMember();
-
-    $sportEvent = createTransportTestSportEvent();
-
-    $this->get('/admin/sport-events/'.$sportEvent->id.'/transport')
-        ->assertOk()
-        ->assertSee(__('transport.offer_transport'));
-});
-
-it('returns 404 on transport page when module is disabled', function (): void {
-    AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, false);
-    actingAsMember();
-
-    $sportEvent = createTransportTestSportEvent();
-
-    $this->get('/admin/sport-events/'.$sportEvent->id.'/transport')
-        ->assertNotFound();
-});
-
-it('returns 404 on transport page when event has no transport', function (): void {
-    AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, true);
-    actingAsMember();
-
-    $sportEvent = createTransportTestSportEvent(SportEventTransportType::None);
-
-    $this->get('/admin/sport-events/'.$sportEvent->id.'/transport')
-        ->assertNotFound();
-});
-
-it('shows transport link on entry page when module is enabled', function (): void {
+it('shows transport tab on entry page for member when module is enabled', function (): void {
     AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, true);
     actingAsMember();
 
@@ -136,7 +105,39 @@ it('shows transport link on entry page when module is enabled', function (): voi
 
     $this->get('/admin/sport-events/'.$sportEvent->id.'/entry')
         ->assertOk()
-        ->assertSee('/admin/sport-events/'.$sportEvent->id.'/transport');
+        ->assertSee(__('transport.offer_transport'));
+});
+
+it('hides transport tab on entry page when module is disabled', function (): void {
+    AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, false);
+    actingAsMember();
+
+    $sportEvent = createTransportTestSportEvent();
+
+    $this->get('/admin/sport-events/'.$sportEvent->id.'/entry')
+        ->assertOk()
+        ->assertDontSee(__('transport.offer_transport'));
+});
+
+it('hides transport tab on entry page when event has no transport', function (): void {
+    AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, true);
+    actingAsMember();
+
+    $sportEvent = createTransportTestSportEvent(SportEventTransportType::None);
+
+    $this->get('/admin/sport-events/'.$sportEvent->id.'/entry')
+        ->assertOk()
+        ->assertDontSee(__('transport.offer_transport'));
+});
+
+it('returns 404 on removed standalone transport page', function (): void {
+    AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, true);
+    actingAsMember();
+
+    $sportEvent = createTransportTestSportEvent();
+
+    $this->get('/admin/sport-events/'.$sportEvent->id.'/transport')
+        ->assertNotFound();
 });
 
 it('denies my vehicles page when module is disabled', function (): void {
@@ -148,7 +149,7 @@ it('denies my vehicles page when module is disabled', function (): void {
     $this->get('/admin/my-vehicle-list')->assertForbidden();
 });
 
-it('shows existing offer in transport page table', function (): void {
+it('shows existing offer in transport tab table', function (): void {
     AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, true);
     $member = actingAsMember();
 
@@ -161,7 +162,7 @@ it('shows existing offer in transport page table', function (): void {
         'departure_place' => 'Testovací nástupiště',
     ]);
 
-    $this->get('/admin/sport-events/'.$sportEvent->id.'/transport')
+    $this->get('/admin/sport-events/'.$sportEvent->id.'/entry')
         ->assertOk()
         ->assertSee('Testovací nástupiště')
         ->assertSee($vehicle->name);

@@ -28,6 +28,40 @@ class AppSetting extends Model
 
     public const string SERVICE_ORDERS_MODULE_ENABLED = 'service_orders.enabled';
 
+    public const string CLUB_FULL_NAME = 'club.full_name';
+
+    public const string CLUB_PRIMARY_BANK_ACCOUNT_NUMBER = 'club.primary_bank_account_number';
+
+    public const string CLUB_PRIMARY_BANK_ACCOUNT_NAME = 'club.primary_bank_account_name';
+
+    public const string CLUB_IBAN = 'club.iban';
+
+    public const string CLUB_USER_CREDIT_LIMIT = 'club.user_credit_limit';
+
+    public const string CLUB_REGULAR_MEMBERSHIP_FEES_PREFIX = 'club.regular_membership_fees_prefix';
+
+    public const string CLUB_EXTRA_MEMBERSHIP_FEES_PREFIX = 'club.extra_membership_fees_prefix';
+
+    public const string CLUB_TECHNICAL_EMAIL = 'club.technical_email';
+
+    /**
+     * Club settings editable in the admin panel, mapped to the config keys
+     * they override. The `abbr` is intentionally missing — it drives the ORIS
+     * integration and logo asset path, so it stays file-only.
+     *
+     * @var array<string, string>
+     */
+    public const array CLUB_CONFIG_MAP = [
+        self::CLUB_FULL_NAME => 'site-config.club.full_name',
+        self::CLUB_PRIMARY_BANK_ACCOUNT_NUMBER => 'site-config.club.primary_bank_account_number',
+        self::CLUB_PRIMARY_BANK_ACCOUNT_NAME => 'site-config.club.primary_bank_account_name',
+        self::CLUB_IBAN => 'site-config.club.iban',
+        self::CLUB_USER_CREDIT_LIMIT => 'site-config.club.user_credit_limit',
+        self::CLUB_REGULAR_MEMBERSHIP_FEES_PREFIX => 'site-config.club.regular_membership_fees_prefix',
+        self::CLUB_EXTRA_MEMBERSHIP_FEES_PREFIX => 'site-config.club.extra_membership_fees_prefix',
+        self::CLUB_TECHNICAL_EMAIL => 'site-config.club.technical_email',
+    ];
+
     /** @var list<string> */
     protected $fillable = [
         'key',
@@ -84,6 +118,21 @@ class AppSetting extends Model
     public static function isServiceOrdersModuleEnabled(): bool
     {
         return self::boolean(self::SERVICE_ORDERS_MODULE_ENABLED);
+    }
+
+    /**
+     * Overrides file/env club config with values saved in the admin panel.
+     * A null (never saved or cleared) value keeps the config file default.
+     */
+    public static function applyClubConfigOverrides(): void
+    {
+        foreach (self::CLUB_CONFIG_MAP as $settingKey => $configKey) {
+            $value = self::get($settingKey);
+
+            if ($value !== null) {
+                config()->set($configKey, $value);
+            }
+        }
     }
 
     private static function cacheKey(string $key): string

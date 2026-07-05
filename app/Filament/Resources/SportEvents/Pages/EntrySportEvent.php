@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace App\Filament\Resources\SportEvents\Pages;
 
 use App\Enums\AppRoles;
-use App\Enums\SportEventTransportType;
 use App\Filament\Resources\SportEvents\Pages\Actions\CreateEntryAction;
 use App\Filament\Resources\SportEvents\Pages\Actions\EntrySendMail;
 use App\Filament\Resources\SportEvents\Pages\Actions\EntryUpdateEvent;
 use App\Filament\Resources\SportEvents\Pages\Actions\ExportsData;
 use App\Filament\Resources\SportEvents\SportEventResource;
-use App\Models\AppSetting;
 use App\Models\SportEvent;
 use App\Models\User;
-use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
@@ -101,16 +98,6 @@ class EntrySportEvent extends Page implements HasForms
         }
         if (! is_null($makeExport)) {
             $defaultActions[] = $makeExport;
-        }
-
-        if (AppSetting::isTransportModuleEnabled()
-            && $sportEvent->transport_type !== SportEventTransportType::None
-        ) {
-            $defaultActions[] = Action::make('transport')
-                ->label(__('transport.page_title'))
-                ->icon('heroicon-o-truck')
-                ->color('gray')
-                ->url(SportEventResource::getUrl('transport', ['record' => $sportEvent]));
         }
 
         return $defaultActions;
