@@ -16,6 +16,20 @@ class DemoUsersSeeder extends Seeder
     {
         $faker = \Faker\Factory::create('cs_CZ');
 
+        // Fixed member account advertised on the demo login page
+        DB::table('users')->insert([
+            'name'                  => 'Member Demo',
+            'email'                 => 'member@demo.cz',
+            'password'              => bcrypt((string) config('demo.admin_password', 'Demo2026!')),
+            'active'                => true,
+            'payer_variable_symbol' => '99999999',
+            'email_verified_at'     => Carbon::now()->toDateTimeString(),
+            'created_at'            => Carbon::now()->subDays(365)->toDateTimeString(),
+            'updated_at'            => Carbon::now()->toDateTimeString(),
+        ]);
+
+        User::where('email', 'member@demo.cz')->first()?->assignRole('member');
+
         $roles = [
             'club_admin'          => 2,
             'event_master'        => 3,

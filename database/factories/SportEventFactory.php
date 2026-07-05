@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\SportEventType;
 use App\Models\SportEvent;
+use App\Models\SportList;
 use Database\Seeders\SportDisciplinesSeeder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
@@ -28,7 +29,8 @@ class SportEventFactory extends Factory
             'entry_desc' => fake()->optional()->paragraph(),
             'event_info' => fake()->optional()->paragraph(),
             'event_warning' => fake()->optional()->sentence(),
-            'sport_id' => fake()->numberBetween(1, 10),
+            'sport_id' => fn (): int => (int) (SportList::query()->inRandomOrder()->value('id')
+                ?? SportList::query()->create(['short_name' => 'OB'])->id),
             'discipline_id' => fake()->optional()->randomElement(
                 SportDisciplinesSeeder::getSeederData()
             ),
