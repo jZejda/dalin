@@ -23,6 +23,12 @@ class SportDiscipline extends Model
     use HasFactory;
 
     /** @var list<string> */
+    protected $fillable = [
+        'short_name',
+        'long_name',
+    ];
+
+    /** @var list<string> */
     public const RELAY_SHORT_NAMES = ['ST', 'SS', 'DR'];
 
     public function isRelayDiscipline(): bool
