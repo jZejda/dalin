@@ -37,7 +37,7 @@ Route::get('/cron-scheduler/'.config('site-config.cron_url_key'), function () {
     Artisan::call('schedule:run');
 });
 
-// Route::get('/demo-reset/'.config('demo.reset_url_key'), [DemoResetController::class, 'reset']);
+Route::get('/demo-reset/'.config('demo.reset_url_key'), [DemoResetController::class, 'reset']);
 
 Route::get('/cron-hourly/'.config('site-config.cron_hourly.url_key'), [CommonCron::class, 'runHourly']);
 
