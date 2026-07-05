@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $sport_event_id
  * @property int|null $sport_service_id
  * @property int|null $sport_service_order_id
+ * @property int|null $market_order_id
  * @property int|null $oris_balance_id
  * @property int|null $bank_transaction_id
  * @property UserCreditStatus $status
@@ -39,6 +40,7 @@ use Illuminate\Support\Carbon;
  * @property-read SportEvent|null $sportEvent
  * @property-read SportService|null $sportService
  * @property-read SportServiceOrder|null $sportServiceOrder
+ * @property-read MarketOrder|null $marketOrder
  * @property-read User|null $user
  * @property-read User|null $relatedUser
  * @property-read Collection<int, UserCreditNote> $userCreditNotes
@@ -65,6 +67,7 @@ class UserCredit extends Model
         'sport_event_id',
         'sport_service_id',
         'sport_service_order_id',
+        'market_order_id',
         'bank_transaction_id',
         'amount',
         'currency',
@@ -114,6 +117,11 @@ class UserCredit extends Model
     public function sportServiceOrder(): HasOne
     {
         return $this->hasOne(SportServiceOrder::class, 'id', 'sport_service_order_id');
+    }
+
+    public function marketOrder(): HasOne
+    {
+        return $this->hasOne(MarketOrder::class, 'id', 'market_order_id');
     }
 
     public function bankTransaction(): HasOne

@@ -28,6 +28,8 @@ class AppSetting extends Model
 
     public const string SERVICE_ORDERS_MODULE_ENABLED = 'service_orders.enabled';
 
+    public const string MARKETPLACE_MODULE_ENABLED = 'marketplace.enabled';
+
     public const string CLUB_FULL_NAME = 'club.full_name';
 
     public const string CLUB_PRIMARY_BANK_ACCOUNT_NUMBER = 'club.primary_bank_account_number';
@@ -118,6 +120,11 @@ class AppSetting extends Model
     public static function isServiceOrdersModuleEnabled(): bool
     {
         return self::boolean(self::SERVICE_ORDERS_MODULE_ENABLED);
+    }
+
+    public static function isMarketplaceModuleEnabled(): bool
+    {
+        return self::boolean(self::MARKETPLACE_MODULE_ENABLED);
     }
 
     /**

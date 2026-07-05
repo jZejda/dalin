@@ -45,6 +45,7 @@ return [
         UserCreditType::InitialDeposit->value => 'Počáteční vklad',
         UserCreditType::TransportBilling->value => 'Cestovní vyúčtování',
         UserCreditType::ServiceFee->value => 'Doplňková služba',
+        UserCreditType::MarketplaceBilling->value => 'Nákup na tržišti',
     ],
 
     'service_order_status_enum' => [

@@ -43,6 +43,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->call(fn () => \Illuminate\Support\Facades\Artisan::call('queue:work', ['--stop-when-empty' => true]))->everyFiveMinutes()->name('queue:work');
         $schedule->job(new SendNewPostsEmailJob())->everyThirtyMinutes();
         $schedule->job(new SendSportEventEntryEndingEmailJob())->hourly();
+        $schedule->command('marketplace:close-expired')->everyFifteenMinutes();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->reportable(function (Throwable $e) {
