@@ -50,6 +50,41 @@ class OrisEntryClient
     }
 
     /**
+     * Send an updateEntry request to ORIS and return the parsed response.
+     *
+     * Unlike createEntry, stage params are sent explicitly as 1/0 so a stage
+     * can be removed from an existing entry.
+     *
+     * @param array<string, mixed> $entryData
+     */
+    public function updateEntry(array $entryData, int $orisEntryId, SportEvent $sportEvent): CreateEntry
+    {
+        $requiredParams = [
+            'entryid' => $orisEntryId,
+            'class' => $entryData['classId'],
+        ];
+
+        $allOptionalParams = [
+            'si' => $entryData['si'] ?? null,
+            'note' => $entryData['note'] ?? null,
+            'clubnote' => $entryData['club_note'] ?? null,
+            'rent_si' => $entryData['rent_si'] ?? null,
+            'requested_start' => $entryData['requested_start'] ?? null,
+        ];
+
+        if (isset($entryData['entry_stages']) && is_array($entryData['entry_stages'])) {
+            for ($stage = 1; $stage <= $sportEvent->stages; $stage++) {
+                $allOptionalParams['stage'.$stage] = in_array('stage'.$stage, $entryData['entry_stages'], true) ? '1' : '0';
+            }
+        }
+
+        $optionalParams = array_filter($allOptionalParams, fn (mixed $v): bool => $v !== null);
+        $params = array_merge($requiredParams, $optionalParams);
+
+        return $this->request(GuzzleClient::METHOD_UPDATE_ENTRY, $params);
+    }
+
+    /**
      * Send a deleteEntry request to ORIS and return the parsed response.
      */
     public function deleteEntry(int $orisEntryId): CreateEntry

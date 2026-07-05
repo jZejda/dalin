@@ -1,0 +1,11 @@
+# Lint konfigurace pro oris-openapi.yaml
+rules:
+  # ORIS je RPC-style API s jediným endpointem /API/ – rozdělení podle metod je
+  # záměrně realizováno query stringem v klíči cesty (/API/?method=...).
+  path-not-include-query: off
+  # Autorizace neprobíhá standardním security schématem, ale parametry
+  # username+password nebo clubkey přímo v těle požadavku.
+  security-defined: off
+  # API vrací vždy HTTP 200; chyby signalizuje polem Status v obálce odpovědi.
+  operation-4xx-response: off
+  info-license: off

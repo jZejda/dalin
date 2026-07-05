@@ -6,6 +6,7 @@ namespace App\Livewire\SportEvent;
 
 use App\Enums\EntryStatus;
 use App\Filament\Resources\SportEvents\Pages\Actions\DeleteEntryAction;
+use App\Filament\Resources\SportEvents\Pages\Actions\UpdateEntryAction;
 use App\Filament\Resources\SportEvents\Pages\Table\EntriesTableColumns;
 use App\Models\SportEvent;
 use App\Models\UserEntry;
@@ -45,6 +46,7 @@ class EntryList extends Component implements HasActions, HasForms, HasTable
                     ->default([EntryStatus::Create->value, EntryStatus::Edit->value]),
             ])
             ->recordActions([
+                (new UpdateEntryAction())->make(),
                 (new DeleteEntryAction())->make(),
             ]);
     }
