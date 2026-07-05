@@ -6,8 +6,13 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Enums\SportEventType;
 use App\Http\Controllers\Controller;
+use App\Models\RelayTeam;
+use App\Models\RelayTeamMember;
 use App\Models\SportClass;
 use App\Models\SportEvent;
+use App\Models\SportEventLink;
+use App\Models\SportService;
+use App\Shared\Helpers\AppHelper;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -17,6 +22,7 @@ use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\QueryParam;
 use Knuckles\Scribe\Attributes\ResponseFromFile;
 use Knuckles\Scribe\Attributes\Subgroup;
+use Knuckles\Scribe\Attributes\UrlParam;
 
 #[Group('V1', 'APIs V1')]
 #[Subgroup('SPORT EVENT', 'Sport events and event category options')]
@@ -75,6 +81,9 @@ final class SportEventController extends Controller
                 'date',
                 'entry_date_1',
                 'event_type',
+                'oris_id',
+                'use_oris_for_entries',
+                'cancelled',
                 'created_at',
                 'updated_at',
             ])
@@ -100,6 +109,9 @@ final class SportEventController extends Controller
                     'value' => $sportEvent->event_type?->value,
                     'label' => $sportEvent->event_type !== null ? __('sport-event.type_enum.'.$sportEvent->event_type->value) : null,
                 ],
+                'oris_id' => $sportEvent->oris_id,
+                'use_oris_for_entries' => $sportEvent->use_oris_for_entries,
+                'cancelled' => $sportEvent->cancelled,
                 'categories' => $categories,
                 'created_at' => $sportEvent->created_at,
                 'updated_at' => $sportEvent->updated_at,
@@ -112,6 +124,142 @@ final class SportEventController extends Controller
                 'category_component_description' => 'categories contains class definitions assigned to each event (SportClass -> SportClassDefinition).',
                 'event_type_component_description' => 'event_type contains both machine value and translated label.',
             ],
+        ])->response();
+    }
+
+    #[UrlParam('sportEvent', 'integer', description: 'Sport event ID.', example: 1201)]
+    #[ResponseFromFile('app/Docs/Api/V1/Response/sport-event.detail.json', 200, description: 'Example Sport Event Detail')]
+    #[ResponseFromFile('app/Docs/Api/V1/Response/404.json', 404, description: 'Sport event not found')]
+    public function detail(SportEvent $sportEvent): JsonResponse
+    {
+        $sportEvent->load([
+            'sportClasses.classDefinition',
+            'sportDiscipline',
+            'sportLevel',
+            'sportEventLinks',
+            'sportServices',
+            'relayTeams.members',
+        ]);
+
+        $classes = $sportEvent->sportClasses
+            ->map(static fn (SportClass $sportClass): array => [
+                'id' => $sportClass->id,
+                'oris_id' => $sportClass->oris_id,
+                'name' => $sportClass->name,
+                'distance' => $sportClass->distance,
+                'climbing' => $sportClass->climbing,
+                'controls' => $sportClass->controls,
+                'fee' => $sportClass->fee,
+                'legs' => $sportClass->legs,
+                'class_definition' => $sportClass->classDefinition !== null ? [
+                    'id' => $sportClass->classDefinition->id,
+                    'name' => $sportClass->classDefinition->name,
+                    'gender' => $sportClass->classDefinition->gender,
+                    'age_from' => $sportClass->classDefinition->age_from,
+                    'age_to' => $sportClass->classDefinition->age_to,
+                ] : null,
+            ])
+            ->values()
+            ->all();
+
+        $services = $sportEvent->sportServices
+            ->map(static fn (SportService $service): array => [
+                'id' => $service->id,
+                'name' => $service->service_name_cz,
+                'unit_price' => $service->unit_price,
+                'qty_available' => $service->qty_available,
+                'qty_remaining' => $service->qty_remaining,
+                'last_booking_date_time' => $service->last_booking_date_time,
+            ])
+            ->values()
+            ->all();
+
+        $links = $sportEvent->sportEventLinks
+            ->map(static fn (SportEventLink $link): array => [
+                'id' => $link->id,
+                'name' => $link->name_cz ?? $link->name_en,
+                'url' => $link->source_url,
+                'type' => $link->source_type->value,
+            ])
+            ->values()
+            ->all();
+
+        $relayTeams = $sportEvent->relayTeams
+            ->map(static fn (RelayTeam $team): array => [
+                'id' => $team->id,
+                'name' => $team->name,
+                'relay_type' => $team->relay_type,
+                'slots_count' => $team->slots_count,
+                'members' => $team->members
+                    ->map(static fn (RelayTeamMember $member): array => [
+                        'relay_team_member_id' => $member->id,
+                        'slot' => $member->slot,
+                        'occupied' => $member->user_entry_id !== null,
+                    ])
+                    ->values()
+                    ->all(),
+            ])
+            ->values()
+            ->all();
+
+        $stageOptions = [];
+        for ($stage = 1; $stage <= (int) $sportEvent->stages; $stage++) {
+            $stageOptions[] = 'stage'.$stage;
+        }
+
+        return JsonResource::make([
+            'id' => $sportEvent->id,
+            'name' => $sportEvent->name,
+            'alt_name' => $sportEvent->alt_name,
+            'oris_id' => $sportEvent->oris_id,
+            'use_oris_for_entries' => $sportEvent->use_oris_for_entries,
+            'date' => $sportEvent->date?->toDateString(),
+            'date_end' => $sportEvent->date_end?->toDateString(),
+            'place' => $sportEvent->place,
+            'organization' => $sportEvent->organization,
+            'region' => $sportEvent->region,
+            'entry_desc' => $sportEvent->entry_desc,
+            'event_info' => $sportEvent->event_info,
+            'event_warning' => $sportEvent->event_warning,
+            'event_type' => [
+                'value' => $sportEvent->event_type?->value,
+                'label' => $sportEvent->event_type !== null ? __('sport-event.type_enum.'.$sportEvent->event_type->value) : null,
+            ],
+            'discipline' => $sportEvent->sportDiscipline !== null ? [
+                'id' => $sportEvent->sportDiscipline->id,
+                'short_name' => $sportEvent->sportDiscipline->short_name,
+                'long_name' => $sportEvent->sportDiscipline->long_name,
+            ] : null,
+            'level' => $sportEvent->sportLevel !== null ? [
+                'id' => $sportEvent->sportLevel->id,
+                'short_name' => $sportEvent->sportLevel->short_name,
+                'long_name' => $sportEvent->sportLevel->long_name,
+            ] : null,
+            'is_relay' => $sportEvent->isRelayDiscipline(),
+            'cancelled' => $sportEvent->cancelled,
+            'cancelled_reason' => $sportEvent->cancelled_reason,
+            'ranking' => $sportEvent->ranking,
+            'ranking_coefficient' => $sportEvent->ranking_coefficient,
+            'entry_dates' => [
+                'entry_date_1' => $sportEvent->entry_date_1?->format('Y-m-d H:i:s'),
+                'entry_date_2' => $sportEvent->entry_date_2?->format('Y-m-d H:i:s'),
+                'entry_date_3' => $sportEvent->entry_date_3?->format('Y-m-d H:i:s'),
+                'last_entry_date' => $sportEvent->lastEntryDate()?->format('Y-m-d H:i:s'),
+            ],
+            'entry_deadline_passed' => AppHelper::allowModifyUserEntry($sportEvent),
+            'start_time' => $sportEvent->start_time,
+            'gps' => [
+                'lat' => $sportEvent->gps_lat,
+                'lon' => $sportEvent->gps_lon,
+            ],
+            'stages' => $sportEvent->stages,
+            'stage_options' => $stageOptions,
+            'classes' => $classes,
+            'services' => $services,
+            'links' => $links,
+            'relay_teams' => $relayTeams,
+            'created_at' => $sportEvent->created_at,
+            'updated_at' => $sportEvent->updated_at,
         ])->response();
     }
 }

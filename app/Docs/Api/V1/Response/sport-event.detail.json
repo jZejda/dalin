@@ -1,0 +1,107 @@
+{
+    "data": {
+        "id": 1201,
+        "name": "Mistrovstvi oblasti na kratke trati",
+        "alt_name": null,
+        "oris_id": 8703,
+        "use_oris_for_entries": true,
+        "date": "2026-05-16",
+        "date_end": null,
+        "place": "Lipnice nad Sazavou",
+        "organization": ["ABC"],
+        "region": ["VC"],
+        "entry_desc": null,
+        "event_info": "Centrum zavodu na louce u obce.",
+        "event_warning": null,
+        "event_type": {
+            "value": "race",
+            "label": "Zavod"
+        },
+        "discipline": {
+            "id": 2,
+            "short_name": "KT",
+            "long_name": "Kratka trat"
+        },
+        "level": {
+            "id": 5,
+            "short_name": "OF",
+            "long_name": "Oblastni zebricek"
+        },
+        "is_relay": false,
+        "cancelled": false,
+        "cancelled_reason": null,
+        "ranking": true,
+        "ranking_coefficient": 1.02,
+        "entry_dates": {
+            "entry_date_1": "2026-05-08 23:59:59",
+            "entry_date_2": "2026-05-12 23:59:59",
+            "entry_date_3": null,
+            "last_entry_date": "2026-05-12 23:59:59"
+        },
+        "entry_deadline_passed": false,
+        "start_time": "10:00",
+        "gps": {
+            "lat": "49.6122",
+            "lon": "15.4114"
+        },
+        "stages": null,
+        "stage_options": [],
+        "classes": [
+            {
+                "id": 351,
+                "oris_id": 123456,
+                "name": "H21",
+                "distance": "5.4",
+                "climbing": "120",
+                "controls": "18",
+                "fee": 150,
+                "legs": null,
+                "class_definition": {
+                    "id": 15,
+                    "name": "H21",
+                    "gender": "M",
+                    "age_from": 21,
+                    "age_to": 34
+                }
+            },
+            {
+                "id": 352,
+                "oris_id": 123457,
+                "name": "D21",
+                "distance": "4.6",
+                "climbing": "95",
+                "controls": "16",
+                "fee": 150,
+                "legs": null,
+                "class_definition": {
+                    "id": 16,
+                    "name": "D21",
+                    "gender": "F",
+                    "age_from": 21,
+                    "age_to": 34
+                }
+            }
+        ],
+        "services": [
+            {
+                "id": 12,
+                "name": "Ubytovani - telocvicna",
+                "unit_price": 100,
+                "qty_available": 40,
+                "qty_remaining": 25,
+                "last_booking_date_time": "2026-05-08 23:59:59"
+            }
+        ],
+        "links": [
+            {
+                "id": 77,
+                "name": "Rozpis zavodu",
+                "url": "https://oris.orientacnisporty.cz/Zavod?id=8703",
+                "type": "oris"
+            }
+        ],
+        "relay_teams": [],
+        "created_at": "2026-03-01T10:20:11.000000Z",
+        "updated_at": "2026-03-05T15:42:00.000000Z"
+    }
+}

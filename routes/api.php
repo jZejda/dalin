@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\V1\PageController;
 use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\SportEventController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\UserEntryController;
 use App\Http\Controllers\Ical\CalendarController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -39,7 +40,21 @@ Route::prefix('v1/user')->middleware([
     //Route::get('/', [UserController::class, 'show']);
     Route::get('/race-profiles', [UserController::class, 'raceProfiles']);
     Route::get('/entry', [UserController::class, 'entry']);
+    Route::post('/entry', [UserEntryController::class, 'store']);
+    Route::delete('/entry/{userEntry}', [UserEntryController::class, 'destroy']);
     Route::get('/credit-balance', [UserController::class, 'creditBalance']);
+});
+
+// Sport events readable by any member — required for the API entry flow
+Route::prefix('v1')->middleware([
+    'apikey',
+    'role:' . User::ROLE_MEMBER
+    . '|' . User::ROLE_REDACTOR
+    . '|' . User::ROLE_SUPER_ADMIN
+    . '|' . User::ROLE_EVENT_MASTER,
+])->group(function (): void {
+    Route::get('/sport-event', [SportEventController::class, 'list']);
+    Route::get('/sport-event/{sportEvent}', [SportEventController::class, 'detail']);
 });
 
 // Posts API protected by x-apikey and role permission using spatie/permission ( OR Permission)
@@ -54,6 +69,4 @@ Route::prefix('v1')->middleware([
 
     Route::get('/page', [PageController::class, 'list']);
     Route::get('/page/{page}', [PageController::class, 'detail']);
-
-    Route::get('/sport-event', [SportEventController::class, 'list']);
 });

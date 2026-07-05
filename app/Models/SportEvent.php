@@ -164,6 +164,7 @@ class SportEvent extends Model
         return $this->hasOne(SportDiscipline::class, 'id', 'discipline_id');
     }
 
+    /** @return HasOne<SportLevel, $this> */
     public function sportLevel(): HasOne
     {
         return $this->hasOne(SportLevel::class, 'id', 'level_id');
@@ -175,6 +176,7 @@ class SportEvent extends Model
         return $this->hasMany(SportClass::class, 'sport_event_id', 'id');
     }
 
+    /** @return HasMany<SportService, $this> */
     public function sportServices(): HasMany
     {
         return $this->hasMany(SportService::class, 'sport_event_id', 'id');
@@ -205,6 +207,7 @@ class SportEvent extends Model
         )->count();
     }
 
+    /** @return HasMany<SportEventLink, $this> */
     public function sportEventLinks(): HasMany
     {
         return $this->HasMany(SportEventLink::class, 'sport_event_id', 'id');

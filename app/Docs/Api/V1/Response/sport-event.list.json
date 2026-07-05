@@ -9,6 +9,9 @@
                 "value": "race",
                 "label": "Zavod"
             },
+            "oris_id": 8703,
+            "use_oris_for_entries": true,
+            "cancelled": false,
             "categories": [
                 {
                     "id": 15,
