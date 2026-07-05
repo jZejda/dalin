@@ -7,7 +7,9 @@ namespace Database\Seeders\Demo;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Models\SportEvent;
+use App\Models\User;
 use App\Models\UserCredit;
+use App\Models\UserCreditNote;
 use App\Models\UserRaceProfile;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
@@ -77,6 +79,39 @@ class DemoUserCreditSeeder extends Seeder
                     'credit_type'          => UserCreditType::UserDonation->value,
                 ]);
             }
+        }
+
+        $this->seedCreditNotes();
+    }
+
+    private function seedCreditNotes(): void
+    {
+        $admin = User::where('email', 'admin@demo.cz')->first();
+
+        if ($admin === null) {
+            return;
+        }
+
+        $notes = [
+            ['note' => 'Platba dohledána ručně podle variabilního symbolu.', 'internal' => true],
+            ['note' => 'Vklad potvrzen na členské schůzi.',                  'internal' => false],
+            ['note' => 'Částka ponížena o slevu pro mládež.',                'internal' => true],
+        ];
+
+        foreach ($notes as $note) {
+            $credit = UserCredit::query()->inRandomOrder()->first();
+
+            if ($credit === null) {
+                return;
+            }
+
+            UserCreditNote::create([
+                'user_id'        => $credit->user_id,
+                'user_credit_id' => $credit->id,
+                'note_user_id'   => $admin->id,
+                'note'           => $note['note'],
+                'internal'       => $note['internal'],
+            ]);
         }
     }
 }

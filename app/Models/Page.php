@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\ContentFormat;
 use App\Enums\PageStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
@@ -36,7 +37,9 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Page extends Model implements HasMedia
 {
+    use HasFactory;
     use InteractsWithMedia;
+
     public const string STATUS_OPEN = 'open';
     public const string STATUS_CLOSED = 'close';
     public const string STATUS_DRAFT = 'draft';

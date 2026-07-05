@@ -5,11 +5,19 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\User;
+use Database\Seeders\Demo\DemoAppSettingsSeeder;
 use Database\Seeders\Demo\DemoBankAccountSeeder;
 use Database\Seeders\Demo\DemoClubsSeeder;
 use Database\Seeders\Demo\DemoBankTransactionSeeder;
+use Database\Seeders\Demo\DemoContentSeeder;
+use Database\Seeders\Demo\DemoMailLogSeeder;
+use Database\Seeders\Demo\DemoMarketplaceSeeder;
 use Database\Seeders\Demo\DemoPostSeeder;
+use Database\Seeders\Demo\DemoRelaySeeder;
+use Database\Seeders\Demo\DemoSportEventExtrasSeeder;
 use Database\Seeders\Demo\DemoSportEventSeeder;
+use Database\Seeders\Demo\DemoSportServiceSeeder;
+use Database\Seeders\Demo\DemoTransportSeeder;
 use Database\Seeders\Demo\DemoUserCreditSeeder;
 use Database\Seeders\Demo\DemoUserEntrySeeder;
 use Database\Seeders\Demo\DemoUserRaceProfileSeeder;
@@ -31,6 +39,7 @@ class DemoSeeder extends Seeder
             SportLevelSeeder::class,
             UserRolesSeeder::class,
             DemoClubsSeeder::class,
+            DemoAppSettingsSeeder::class,
         ]);
 
         // Demo admin user with known demo password
@@ -84,6 +93,13 @@ class DemoSeeder extends Seeder
             DemoUserEntrySeeder::class,
             DemoUserCreditSeeder::class,
             DemoPostSeeder::class,
+            DemoContentSeeder::class,
+            DemoMarketplaceSeeder::class,
+            DemoTransportSeeder::class,
+            DemoSportServiceSeeder::class,
+            DemoSportEventExtrasSeeder::class,
+            DemoRelaySeeder::class,
+            DemoMailLogSeeder::class,
         ]);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\SportEvent;
 use App\Models\SportService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -15,6 +16,7 @@ class SportServiceFactory extends Factory
     public function definition(): array
     {
         return [
+            'sport_event_id' => SportEvent::factory(),
             'oris_service_id' => $this->faker->unique()->numberBetween(1000, 99999),
             'service_name_cz' => $this->faker->randomElement(['Ubytování', 'Nocleh v tělocvičně', 'Parkování', 'Tričko']),
             'last_booking_date_time' => now()->addWeek()->format('Y-m-d H:i:s'),

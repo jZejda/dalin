@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use App\Enums\SportEventType;
+use App\Models\SportDiscipline;
 use App\Models\SportEvent;
 use App\Models\SportList;
-use Database\Seeders\SportDisciplinesSeeder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
@@ -31,9 +31,8 @@ class SportEventFactory extends Factory
             'event_warning' => fake()->optional()->sentence(),
             'sport_id' => fn (): int => (int) (SportList::query()->inRandomOrder()->value('id')
                 ?? SportList::query()->create(['short_name' => 'OB'])->id),
-            'discipline_id' => fake()->optional()->randomElement(
-                SportDisciplinesSeeder::getSeederData()
-            ),
+            'discipline_id' => fn (): int => (int) (SportDiscipline::query()->inRandomOrder()->value('id')
+                ?? SportDiscipline::query()->create(['short_name' => 'KL', 'long_name' => 'Klasická trať'])->id),
             'level_id' => fake()->optional()->numberBetween(1, 3),
             'event_type' => fake()->randomElement(SportEventType::cases()),
             'use_oris_for_entries' => fake()->boolean(),
