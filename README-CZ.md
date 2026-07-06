@@ -3,7 +3,7 @@
 <div align="center">
 *PHP - MySQL • Laravel • Filament • Tailwind*
 
-![PHP 8.4](https://img.shields.io/badge/PHP-8.4-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![PHP 8.5](https://img.shields.io/badge/PHP-8.5-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![Laravel 12.x](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![FilamentPHP v5.x](https://img.shields.io/badge/FilamentPHP-v5.x-FB70A9?style=for-the-badge&logo=filament)
 ![Tailwind CSS 4.0](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
@@ -26,7 +26,7 @@ pro český region hlavně [ORIS](https://oris.ceskyorientak.cz/) systém pro au
 
 ## Používá technologie
 
-- PHP v8.4
+- PHP v8.5
 - MySql 8* a vyšší
 - [Laravel](https://laravel.com/) - PHP framework actually ve verzi 12.x
 - [Filamentphp](https://filamentphp.com/) - ve verzi 5.x

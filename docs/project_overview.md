@@ -8,7 +8,7 @@
 ## 🛠️ Technologie
 | Vrstva        | Technologie                         | Poznámky |
 |---------------|-------------------------------------|----------|
-| Backend       | PHP 8.4 + Laravel 12                | Používáme Eloquent, API Resources, Service Layer |
+| Backend       | PHP 8.5 + Laravel 13                | Používáme Eloquent, API Resources, Service Layer |
 | Frontend      | TailwindCSS v4.x + FilamentPHP v4.x | Filament slouží jako UI framework pro admin rozhraní |
 | Testování     | Pest 4                              | Unit + Feature testy, `expect()` syntaxe |
 | Build tools   | Vite                                | Kompilace JS/CSS, hot reload |
@@ -43,7 +43,7 @@
 - **Komponenty**: Filament komponenty rozděleny podle domén (`Users`, `Orders`, `Settings`)
 
 ## 🧠 AI tipy
-- Generuj kód kompatibilní s Laravel 12
+- Generuj kód kompatibilní s Laravel 13
 - Používej Filament komponenty (`Tables`, `Forms`, `Actions`)
 - Testy piš v Pest syntaxi (`expect(...)->toBe(...)`)
 - Preferuj typovou bezpečnost (`DTOs`, `strict types`)

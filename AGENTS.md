@@ -1,12 +1,12 @@
 # AGENTS.md — Dalin
 
-Orienteering club web application built with Laravel 12, PHP 8.4, Filament v5, Tailwind CSS v4, and Pest 4.
+Orienteering club web application built with Laravel 13, PHP 8.5, Filament v5, Tailwind CSS v4, and Pest 4.
 
 > **Important:** Always read `docs/project_overview.md` before writing code (project context, architecture decisions, module overview).
 
 ## Architecture
 
-- **Backend:** Laravel 12 (PHP 8.4, strict types everywhere)
+- **Backend:** Laravel 13 (PHP 8.5, strict types everywhere)
 - **Admin panel:** Filament v5 with Livewire v4
 - **Frontend:** Blade templates + Alpine.js 3, Tailwind CSS v4, Vite 7
 - **Testing:** Pest 4 (with Laravel, Livewire, Faker, Browser plugins)

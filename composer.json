@@ -106,6 +106,9 @@
     },
     "config": {
         "optimize-autoloader": true,
+        "platform": {
+            "php": "8.4.99"
+        },
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
