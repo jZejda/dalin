@@ -14,17 +14,23 @@ use App\Filament\Resources\UserCredits\UserCreditResource;
 use App\Models\SportEvent;
 use App\Services\OrisApiService;
 use App\Shared\Helpers\AppHelper;
-use Carbon\Carbon;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Support\Enums\Width;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Str;
 
 class ListUserCredits extends ListRecords
 {
     protected static string $resource = UserCreditResource::class;
+
+    /** @var array<int, string> */
+    protected array $orisBilledBadges = [];
 
     protected function getHeaderActions(): array
     {
@@ -101,19 +107,72 @@ class ListUserCredits extends ListRecords
                     ->schema([
                         Select::make('sportEventId')
                             ->label('Závod/událost')
-                            ->options(
-                                SportEvent::all()
-                                    ->sortBy('date')
-                                    ->whereNotNull('oris_id')
-                                    ->where('created_at', '>', Carbon::now()->subMonths(12)->format(AppHelper::MYSQL_DATE_TIME))
-                                    ->sortByDesc('date')
-                                    ->pluck('sport_event_last_cost_calculate', 'id')
-                            )
+                            ->searchable()
+                            ->allowHtml()
+                            ->options(fn (): array => $this->getOrisEventOptions())
+                            ->getSearchResultsUsing(fn (string $search): array => $this->getOrisEventOptions($search))
+                            ->getOptionLabelUsing(function (mixed $value): ?string {
+                                $sportEvent = SportEvent::query()->find($value);
+
+                                return $sportEvent instanceof SportEvent ? $this->formatOrisEventOption($sportEvent) : null;
+                            })
                             ->required()
                             ->columnSpan(2),
                     ]),
 
             ]);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function getOrisEventOptions(?string $search = null): array
+    {
+        return SportEvent::query()
+            ->whereNotNull('oris_id')
+            ->when($search !== null && $search !== '', function (Builder $query) use ($search): Builder {
+                return $query->where(function (Builder $query) use ($search): void {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('alt_name', 'like', "%{$search}%")
+                        ->orWhere('oris_id', 'like', "%{$search}%");
+                });
+            })
+            ->orderByDesc('date')
+            ->limit(50)
+            ->get()
+            ->sortBy('date')
+            ->mapWithKeys(fn (SportEvent $sportEvent): array => [
+                $sportEvent->id => $this->formatOrisEventOption($sportEvent),
+            ])
+            ->all();
+    }
+
+    private function formatOrisEventOption(SportEvent $sportEvent): string
+    {
+        $labelParts = array_filter([
+            $sportEvent->date?->format(AppHelper::DATE_FORMAT),
+            count($sportEvent->organization ?? []) > 0 ? Arr::join($sportEvent->organization, ', ') : null,
+            $sportEvent->alt_name !== null ? Str::limit($sportEvent->alt_name, 50) : null,
+            Str::limit($sportEvent->name, 50),
+            $sportEvent->oris_id !== null ? '(ORIS '.$sportEvent->oris_id.')' : null,
+        ]);
+
+        return $this->getOrisBilledBadge($sportEvent->last_calculate_cost !== null)
+            .' '
+            .e(implode(' | ', $labelParts));
+    }
+
+    private function getOrisBilledBadge(bool $isBilled): string
+    {
+        $key = (int) $isBilled;
+
+        if (! isset($this->orisBilledBadges[$key])) {
+            $this->orisBilledBadges[$key] = $isBilled
+                ? Blade::render('<x-filament::badge size="sm" color="success">Vyúčtováno</x-filament::badge>')
+                : Blade::render('<x-filament::badge size="sm" color="warning">Čeká</x-filament::badge>');
+        }
+
+        return $this->orisBilledBadges[$key];
     }
 
     public function filterFromDay(string $from, string $until): void
