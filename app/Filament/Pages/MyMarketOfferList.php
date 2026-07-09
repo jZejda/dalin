@@ -290,6 +290,7 @@ class MyMarketOfferList extends Page implements HasForms, HasTable
                 ->schema([
                     Repeater::make('products')
                         ->relationship()
+                        ->extraAttributes(['class' => 'market-products-repeater'])
                         ->hiddenLabel()
                         ->minItems(1)
                         ->columns(2)

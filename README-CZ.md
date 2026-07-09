@@ -1,75 +1,142 @@
 # DaLin
 
 <div align="center">
+
 *PHP - MySQL • Laravel • Filament • Tailwind*
 
 ![PHP 8.5](https://img.shields.io/badge/PHP-8.5-777BB4?style=for-the-badge&logo=php&logoColor=white)
-![Laravel 12.x](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Laravel 13.x](https://img.shields.io/badge/Laravel-13.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![FilamentPHP v5.x](https://img.shields.io/badge/FilamentPHP-v5.x-FB70A9?style=for-the-badge&logo=filament)
 ![Tailwind CSS 4.0](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
 </div>
 
-**DaLin** - informační systém na správu klubu orientačních sportů.
-Systém využívá v maximální míře různá napojení na ostatní automatizované systémy, 
-pro český region hlavně [ORIS](https://oris.ceskyorientak.cz/) systém pro automatizaci přihlášek na závody, stahování plateb, atd.
+**DaLin** je informační systém pro správu klubu orientačních sportů — od
+přihlášek na závody přes členské finance až po sdílenou dopravu na závody.
+Místo žonglování s tabulkami, e-maily a bankovními výpisy mají členové
+i správci klubu jedno místo, kde se vše děje automaticky.
+
+Systém je úzce propojený s [ORISem](https://oris.ceskyorientak.cz/),
+oficiálním informačním systémem českého orientačního běhu, takže kalendář
+závodů, přihlášky i výsledky zůstávají synchronizované bez ruční práce.
 
 - [📢 &nbsp;Informace k vydání](https://docs.dalin.cz/changelog/)
 - [✨ &nbsp;Používá ABM klub orientačního běhu](https://abmbrno.cz)
 
-![Dalin - Závody](https://jirizejda.cz/images/dalin.png)
+## Co DaLin umí
 
-## Show Demo
+### 🏃 Přihlášky na závody bez papírování
+Členové si projdou kalendář závodů (synchronizovaný z ORISu), vyberou
+kategorii a přihlásí se na pár kliknutí. Správce klubu už nesbírá přihlášky
+e-mailem — DaLin je odesílá do ORISu automaticky a hlídá termíny, změny
+i odhlášky. Podporované jsou i štafetové závody včetně sestavování
+štafetových týmů z jednotlivých členů.
 
-⚡ Tento projekt je využíván klubem [ABM Brno](https://abmbrno.cz/) Klub orientačního běhu ALFA Brno z.s.
+### 💰 Přehledné členské finance
+Každý člen má v klubu kreditní účet. Startovné se z něj strhává automaticky
+a příchozí platby se stahují přímo z klubového bankovního účtu (vestavěné
+jsou konektory pro Fio banku a Monetu) a párují se ke členům. Každý kdykoli
+vidí svůj zůstatek a historii transakcí; hospodáři klubu vidí celkový obraz.
+
+### 🚗 Sdílená doprava na závody
+Dostat 40 lidí v sobotu ráno do lesa je logistický oříšek. Členové si mohou
+k danému závodu vyžádat místo v autě, nebo naopak volná místa ve svém autě
+nabídnout, a systém poptávky s nabídkami propojí.
+
+### 🛒 Klubové tržiště
+Jednoduché interní tržiště pro klubové vybavení — dresy, SI čipy, mapy nebo
+věci z druhé ruky. Objednávky se platí z členského kreditu.
+
+### 📅 Kalendáře, exporty a notifikace
+Osobní kalendář závodů lze odebírat přes iCal v libovolné kalendářové
+aplikaci. Startovní listiny lze exportovat ve formátech ČSOS a IOF XML pro
+pořadatele. Členům chodí e-mailové notifikace o termínech přihlášek
+a důležitých událostech.
+
+### 📝 Klubový obsah a web
+Správci mohou publikovat novinky a statické stránky, takže systém zároveň
+slouží jako jednoduchý klubový web s členskou sekcí.
+
+### 🔐 Role pro každý typ uživatele
+Jemně odstupňované role (člen, závodník, správce závodů, hospodář, správce
+klubu, …) zajišťují, že každý vidí přesně to, co potřebuje — nic víc, nic míň.
+
+## Pro koho je určen
+
+- **Členové a závodníci** — přihlašují se na závody, sledují svůj kredit,
+  sdílejí dopravu.
+- **Správci klubu a správci závodů** — spravují kalendář, přihlášky a členy.
+- **Hospodáři** — párují bankovní platby, dohlížejí na klubové finance.
+- **Vývojáři** — pro integrace je k dispozici verzované REST API
+  (`/api/v1/`), zabezpečené Sanctum tokeny a API klíči.
+
+## Ukázka
+
+⚡ Tento projekt v ostrém provozu používá klub [ABM Brno](https://abmbrno.cz/) — Klub orientačního běhu ALFA Brno z.s.
 
 📘 Uživatelskou dokumentaci k projektu naleznete na [stránce nápovědy](https://jirizejda.cz/dalin/).
 
-## Používá technologie
+![Dalin - Závody](https://jirizejda.cz/images/dalin.png)
 
-- PHP v8.5
-- MySql 8* a vyšší
-- [Laravel](https://laravel.com/) - PHP framework actually ve verzi 12.x
-- [Filamentphp](https://filamentphp.com/) - ve verzi 5.x
-- [Tailwindcss](https://tailwindcss.com/) - A utility-first CSS framework
-    - [Flowbite](https://flowbite.com/) - open-source tailwind css library
-- [Livewire](https://livewire.laravel.com/) - Livewire is a full-stack framework for non frontend programmers
-- [Alpine.Js](https://alpinejs.dev/) - lightweight, JavaScript framework
+## Použité technologie
 
-## Nastavení
+- PHP 8.5, MySQL 8 a vyšší
+- [Laravel](https://laravel.com/) 13.x - PHP framework
+- [Filament](https://filamentphp.com/) 5.x - administrační panel
+- [Livewire](https://livewire.laravel.com/) 4 - full-stack framework pro dynamická rozhraní
+- [Alpine.js](https://alpinejs.dev/) - odlehčený JavaScript framework
+- [Tailwind CSS](https://tailwindcss.com/) 4 - utility-first CSS framework
+    - [Flowbite](https://flowbite.com/) - open-source knihovna pro Tailwind CSS
 
-Pokud chcete lokálně vyvíjet tento projekt, můžete postupovat podle následujících kroků:
+## Instalace
+
+Pokud chcete projekt lokálně vyvíjet, postupujte podle následujících kroků:
 
 > [!NOTE]
-> Pro lokální vývoj prosím používejte 🐳 Docker container.
-> Stačí využívat připravené `make` příkazy pokrývající běžné příkazy při vývoji. Nápovědu získáte prostým zadáním `make` v příkazové řádce projektu
+> Pro lokální vývoj používejte 🐳 Docker container (Laravel Sail).
+> Součástí projektu je Makefile s běžnými příkazy — nápovědu získáte zadáním `make`.
 
-1. Klonování repozitáře.
+1. Naklonujte repozitář:
     ```bash
     git clone git@gitlab.com:jzejda/dalin.git
-    # or
+    # nebo
     git clone https://gitlab.com/jzejda/dalin.git
     ```
 2. `cd dalin`
-3. `make up`
-4. `make bash`
-5. In container image use `composer install`
-6. `cp .env.example .env`
-7. `php artisan key:generate`
-8. Set **database config** on `.env` file
-9. `php artisan migrate --seed` - run migrations and seeding data
-10. `php artisan shield:install` -> yes and yes
-11. `npm install` - install frontend dependencies
-12. `npm run dev` - compile the assets
-11. Open `https://localhost` with browser.
-12. Open `https://localhost:8084` You can manage MySQL database in phpMyAdmin tool.
-13. Login into application under `http://localhost/admin/login` with credentials from `database/seeders/UserTableSeeder.php`
+3. `cp .env.example .env`
+4. `make up` — spustí Docker kontejnery
+5. `make bash` — vstup do PHP kontejneru, uvnitř pak:
+    1. `composer install`
+    2. `php artisan key:generate`
+    3. Nastavte **připojení k databázi** v souboru `.env`
+    4. `php artisan migrate --seed` — spustí migrace a naplní data
+    5. `php artisan shield:install` → yes a yes
+    6. `npm install` — instalace frontend závislostí
+    7. `npm run dev` — kompilace assetů
+6. Otevřete v prohlížeči `http://localhost`.
+7. Do administrace se přihlásíte na `http://localhost/admin/login` pomocí
+   údajů ze souboru `database/seeders/UserTableSeeder.php`.
 
-Doporučuji používat `make` bash nástroj ve výchozí složce projektu.
+Užitečné vývojářské služby běžící vedle aplikace:
 
-## License
+| Služba | URL | K čemu slouží |
+|---|---|---|
+| phpMyAdmin | `http://localhost:8084` | Správa MySQL databáze |
+| Mailpit | `http://localhost:8025` | Zachytávání a náhled odchozích e-mailů |
+
+Nejčastější příkazy pro každodenní vývoj (spouštějí se z kořene projektu):
+
+```bash
+make pest      # Spustí testy
+make lint      # Kontrola stylu kódu (Pint)
+make phpstan   # Statická analýza
+make clear     # Vyčistí všechny cache
+```
+
+## Licence
 
 <p>
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-Tento projekt je open-sourced software využívájící [MIT license](LICENSE).
+Tento projekt je open-source software licencovaný pod [MIT licencí](LICENSE).

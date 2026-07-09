@@ -8,3 +8,8 @@
 * Frontent content
 */
 /*@import '../../content/_front-post.scss';*/
+
+/* Marketplace: šedé pozadí položek produktů v repeateru (MyMarketOfferList) */
+.market-products-repeater .fi-fo-repeater-item {
+    @apply bg-gray-100 dark:bg-gray-800;
+}
