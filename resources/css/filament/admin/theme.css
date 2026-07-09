@@ -9,6 +9,15 @@
 */
 /*@import '../../content/_front-post.scss';*/
 
+/* Sidebar: mezery v levém menu (výchozí Filament hodnoty: položky gap-y-1, skupiny gap-y-7) */
+.fi-sidebar-group-items {
+    @apply gap-y-1; /* mezera mezi jednotlivými položkami ve skupině */
+}
+
+.fi-sidebar-nav-groups {
+    @apply gap-y-1; /* mezera mezi skupinami (Obsah, …) */
+}
+
 /* Marketplace: šedé pozadí položek produktů v repeateru (MyMarketOfferList) */
 .market-products-repeater .fi-fo-repeater-item {
     @apply bg-gray-100 dark:bg-gray-800;
