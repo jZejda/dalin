@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Enums\Width;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 
@@ -28,7 +29,6 @@ class ListUserCredits extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
             $this->getEventOrisBalance(),
             (Auth::user()?->hasRole([
                 AppRoles::EventMaster,
@@ -43,6 +43,10 @@ class ListUserCredits extends ListRecords
     {
         return ActionGroup::make(
             [
+                CreateAction::make()
+                    ->label('Nové vyúčtování')
+                    ->icon('heroicon-o-banknotes')
+                    ->modalWidth(Width::SevenExtraLarge),
                 (new AddUserTransferBillingModal())->getAction(
                     AddUserTransferBillingModal::ACTION_ADD_USER_TRANSPORT_BILLING,
                     UserCreditType::TransportBilling

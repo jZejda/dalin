@@ -88,16 +88,11 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                 TextColumn::make('userCredit.id')
                     ->label(__('bank-transaction.user_credit_id'))
                     ->url(function (BankTransaction $bankTransaction): string {
-                        $countUserTransactions = count($bankTransaction->userCredit);
-
-                        if ($countUserTransactions > 1) {
-                            return route('filament.admin.resources.user-credits.view', ['record' => $bankTransaction->userCredit[0]->id]);
-                        } elseif ($countUserTransactions === 1) {
-                            return route('filament.admin.resources.user-credits.view', ['record' => $bankTransaction->userCredit[0]->id]);
-                        } else {
-                            return '#';
+                        if (count($bankTransaction->userCredit) > 0) {
+                            return route('filament.admin.resources.user-credits.index', ['tableSearch' => $bankTransaction->userCredit[0]->id]);
                         }
 
+                        return '#';
                     })
                     ->description(function (BankTransaction $bankTransaction): string {
                         return 'transakcí: ' . (string)$bankTransaction->userCredit->count();

@@ -1,6 +1,6 @@
 <div class="p-6 bg-gray-100 rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-600">
     <ol class="relative border-l border-gray-200 dark:border-gray-700">
-        @foreach($this->record->userCreditNotes as $userCreditNote)
+        @foreach($record->userCreditNotes as $userCreditNote)
 
             @php
                 $userName = $userCreditNote->userNoteMade->name;

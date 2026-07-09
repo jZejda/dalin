@@ -9,12 +9,10 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Actions\ActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
+use App\Filament\Resources\UserCredits\Actions\AddUserCreditNoteModal;
 use App\Filament\Resources\UserCredits\Pages\ListUserCredits;
-use App\Filament\Resources\UserCredits\Pages\CreateUserCredit;
-use App\Filament\Resources\UserCredits\Pages\EditUserCredit;
-use App\Filament\Resources\UserCredits\Pages\ViewUserCredit;
 use App\Enums\AppRoles;
 use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
@@ -38,6 +36,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Filament\Support\Enums\Width;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 
@@ -275,8 +274,10 @@ class UserCreditResource extends Resource implements HasShieldPermissions
             ])
             ->recordActions([
                 ActionGroup::make([
-                    EditAction::make(),
-                    ViewAction::make(),
+                    EditAction::make()
+                        ->modalWidth(Width::SevenExtraLarge),
+                    (new AddUserCreditNoteModal())->getAction(),
+                    DeleteAction::make(),
                 ]),
             ])
             ->toolbarActions([
@@ -307,9 +308,6 @@ class UserCreditResource extends Resource implements HasShieldPermissions
     {
         return [
             'index' => ListUserCredits::route('/'),
-            'create' => CreateUserCredit::route('/create'),
-            'edit' => EditUserCredit::route('/{record}/edit'),
-            'view' => ViewUserCredit::route('/{record}'),
         ];
     }
 

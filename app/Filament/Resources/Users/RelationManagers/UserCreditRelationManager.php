@@ -8,8 +8,8 @@ use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Schemas\Schema;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Support\Enums\Width;
 use App\Models\SportEvent;
 use App\Models\UserCredit;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -54,12 +54,7 @@ class UserCreditRelationManager extends RelationManager
 
     public function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                TextInput::make('amount')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+        return UserCreditResource::form($schema);
     }
 
     //    protected function getTableContentFooter(): ?View
@@ -80,7 +75,6 @@ class UserCreditRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
-                    ->url(fn (UserCredit $record): string => route('filament.admin.resources.user-credits.view', ['record' => $record->id]))
                     //->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name != null ? $record->sportEvent?->alt_name : 'nepřiřazeno k závodu')
                     ->description(function (UserCredit $record): string {
                         $description = '';
@@ -143,9 +137,9 @@ class UserCreditRelationManager extends RelationManager
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make()
-                        ->url(fn (UserCredit $record): string => UserCreditResource::getUrl('view', ['record' => $record])),
+                        ->modalWidth(Width::SevenExtraLarge),
                     EditAction::make()
-                        ->url(fn (UserCredit $record): string => UserCreditResource::getUrl('edit', ['record' => $record])),
+                        ->modalWidth(Width::SevenExtraLarge),
                 ]),
             ])
             ->toolbarActions([
