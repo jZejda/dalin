@@ -28,6 +28,11 @@ use Knuckles\Scribe\Attributes\UrlParam;
 #[Subgroup('SPORT EVENT', 'Sport events and event category options')]
 final class SportEventController extends Controller
 {
+    /**
+     * Seznam závodů a akcí
+     *
+     * Vrátí stránkovaný seznam závodů a akcí klubu s možností filtrování.
+     */
     #[QueryParam('from', 'string', description: 'Date from in Y-m-d format.', required: false, example: '2026-01-01')]
     #[QueryParam('to', 'string', description: 'Date to in Y-m-d format.', required: false, example: '2026-12-31')]
     #[QueryParam('event_type', 'string', description: 'Filter by event type category. Allowed values: race, training, trainingCamp, other.', required: false, example: 'race')]
@@ -127,6 +132,11 @@ final class SportEventController extends Controller
         ])->response();
     }
 
+    /**
+     * Detail závodu
+     *
+     * Vrátí detail závodu včetně kategorií, štafet a možností etap pro přihlášení.
+     */
     #[UrlParam('sportEvent', 'integer', description: 'Sport event ID.', example: 1201)]
     #[ResponseFromFile('app/Docs/Api/V1/Response/sport-event.detail.json', 200, description: 'Example Sport Event Detail')]
     #[ResponseFromFile('app/Docs/Api/V1/Response/404.json', 404, description: 'Sport event not found')]

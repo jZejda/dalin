@@ -28,6 +28,11 @@ final class UserController extends Controller
         return JsonResource::make($request->user())->response();
     }
 
+    /**
+     * Seznam závodních profilů
+     *
+     * Vrátí závodní profily přihlášeného uživatele (výchozí jen aktivní).
+     */
     #[QueryParam('all', 'boolean', description: 'When true, includes both active and inactive race profiles. Defaults to false (active only).', required: false, example: false)]
     #[ResponseFromFile('app/Docs/Api/V1/Response/user.race-profiles.json', 200, description: 'Example User Race Profiles')]
     public function raceProfiles(Request $request): JsonResponse
@@ -77,6 +82,11 @@ final class UserController extends Controller
         return JsonResource::collection($raceProfiles)->response();
     }
 
+    /**
+     * Seznam přihlášek uživatele
+     *
+     * Vrátí přihlášky všech závodních profilů uživatele, výchozí od dneška dál.
+     */
     #[QueryParam('from', 'string', description: 'Date from in Y-m-d format. Filters by sport event date.', required: false, example: '2026-01-01')]
     #[QueryParam('to', 'string', description: 'Date to in Y-m-d format. Filters by sport event date.', required: false, example: '2026-12-31')]
     #[QueryParam('page', 'integer', description: 'Page number for pagination.', required: false, example: 1)]
@@ -141,6 +151,11 @@ final class UserController extends Controller
         return JsonResource::collection($entries)->response();
     }
 
+    /**
+     * Zůstatek konta uživatele
+     *
+     * Vrátí aktuální zůstatek kreditu přihlášeného uživatele.
+     */
     #[ResponseFromFile('app/Docs/Api/V1/Response/user.credit-balance.json', 200, description: 'Example User Credit Balance')]
     public function creditBalance(Request $request): JsonResponse
     {

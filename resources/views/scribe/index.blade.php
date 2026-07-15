@@ -78,19 +78,19 @@
                             </li>
                                                             <ul id="tocify-subheader-v1-user" class="tocify-subheader">
                                                                             <li class="tocify-item level-3" data-unique="v1-GETapi-v1-user-race-profiles">
-                                            <a href="#v1-GETapi-v1-user-race-profiles">GET api/v1/user/race-profiles</a>
+                                            <a href="#v1-GETapi-v1-user-race-profiles">Seznam závodních profilů</a>
                                         </li>
                                                                             <li class="tocify-item level-3" data-unique="v1-GETapi-v1-user-entry">
-                                            <a href="#v1-GETapi-v1-user-entry">GET api/v1/user/entry</a>
+                                            <a href="#v1-GETapi-v1-user-entry">Seznam přihlášek uživatele</a>
                                         </li>
                                                                             <li class="tocify-item level-3" data-unique="v1-POSTapi-v1-user-entry">
-                                            <a href="#v1-POSTapi-v1-user-entry">POST api/v1/user/entry</a>
+                                            <a href="#v1-POSTapi-v1-user-entry">Vytvoření přihlášky na závod</a>
                                         </li>
                                                                             <li class="tocify-item level-3" data-unique="v1-DELETEapi-v1-user-entry--userEntry_id-">
-                                            <a href="#v1-DELETEapi-v1-user-entry--userEntry_id-">DELETE api/v1/user/entry/{userEntry_id}</a>
+                                            <a href="#v1-DELETEapi-v1-user-entry--userEntry_id-">Zrušení přihlášky</a>
                                         </li>
                                                                             <li class="tocify-item level-3" data-unique="v1-GETapi-v1-user-credit-balance">
-                                            <a href="#v1-GETapi-v1-user-credit-balance">GET api/v1/user/credit-balance</a>
+                                            <a href="#v1-GETapi-v1-user-credit-balance">Zůstatek konta uživatele</a>
                                         </li>
                                                                     </ul>
                                                                                 <li class="tocify-item level-2" data-unique="v1-sport-event">
@@ -98,10 +98,10 @@
                             </li>
                                                             <ul id="tocify-subheader-v1-sport-event" class="tocify-subheader">
                                                                             <li class="tocify-item level-3" data-unique="v1-GETapi-v1-sport-event">
-                                            <a href="#v1-GETapi-v1-sport-event">GET api/v1/sport-event</a>
+                                            <a href="#v1-GETapi-v1-sport-event">Seznam závodů a akcí</a>
                                         </li>
                                                                             <li class="tocify-item level-3" data-unique="v1-GETapi-v1-sport-event--sportEvent_id-">
-                                            <a href="#v1-GETapi-v1-sport-event--sportEvent_id-">GET api/v1/sport-event/{sportEvent_id}</a>
+                                            <a href="#v1-GETapi-v1-sport-event--sportEvent_id-">Detail závodu</a>
                                         </li>
                                                                     </ul>
                                                                                 <li class="tocify-item level-2" data-unique="v1-post">
@@ -109,10 +109,10 @@
                             </li>
                                                             <ul id="tocify-subheader-v1-post" class="tocify-subheader">
                                                                             <li class="tocify-item level-3" data-unique="v1-GETapi-v1-post">
-                                            <a href="#v1-GETapi-v1-post">GET api/v1/post</a>
+                                            <a href="#v1-GETapi-v1-post">Seznam příspěvků</a>
                                         </li>
                                                                             <li class="tocify-item level-3" data-unique="v1-GETapi-v1-post--post_id-">
-                                            <a href="#v1-GETapi-v1-post--post_id-">GET api/v1/post/{post_id}</a>
+                                            <a href="#v1-GETapi-v1-post--post_id-">Detail příspěvku</a>
                                         </li>
                                                                     </ul>
                                                                                 <li class="tocify-item level-2" data-unique="v1-page">
@@ -120,10 +120,10 @@
                             </li>
                                                             <ul id="tocify-subheader-v1-page" class="tocify-subheader">
                                                                             <li class="tocify-item level-3" data-unique="v1-GETapi-v1-page">
-                                            <a href="#v1-GETapi-v1-page">GET api/v1/page</a>
+                                            <a href="#v1-GETapi-v1-page">Seznam stránek</a>
                                         </li>
                                                                             <li class="tocify-item level-3" data-unique="v1-GETapi-v1-page--page_id-">
-                                            <a href="#v1-GETapi-v1-page--page_id-">GET api/v1/page/{page_id}</a>
+                                            <a href="#v1-GETapi-v1-page--page_id-">Detail stránky</a>
                                         </li>
                                                                     </ul>
                                                                         </ul>
@@ -165,12 +165,12 @@ You can switch the language used with the tabs at the top right (or from the nav
                                         <p>
                     <p>Authenticated user overview endpoints</p>
                 </p>
-                                        <h2 id="v1-GETapi-v1-user-race-profiles">GET api/v1/user/race-profiles</h2>
+                                        <h2 id="v1-GETapi-v1-user-race-profiles">Seznam závodních profilů</h2>
 
 <p>
 </p>
 
-
+<p>Vrátí závodní profily přihlášeného uživatele (výchozí jen aktivní).</p>
 
 <span id="example-requests-GETapi-v1-user-race-profiles">
 <blockquote>Example request:</blockquote>
@@ -362,12 +362,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                 </form>
 
-                    <h2 id="v1-GETapi-v1-user-entry">GET api/v1/user/entry</h2>
+                    <h2 id="v1-GETapi-v1-user-entry">Seznam přihlášek uživatele</h2>
 
 <p>
 </p>
 
-
+<p>Vrátí přihlášky všech závodních profilů uživatele, výchozí od dneška dál.</p>
 
 <span id="example-requests-GETapi-v1-user-entry">
 <blockquote>Example request:</blockquote>
@@ -653,12 +653,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
-                    <h2 id="v1-POSTapi-v1-user-entry">POST api/v1/user/entry</h2>
+                    <h2 id="v1-POSTapi-v1-user-entry">Vytvoření přihlášky na závod</h2>
 
 <p>
 </p>
 
-
+<p>Přihlásí závodní profil uživatele na závod — včetně štafet, etap a ORIS závodů.</p>
 
 <span id="example-requests-POSTapi-v1-user-entry">
 <blockquote>Example request:</blockquote>
@@ -1011,12 +1011,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
-                    <h2 id="v1-DELETEapi-v1-user-entry--userEntry_id-">DELETE api/v1/user/entry/{userEntry_id}</h2>
+                    <h2 id="v1-DELETEapi-v1-user-entry--userEntry_id-">Zrušení přihlášky</h2>
 
 <p>
 </p>
 
-
+<p>Zruší přihlášku uživatele, u ORIS závodů včetně odhlášení v ORISu.</p>
 
 <span id="example-requests-DELETEapi-v1-user-entry--userEntry_id-">
 <blockquote>Example request:</blockquote>
@@ -1194,12 +1194,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                     </form>
 
-                    <h2 id="v1-GETapi-v1-user-credit-balance">GET api/v1/user/credit-balance</h2>
+                    <h2 id="v1-GETapi-v1-user-credit-balance">Zůstatek konta uživatele</h2>
 
 <p>
 </p>
 
-
+<p>Vrátí aktuální zůstatek kreditu přihlášeného uživatele.</p>
 
 <span id="example-requests-GETapi-v1-user-credit-balance">
 <blockquote>Example request:</blockquote>
@@ -1339,12 +1339,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
                                         <p>
                     <p>Sport events and event category options</p>
                 </p>
-                                        <h2 id="v1-GETapi-v1-sport-event">GET api/v1/sport-event</h2>
+                                        <h2 id="v1-GETapi-v1-sport-event">Seznam závodů a akcí</h2>
 
 <p>
 </p>
 
-
+<p>Vrátí stránkovaný seznam závodů a akcí klubu s možností filtrování.</p>
 
 <span id="example-requests-GETapi-v1-sport-event">
 <blockquote>Example request:</blockquote>
@@ -1698,12 +1698,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
         </div>
         </form>
 
-                    <h2 id="v1-GETapi-v1-sport-event--sportEvent_id-">GET api/v1/sport-event/{sportEvent_id}</h2>
+                    <h2 id="v1-GETapi-v1-sport-event--sportEvent_id-">Detail závodu</h2>
 
 <p>
 </p>
 
-
+<p>Vrátí detail závodu včetně kategorií, štafet a možností etap pro přihlášení.</p>
 
 <span id="example-requests-GETapi-v1-sport-event--sportEvent_id-">
 <blockquote>Example request:</blockquote>
@@ -1980,12 +1980,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
                                         <p>
                     <p>News</p>
                 </p>
-                                        <h2 id="v1-GETapi-v1-post">GET api/v1/post</h2>
+                                        <h2 id="v1-GETapi-v1-post">Seznam příspěvků</h2>
 
 <p>
 </p>
 
-
+<p>Vrátí stránkovaný seznam novinek a příspěvků klubu.</p>
 
 <span id="example-requests-GETapi-v1-post">
 <blockquote>Example request:</blockquote>
@@ -2207,12 +2207,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                 </form>
 
-                    <h2 id="v1-GETapi-v1-post--post_id-">GET api/v1/post/{post_id}</h2>
+                    <h2 id="v1-GETapi-v1-post--post_id-">Detail příspěvku</h2>
 
 <p>
 </p>
 
-
+<p>Vrátí detail konkrétního příspěvku podle ID.</p>
 
 <span id="example-requests-GETapi-v1-post--post_id-">
 <blockquote>Example request:</blockquote>
@@ -2424,12 +2424,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
                                         <p>
                     <p>Page</p>
                 </p>
-                                        <h2 id="v1-GETapi-v1-page">GET api/v1/page</h2>
+                                        <h2 id="v1-GETapi-v1-page">Seznam stránek</h2>
 
 <p>
 </p>
 
-
+<p>Vrátí stránkovaný seznam obsahových stránek klubu.</p>
 
 <span id="example-requests-GETapi-v1-page">
 <blockquote>Example request:</blockquote>
@@ -2679,12 +2679,12 @@ You can check the Dev Tools console for debugging information.</code></pre>
             </div>
                 </form>
 
-                    <h2 id="v1-GETapi-v1-page--page_id-">GET api/v1/page/{page_id}</h2>
+                    <h2 id="v1-GETapi-v1-page--page_id-">Detail stránky</h2>
 
 <p>
 </p>
 
-
+<p>Vrátí detail konkrétní obsahové stránky podle ID.</p>
 
 <span id="example-requests-GETapi-v1-page--page_id-">
 <blockquote>Example request:</blockquote>

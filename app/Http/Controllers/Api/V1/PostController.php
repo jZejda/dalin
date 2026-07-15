@@ -19,6 +19,11 @@ use Knuckles\Scribe\Attributes\Response;
 #[Subgroup("POST", "News")]
 class PostController extends Controller
 {
+    /**
+     * Seznam příspěvků
+     *
+     * Vrátí stránkovaný seznam novinek a příspěvků klubu.
+     */
     #[QueryParam('from', 'string', description:'Date from in Y-M-D', required: false, example: '2024-12-31')]
     #[QueryParam('to', 'string', description: 'Date to in Y-M-D', required: false, example: '2024-12-31')]
     #[QueryParam('page', 'integer', 'Filter by whether a post is public or not.', required: false, example: 1)]
@@ -81,6 +86,11 @@ class PostController extends Controller
         return JsonResource::collection($posts);
     }
 
+    /**
+     * Detail příspěvku
+     *
+     * Vrátí detail konkrétního příspěvku podle ID.
+     */
     #[Response(<<<JSON
       {
         "data": {

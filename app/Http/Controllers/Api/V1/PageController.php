@@ -20,6 +20,11 @@ use Knuckles\Scribe\Attributes\UrlParam;
 #[Subgroup("PAGE", "Page")]
 class PageController extends Controller
 {
+    /**
+     * Seznam stránek
+     *
+     * Vrátí stránkovaný seznam obsahových stránek klubu.
+     */
     #[QueryParam('from', 'string', description:'Date from in Y-M-D format', required: false, example: '2024-12-31')]
     #[QueryParam('to', 'string', description: 'Date to in Y-M-D format', required: false, example: '2024-12-31')]
     #[QueryParam('page', 'integer', description: 'Page number for pagination', required: false, example: 1)]
@@ -68,6 +73,11 @@ class PageController extends Controller
         return JsonResource::collection($pages);
     }
 
+    /**
+     * Detail stránky
+     *
+     * Vrátí detail konkrétní obsahové stránky podle ID.
+     */
     //    #[UrlParam('page', 'integer', 'The ID of the Page.', required: true, example: 1)]
     #[ResponseFromFile('app/Docs/Api/V1/Response/page.detail.html.json', 200, description: 'Example with HTML content (content_format = 1)')]
     #[ResponseFromFile('app/Docs/Api/V1/Response/page.detail.markdown.json', 200, description: 'Example with Markdown content (content_format = 2)')]

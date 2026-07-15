@@ -30,6 +30,11 @@ use Knuckles\Scribe\Attributes\UrlParam;
 #[Subgroup('USER', 'Authenticated user overview endpoints')]
 final class UserEntryController extends Controller
 {
+    /**
+     * Vytvoření přihlášky na závod
+     *
+     * Přihlásí závodní profil uživatele na závod — včetně štafet, etap a ORIS závodů.
+     */
     #[BodyParam('sport_event_id', 'integer', description: 'ID of the sport event (see GET /api/v1/sport-event).', example: 1201)]
     #[BodyParam('race_profile_id', 'integer', description: 'ID of one of the authenticated user\'s race profiles (see GET /api/v1/user/race-profiles).', example: 12)]
     #[BodyParam('class_id', 'integer', description: 'ID of the event class (see classes[].id in GET /api/v1/sport-event/{id}). Required for non-relay events.', required: false, example: 351)]
@@ -162,6 +167,11 @@ final class UserEntryController extends Controller
             ->setStatusCode(201);
     }
 
+    /**
+     * Zrušení přihlášky
+     *
+     * Zruší přihlášku uživatele, u ORIS závodů včetně odhlášení v ORISu.
+     */
     #[UrlParam('userEntry', 'integer', description: 'User entry ID (see GET /api/v1/user/entry).', example: 5301)]
     #[ResponseFromFile('app/Docs/Api/V1/Response/user.entry.delete.json', 200, description: 'Entry cancelled')]
     #[Response('{"message": "Entry deadline has passed."}', 422, description: 'Deadline passed, entry cannot be cancelled')]
