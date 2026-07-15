@@ -14,6 +14,7 @@ use App\Enums\UserCreditType;
 use App\Filament\Resources\BankTransactions\Pages\CreateBankTransaction;
 use App\Filament\Resources\BankTransactions\Pages\EditBankTransaction;
 use App\Filament\Resources\BankTransactions\Pages\ListBankTransactions;
+use App\Models\AppSetting;
 use App\Models\BankTransaction;
 use App\Models\User;
 use App\Models\UserCredit;
@@ -60,6 +61,11 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
             ->components([
                 //
             ]);
+    }
+
+    public static function canAccess(): bool
+    {
+        return AppSetting::isBankModuleEnabled() && parent::canAccess();
     }
 
     public static function canCreate(): bool

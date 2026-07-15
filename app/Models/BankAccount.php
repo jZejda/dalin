@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\BankConnector;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
@@ -13,10 +14,9 @@ use Carbon\Carbon;
  *
  * @property int $id
  * @property string $name
- * @property string $code
+ * @property BankConnector $code
  * @property string $currency
- * @property string $api_url
- * @property array $account_credentials
+ * @property array<string, string>|null $account_credentials
  * @property Carbon|null $last_synced
  * @property bool $active
  * @property Carbon|null $created_at
@@ -29,11 +29,22 @@ class BankAccount extends Model
     public const string MONETA_MONEY_BANK = 'monetaMoneyBank';
     public const string FIO_BANK = 'fioBank';
 
+    /** @var list<string> */
+    protected $fillable = [
+        'name',
+        'code',
+        'currency',
+        'account_credentials',
+        'last_synced',
+        'active',
+    ];
+
     /** @var array<string, string> */
     protected $casts = [
+        'code' => BankConnector::class,
         'active' => 'boolean',
         'last_synced' => 'datetime:Y-m-d H:i:s',
-        'account_credentials' => 'array',
+        'account_credentials' => 'encrypted:array',
     ];
 
 }

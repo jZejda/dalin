@@ -39,12 +39,15 @@ class Settings extends Page implements HasForms
 
     public bool $marketplace_enabled = false;
 
+    public bool $bank_enabled = false;
+
     public function mount(): void
     {
         $this->transport_enabled = AppSetting::isTransportModuleEnabled();
         $this->event_payments_enabled = AppSetting::isEventPaymentsModuleEnabled();
         $this->service_orders_enabled = AppSetting::isServiceOrdersModuleEnabled();
         $this->marketplace_enabled = AppSetting::isMarketplaceModuleEnabled();
+        $this->bank_enabled = AppSetting::isBankModuleEnabled();
     }
 
     protected function getFormSchema(): array
@@ -78,6 +81,13 @@ class Settings extends Page implements HasForms
                         ->label('Modul tržiště je zapnutý')
                         ->helperText('Vypnutí modulu skryje tržiště v celé aplikaci, uložená data zůstanou zachována.'),
                 ]),
+            Section::make('Modul Napojení na banku')
+                ->description('Po zapnutí modulu bude dostupná stránka Bankovní výpis a správa bankovních napojení. Transakce se automaticky stahují, jen pokud je modul zapnutý a existuje alespoň jedno aktivní bankovní napojení.')
+                ->schema([
+                    Toggle::make('bank_enabled')
+                        ->label('Modul napojení na banku je zapnutý')
+                        ->helperText('Vypnutí modulu skryje bankovní výpis a zastaví stahování transakcí, uložená data zůstanou zachována.'),
+                ]),
         ];
     }
 
@@ -87,6 +97,7 @@ class Settings extends Page implements HasForms
         AppSetting::set(AppSetting::EVENT_PAYMENTS_MODULE_ENABLED, $this->event_payments_enabled);
         AppSetting::set(AppSetting::SERVICE_ORDERS_MODULE_ENABLED, $this->service_orders_enabled);
         AppSetting::set(AppSetting::MARKETPLACE_MODULE_ENABLED, $this->marketplace_enabled);
+        AppSetting::set(AppSetting::BANK_MODULE_ENABLED, $this->bank_enabled);
 
         Notification::make()
             ->title('Nastavení uloženo')

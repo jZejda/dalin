@@ -18,7 +18,6 @@ class BankAccountFactory extends Factory
             'name'                => $this->faker->company() . ' účet',
             'code'                => $this->faker->randomElement([BankAccount::FIO_BANK, BankAccount::MONETA_MONEY_BANK]),
             'currency'            => 'CZK',
-            'api_url'             => 'https://fioapi.fio.cz/v1/rest/',
             'account_credentials' => ['token' => $this->faker->sha256()],
             'active'              => true,
             'last_synced'         => $this->faker->dateTimeThisMonth(),

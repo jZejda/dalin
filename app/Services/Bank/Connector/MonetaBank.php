@@ -104,6 +104,15 @@ class MonetaBank implements ConnectorInterface
 
     private function callBank(BankAccount $bankAccount, ?Carbon $fromDate = null): ?TransactionResponse
     {
+        $token = $bankAccount->account_credentials['token'] ?? null;
+        $accountId = $bankAccount->account_credentials['account_id'] ?? null;
+
+        if ($token === null || $accountId === null) {
+            Log::channel('site')->error("Bank Account MonetaMoneyBank: missing 'token' or 'account_id' credential for account ID {$bankAccount->id}.");
+
+            return null;
+        }
+
         $client = $this->getClient();
         $from = $bankAccount->last_synced?->toIso8601String();
         if ($fromDate === null) {
@@ -111,14 +120,14 @@ class MonetaBank implements ConnectorInterface
         }
 
         $headers = [
-            'Authorization' => 'Bearer '.$bankAccount->account_credentials['token'],
+            'Authorization' => 'Bearer '.$token,
             'Accept' => 'application/json',
         ];
 
         try {
             $response = $client->request(
                 'GET',
-                'vip/aisp/my/accounts/'.$bankAccount->account_credentials['account_id'].'/transactions?fromDate='.$from,
+                'vip/aisp/my/accounts/'.$accountId.'/transactions?fromDate='.$from,
                 ['headers' => $headers]
             );
 

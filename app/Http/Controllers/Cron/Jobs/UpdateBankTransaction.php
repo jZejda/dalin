@@ -6,35 +6,37 @@ namespace App\Http\Controllers\Cron\Jobs;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Models\AppSetting;
 use App\Models\BankAccount;
 use App\Models\BankTransaction;
 use App\Services\Bank\BankAccountService;
-use App\Services\Bank\Connector\FioBank;
-use App\Services\Bank\Connector\MonetaBank;
 use App\Services\Bank\Connector\Transaction;
 use App\Services\Bank\MatchRules\ExtraMembershipFeesRule;
 use App\Shared\Helpers\BankTransactionHelper;
+use ValueError;
 
 final class UpdateBankTransaction implements CommonCronJobs
 {
     public function run(): void
     {
+        if (!AppSetting::isBankModuleEnabled()) {
+            Log::channel('site')->info('UpdateBankTransaction: bank module is disabled, skipping sync.');
+
+            return;
+        }
+
         /** @var BankAccount[] $bankAccounts */
         $bankAccounts = BankAccount::query()->where('active', '=', 1)->get();
 
         foreach ($bankAccounts as $bankAccount) {
-            $class = match ($bankAccount->code) {
-                BankAccount::MONETA_MONEY_BANK => MonetaBank::class,
-                BankAccount::FIO_BANK => FioBank::class,
-                default => null,
-            };
-
-            if ($class === null) {
-                Log::channel('site')->warning("UpdateBankTransaction: unknown bank code '{$bankAccount->code}' for account ID {$bankAccount->id}, skipping.");
+            try {
+                $connector = $bankAccount->code->connector();
+            } catch (ValueError) {
+                Log::channel('site')->warning("UpdateBankTransaction: unknown bank code '{$bankAccount->getRawOriginal('code')}' for account ID {$bankAccount->id}, skipping.");
                 continue;
             }
 
-            $bankTransactions = (new $class())->getTransactions($bankAccount, $bankAccount->last_synced?->subMinutes(5));
+            $bankTransactions = $connector->getTransactions($bankAccount, $bankAccount->last_synced?->subMinutes(5));
 
             if ($bankTransactions === null) {
                 continue;

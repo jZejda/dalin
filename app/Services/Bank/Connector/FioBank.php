@@ -76,6 +76,14 @@ class FioBank implements ConnectorInterface
 
     private function callBank(BankAccount $bankAccount, ?Carbon $fromDate = null): ?TransactionResponse
     {
+        $token = $bankAccount->account_credentials['token'] ?? null;
+
+        if ($token === null) {
+            Log::channel('site')->error("Bank Account FioBank: missing 'token' credential for account ID {$bankAccount->id}.");
+
+            return null;
+        }
+
         $client = $this->getClient();
         $from = $bankAccount->last_synced?->toDateString();
 
@@ -92,7 +100,7 @@ class FioBank implements ConnectorInterface
         try {
             $response = $client->request(
                 'GET',
-                $bankAccount->account_credentials['token'].'/'.$from.'/'.$today.'/transactions.json',
+                $token.'/'.$from.'/'.$today.'/transactions.json',
                 ['headers' => $headers]
             );
 
