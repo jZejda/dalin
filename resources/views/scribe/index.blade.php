@@ -27,7 +27,7 @@
             </style>
 
     <script>
-        var tryItOutBaseUrl = "http://localhost";
+        var tryItOutBaseUrl = "https://demo.dalin.cz";
         var useCsrf = Boolean();
         var csrfUrl = "/sanctum/csrf-cookie";
     </script>
@@ -137,7 +137,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: July 5, 2026</li>
+        <li>Last updated: July 15, 2026</li>
     </ul>
 </div>
 
@@ -147,7 +147,7 @@
         <h1 id="introduction">Introduction</h1>
 <p>Start (and never finish) side projects with this API.</p>
 <aside>
-    <strong>Base URL</strong>: <code>http://localhost</code>
+    <strong>Base URL</strong>: <code>https://demo.dalin.cz</code>
 </aside>
 <pre><code>This documentation aims to provide all the information you need to work with our API.
 
@@ -178,7 +178,7 @@ You can switch the language used with the tabs at the top right (or from the nav
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/user/race-profiles';
+$url = 'https://demo.dalin.cz/api/v1/user/race-profiles';
 $response = $client-&gt;get(
     $url,
     [
@@ -197,14 +197,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/user/race-profiles?all=" \
+    --get "https://demo.dalin.cz/api/v1/user/race-profiles?all=" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/user/race-profiles"
+    "https://demo.dalin.cz/api/v1/user/race-profiles"
 );
 
 const params = {
@@ -375,7 +375,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/user/entry';
+$url = 'https://demo.dalin.cz/api/v1/user/entry';
 $response = $client-&gt;get(
     $url,
     [
@@ -390,8 +390,8 @@ $response = $client-&gt;get(
             'per_page' =&gt; '20',
         ],
         'json' =&gt; [
-            'from' =&gt; '2026-07-05',
-            'to' =&gt; '2026-07-05',
+            'from' =&gt; '2026-07-15',
+            'to' =&gt; '2026-07-15',
             'per_page' =&gt; 1,
         ],
     ]
@@ -402,12 +402,12 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/user/entry?from=2026-01-01&amp;to=2026-12-31&amp;page=1&amp;per_page=20" \
+    --get "https://demo.dalin.cz/api/v1/user/entry?from=2026-01-01&amp;to=2026-12-31&amp;page=1&amp;per_page=20" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"from\": \"2026-07-05\",
-    \"to\": \"2026-07-05\",
+    \"from\": \"2026-07-15\",
+    \"to\": \"2026-07-15\",
     \"per_page\": 1
 }"
 </code></pre></div>
@@ -415,7 +415,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/user/entry"
+    "https://demo.dalin.cz/api/v1/user/entry"
 );
 
 const params = {
@@ -433,8 +433,8 @@ const headers = {
 };
 
 let body = {
-    "from": "2026-07-05",
-    "to": "2026-07-05",
+    "from": "2026-07-15",
+    "to": "2026-07-15",
     "per_page": 1
 };
 
@@ -622,10 +622,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-user-entry"
-               value="2026-07-05"
+               value="2026-07-15"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-05</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-15</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
@@ -634,10 +634,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="to"                data-endpoint="GETapi-v1-user-entry"
-               value="2026-07-05"
+               value="2026-07-15"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-05</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-15</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
@@ -666,7 +666,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/user/entry';
+$url = 'https://demo.dalin.cz/api/v1/user/entry';
 $response = $client-&gt;post(
     $url,
     [
@@ -694,7 +694,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
-    "http://localhost/api/v1/user/entry" \
+    "https://demo.dalin.cz/api/v1/user/entry" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -716,7 +716,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/user/entry"
+    "https://demo.dalin.cz/api/v1/user/entry"
 );
 
 const headers = {
@@ -1024,7 +1024,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/user/entry/1';
+$url = 'https://demo.dalin.cz/api/v1/user/entry/1';
 $response = $client-&gt;delete(
     $url,
     [
@@ -1040,14 +1040,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
-    "http://localhost/api/v1/user/entry/1" \
+    "https://demo.dalin.cz/api/v1/user/entry/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/user/entry/1"
+    "https://demo.dalin.cz/api/v1/user/entry/1"
 );
 
 const headers = {
@@ -1207,7 +1207,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/user/credit-balance';
+$url = 'https://demo.dalin.cz/api/v1/user/credit-balance';
 $response = $client-&gt;get(
     $url,
     [
@@ -1223,14 +1223,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/user/credit-balance" \
+    --get "https://demo.dalin.cz/api/v1/user/credit-balance" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/user/credit-balance"
+    "https://demo.dalin.cz/api/v1/user/credit-balance"
 );
 
 const headers = {
@@ -1352,7 +1352,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/sport-event';
+$url = 'https://demo.dalin.cz/api/v1/sport-event';
 $response = $client-&gt;get(
     $url,
     [
@@ -1369,8 +1369,8 @@ $response = $client-&gt;get(
             'per_page' =&gt; '20',
         ],
         'json' =&gt; [
-            'from' =&gt; '2026-07-05',
-            'to' =&gt; '2026-07-05',
+            'from' =&gt; '2026-07-15',
+            'to' =&gt; '2026-07-15',
             'class_definition_id' =&gt; 16,
             'per_page' =&gt; 22,
         ],
@@ -1382,12 +1382,12 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/sport-event?from=2026-01-01&amp;to=2026-12-31&amp;event_type=race&amp;class_definition_id=15&amp;page=1&amp;per_page=20" \
+    --get "https://demo.dalin.cz/api/v1/sport-event?from=2026-01-01&amp;to=2026-12-31&amp;event_type=race&amp;class_definition_id=15&amp;page=1&amp;per_page=20" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"from\": \"2026-07-05\",
-    \"to\": \"2026-07-05\",
+    \"from\": \"2026-07-15\",
+    \"to\": \"2026-07-15\",
     \"class_definition_id\": 16,
     \"per_page\": 22
 }"
@@ -1396,7 +1396,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/sport-event"
+    "https://demo.dalin.cz/api/v1/sport-event"
 );
 
 const params = {
@@ -1416,8 +1416,8 @@ const headers = {
 };
 
 let body = {
-    "from": "2026-07-05",
-    "to": "2026-07-05",
+    "from": "2026-07-15",
+    "to": "2026-07-15",
     "class_definition_id": 16,
     "per_page": 22
 };
@@ -1643,10 +1643,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-sport-event"
-               value="2026-07-05"
+               value="2026-07-15"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-05</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-15</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
@@ -1655,10 +1655,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="to"                data-endpoint="GETapi-v1-sport-event"
-               value="2026-07-05"
+               value="2026-07-15"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-05</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-15</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>event_type</code></b>&nbsp;&nbsp;
@@ -1711,7 +1711,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/sport-event/1';
+$url = 'https://demo.dalin.cz/api/v1/sport-event/1';
 $response = $client-&gt;get(
     $url,
     [
@@ -1727,14 +1727,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/sport-event/1" \
+    --get "https://demo.dalin.cz/api/v1/sport-event/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/sport-event/1"
+    "https://demo.dalin.cz/api/v1/sport-event/1"
 );
 
 const headers = {
@@ -1993,7 +1993,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/post';
+$url = 'https://demo.dalin.cz/api/v1/post';
 $response = $client-&gt;get(
     $url,
     [
@@ -2015,14 +2015,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/post?from=2024-12-31&amp;to=2024-12-31&amp;page=1&amp;per_page=architecto" \
+    --get "https://demo.dalin.cz/api/v1/post?from=2024-12-31&amp;to=2024-12-31&amp;page=1&amp;per_page=architecto" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/post"
+    "https://demo.dalin.cz/api/v1/post"
 );
 
 const params = {
@@ -2220,7 +2220,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/post/1';
+$url = 'https://demo.dalin.cz/api/v1/post/1';
 $response = $client-&gt;get(
     $url,
     [
@@ -2236,14 +2236,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/post/1" \
+    --get "https://demo.dalin.cz/api/v1/post/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/post/1"
+    "https://demo.dalin.cz/api/v1/post/1"
 );
 
 const headers = {
@@ -2437,7 +2437,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/page';
+$url = 'https://demo.dalin.cz/api/v1/page';
 $response = $client-&gt;get(
     $url,
     [
@@ -2461,14 +2461,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/page?from=2024-12-31&amp;to=2024-12-31&amp;page=1&amp;per_page=20&amp;status=open&amp;content_category_id=1" \
+    --get "https://demo.dalin.cz/api/v1/page?from=2024-12-31&amp;to=2024-12-31&amp;page=1&amp;per_page=20&amp;status=open&amp;content_category_id=1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/page"
+    "https://demo.dalin.cz/api/v1/page"
 );
 
 const params = {
@@ -2692,7 +2692,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 
 <div class="php-example">
     <pre><code class="language-php">$client = new \GuzzleHttp\Client();
-$url = 'http://localhost/api/v1/page/1';
+$url = 'https://demo.dalin.cz/api/v1/page/1';
 $response = $client-&gt;get(
     $url,
     [
@@ -2708,14 +2708,14 @@ print_r(json_decode((string) $body));</code></pre></div>
 
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
-    --get "http://localhost/api/v1/page/1" \
+    --get "https://demo.dalin.cz/api/v1/page/1" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
 
 <div class="javascript-example">
     <pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/v1/page/1"
+    "https://demo.dalin.cz/api/v1/page/1"
 );
 
 const headers = {

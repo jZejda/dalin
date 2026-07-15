@@ -25,7 +25,8 @@ return [
 
     // The base URL displayed in the docs.
     // If you're using `laravel` type, you can set this to a dynamic string, like '{{ config("app.tenant_url") }}' to get a dynamic base URL.
-    'base_url' => config("app.url"),
+    // Fixed to the public instance so the generated OpenAPI spec (published in the Zudoku docs) does not point to localhost.
+    'base_url' => env('SCRIBE_BASE_URL', 'https://demo.dalin.cz'),
 
     // Routes to include in the docs
     'routes' => [
