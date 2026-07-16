@@ -15,10 +15,12 @@ enum ContentFormat: int implements HasLabel, HasColor
 
     public function getLabel(): ?string
     {
+        $trKey = 'content.enums.content_format.';
+
         return match ($this) {
-            self::Html => 'HTML',
-            self::Markdown => 'Markdown',
-            self::TipTapJson => 'TipTap JSON',
+            self::Html => __($trKey.self::Html->value),
+            self::Markdown => __($trKey.self::Markdown->value),
+            self::TipTapJson => __($trKey.self::TipTapJson->value),
         };
     }
 

@@ -1,5 +1,9 @@
 <?php
 
+use App\Enums\ContentFormat;
+use App\Enums\PageStatus;
+use App\Enums\PostStatus;
+
 return [
 
     /*
@@ -11,6 +15,26 @@ return [
     | (PostResource) and content categories (ContentCategoryResource).
     |
     */
+
+    'enums' => [
+        'content_format' => [
+            ContentFormat::Html->value => 'HTML',
+            ContentFormat::Markdown->value => 'Markdown',
+            ContentFormat::TipTapJson->value => 'TipTap JSON',
+        ],
+
+        'page_status' => [
+            PageStatus::Open->value => 'Published',
+            PageStatus::Closed->value => 'Closed',
+            PageStatus::Draft->value => 'Draft',
+            PageStatus::Archive->value => 'Archived',
+        ],
+
+        'post_status' => [
+            PostStatus::Public->value => 'Public',
+            PostStatus::Private->value => 'Internal',
+        ],
+    ],
 
     'page' => [
         'navigation_label' => 'Pages',

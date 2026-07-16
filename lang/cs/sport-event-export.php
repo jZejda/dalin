@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\SportEventExportsType;
+
 return [
 
     /*
@@ -15,6 +17,16 @@ return [
     'navigation_label' => 'Výstupy pro pořádání',
     'label'            => 'Výstup pro pořádání',
     'plural_label'     => 'Výstupy pro pořádání',
+
+    'type_enum' => [
+        SportEventExportsType::EventEntryListCat->value => 'Startovka kategorie',
+        SportEventExportsType::ResultEntryListCat->value => 'Výsledky kategorie',
+    ],
+
+    'aside_link_title_enum' => [
+        SportEventExportsType::EventEntryListCat->value => 'Startovka',
+        SportEventExportsType::ResultEntryListCat->value => 'Výsledky',
+    ],
 
     'form' => [
         'export_type'         => 'Typ exportu',

@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\SportEventExportsType;
+
 return [
 
     /*
@@ -15,6 +17,16 @@ return [
     'navigation_label' => 'Organization exports',
     'label'            => 'Organization export',
     'plural_label'     => 'Organization exports',
+
+    'type_enum' => [
+        SportEventExportsType::EventEntryListCat->value => 'Category start list',
+        SportEventExportsType::ResultEntryListCat->value => 'Category results',
+    ],
+
+    'aside_link_title_enum' => [
+        SportEventExportsType::EventEntryListCat->value => 'Start list',
+        SportEventExportsType::ResultEntryListCat->value => 'Results',
+    ],
 
     'form' => [
         'export_type'         => 'Export type',

@@ -17,7 +17,7 @@ enum TransactionIndicator: string implements HasColor, HasIcon, HasLabel
     #[Override]
     public function getLabel(): string
     {
-        $trKey = 'bank_transaction.transaction_indicator.';
+        $trKey = 'bank-transaction.transaction_indicator.';
 
         return __($trKey.$this->value);
     }

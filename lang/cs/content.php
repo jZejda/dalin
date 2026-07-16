@@ -1,5 +1,9 @@
 <?php
 
+use App\Enums\ContentFormat;
+use App\Enums\PageStatus;
+use App\Enums\PostStatus;
+
 return [
 
     /*
@@ -11,6 +15,26 @@ return [
     | (PostResource) a kategorie obsahu (ContentCategoryResource).
     |
     */
+
+    'enums' => [
+        'content_format' => [
+            ContentFormat::Html->value => 'HTML',
+            ContentFormat::Markdown->value => 'Markdown',
+            ContentFormat::TipTapJson->value => 'TipTap JSON',
+        ],
+
+        'page_status' => [
+            PageStatus::Open->value => 'Zveřejněno',
+            PageStatus::Closed->value => 'Uzavřeno',
+            PageStatus::Draft->value => 'Koncept',
+            PageStatus::Archive->value => 'Archivováno',
+        ],
+
+        'post_status' => [
+            PostStatus::Public->value => 'Veřejná',
+            PostStatus::Private->value => 'Interní',
+        ],
+    ],
 
     'page' => [
         'navigation_label' => 'Stránky',

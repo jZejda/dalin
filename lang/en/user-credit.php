@@ -53,6 +53,7 @@ return [
 
     'credit_source_enum' => [
         'user' => 'User',
+        'system' => 'System',
         'cron' => 'System',
     ],
 

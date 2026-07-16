@@ -15,9 +15,11 @@ enum SportEventExportsType: string implements HasColor, HasIcon, HasLabel
 
     public function getLabel(): ?string
     {
+        $trKey = 'sport-event-export.type_enum.';
+
         return match ($this) {
-            self::EventEntryListCat => 'Startovka kategorie',
-            self::ResultEntryListCat => 'Výsledky kategorie',
+            self::EventEntryListCat => __($trKey.self::EventEntryListCat->value),
+            self::ResultEntryListCat => __($trKey.self::ResultEntryListCat->value),
         };
     }
 
@@ -39,9 +41,15 @@ enum SportEventExportsType: string implements HasColor, HasIcon, HasLabel
 
     public function getAsideLinkTitle(?string $title = null): string
     {
+        if ($title !== null) {
+            return $title;
+        }
+
+        $trKey = 'sport-event-export.aside_link_title_enum.';
+
         return match ($this) {
-            self::EventEntryListCat => $title === null ? 'Startovka' : $title,
-            self::ResultEntryListCat => $title === null ? 'Výsledky' : $title,
+            self::EventEntryListCat => __($trKey.self::EventEntryListCat->value),
+            self::ResultEntryListCat => __($trKey.self::ResultEntryListCat->value),
         };
     }
 

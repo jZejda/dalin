@@ -16,11 +16,13 @@ enum PageStatus: string implements HasLabel, HasColor
 
     public function getLabel(): ?string
     {
+        $trKey = 'content.enums.page_status.';
+
         return match ($this) {
-            self::Open => 'Zveřejněno',
-            self::Closed => 'Uzavřeno',
-            self::Draft => 'Koncept',
-            self::Archive => 'Archivováno',
+            self::Open => __($trKey.self::Open->value),
+            self::Closed => __($trKey.self::Closed->value),
+            self::Draft => __($trKey.self::Draft->value),
+            self::Archive => __($trKey.self::Archive->value),
         };
     }
 

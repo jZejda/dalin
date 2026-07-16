@@ -18,11 +18,12 @@ return [
     'app_role_enum' => [
         AppRoles::SuperAdmin->value => 'Administrátor',
         AppRoles::ClubAdmin->value => 'Admin klubu',
-        AppRoles::Redactor->value => 'Redaktor',
-        AppRoles::Member->value => 'Člen',
-        AppRoles::BillingSpecialist->value => 'Správce financí',
         AppRoles::EventMaster->value => 'Správce závodů',
+        AppRoles::Member->value => 'Člen',
+        AppRoles::Racer->value => 'Závodník',
+        AppRoles::Redactor->value => 'Redaktor',
         AppRoles::EventOrganizer->value => 'Organizátor závodů',
+        AppRoles::BillingSpecialist->value => 'Správce financí',
     ],
 
 ];

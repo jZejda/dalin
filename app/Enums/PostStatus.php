@@ -14,9 +14,11 @@ enum PostStatus: int implements HasColor, HasLabel
 
     public function getLabel(): ?string
     {
+        $trKey = 'content.enums.post_status.';
+
         return match ($this) {
-            self::Public => 'Veřejná',
-            self::Private => 'Interní',
+            self::Public => __($trKey.self::Public->value),
+            self::Private => __($trKey.self::Private->value),
         };
     }
 
