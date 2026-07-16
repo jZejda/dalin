@@ -31,11 +31,20 @@ class MailLogResource extends Resource implements HasShieldPermissions
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-envelope';
 
-    protected static ?string $navigationLabel = 'Odeslané e-maily';
+    public static function getNavigationLabel(): string
+    {
+        return __('mail-log.navigation_label');
+    }
 
-    protected static ?string $label = 'Odeslaný e-mail';
+    public static function getModelLabel(): string
+    {
+        return __('mail-log.label');
+    }
 
-    protected static ?string $pluralLabel = 'Odeslané e-maily';
+    public static function getPluralModelLabel(): string
+    {
+        return __('mail-log.plural_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -70,7 +79,7 @@ class MailLogResource extends Resource implements HasShieldPermissions
                     ->label(__('mail-log.mailable'))
                     ->badge()
                     ->color('gray')
-                    ->placeholder('—'),
+                    ->placeholder(__('mail-log.mailable_placeholder')),
                 TextColumn::make('source_type')
                     ->label(__('mail-log.source'))
                     ->badge()
@@ -79,7 +88,7 @@ class MailLogResource extends Resource implements HasShieldPermissions
                     ->icon(fn (MailSource $state): string => $state->icon()),
                 TextColumn::make('sourceUser.name')
                     ->label(__('mail-log.source_user'))
-                    ->placeholder('—')
+                    ->placeholder(__('mail-log.source_user_placeholder'))
                     ->searchable(),
             ])
             ->filters([

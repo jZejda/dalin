@@ -29,6 +29,11 @@ return [
     'is_default_helper' => 'Toto vozidlo se při nabízení dopravy předvyplní automaticky.',
     'owner' => 'Vlastník',
 
+    'brand_placeholder' => '—',
+    'operator_placeholder' => '—',
+    'consumption_placeholder' => '—',
+    'price_per_km_placeholder' => '—',
+
     'type_enum' => [
         VehicleType::PassengerCar->value => 'Osobní automobil',
         VehicleType::Van->value => 'Dodávka',

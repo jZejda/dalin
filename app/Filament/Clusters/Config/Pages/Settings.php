@@ -23,11 +23,17 @@ class Settings extends Page implements HasForms
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
-    protected static ?string $navigationLabel = 'Nastavení';
-
-    protected static ?string $title = 'Nastavení';
-
     protected static ?int $navigationSort = 10;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('settings.navigation_label');
+    }
+
+    public function getTitle(): string
+    {
+        return __('settings.title');
+    }
 
     protected string $view = 'filament.clusters.config.pages.settings';
 
@@ -53,40 +59,40 @@ class Settings extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
-            Section::make('Modul Doprava')
-                ->description('Po zapnutí modulu bude možné u závodů nastavit typ dopravy, členové uvidí správu svých vozidel a budou moci nabízet spolujízdu.')
+            Section::make(__('settings.form.transport.section'))
+                ->description(__('settings.form.transport.description'))
                 ->schema([
                     Toggle::make('transport_enabled')
-                        ->label('Modul doprava je zapnutý')
-                        ->helperText('Vypnutí modulu skryje dopravu v celé aplikaci, uložená data zůstanou zachována.'),
+                        ->label(__('settings.form.transport.toggle_label'))
+                        ->helperText(__('settings.form.transport.toggle_helper')),
                 ]),
-            Section::make('Modul Platby u závodů')
-                ->description('Po zapnutí modulu se na detailu závodu zobrazí záložka Platby / Finance se správou plateb závodních profilů.')
+            Section::make(__('settings.form.event_payments.section'))
+                ->description(__('settings.form.event_payments.description'))
                 ->schema([
                     Toggle::make('event_payments_enabled')
-                        ->label('Modul plateb u závodů je zapnutý')
-                        ->helperText('Vypnutí modulu skryje záložku plateb na detailu závodu, uložená data zůstanou zachována.'),
+                        ->label(__('settings.form.event_payments.toggle_label'))
+                        ->helperText(__('settings.form.event_payments.toggle_helper')),
                 ]),
-            Section::make('Modul Doplňkové služby')
-                ->description('Po zapnutí modulu si členové mohou na detailu závodu objednávat doplňkové služby (ubytování, nocleh apod.) včetně termínů plateb. Při vypnutém modulu je vidět jen náhled nabízených služeb.')
+            Section::make(__('settings.form.service_orders.section'))
+                ->description(__('settings.form.service_orders.description'))
                 ->schema([
                     Toggle::make('service_orders_enabled')
-                        ->label('Modul doplňkových služeb je zapnutý')
-                        ->helperText('Vypnutí modulu skryje záložku objednávek na detailu závodu, uložená data zůstanou zachována.'),
+                        ->label(__('settings.form.service_orders.toggle_label'))
+                        ->helperText(__('settings.form.service_orders.toggle_helper')),
                 ]),
-            Section::make('Modul Tržiště')
-                ->description('Po zapnutí modulu mohou členové vystavovat nabídky produktů za sebe nebo za oddíl a ostatní si je objednávat. Po ukončení nabídky se náklady rozúčtují podle objednaných kusů.')
+            Section::make(__('settings.form.marketplace.section'))
+                ->description(__('settings.form.marketplace.description'))
                 ->schema([
                     Toggle::make('marketplace_enabled')
-                        ->label('Modul tržiště je zapnutý')
-                        ->helperText('Vypnutí modulu skryje tržiště v celé aplikaci, uložená data zůstanou zachována.'),
+                        ->label(__('settings.form.marketplace.toggle_label'))
+                        ->helperText(__('settings.form.marketplace.toggle_helper')),
                 ]),
-            Section::make('Modul Napojení na banku')
-                ->description('Po zapnutí modulu bude dostupná stránka Bankovní výpis a správa bankovních napojení. Transakce se automaticky stahují, jen pokud je modul zapnutý a existuje alespoň jedno aktivní bankovní napojení.')
+            Section::make(__('settings.form.bank.section'))
+                ->description(__('settings.form.bank.description'))
                 ->schema([
                     Toggle::make('bank_enabled')
-                        ->label('Modul napojení na banku je zapnutý')
-                        ->helperText('Vypnutí modulu skryje bankovní výpis a zastaví stahování transakcí, uložená data zůstanou zachována.'),
+                        ->label(__('settings.form.bank.toggle_label'))
+                        ->helperText(__('settings.form.bank.toggle_helper')),
                 ]),
         ];
     }
@@ -100,7 +106,7 @@ class Settings extends Page implements HasForms
         AppSetting::set(AppSetting::BANK_MODULE_ENABLED, $this->bank_enabled);
 
         Notification::make()
-            ->title('Nastavení uloženo')
+            ->title(__('settings.notification.saved_title'))
             ->success()
             ->send();
     }

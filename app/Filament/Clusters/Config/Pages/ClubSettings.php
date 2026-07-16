@@ -25,11 +25,17 @@ class ClubSettings extends Page implements HasForms
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-identification';
 
-    protected static ?string $navigationLabel = 'Nastavení klubu';
-
-    protected static ?string $title = 'Nastavení klubu';
-
     protected static ?int $navigationSort = 11;
+
+    public static function getNavigationLabel(): string
+    {
+        return __('club-settings.navigation_label');
+    }
+
+    public function getTitle(): string
+    {
+        return __('club-settings.title');
+    }
 
     protected string $view = 'filament.clusters.config.pages.club-settings';
 
@@ -67,59 +73,59 @@ class ClubSettings extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
-            Section::make('Identifikace klubu')
+            Section::make(__('club-settings.form.identification.section'))
                 ->schema([
                     TextInput::make('abbr')
-                        ->label('Zkratka klubu')
+                        ->label(__('club-settings.form.identification.abbr'))
                         ->disabled()
                         ->dehydrated(false)
-                        ->helperText('Zkratka se používá pro ORIS API a cestu k logu, proto ji lze změnit pouze v souboru config/site-config.php.'),
+                        ->helperText(__('club-settings.form.identification.abbr_helper')),
                     TextInput::make('full_name')
-                        ->label('Celý název klubu')
+                        ->label(__('club-settings.form.identification.full_name'))
                         ->required()
                         ->maxLength(255),
                 ]),
-            Section::make('Bankovní údaje')
-                ->description('Údaje se zobrazují členům v pokynech pro platbu kreditu.')
+            Section::make(__('club-settings.form.bank_details.section'))
+                ->description(__('club-settings.form.bank_details.description'))
                 ->schema([
                     TextInput::make('primary_bank_account_number')
-                        ->label('Číslo hlavního účtu')
+                        ->label(__('club-settings.form.bank_details.primary_bank_account_number'))
                         ->required()
                         ->maxLength(50),
                     TextInput::make('primary_bank_account_name')
-                        ->label('Název banky')
+                        ->label(__('club-settings.form.bank_details.primary_bank_account_name'))
                         ->required()
                         ->maxLength(100),
                     TextInput::make('iban')
-                        ->label('IBAN')
+                        ->label(__('club-settings.form.bank_details.iban'))
                         ->maxLength(34)
-                        ->helperText('Používá se pro generování QR platby. Ponechte prázdné, pokud chcete použít hodnotu z konfiguračního souboru.'),
+                        ->helperText(__('club-settings.form.bank_details.iban_helper')),
                 ]),
-            Section::make('Kredit a členské příspěvky')
+            Section::make(__('club-settings.form.credit.section'))
                 ->schema([
                     TextInput::make('user_credit_limit')
-                        ->label('Limit kreditu člena')
+                        ->label(__('club-settings.form.credit.user_credit_limit'))
                         ->required()
                         ->integer()
                         ->maxValue(0)
-                        ->helperText('Záporné celé číslo. Nejnižší povolený zůstatek kreditu — po jeho dosažení se člen nemůže přihlásit na závod.'),
+                        ->helperText(__('club-settings.form.credit.user_credit_limit_helper')),
                     TextInput::make('regular_membership_fees_prefix')
-                        ->label('Prefix VS řádných členských příspěvků')
+                        ->label(__('club-settings.form.credit.regular_membership_fees_prefix'))
                         ->required()
                         ->regex('/^\d{1,6}$/')
-                        ->helperText('Pouze číslice.'),
+                        ->helperText(__('club-settings.form.credit.regular_membership_fees_prefix_helper')),
                     TextInput::make('extra_membership_fees_prefix')
-                        ->label('Prefix VS mimořádných příspěvků (dobití kreditu)')
+                        ->label(__('club-settings.form.credit.extra_membership_fees_prefix'))
                         ->required()
                         ->regex('/^\d{1,6}$/')
-                        ->helperText('Pozor: používá se pro automatické párování bankovních transakcí. Platby zaslané se starým prefixem se po změně nespárují.'),
+                        ->helperText(__('club-settings.form.credit.extra_membership_fees_prefix_helper')),
                 ]),
-            Section::make('Kontakty')
+            Section::make(__('club-settings.form.contacts.section'))
                 ->schema([
                     TextInput::make('technical_email')
-                        ->label('Technický e-mail')
+                        ->label(__('club-settings.form.contacts.technical_email'))
                         ->email()
-                        ->helperText('Kontakt uváděný v e-mailech členům (reset hesla, změny kreditu apod.).'),
+                        ->helperText(__('club-settings.form.contacts.technical_email_helper')),
                 ]),
         ];
     }
@@ -140,7 +146,7 @@ class ClubSettings extends Page implements HasForms
         AppSetting::applyClubConfigOverrides();
 
         Notification::make()
-            ->title('Nastavení klubu uloženo')
+            ->title(__('club-settings.notification.saved_title'))
             ->success()
             ->send();
     }

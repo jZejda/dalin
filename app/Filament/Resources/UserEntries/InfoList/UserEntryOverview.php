@@ -15,51 +15,51 @@ class UserEntryOverview
     public static function getOverview(): array
     {
         return [
-            Section::make('Přihláška')
+            Section::make(__('user-entry.infolist.entry_section.heading'))
                 ->icon('heroicon-m-user')
-                ->description('Detail přihlášky na zvolený závod nebo akci.')
+                ->description(__('user-entry.infolist.entry_section.description'))
                 ->schema([
                     TextEntry::make('sportEvent.name')
-                        ->label('Název závodu/akce:')
+                        ->label(__('user-entry.infolist.sport_event_name'))
                         ->size(TextSize::Large),
                     TextEntry::make('sportEvent.date')
-                        ->label('Datum konání akce:')
+                        ->label(__('user-entry.infolist.sport_event_date'))
                         ->icon('heroicon-m-calendar-days')
                         ->dateTime(AppHelper::DATE_FORMAT)
                         ->size(TextSize::Large),
                     TextEntry::make('sportEvent.place')
-                        ->label('Místo:')
+                        ->label(__('user-entry.infolist.sport_event_place'))
                         ->icon('heroicon-m-map-pin')
                         ->size(TextSize::Large),
                 ])
                 ->columns(),
-            Section::make('Závodní profil')
+            Section::make(__('user-entry.infolist.profile_section.heading'))
                 ->icon('heroicon-m-user')
-                ->description('Detail přihlášeného závodníka, plus ostatní přihlašovací údaje.')
+                ->description(__('user-entry.infolist.profile_section.description'))
                 ->schema([
                     TextEntry::make('class_name')
-                        ->label('Kategorie:')
+                        ->label(__('user-entry.infolist.class_name'))
                         ->badge()
                         ->color('success')
                         ->size(TextSize::Large),
                     TextEntry::make('userRaceProfile.UserRaceFullName')
-                        ->label('Závodník:')
+                        ->label(__('user-entry.infolist.race_profile'))
                         ->size(TextSize::Large),
                     TextEntry::make('note')
-                        ->label('Poznámka:')
-                        ->placeholder('- nebyla vyplněna -')
+                        ->label(__('user-entry.infolist.note'))
+                        ->placeholder(__('user-entry.infolist.note_placeholder'))
                         ->size(TextSize::Large),
                     TextEntry::make('club_note')
                         ->icon('heroicon-m-chevron-right')
-                        ->label('Klubová poznámka:')
+                        ->label(__('user-entry.infolist.club_note'))
                         ->size(TextSize::Large)
-                        ->placeholder('- nebyla vyplněna -'),
+                        ->placeholder(__('user-entry.infolist.club_note_placeholder')),
                     TextEntry::make('requested_start')
-                        ->label('Start v:')
+                        ->label(__('user-entry.infolist.requested_start'))
                         ->size(TextSize::Large)
-                        ->placeholder('- nebyl požadován -'),
+                        ->placeholder(__('user-entry.infolist.requested_start_placeholder')),
                     IconEntry::make('rent_si')
-                        ->label('Půjčit čip:')
+                        ->label(__('user-entry.infolist.rent_si'))
                         ->icon(fn (int $state): string => match ($state) {
                             0 => 'heroicon-m-no-symbol',
                             1 => 'heroicon-o-check',
@@ -73,9 +73,9 @@ class UserEntryOverview
                     TextEntry::make('entry_stages')
                         ->badge()
                         ->separator(',')
-                        ->label('Etapy:')
+                        ->label(__('user-entry.infolist.entry_stages'))
                         ->formatStateUsing(fn (string $state): string => str_replace('stage', 'E', $state))
-                        ->placeholder('- jednoetapový závod -'),
+                        ->placeholder(__('user-entry.infolist.entry_stages_placeholder')),
                 ])
                 ->columns(),
         ];

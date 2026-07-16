@@ -40,11 +40,20 @@ class VehicleResource extends Resource implements HasShieldPermissions
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-truck';
 
-    protected static ?string $navigationLabel = 'Klubová vozidla';
+    public static function getNavigationLabel(): string
+    {
+        return __('vehicle.club_vehicles');
+    }
 
-    protected static ?string $label = 'Klubové vozidlo';
+    public static function getModelLabel(): string
+    {
+        return __('vehicle.club_vehicle');
+    }
 
-    protected static ?string $pluralLabel = 'Klubová vozidla';
+    public static function getPluralModelLabel(): string
+    {
+        return __('vehicle.club_vehicles');
+    }
 
     /** Resource spravuje pouze klubová vozidla (user_id IS NULL). */
     public static function getEloquentQuery(): Builder
@@ -162,7 +171,7 @@ class VehicleResource extends Resource implements HasShieldPermissions
                 ->label(__('vehicle.brand'))
                 ->sortable()
                 ->searchable()
-                ->placeholder('—'),
+                ->placeholder(__('vehicle.brand_placeholder')),
             TextColumn::make('type')
                 ->label(__('vehicle.type'))
                 ->badge()
@@ -173,16 +182,16 @@ class VehicleResource extends Resource implements HasShieldPermissions
                 ->sortable(),
             TextColumn::make('operator')
                 ->label(__('vehicle.operator'))
-                ->placeholder('—')
+                ->placeholder(__('vehicle.operator_placeholder'))
                 ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('consumption')
                 ->label(__('vehicle.consumption'))
                 ->suffix(' '.__('vehicle.consumption_suffix'))
-                ->placeholder('—'),
+                ->placeholder(__('vehicle.consumption_placeholder')),
             TextColumn::make('price_per_km')
                 ->label(__('vehicle.price_per_km'))
                 ->suffix(' '.__('vehicle.price_per_km_suffix'))
-                ->placeholder('—'),
+                ->placeholder(__('vehicle.price_per_km_placeholder')),
             IconColumn::make('active')
                 ->label(__('vehicle.active'))
                 ->boolean(),

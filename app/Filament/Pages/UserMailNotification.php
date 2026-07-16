@@ -38,9 +38,21 @@ class UserMailNotification extends Page implements HasForms
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
     protected string $view = 'filament.pages.user-mail-notification';
     protected static ?string $slug = 'user-settings';
-    protected static ?string $navigationLabel = 'Uživatelská nastavení';
-    protected static string | \UnitEnum | null $navigationGroup = 'Uživatel';
-    protected static ?string $title = 'Uživatelská nastavení';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation_groups.users');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('user-mail-notification.navigation_label');
+    }
+
+    public function getTitle(): string
+    {
+        return __('user-mail-notification.title');
+    }
 
     private const int DEFAULT_TRIGGER_EVENT = 17;
 
@@ -137,9 +149,9 @@ class UserMailNotification extends Page implements HasForms
         $this->show_api_key = true;
 
         Notification::make()
-            ->title('API klíč vygenerován')
+            ->title(__('user-mail-notification.actions.generate_api_key.notification_title'))
             ->success()
-            ->body('Nový API klíč byl úspěšně vygenerován. Hash klíče je zobrazen níže a zůstane viditelný i po obnovení stránky.')
+            ->body(__('user-mail-notification.actions.generate_api_key.notification_body'))
             ->send();
     }
 
@@ -158,9 +170,9 @@ class UserMailNotification extends Page implements HasForms
         $this->show_api_key = true;
 
         Notification::make()
-            ->title('API klíč přegenerován')
+            ->title(__('user-mail-notification.actions.regenerate_api_key.notification_title'))
             ->success()
-            ->body('API klíč byl úspěšně přegenerován. Starý klíč již není platný. Nový hash klíče je zobrazen níže.')
+            ->body(__('user-mail-notification.actions.regenerate_api_key.notification_body'))
             ->send();
     }
 
@@ -176,18 +188,18 @@ class UserMailNotification extends Page implements HasForms
         $this->show_api_key = false;
 
         Notification::make()
-            ->title('API klíč smazán')
+            ->title(__('user-mail-notification.actions.delete_api_key.notification_title'))
             ->success()
-            ->body('API klíč byl úspěšně smazán.')
+            ->body(__('user-mail-notification.actions.delete_api_key.notification_body'))
             ->send();
     }
 
     public function copyApiKey(): void
     {
         Notification::make()
-            ->title('Zkopírováno')
+            ->title(__('user-mail-notification.common.copied_title'))
             ->success()
-            ->body('API klíč byl zkopírován do schránky.')
+            ->body(__('user-mail-notification.actions.copy_api_key.notification_body'))
             ->send();
     }
 
@@ -200,9 +212,9 @@ class UserMailNotification extends Page implements HasForms
         $this->has_calendar_token = true;
 
         Notification::make()
-            ->title('Kalendářový token vygenerován')
+            ->title(__('user-mail-notification.actions.generate_calendar_token.notification_title'))
             ->success()
-            ->body('Nový token byl úspěšně vygenerován.')
+            ->body(__('user-mail-notification.actions.generate_calendar_token.notification_body'))
             ->send();
     }
 
@@ -215,9 +227,9 @@ class UserMailNotification extends Page implements HasForms
         $this->has_calendar_token = true;
 
         Notification::make()
-            ->title('Kalendářový token přegenerován')
+            ->title(__('user-mail-notification.actions.regenerate_calendar_token.notification_title'))
             ->success()
-            ->body('Starý token byl zneplatněn. Nový token byl úspěšně vygenerován.')
+            ->body(__('user-mail-notification.actions.regenerate_calendar_token.notification_body'))
             ->send();
     }
 
@@ -231,36 +243,36 @@ class UserMailNotification extends Page implements HasForms
         $this->has_calendar_token = false;
 
         Notification::make()
-            ->title('Kalendářový token zrušen')
+            ->title(__('user-mail-notification.actions.revoke_calendar_token.notification_title'))
             ->success()
-            ->body('Token byl úspěšně zrušen.')
+            ->body(__('user-mail-notification.actions.revoke_calendar_token.notification_body'))
             ->send();
     }
 
     public function copyCalendarToken(): void
     {
         Notification::make()
-            ->title('Zkopírováno')
+            ->title(__('user-mail-notification.common.copied_title'))
             ->success()
-            ->body('Kalendářový token byl zkopírován do schránky.')
+            ->body(__('user-mail-notification.actions.copy_calendar_token.notification_body'))
             ->send();
     }
 
     public function copyCalendarUrl(): void
     {
         Notification::make()
-            ->title('Zkopírováno')
+            ->title(__('user-mail-notification.common.copied_title'))
             ->success()
-            ->body('Adresa kalendářového kanálu byla zkopírována do schránky.')
+            ->body(__('user-mail-notification.actions.copy_calendar_url.notification_body'))
             ->send();
     }
 
     public function copyCalendarUrlFailed(): void
     {
         Notification::make()
-            ->title('Chyba')
+            ->title(__('user-mail-notification.common.error_title'))
             ->danger()
-            ->body('Adresu se nepodařilo zkopírovat do schránky.')
+            ->body(__('user-mail-notification.actions.copy_calendar_url_failed.notification_body'))
             ->send();
     }
 
@@ -301,9 +313,9 @@ class UserMailNotification extends Page implements HasForms
         $this->storeFilters($filtersOptions);
 
         Notification::make()
-            ->title('Nastavení uloženo')
+            ->title(__('user-mail-notification.actions.submit.notification_title'))
             ->success()
-            ->body('Změny v nastavení byly uloženy.')
+            ->body(__('user-mail-notification.actions.submit.notification_body'))
             ->send();
     }
 
@@ -316,8 +328,8 @@ class UserMailNotification extends Page implements HasForms
     public function getBreadcrumbs(): array
     {
         return [
-            url('/admin/users') => 'Uživatel',
-            url()->current() => 'Nastavení',
+            url('/admin/users') => __('user-mail-notification.breadcrumbs.users'),
+            url()->current() => __('user-mail-notification.breadcrumbs.settings'),
         ];
     }
 
@@ -331,70 +343,70 @@ class UserMailNotification extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
-            Tabs::make('Tabs')
+            Tabs::make(__('user-mail-notification.tabs.group_label'))
             ->tabs([
-                Tab::make('E-mailové nastavení')
+                Tab::make(__('user-mail-notification.tabs.mail_settings'))
                     ->schema([
-                        Section::make('Upozornění na Novinky')
-                            ->description('Zde si můžete nastavit upozornění na novinky veřejné a novinky z členské sekce.')
+                        Section::make(__('user-mail-notification.sections.news.heading'))
+                            ->description(__('user-mail-notification.sections.news.description'))
                             ->aside()
                             ->columns(1)
                             ->schema([
                                 CheckboxList::make('news')
-                                    ->label('Novinky')
+                                    ->label(__('user-mail-notification.form.news'))
                                     ->options([
-                                        '0' => 'Novinky veřejné',
-                                        '1' => 'Novinky členské sekce',
+                                        '0' => __('user-mail-notification.form.news_option_public'),
+                                        '1' => __('user-mail-notification.form.news_option_members'),
                                     ]),
                             ]),
-                        Section::make('Upozornění na blížící se konec přihlášek k závodům')
-                            ->description('Pokud se bude blížit konec přihlášek k závodům, budete na toto upozorněni v e-mailu v uvedený čas s předstihem nastaveným ve volbě počtu dnů před koncem přihlášek.')
+                        Section::make(__('user-mail-notification.sections.entry_deadline.heading'))
+                            ->description(__('user-mail-notification.sections.entry_deadline.description'))
                             ->aside()
                             ->columns(3)
                             ->schema([
                                 CheckboxList::make('sport')
-                                    ->label('Sport')
+                                    ->label(__('user-mail-notification.form.sport'))
                                     ->options(SportList::all()->pluck('short_name', 'id')),
 
                                 TextInput::make('sport_time_trigger')
-                                    ->label('Přibližná hodina upozornění')
+                                    ->label(__('user-mail-notification.form.sport_time_trigger'))
                                     ->numeric()
                                     ->maxValue(24)
                                     ->minValue(0)
                                     ->default(self::DEFAULT_TRIGGER_EVENT),
                                 TextInput::make('days_before_event_entry_ends')
-                                    ->label('Dnů před ukončením přihlášek')
+                                    ->label(__('user-mail-notification.form.days_before_event_entry_ends'))
                                     ->numeric()
                                     ->maxValue(14)
                                     ->minValue(1)
                                     ->default(4),
                             ]),
-                        Section::make('Souhrn závodů u kterých končí termín přihlášek následující týden')
-                            ->description('V nastaveni definujete, které sporty budou v e-mailu souhrnně uvedeny. Souhrn obsahuje závody u kterých končí termín přihlášek následující týden.')
+                        Section::make(__('user-mail-notification.sections.weekly_summary.heading'))
+                            ->description(__('user-mail-notification.sections.weekly_summary.description'))
                             ->aside()
                             ->columns(2)
                             ->schema([
                                 CheckboxList::make('week_report_by_sport')
-                                    ->label('Sport')
+                                    ->label(__('user-mail-notification.form.week_report_by_sport'))
                                     ->options(SportList::all()->pluck('short_name', 'id')),
                             ]),
-                        Section::make('Ostatní e-maily')
-                            ->description('Souhrný e-mail před závodem obsahuje informace o akci, startovní časy přihlášených závodníků a parametry jejich kategorií.')
+                        Section::make(__('user-mail-notification.sections.other_mails.heading'))
+                            ->description(__('user-mail-notification.sections.other_mails.description'))
                             ->aside()
                             ->columns(3)
                             ->schema([
                                 Toggle::make('pre_race_summary_enabled')
-                                    ->label('Souhrn před závodem')
+                                    ->label(__('user-mail-notification.form.pre_race_summary_enabled'))
                                     ->columnSpanFull()
                                     ->default(false),
                                 TextInput::make('pre_race_summary_days_before')
-                                    ->label('Dnů před závodem')
+                                    ->label(__('user-mail-notification.form.pre_race_summary_days_before'))
                                     ->numeric()
                                     ->minValue(1)
                                     ->maxValue(14)
                                     ->default(1),
                                 TextInput::make('pre_race_summary_time_trigger')
-                                    ->label('Přibližná hodina odeslání')
+                                    ->label(__('user-mail-notification.form.pre_race_summary_time_trigger'))
                                     ->numeric()
                                     ->minValue(0)
                                     ->maxValue(23)
@@ -402,48 +414,48 @@ class UserMailNotification extends Page implements HasForms
                             ]),
                     ]),
 
-                Tab::make('Filtry zobrazení')
+                Tab::make(__('user-mail-notification.tabs.display_filters'))
                     ->schema([
                         Repeater::make('event_filters')
-                            ->label('Uživatelské filtry listu závodů a událostí.')
+                            ->label(__('user-mail-notification.form.event_filters'))
                             ->schema([
                                 Hidden::make('id')
                                     ->default(fn () => (string) Str::uuid()),
                                 TextInput::make('name')
-                                    ->label('Název')
-                                    ->hint('Bude zobrazen jako titulek filtru.')
+                                    ->label(__('user-mail-notification.form.filter_name'))
+                                    ->hint(__('user-mail-notification.form.filter_name_hint'))
                                     ->required(),
                                 Select::make('sport_list')
-                                    ->label('Sport')
+                                    ->label(__('user-mail-notification.form.filter_sport_list'))
                                     ->options(SportList::whereIn('short_name', ['OB', 'LOB', 'MTBO', 'TRAIL'])->pluck('short_name', 'id'))
                                     ->multiple()
                                     ->default([])
                                     ->required(),
                                 Select::make('sport_event_type')
-                                    ->label('Typ akce')
+                                    ->label(__('user-mail-notification.form.filter_sport_event_type'))
                                     ->options(SportEventType::enumArray())
                                     ->multiple()
                                     ->default([])
                                     ->required(),
                                 Select::make('icon')
-                                    ->label('Ikona')
+                                    ->label(__('user-mail-notification.form.filter_icon'))
                                     ->options(AppHeroIcons::enumArray())
                                     ->required(),
                             ])
                             ->columns(4)
-                            ->addActionLabel('Přidej nový filtr')
+                            ->addActionLabel(__('user-mail-notification.form.event_filters_add_action'))
                             ->reorderable(false)
                             ->default([])
                     ]),
 
-                Tab::make('Ostatní')
+                Tab::make(__('user-mail-notification.tabs.other'))
                     ->schema([
-                        Section::make('Oprávnění k přihlašování')
-                            ->description('V nastavení můžete udělit právo přihlašovat všechny vámi spravované registrace vybraným uživatelům. Vhodné například pro rodinné příslušníky, kamarády. Právo můžete kdykoliv odvolat.')
+                        Section::make(__('user-mail-notification.sections.sign_up_permissions.heading'))
+                            ->description(__('user-mail-notification.sections.sign_up_permissions.description'))
                             ->aside()
                             ->schema([
                                 Select::make('users_allow_sign_up_for_race')
-                                    ->label('Uživatelé kteří mě mohou přihlašovat a odhlašovat ze závodů')
+                                    ->label(__('user-mail-notification.form.users_allow_sign_up_for_race'))
                                     ->multiple()
                                     ->searchable()
                                     ->options(User::all()->where('active', '=', 1)->pluck('user_identification', 'id'))
@@ -451,10 +463,10 @@ class UserMailNotification extends Page implements HasForms
                             ]),
                     ]),
 
-                Tab::make('API Klíč')
+                Tab::make(__('user-mail-notification.tabs.api_key'))
                     ->schema([
-                        Section::make('Správa API klíče')
-                            ->description('API klíč slouží pro autentizaci při používání API. Uchovávejte jej v tajnosti.')
+                        Section::make(__('user-mail-notification.sections.api_key.heading'))
+                            ->description(__('user-mail-notification.sections.api_key.description'))
                             ->aside()
                             ->schema([
                                 View::make('filament.pages.components.api-key-manager')
@@ -466,10 +478,10 @@ class UserMailNotification extends Page implements HasForms
                             ]),
                     ]),
 
-                Tab::make('Kalendář')
+                Tab::make(__('user-mail-notification.tabs.calendar'))
                     ->schema([
-                        Section::make('Kalendářové feedy')
-                            ->description('Veřejné feedy jsou dostupné bez přihlášení. Osobní feedy vyžadují vygenerování tokenu a zobrazují pouze vaše závody a tréninky. Feedy lze přidat do Google Calendar, Apple Calendar a dalších aplikací podporujících iCal.')
+                        Section::make(__('user-mail-notification.sections.calendar.heading'))
+                            ->description(__('user-mail-notification.sections.calendar.description'))
                             ->aside()
                             ->schema([
                                 View::make('filament.pages.components.calendar-token-manager')

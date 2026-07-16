@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\UserEntries;
 
 use App\Shared\Helpers\AppHelper;
@@ -29,11 +31,27 @@ class UserEntryResource extends Resource implements HasShieldPermissions
     protected static ?string $model = UserEntry::class;
 
     protected static ?int $navigationSort = 30;
-    protected static string | \UnitEnum | null $navigationGroup = 'Uživatel';
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-flag';
-    protected static ?string $navigationLabel = 'Přihlášky';
-    protected static ?string $label = 'Přihláška na závody';
-    protected static ?string $pluralLabel = 'Přihlášky na závody';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation_groups.users');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('user-entry.navigation_label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('user-entry.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('user-entry.plural_label');
+    }
 
     public static function getEloquentQuery(): Builder
     {
@@ -59,14 +77,14 @@ class UserEntryResource extends Resource implements HasShieldPermissions
             ->columns([
                 TextColumn::make('sportEvent.name')
                     ->description(fn (UserEntry $record): string => $record->sportEvent->alt_name ?? '')
-                    ->label('Závod')
+                    ->label(__('user-entry.table.sport_event'))
                     ->url(fn (UserEntry $record): string => route('filament.admin.resources.sport-events.entry', ['record' => $record->sport_event_id]))
                     ->sortable(query: function (Builder $query, string $direction): Builder {
                         return $query
                             ->orderBy('sport_events.name', $direction === 'desc' ? 'desc' : 'asc');
                     }),
                 TextColumn::make('class_name')
-                    ->label('Kategorie')
+                    ->label(__('user-entry.table.class_name'))
                     ->description(function (UserEntry $record): string {
                         $sportClass = $record->sportEvent?->sportClasses->firstWhere('name', $record->class_name);
                         if ($sportClass === null) {
@@ -82,22 +100,22 @@ class UserEntryResource extends Resource implements HasShieldPermissions
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('userRaceProfile.UserRaceFullName')
-                    ->label('Registrace'),
+                    ->label(__('user-entry.table.race_profile')),
                 TextColumn::make('sportEvent.date')
-                    ->label('Datum')
+                    ->label(__('user-entry.table.date'))
                     ->dateTime(AppHelper::DATE_FORMAT)
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('real_start')
-                    ->label('Start v')
+                    ->label(__('user-entry.table.real_start'))
                     ->dateTime('H:i')
-                    ->placeholder('—'),
+                    ->placeholder(__('user-entry.table.real_start_none')),
                 TextColumn::make('requested_start')
-                    ->label('Poznámka')
+                    ->label(__('user-entry.table.requested_start_note'))
                     ->limit(20)
                     ->tooltip(fn (UserEntry $record): string => $record->requested_start ?? ''),
                 IconColumn::make('rent_si')
-                    ->label('Půjčít SI')
+                    ->label(__('user-entry.table.rent_si'))
                     ->icon(fn (int $state): string => match ($state) {
                         0 => 'heroicon-m-no-symbol',
                         1 => 'heroicon-o-check',
@@ -111,11 +129,11 @@ class UserEntryResource extends Resource implements HasShieldPermissions
                 TextColumn::make('entry_stages')
                     ->badge()
                     ->separator(',')
-                    ->label('Etapy')
+                    ->label(__('user-entry.table.entry_stages'))
                     ->formatStateUsing(fn (string $state): string => str_replace('stage', 'E', $state))
                     ->searchable(),
                 TextColumn::make('entry_status')
-                    ->label('Stav přihlášky')
+                    ->label(__('user-entry.table.entry_status'))
                     ->badge()
                     ->searchable(),
             ])
@@ -128,13 +146,13 @@ class UserEntryResource extends Resource implements HasShieldPermissions
                     )
                     ->searchable(),
                 SelectFilter::make('entry_status')
-                    ->label('Stav přihlášky')
+                    ->label(__('user-entry.filters.entry_status'))
                     ->options(EntryStatus::enumArray())->multiple()
                     ->default([EntryStatus::Create->value, EntryStatus::Edit->value]),
             ])
             ->recordActions([
                 Action::make('View Information')
-                    ->label('info')
+                    ->label(__('user-entry.actions.view_information.label'))
                     ->icon('heroicon-m-information-circle')
                     ->schema(UserEntryOverview::getOverview())
                     ->slideOver()

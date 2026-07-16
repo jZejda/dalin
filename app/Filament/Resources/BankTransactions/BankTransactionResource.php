@@ -45,15 +45,27 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
 
     protected static ?int $navigationSort = 45;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Správa Financí';
-
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-m-qr-code';
 
-    protected static ?string $navigationLabel = 'Bankovní výpis';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation_groups.finance');
+    }
 
-    protected static ?string $label = 'Bankovní výpis';
+    public static function getNavigationLabel(): string
+    {
+        return __('bank-transaction.navigation_label');
+    }
 
-    protected static ?string $pluralLabel = 'Bankovní výpis';
+    public static function getModelLabel(): string
+    {
+        return __('bank-transaction.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('bank-transaction.plural_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -101,7 +113,7 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                         return '#';
                     })
                     ->description(function (BankTransaction $bankTransaction): string {
-                        return 'transakcí: ' . (string)$bankTransaction->userCredit->count();
+                        return __('bank-transaction.user_credit_count', ['count' => $bankTransaction->userCredit->count()]);
                     }),
                 TextColumn::make('amount')
                     ->money('CZK', locale: 'cs')
@@ -133,7 +145,7 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                 Filter::make('date')
                     ->schema([
                         DatePicker::make('date')
-                            ->label('Datum transakce od'),
+                            ->label(__('bank-transaction.filters.date_from')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -146,10 +158,10 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                             return null;
                         }
 
-                        return 'Transakce novější: ' . Carbon::parse($data['date'])->format(AppHelper::DATE_FORMAT);
+                        return __('bank-transaction.filters.date_newer', ['date' => Carbon::parse($data['date'])->format(AppHelper::DATE_FORMAT)]);
                     })->default(now()->subDays(7)),
                 SelectFilter::make('transaction_indicator')
-                    ->label('Typ transakce')
+                    ->label(__('bank-transaction.filters.transaction_indicator'))
                     ->options(TransactionIndicator::enumArray()),
             ])
             ->defaultSort('date', 'desc')
@@ -180,21 +192,21 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
 
     private static function getTableRowAddNoteAction(): Action
     {
-        return Action::make('Popis transakce')
+        return Action::make('edit_description')
+            ->label(__('bank-transaction.actions.edit_description.label'))
             ->icon('heroicon-o-document-text')
             ->color('info')
-            ->modalHeading('Upravit označení transakce')
+            ->modalHeading(__('bank-transaction.actions.edit_description.modal_heading'))
             ->modalDescription(function (): HtmlString {
-                return new HtmlString('Pro lepší přehlednost můžeš u transakce změnit <strong>popis</strong> a <strong>poznámku</strong>.</br>
-                Ostatní parametry transakce není možné upravovat. V případě že by to opravdu bylo potřeba, kontaktuj správce účtu klubu.');
+                return new HtmlString(__('bank-transaction.actions.edit_description.modal_description'));
             })
             ->modalIcon('heroicon-o-document-text')
             ->schema([
                 TextInput::make('description')
-                    ->label('Popis')
+                    ->label(__('bank-transaction.description'))
                     ->default(fn (BankTransaction $bankTransaction): ?string => $bankTransaction->description),
                 TextInput::make('note')
-                    ->label('Poznámka')
+                    ->label(__('bank-transaction.note'))
                     ->default(fn (BankTransaction $bankTransaction): ?string => $bankTransaction->note),
             ])
             ->action(function (BankTransaction $bankTransaction, array $data): void {
@@ -203,8 +215,8 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                 $bankTransaction->save();
 
                 Notification::make()
-                    ->title('Popis transakce')
-                    ->body('Úspěšně jsme změnili popis transakce.')
+                    ->title(__('bank-transaction.actions.edit_description.notification_title'))
+                    ->body(__('bank-transaction.actions.edit_description.notification_body'))
                     ->success()
                     ->send();
             });
@@ -212,15 +224,15 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
 
     private static function assignTransactionToUserAction(): Action
     {
-        return Action::make('Přiradit transakci uživateli')
+        return Action::make('assign_to_user')
+            ->label(__('bank-transaction.actions.assign_to_user.label'))
             ->icon('heroicon-o-user-plus')
             ->color('info')
             ->modalHeading(function (BankTransaction $bankTransaction): string {
-                return 'Přidání transakce konkrétnímu uživateli s VS: ' . $bankTransaction->variable_symbol ?? '---';
+                return __('bank-transaction.actions.assign_to_user.modal_heading', ['vs' => $bankTransaction->variable_symbol ?? '---']);
             })
             ->modalDescription(function (): HtmlString {
-                return new HtmlString('Příchozí transakce jsou uživateli <strong>pokud je správně uveden variabilní symbol</strong> automaticky přiřazeny.</br>
-                Zde je můžeš přiřadit nebo zrušit ručně.');
+                return new HtmlString(__('bank-transaction.actions.assign_to_user.modal_description'));
             })
             ->modalIcon('heroicon-o-document-text')
             ->schema([
@@ -263,8 +275,8 @@ class BankTransactionResource extends Resource implements HasShieldPermissions
                 $userCreditNotes->saveOrFail();
 
                 Notification::make()
-                    ->title('Transakce')
-                    ->body('Příchozí kredit byl přiřazen uživateli')
+                    ->title(__('bank-transaction.actions.assign_to_user.notification_title'))
+                    ->body(__('bank-transaction.actions.assign_to_user.notification_body'))
                     ->success()
                     ->send();
             });
