@@ -31,18 +31,18 @@ final class UserSendMail
                 ))->send();
 
                 Notification::make()
-                    ->title('E-mail rozeslán')
-                    ->body('Cílovým uživatelům byl odeslán e-mail.')
+                    ->title(__('filament/user-setting.actions.send_mail.notification_title'))
+                    ->body(__('filament/user-setting.actions.send_mail.notification_body'))
                     ->success()
                     ->seconds(8)
                     ->send();
             })
             ->color('gray')
-            ->label('Pošli e-mail')
+            ->label(__('filament/user-setting.actions.send_mail.label'))
             ->icon('heroicon-s-paper-airplane')
-            ->modalHeading('Pošle e-mail vybraným skupinám uživatelů systému.')
-            ->modalDescription('E-mail je odesílán z fronty každý 5 minut.')
-            ->modalSubmitActionLabel('Odeslat')
+            ->modalHeading(__('filament/user-setting.actions.send_mail.modal_heading'))
+            ->modalDescription(__('filament/user-setting.actions.send_mail.modal_description'))
+            ->modalSubmitActionLabel(__('filament/user-setting.actions.send_mail.modal_submit'))
             ->visible(auth()->user()->hasRole([
                 AppRoles::SuperAdmin->value,
                 AppRoles::EventMaster->value,
@@ -53,25 +53,25 @@ final class UserSendMail
                 Grid::make(1)
                     ->schema([
                         TextInput::make('subject')
-                            ->label('Předmět zprávy')
+                            ->label(__('filament/user-setting.actions.send_mail.subject'))
                             ->required(),
                         TextInput::make('replyTo')
-                            ->label('Adresa pro odpovědi')
+                            ->label(__('filament/user-setting.actions.send_mail.reply_to'))
                             ->default(Auth::user()?->email),
                         Select::make('targetUsers')
-                            ->label('Cílová skupina uživatelů podle role')
+                            ->label(__('filament/user-setting.actions.send_mail.target_users'))
                             ->multiple()
                             ->options([
-                                'all' => 'Všem aktivním uživatelům',
-                                AppRoles::Member->value => 'Členové',
-                                AppRoles::EventMaster->value => 'Správce závodů',
-                                AppRoles::Redactor->value => 'Redaktor',
-                                AppRoles::EventOrganizer->value => 'Organizátor závodů',
-                                AppRoles::BillingSpecialist->value => 'Finančník',
+                                'all' => __('filament/user-setting.actions.send_mail.target_users_options.all'),
+                                AppRoles::Member->value => __('filament/user-setting.actions.send_mail.target_users_options.'.AppRoles::Member->value),
+                                AppRoles::EventMaster->value => __('filament/user-setting.actions.send_mail.target_users_options.'.AppRoles::EventMaster->value),
+                                AppRoles::Redactor->value => __('filament/user-setting.actions.send_mail.target_users_options.'.AppRoles::Redactor->value),
+                                AppRoles::EventOrganizer->value => __('filament/user-setting.actions.send_mail.target_users_options.'.AppRoles::EventOrganizer->value),
+                                AppRoles::BillingSpecialist->value => __('filament/user-setting.actions.send_mail.target_users_options.'.AppRoles::BillingSpecialist->value),
                             ])
                             ->minItems(1),
                         MarkdownEditor::make('content')
-                            ->label('Zpráva')
+                            ->label(__('filament/user-setting.actions.send_mail.content'))
                             ->required(),
                     ]),
 

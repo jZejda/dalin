@@ -18,9 +18,17 @@ class UserCreditList extends Page
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static ?string $title = 'Finance';
-    protected static string | \UnitEnum | null $navigationGroup = 'Uživatel';
     protected static ?int $navigationSort = 34;
+
+    public function getTitle(): string
+    {
+        return __('user-credit.list.page_title');
+    }
+
+    public static function getNavigationGroup(): string | \UnitEnum | null
+    {
+        return __('app.navigation_groups.users');
+    }
 
     protected function getHeaderWidgets(): array
     {
@@ -47,7 +55,7 @@ class UserCreditList extends Page
             )->button()
             ->icon('heroicon-o-plus-circle')
             ->color('gray')
-            ->label('Nový záznam')
+            ->label(__('user-credit.list.new_record_label'))
         ];
     }
 

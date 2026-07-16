@@ -129,6 +129,7 @@ return [
     ],
 
     'list' => [
+        'page_title' => 'Finance',
         'new_billing_label' => 'Nové vyúčtování',
         'new_record_label' => 'Nový záznam',
     ],

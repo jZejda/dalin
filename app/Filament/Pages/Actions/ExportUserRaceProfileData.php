@@ -38,24 +38,23 @@ final class ExportUserRaceProfileData
                 }
             })
             ->color('gray')
-            ->label('Export do Excelu')
+            ->label(__('user-race-profile.actions.export.label'))
             ->icon('heroicon-o-document-arrow-down')
-            ->modalHeading('Vytvoří exportní soubor podle zadání')
+            ->modalHeading(__('user-race-profile.actions.export.modal_heading'))
             ->modalDescription(function (): HtmlString {
-                return new HtmlString('Zvol požadovaný export. Je možné zvolit <strong>všechny registrace</strong> smazané i nesmazané</br>
-                Nebo pouze <strong>aktivní</strong> případně <strong>neaktivní</strong>.');
+                return new HtmlString(__('user-race-profile.actions.export.modal_description'));
             })
-            ->modalSubmitActionLabel('Exportovat')
+            ->modalSubmitActionLabel(__('user-race-profile.actions.export.modal_submit'))
             ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster, AppRoles::EventOrganizer, AppRoles::BillingSpecialist]))
             ->schema([
                 Grid::make(1)
                     ->schema([
                         Select::make('export_type')
-                            ->label('Nabízené exporty')
+                            ->label(__('user-race-profile.actions.export.export_type'))
                             ->options([
-                                self::ALL_REGISTRATIONS => 'Všechny registrace *.xlsx',
-                                self::ACTIVE_REGISTRATIONS => 'Pouze aktivní registrace *.xlsx',
-                                self::DEACTIVATED_REGISTRATIONS => 'Neaktivní registrace *.xlsx',
+                                self::ALL_REGISTRATIONS => __('user-race-profile.actions.export.export_type_all'),
+                                self::ACTIVE_REGISTRATIONS => __('user-race-profile.actions.export.export_type_active'),
+                                self::DEACTIVATED_REGISTRATIONS => __('user-race-profile.actions.export.export_type_deactivated'),
                             ])
                             ->required(),
                     ]),
@@ -66,8 +65,8 @@ final class ExportUserRaceProfileData
     private static function getNotificationMessage(): Notification
     {
         return Notification::make()
-            ->title('Export přihlášek proběhl v pořádku')
-            ->body('Soubor Excel přihlášených uživatelů otevřete z disku.')
+            ->title(__('user-race-profile.actions.export.notification_title'))
+            ->body(__('user-race-profile.actions.export.notification_body'))
             ->success()
             ->seconds(15)
             ->send();

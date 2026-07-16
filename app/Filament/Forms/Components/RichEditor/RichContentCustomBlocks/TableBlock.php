@@ -19,7 +19,7 @@ class TableBlock extends RichContentCustomBlock
 
     public static function getLabel(): string
     {
-        return 'Tabulka';
+        return __('rich-editor.blocks.table.label');
     }
 
     public static function getIcon(): string
@@ -30,27 +30,27 @@ class TableBlock extends RichContentCustomBlock
     public static function configureEditorAction(Action $action): Action
     {
         return $action
-            ->modalHeading('Konfigurace tabulky')
-            ->modalDescription('Vlož data oddělená tabulátory (např. zkopírovaná z Excelu, ORIS nebo PDF). Sloupce lze také oddělit dvěma a více mezerami.')
+            ->modalHeading(__('rich-editor.blocks.table.modal_heading'))
+            ->modalDescription(__('rich-editor.blocks.table.modal_description'))
             ->schema([
                 TextInput::make('title')
-                    ->label('Nadpis (volitelný)')
+                    ->label(__('rich-editor.blocks.table.title'))
                     ->maxLength(150),
                 Textarea::make('raw')
-                    ->label('Data tabulky')
+                    ->label(__('rich-editor.blocks.table.raw'))
                     ->required()
                     ->rows(12)
                     ->autosize()
-                    ->placeholder("kat\tdélka\tpřev.\tkontroly\nD10\t2,6\t65\t9\nD12\t2,8\t65\t10")
-                    ->helperText('Každý řádek = jeden řádek tabulky. Sloupce odděl tabulátorem nebo víc mezerami.'),
+                    ->placeholder(__('rich-editor.blocks.table.raw_placeholder'))
+                    ->helperText(__('rich-editor.blocks.table.raw_helper')),
                 Checkbox::make('has_header')
-                    ->label('První řádek je hlavička')
+                    ->label(__('rich-editor.blocks.table.has_header'))
                     ->default(true),
                 Checkbox::make('striped')
-                    ->label('Proužkování řádků')
+                    ->label(__('rich-editor.blocks.table.striped'))
                     ->default(true),
                 Checkbox::make('compact')
-                    ->label('Kompaktní (menší padding)')
+                    ->label(__('rich-editor.blocks.table.compact'))
                     ->default(false),
             ]);
     }
@@ -97,9 +97,11 @@ class TableBlock extends RichContentCustomBlock
         $parsed = self::parse((string) ($config['raw'] ?? ''));
         $rowCount = count($parsed['rows']) + (! empty($parsed['headers']) ? 1 : 0);
 
-        return $title !== ''
-            ? "Tabulka: {$title} ({$rowCount} ř.)"
-            : "Tabulka ({$rowCount} ř.)";
+        if ($title !== '') {
+            return __('rich-editor.blocks.table.preview_label_titled', ['title' => $title, 'count' => $rowCount]);
+        }
+
+        return __('rich-editor.blocks.table.preview_label_untitled', ['count' => $rowCount]);
     }
 
     /**

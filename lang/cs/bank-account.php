@@ -42,4 +42,8 @@ return [
         'account_id' => 'ID účtu (account_id)',
     ],
 
+    'list' => [
+        'create_action' => 'Přidat napojení',
+    ],
+
 ];

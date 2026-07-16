@@ -113,7 +113,7 @@ class MyMarketOfferList extends Page implements HasForms, HasTable
                 TextColumn::make('orders_count')
                     ->label(__('marketplace.orders_count')),
                 TextColumn::make('created_at')
-                    ->label('Vytvořeno')
+                    ->label(__('marketplace.created_at'))
                     ->dateTime('j. n. Y H:i')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -171,7 +171,7 @@ class MyMarketOfferList extends Page implements HasForms, HasTable
                 ['offer' => $record->load(['products.orders.user'])],
             ))
             ->modalSubmitAction(false)
-            ->modalCancelActionLabel('Zavřít');
+            ->modalCancelActionLabel(__('marketplace.close_action'));
     }
 
     private function sendAnnouncementAction(): Action

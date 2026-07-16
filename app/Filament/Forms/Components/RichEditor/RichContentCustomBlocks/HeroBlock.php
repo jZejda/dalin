@@ -17,7 +17,7 @@ class HeroBlock extends RichContentCustomBlock
 
     public static function getLabel(): string
     {
-        return 'Hero';
+        return __('rich-editor.blocks.hero.label');
     }
 
     public static function getIcon(): string
@@ -28,25 +28,25 @@ class HeroBlock extends RichContentCustomBlock
     public static function configureEditorAction(Action $action): Action
     {
         return $action
-            ->modalHeading('Konfigurace Hero bloku')
-            ->modalDescription('Nastavte parametry pro hero sekci')
+            ->modalHeading(__('rich-editor.blocks.hero.modal_heading'))
+            ->modalDescription(__('rich-editor.blocks.hero.modal_description'))
             ->schema([
                 TextInput::make('heading')
-                    ->label('Hlavní nadpis')
+                    ->label(__('rich-editor.blocks.hero.heading'))
                     ->required()
-                    ->placeholder('Zadejte hlavní nadpis')
+                    ->placeholder(__('rich-editor.blocks.hero.heading_placeholder'))
                     ->maxLength(100),
                 TextInput::make('subheading')
-                    ->label('Podnadpis')
-                    ->placeholder('Zadejte podnadpis (volitelné)')
+                    ->label(__('rich-editor.blocks.hero.subheading'))
+                    ->placeholder(__('rich-editor.blocks.hero.subheading_placeholder'))
                     ->maxLength(200),
                 TextInput::make('buttonLabel')
-                    ->label('Text tlačítka')
-                    ->placeholder('Zadejte text tlačítka (volitelné)')
+                    ->label(__('rich-editor.blocks.hero.button_label'))
+                    ->placeholder(__('rich-editor.blocks.hero.button_label_placeholder'))
                     ->maxLength(50),
                 TextInput::make('buttonUrl')
-                    ->label('URL tlačítka')
-                    ->placeholder('Zadejte URL tlačítka (volitelné)')
+                    ->label(__('rich-editor.blocks.hero.button_url'))
+                    ->placeholder(__('rich-editor.blocks.hero.button_url_placeholder'))
                     ->url()
                     ->maxLength(255),
             ]);
@@ -55,7 +55,7 @@ class HeroBlock extends RichContentCustomBlock
     public static function toPreviewHtml(array $config): string
     {
         return view('filament.forms.components.rich-editor.rich-content-custom-blocks.hero.preview', [
-            'heading' => $config['heading'] ?? 'Nepojmenovaný hero blok',
+            'heading' => $config['heading'] ?? __('rich-editor.blocks.hero.preview_untitled'),
             'subheading' => $config['subheading'] ?? '',
         ])->render();
     }
@@ -79,6 +79,6 @@ class HeroBlock extends RichContentCustomBlock
      */
     public static function getPreviewLabel(array $config): string
     {
-        return "Hero section: {$config['heading']}";
+        return __('rich-editor.blocks.hero.preview_label', ['heading' => (string) ($config['heading'] ?? '')]);
     }
 }

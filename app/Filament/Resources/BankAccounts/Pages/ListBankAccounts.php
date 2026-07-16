@@ -16,7 +16,7 @@ class ListBankAccounts extends ListRecords
     {
         return [
             CreateAction::make()
-                ->label('Přidat napojení'),
+                ->label(__('bank-account.list.create_action')),
         ];
     }
 }

@@ -18,18 +18,25 @@ class UserRaceProfileList extends Page
     use HasPageShield;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
-    protected static ?string $title = 'Registrace';
-    protected static string | \UnitEnum | null $navigationGroup = 'Správa';
     protected static ?int $navigationSort = 34;
 
     protected string $view = 'filament.pages.user-race-profile-list';
 
+    public function getTitle(): string
+    {
+        return __('user-race-profile.list.page_title');
+    }
+
+    public static function getNavigationGroup(): string | \UnitEnum | null
+    {
+        return __('app.navigation_groups.admin');
+    }
 
     protected function getHeaderActions(): array
     {
         return [
             Action::make('help')
-                ->label('Nápověda')
+                ->label(__('user-race-profile.list.help_label'))
                 ->icon('heroicon-o-information-circle')
                 ->color('gray')
                 ->url(AppHelper::getPageHelpUrl('stranka-registrace.html')),
@@ -56,6 +63,6 @@ class UserRaceProfileList extends Page
         )->button()
             ->icon('heroicon-s-chevron-double-down')
             ->color('primary')
-            ->label('Akce');
+            ->label(__('app.common.actions'));
     }
 }

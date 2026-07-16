@@ -17,7 +17,7 @@ class ContentDividerBlock extends RichContentCustomBlock
 
     public static function getLabel(): string
     {
-        return 'Oddělovník sekce';
+        return __('rich-editor.blocks.content_divider.label');
     }
 
     public static function getIcon(): string
@@ -28,18 +28,18 @@ class ContentDividerBlock extends RichContentCustomBlock
     public static function configureEditorAction(Action $action): Action
     {
         return $action
-            ->modalHeading('Konfigurace oddělovníku sekce')
-            ->modalDescription('Nastavte parametry pro oddělovník sekce')
+            ->modalHeading(__('rich-editor.blocks.content_divider.modal_heading'))
+            ->modalDescription(__('rich-editor.blocks.content_divider.modal_description'))
             ->schema([
                 TextInput::make('separator')
-                    ->label('Oddělovník')
+                    ->label(__('rich-editor.blocks.content_divider.separator'))
                     ->required()
-                    ->placeholder('Např. Aktuality, O klubu, Závody...')
+                    ->placeholder(__('rich-editor.blocks.content_divider.separator_placeholder'))
                     ->maxLength(50),
                 TextInput::make('heading')
-                    ->label('Hlavní nadpis')
+                    ->label(__('rich-editor.blocks.content_divider.heading'))
                     ->required()
-                    ->placeholder('Zadejte hlavní nadpis sekce')
+                    ->placeholder(__('rich-editor.blocks.content_divider.heading_placeholder'))
                     ->maxLength(100),
             ]);
     }
@@ -48,7 +48,7 @@ class ContentDividerBlock extends RichContentCustomBlock
     {
         return view('filament.forms.components.rich-editor.rich-content-custom-blocks.content-divider.preview', [
             'separator' => $config['separator'] ?? '',
-            'heading' => $config['heading'] ?? 'Nepojmenovaný oddělovník',
+            'heading' => $config['heading'] ?? __('rich-editor.blocks.content_divider.preview_untitled'),
         ])->render();
     }
 
@@ -69,6 +69,6 @@ class ContentDividerBlock extends RichContentCustomBlock
      */
     public static function getPreviewLabel(array $config): string
     {
-        return "Oddělovník: {$config['heading']}";
+        return __('rich-editor.blocks.content_divider.preview_label', ['heading' => (string) ($config['heading'] ?? '')]);
     }
 }

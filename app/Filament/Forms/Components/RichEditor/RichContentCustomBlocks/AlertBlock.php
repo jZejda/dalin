@@ -19,7 +19,7 @@ class AlertBlock extends RichContentCustomBlock
 
     public static function getLabel(): string
     {
-        return 'Alert';
+        return __('rich-editor.blocks.alert.label');
     }
 
     public static function getIcon(): string
@@ -30,27 +30,27 @@ class AlertBlock extends RichContentCustomBlock
     public static function configureEditorAction(Action $action): Action
     {
         return $action
-            ->modalHeading('Konfigurace Alert bloku')
-            ->modalDescription('Nastavte parametry pro alert sekci')
+            ->modalHeading(__('rich-editor.blocks.alert.modal_heading'))
+            ->modalDescription(__('rich-editor.blocks.alert.modal_description'))
             ->schema([
                 Select::make('type')
-                    ->label('Typ alertu')
+                    ->label(__('rich-editor.blocks.alert.type'))
                     ->options([
-                        'default' => 'Výchozí',
-                        'info' => 'Informace',
-                        'warning' => 'Varování',
-                        'error' => 'Chyba',
+                        'default' => __('rich-editor.blocks.alert.type_options.default'),
+                        'info' => __('rich-editor.blocks.alert.type_options.info'),
+                        'warning' => __('rich-editor.blocks.alert.type_options.warning'),
+                        'error' => __('rich-editor.blocks.alert.type_options.error'),
                     ])
                     ->default('default')
                     ->required(),
                 TextInput::make('heading')
-                    ->label('Nadpis')
+                    ->label(__('rich-editor.blocks.alert.heading'))
                     ->required()
-                    ->placeholder('Zadejte nadpis alertu')
+                    ->placeholder(__('rich-editor.blocks.alert.heading_placeholder'))
                     ->maxLength(100),
                 MarkdownEditor::make('content')
-                    ->label('Obsah (Markdown)')
-                    ->placeholder('Zadejte obsah v Markdown formátu')
+                    ->label(__('rich-editor.blocks.alert.content'))
+                    ->placeholder(__('rich-editor.blocks.alert.content_placeholder'))
                     ->maxLength(1000),
             ]);
     }
@@ -59,7 +59,7 @@ class AlertBlock extends RichContentCustomBlock
     {
         return view('filament.forms.components.rich-editor.rich-content-custom-blocks.alert.preview', [
             'type' => $config['type'] ?? 'default',
-            'heading' => $config['heading'] ?? 'Nepojmenovaný alert',
+            'heading' => $config['heading'] ?? __('rich-editor.blocks.alert.preview_untitled'),
             'content' => $config['content'] ?? '',
         ])->render();
     }
@@ -83,15 +83,20 @@ class AlertBlock extends RichContentCustomBlock
     public static function getPreviewLabel(array $config): string
     {
         $typeLabels = [
-            'default' => 'Výchozí',
-            'info' => 'Informace',
-            'warning' => 'Varování',
-            'error' => 'Chyba',
+            'default' => __('rich-editor.blocks.alert.type_options.default'),
+            'info' => __('rich-editor.blocks.alert.type_options.info'),
+            'warning' => __('rich-editor.blocks.alert.type_options.warning'),
+            'error' => __('rich-editor.blocks.alert.type_options.error'),
         ];
 
-        $typeLabel = $typeLabels[$config['type'] ?? 'default'] ?? 'Výchozí';
-        $heading = $config['heading'] ?? 'Nepojmenovaný alert';
+        $type = $config['type'] ?? 'default';
+        $type = is_string($type) ? $type : 'default';
+        $typeLabel = $typeLabels[$type] ?? $typeLabels['default'];
+        $heading = $config['heading'] ?? __('rich-editor.blocks.alert.preview_untitled');
 
-        return "Alert ({$typeLabel}): {$heading}";
+        return __('rich-editor.blocks.alert.preview_label', [
+            'type' => $typeLabel,
+            'heading' => (string) $heading,
+        ]);
     }
 }

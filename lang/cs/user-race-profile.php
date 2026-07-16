@@ -16,6 +16,11 @@ return [
     'label'            => 'Moje registrace',
     'plural_label'     => 'Moje registrace',
 
+    'list' => [
+        'page_title' => 'Registrace',
+        'help_label' => 'Nápověda',
+    ],
+
     // Table
     'table' => [
         'reg_number' => 'Registrace',
@@ -83,6 +88,20 @@ return [
             'notification_success_body'    => 'Členství v klubu proběhlo v pořádku',
             'notification_error_title'     => 'Něco se nepovedlo',
             'notification_error_body'      => 'Něco se nepovedlo, Můžeš vyzkoušet akci zopakovat nebo kontaktuj admina s popisem chyby, děkujeme.',
+        ],
+
+        'export' => [
+            'label'               => 'Export do Excelu',
+            'modal_heading'       => 'Vytvoří exportní soubor podle zadání',
+            'modal_description'   => 'Zvol požadovaný export. Je možné zvolit <strong>všechny registrace</strong> smazané i nesmazané</br>
+                Nebo pouze <strong>aktivní</strong> případně <strong>neaktivní</strong>.',
+            'modal_submit'        => 'Exportovat',
+            'export_type'         => 'Nabízené exporty',
+            'export_type_all'         => 'Všechny registrace *.xlsx',
+            'export_type_active'      => 'Pouze aktivní registrace *.xlsx',
+            'export_type_deactivated' => 'Neaktivní registrace *.xlsx',
+            'notification_title' => 'Export přihlášek proběhl v pořádku',
+            'notification_body'  => 'Soubor Excel přihlášených uživatelů otevřete z disku.',
         ],
 
     ],

@@ -35,11 +35,25 @@ class SportEventExportResource extends Resource implements HasShieldPermissions
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Akce/Závody';
+    public static function getNavigationGroup(): string | \UnitEnum | null
+    {
+        return __('app.navigation_groups.events');
+    }
 
-    protected static ?string $label = 'Výstup pro pořádání';
+    public static function getNavigationLabel(): string
+    {
+        return __('sport-event-export.navigation_label');
+    }
 
-    protected static ?string $pluralLabel = 'Výstupy pro pořádání';
+    public static function getModelLabel(): string
+    {
+        return __('sport-event-export.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('sport-event-export.plural_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -77,13 +91,13 @@ class SportEventExportResource extends Resource implements HasShieldPermissions
                     Section::make()
                         ->schema([
                             Select::make('export_type')
-                                ->label('Typ exportu')
+                                ->label(__('sport-event-export.form.export_type'))
                                 ->options(SportEventExportsType::class)
                                 ->default(SportEventExportsType::EventEntryListCat)
                                 ->searchable(),
 
                             Select::make('file_type')
-                                ->label('Typ souboru')
+                                ->label(__('sport-event-export.form.file_type'))
                                 ->options([
                                     SportEventExport::FILE_XML_IOF_V3 => 'XML IOF v3',
                                 ])
@@ -91,7 +105,7 @@ class SportEventExportResource extends Resource implements HasShieldPermissions
                                 ->disablePlaceholderSelection(),
 
                             Select::make('sport_event_id')
-                                ->label('ID závodu')
+                                ->label(__('sport-event-export.form.sport_event'))
                                 ->options(
                                     SportEvent::all()
                                         ->whereIn('event_type', [SportEventType::Race, SportEventType::Training, SportEventType::TrainingCamp])
@@ -99,10 +113,10 @@ class SportEventExportResource extends Resource implements HasShieldPermissions
                                         ->pluck('sportEventOrisTitle', 'id')
                                 ),
                             DateTimePicker::make('start_time')
-                                ->label('Čas 00')
+                                ->label(__('sport-event-export.form.start_time'))
                                 ->nullable(),
                             TextInput::make('sport_event_leg_id')
-                                ->label('ID Etapy závodu')
+                                ->label(__('sport-event-export.form.sport_event_leg_id'))
                                 ->nullable(),
 
                         ])->columnSpan([
@@ -122,7 +136,7 @@ class SportEventExportResource extends Resource implements HasShieldPermissions
                 TextColumn::make('slug')
                     ->searchable()
                     ->copyable()
-                    ->label('Cesta')
+                    ->label(__('sport-event-export.table.path'))
                     ->prefix(function (SportEventExport $record): string {
                         if ($record->export_type === SportEventExportsType::EventEntryListCat) {
                             return '/startovka/';
@@ -133,7 +147,7 @@ class SportEventExportResource extends Resource implements HasShieldPermissions
                 TextColumn::make('export_type')
                     ->badge(),
                 TextColumn::make('result_path')
-                    ->label('Cesta k souboru'),
+                    ->label(__('sport-event-export.table.result_path')),
                 TextColumn::make('updated_at')
                     ->label(__('filament-shield::filament-shield.column.updated_at'))
                     ->dateTime(AppHelper::DATE_TIME_FORMAT),

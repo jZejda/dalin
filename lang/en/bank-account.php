@@ -42,4 +42,8 @@ return [
         'account_id' => 'Account ID (account_id)',
     ],
 
+    'list' => [
+        'create_action' => 'Add connection',
+    ],
+
 ];

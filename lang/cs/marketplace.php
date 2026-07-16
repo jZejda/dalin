@@ -37,6 +37,8 @@ return [
     'marketplace_title' => 'Tržiště',
     'my_offers_title' => 'Moje nabídky',
     'my_orders_title' => 'Moje objednávky',
+    'created_at' => 'Vytvořeno',
+    'close_action' => 'Zavřít',
 
     'tab_active' => 'Aktivní nabídky',
     'tab_past' => 'Proběhlé nabídky',

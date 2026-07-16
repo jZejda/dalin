@@ -17,7 +17,7 @@ class SimpleDividerBlock extends RichContentCustomBlock
 
     public static function getLabel(): string
     {
-        return 'Jednoduchý oddělovník';
+        return __('rich-editor.blocks.simple_divider.label');
     }
 
     public static function getIcon(): string
@@ -28,20 +28,20 @@ class SimpleDividerBlock extends RichContentCustomBlock
     public static function configureEditorAction(Action $action): Action
     {
         return $action
-            ->modalHeading('Konfigurace jednoduchého oddělovníku')
-            ->modalDescription('Nastavte číslo lampionu a nadpis')
+            ->modalHeading(__('rich-editor.blocks.simple_divider.modal_heading'))
+            ->modalDescription(__('rich-editor.blocks.simple_divider.modal_description'))
             ->schema([
                 TextInput::make('number')
-                    ->label('Číslo lampionu')
+                    ->label(__('rich-editor.blocks.simple_divider.number'))
                     ->required()
                     ->numeric()
                     ->minValue(1)
                     ->maxValue(999)
-                    ->placeholder('Např. 31'),
+                    ->placeholder(__('rich-editor.blocks.simple_divider.number_placeholder')),
                 TextInput::make('heading')
-                    ->label('Nadpis')
+                    ->label(__('rich-editor.blocks.simple_divider.heading'))
                     ->required()
-                    ->placeholder('Zadejte nadpis')
+                    ->placeholder(__('rich-editor.blocks.simple_divider.heading_placeholder'))
                     ->maxLength(150),
             ]);
     }
@@ -50,7 +50,7 @@ class SimpleDividerBlock extends RichContentCustomBlock
     {
         return view('filament.forms.components.rich-editor.rich-content-custom-blocks.simple-divider.preview', [
             'number' => $config['number'] ?? '1',
-            'heading' => $config['heading'] ?? 'Nepojmenovaný oddělovník',
+            'heading' => $config['heading'] ?? __('rich-editor.blocks.simple_divider.preview_untitled'),
         ])->render();
     }
 
@@ -71,6 +71,9 @@ class SimpleDividerBlock extends RichContentCustomBlock
      */
     public static function getPreviewLabel(array $config): string
     {
-        return "Lampion #{$config['number']}: {$config['heading']}";
+        return __('rich-editor.blocks.simple_divider.preview_label', [
+            'number' => (string) ($config['number'] ?? ''),
+            'heading' => (string) ($config['heading'] ?? ''),
+        ]);
     }
 }

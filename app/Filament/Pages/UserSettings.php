@@ -36,7 +36,7 @@ class UserSettings extends Page
 
     public function getHeading(): string
     {
-        return __('Můj přehled');
+        return __('filament/user-setting.heading');
     }
 
     protected function getHeaderWidgets(): array
@@ -81,7 +81,7 @@ class UserSettings extends Page
 
     public static function getNavigationLabel(): string
     {
-        return __('Můj přehled');
+        return __('filament/user-setting.heading');
     }
 
     protected function getHeaderActions(): array
