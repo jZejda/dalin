@@ -30,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Attribute mails dispatched during a web request to the logged-in user
         $middleware->web(append: [
             \App\Http\Middleware\CaptureMailSource::class,
+            \App\Http\Middleware\SetLocale::class,
         ]);
 
         $middleware->alias([

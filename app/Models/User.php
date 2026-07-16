@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -38,6 +39,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $password
  * @property string|null $payer_variable_symbol
  * @property bool $active
+ * @property string $locale
  * @property string|null $remember_token
  * @property string|null $api_key_hash
  * @property string|null $calendar_token
@@ -60,7 +62,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read UserSetting|null $userSetting
  */
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, HasLocalePreference
 {
     use HasApiTokens;
     use HasFactory;
@@ -80,6 +82,7 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'payer_variable_symbol',
         'active',
+        'locale',
         'calendar_token',
     ];
 
@@ -96,6 +99,11 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
         'active' => 'boolean',
     ];
+
+    public function preferredLocale(): string
+    {
+        return $this->locale;
+    }
 
     public function setApiKey(string $plainApiKey): void
     {

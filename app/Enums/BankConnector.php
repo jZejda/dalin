@@ -53,11 +53,11 @@ enum BankConnector: string
     {
         return match ($this) {
             self::MonetaMoneyBank => [
-                'token' => 'API token',
-                'account_id' => 'ID účtu (account_id)',
+                'token' => __('bank-account.credentials.token'),
+                'account_id' => __('bank-account.credentials.account_id'),
             ],
             self::FioBank => [
-                'token' => 'API token',
+                'token' => __('bank-account.credentials.token'),
             ],
         };
     }

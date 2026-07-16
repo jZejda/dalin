@@ -1,8 +1,7 @@
 @php
-use App\Shared\Helpers\EmptyType;
-use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use App\Enums\UserParamType;
+use App\Shared\Helpers\AppHelper;
 
 /** @var App\Models\User $user */
 /** @var App\Models\UserCredit $userCredit */
@@ -10,24 +9,27 @@ use App\Enums\UserParamType;
 
 <x-mail::message>
 
-## Pohyb na účtu
+## {{ __('mail/user-credit-change.body.heading') }}
 
-Na účtu uživatele **{{ $user->name }}** došlo k pohybu.
+{{ __('mail/user-credit-change.body.intro', ['name' => $user->name]) }}
 
-Aktuální výše uživatelského konta: **{{ $user->getParam(UserParamType::UserActualBalance) }}** Kč k datu **{{ Carbon::now()->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}**.
+{{ __('mail/user-credit-change.body.balance', [
+    'balance' => $user->getParam(UserParamType::UserActualBalance),
+    'date' => Carbon::now()->format(AppHelper::DATE_TIME_FORMAT),
+]) }}
 
 @component('mail::divider')
-## Pohyb z poslední transakce
+## {{ __('mail/user-credit-change.body.last_transaction_heading') }}
 
-- částka: **{{ $userCredit->amount }} Kč**
-- datum transakce: {{ Carbon::parse($userCredit->created_at)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}
-- ID transakce: {{ $userCredit->id }}
-- vazba na ID bankovní transakce: {{ $userCredit->bank_transaction_id }}
+- {{ __('mail/user-credit-change.body.amount', ['amount' => $userCredit->amount]) }}
+- {{ __('mail/user-credit-change.body.transaction_date', ['date' => Carbon::parse($userCredit->created_at)->format(AppHelper::DATE_TIME_FORMAT)]) }}
+- {{ __('mail/user-credit-change.body.transaction_id', ['id' => $userCredit->id]) }}
+- {{ __('mail/user-credit-change.body.bank_transaction_id', ['id' => $userCredit->bank_transaction_id]) }}
 
 @endcomponent
 
-Pokud by byla v transakci nějaká nesrovnalost, prosím kontaktujte nás na e-mailu: {!! config('site-config.club.technical_email') !!}
+{{ __('mail/user-credit-change.body.contact', ['email' => config('site-config.club.technical_email')]) }}
 
-Mějte se fajn a jezděte na závody - {{ Config::get('site-config.club.abbr') }}
+{{ __('mail/user-credit-change.body.signoff', ['club' => config('site-config.club.abbr')]) }}
 
 </x-mail::message>

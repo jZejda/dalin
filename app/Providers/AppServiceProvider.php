@@ -8,6 +8,7 @@ use App\Mcp\Servers\DalinServer;
 use App\Models\AppSetting;
 use App\Models\UserCredit;
 use App\Observers\UserCreditObserver;
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Filament\Facades\Filament;
 use Laravel\Mcp\Facades\Mcp;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -41,6 +42,15 @@ class AppServiceProvider extends ServiceProvider
 
         // MCP server registration
         Mcp::local('dalin', DalinServer::class);
+
+        // CZ/EN language switch in the panel; preference persisted via
+        // App\Listeners\PersistUserLocale (auto-discovered LocaleChanged listener)
+        LanguageSwitch::configureUsing(function (LanguageSwitch $switch): void {
+            $switch
+                ->locales(['cs', 'en'])
+                ->visible(outsidePanels: true)
+                ->userPreferredLocale(fn (): ?string => auth()->user()?->locale);
+        });
 
         // Observer from EventServiceProvider
         UserCredit::observe(UserCreditObserver::class);

@@ -36,11 +36,20 @@ class BankAccountResource extends Resource implements HasShieldPermissions
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-library';
 
-    protected static ?string $navigationLabel = 'Bankovní napojení';
+    public static function getNavigationLabel(): string
+    {
+        return __('bank-account.navigation_label');
+    }
 
-    protected static ?string $label = 'Bankovní napojení';
+    public static function getModelLabel(): string
+    {
+        return __('bank-account.label');
+    }
 
-    protected static ?string $pluralLabel = 'Bankovní napojení';
+    public static function getPluralModelLabel(): string
+    {
+        return __('bank-account.plural_label');
+    }
 
     public static function canAccess(): bool
     {
@@ -51,33 +60,33 @@ class BankAccountResource extends Resource implements HasShieldPermissions
     {
         return $schema
             ->components([
-                Section::make('Napojení')
+                Section::make(__('bank-account.form.section_connection'))
                     ->schema([
                         TextInput::make('name')
-                            ->label('Název')
+                            ->label(__('bank-account.form.name'))
                             ->required()
                             ->maxLength(64),
                         Select::make('code')
-                            ->label('Banka (konektor)')
+                            ->label(__('bank-account.form.code'))
                             ->options(BankConnector::enumArray())
                             ->required()
                             ->live()
                             ->native(false)
                             ->disabledOn('edit')
-                            ->helperText('Konektor nelze u existujícího napojení měnit — odeber napojení a přidej nové.'),
+                            ->helperText(__('bank-account.form.code_helper')),
                         TextInput::make('currency')
-                            ->label('Měna')
+                            ->label(__('bank-account.form.currency'))
                             ->required()
                             ->default('CZK')
                             ->maxLength(12),
                         Toggle::make('active')
-                            ->label('Napojení je aktivní')
-                            ->helperText('Transakce se stahují jen z aktivních napojení.')
+                            ->label(__('bank-account.form.active'))
+                            ->helperText(__('bank-account.form.active_helper'))
                             ->default(false),
                     ])
                     ->columns(2),
-                Section::make('Přístupové údaje')
-                    ->description('Údaje se ukládají šifrovaně a zpětně se nezobrazují. Při editaci ponech pole prázdné, pokud chceš zachovat uloženou hodnotu.')
+                Section::make(__('bank-account.form.section_credentials'))
+                    ->description(__('bank-account.form.credentials_description'))
                     ->visible(fn (Get $get): bool => filled($get('code')))
                     ->schema(fn (Get $get, ?BankAccount $record, string $operation): array => self::credentialInputs($get('code'), $record, $operation))
                     ->columns(2),
@@ -89,22 +98,22 @@ class BankAccountResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Název')
+                    ->label(__('bank-account.table.name'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('code')
-                    ->label('Banka')
+                    ->label(__('bank-account.table.bank'))
                     ->badge()
                     ->formatStateUsing(fn (BankConnector $state): string => $state->label()),
                 TextColumn::make('currency')
-                    ->label('Měna'),
+                    ->label(__('bank-account.table.currency')),
                 TextColumn::make('last_synced')
-                    ->label('Poslední synchronizace')
+                    ->label(__('bank-account.table.last_synced'))
                     ->dateTime(AppHelper::DATE_TIME_FORMAT)
                     ->sortable()
-                    ->placeholder('nikdy'),
+                    ->placeholder(__('bank-account.table.never')),
                 ToggleColumn::make('active')
-                    ->label('Aktivní'),
+                    ->label(__('bank-account.table.active')),
             ])
             ->recordActions([
                 EditAction::make(),
@@ -147,15 +156,20 @@ class BankAccountResource extends Resource implements HasShieldPermissions
         $inputs = [];
 
         foreach ($connector->credentialFields() as $key => $label) {
-            $inputs[] = TextInput::make('credentials.'.$key)
+            $input = TextInput::make('credentials.'.$key)
                 ->label($label)
                 ->password()
                 ->revealable()
                 ->autocomplete('new-password')
                 ->required($operation === 'create')
                 ->dehydrated(fn (?string $state): bool => filled($state))
-                ->placeholder(self::maskedCredential($record?->account_credentials[$key] ?? null))
-                ->helperText($operation === 'edit' ? 'Ponech prázdné pro zachování uložené hodnoty.' : null);
+                ->placeholder(self::maskedCredential($record?->account_credentials[$key] ?? null));
+
+            if ($operation === 'edit') {
+                $input->helperText(__('bank-account.form.credential_keep_helper'));
+            }
+
+            $inputs[] = $input;
         }
 
         return $inputs;

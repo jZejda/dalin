@@ -3,6 +3,7 @@
 
 @source '../../../../app/Filament';
 @source '../../../../resources/views/filament';
+@source '../../../../vendor/bezhansalleh/filament-language-switch/**';
 
 /*
 * Frontent content
