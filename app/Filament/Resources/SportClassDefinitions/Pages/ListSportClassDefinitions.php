@@ -28,15 +28,15 @@ class ListSportClassDefinitions extends ListRecords
 
                     if ($result) {
                         Notification::make()
-                            ->title('Aktualizace definic kategorií')
-                            ->body('Aktualizace definic kategorií z ORISu proběhla v pořádku.')
+                            ->title(__('sport-class-definition.actions.update.notification_title'))
+                            ->body(__('sport-class-definition.actions.update.notification_body_success'))
                             ->success()
                             ->seconds(8)
                             ->send();
                     } else {
                         Notification::make()
-                            ->title('Aktualizace definic kategorií')
-                            ->body('Něco se nepovedlo, Můžeš vyzkoušet akci zopakovat nebo kontaktuj admina s popisem chyby, děkujeme.')
+                            ->title(__('sport-class-definition.actions.update.notification_title'))
+                            ->body(__('sport-class-definition.actions.update.notification_body_error'))
                             ->danger()
                             ->send();
                     }
@@ -44,16 +44,16 @@ class ListSportClassDefinitions extends ListRecords
                 })
 
                 ->color('gray')
-                ->label('Aktualizovat')
+                ->label(__('sport-class-definition.actions.update.label'))
                 ->icon('heroicon-m-arrow-path')
-                ->modalHeading('Aktualizuj definici kategorií z ORISu')
-                ->modalDescription('Definice kategorii, podle ORISU. V dialogu zvol pro jaký sport chceš zaktualizovat definice kategorií.')
-                ->modalSubmitActionLabel('Aktualizovat')
+                ->modalHeading(__('sport-class-definition.actions.update.modal_heading'))
+                ->modalDescription(__('sport-class-definition.actions.update.modal_description'))
+                ->modalSubmitActionLabel(__('sport-class-definition.actions.update.modal_submit_action_label'))
                 ->schema([
                     Grid::make(2)
                         ->schema([
                             Select::make('sportEventId')
-                                ->label('Závod/událost')
+                                ->label(__('sport-class-definition.actions.update.sport_event'))
                                 ->options(SportList::all()->pluck('short_name', 'id'))
                                 ->required()
                                 ->columnSpan(2)

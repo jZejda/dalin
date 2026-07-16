@@ -506,4 +506,26 @@ return [
         EntryStatus::Edit->value => 'upraveno',
         EntryStatus::Cancel->value => 'stornováno',
     ],
+
+    'relation_news' => [
+        'label' => 'Novinky',
+        'title' => 'Novinky',
+    ],
+
+    'relation_credits' => [
+        'title' => 'Startovné',
+        'table' => [
+            'created_at' => 'Vytvořeno',
+            'user_race_profile' => 'Závodní profil',
+            'user' => 'Uživatel',
+            'amount_total' => 'Celkem',
+        ],
+    ],
+
+    'widgets' => [
+        'map' => [
+            'event_date' => 'datum',
+            'event_place' => 'místo',
+        ],
+    ],
 ];

@@ -57,18 +57,18 @@ class StatsOverview extends BaseWidget
             ->count();
 
         return [
-            Stat::make('Finance', $usersAmountCount . ' Kč')
-                ->description($usersAmountCount >= 0 ? 'Hurá na závody' : 'Bylo by fajn zaslat dar')
+            Stat::make(__('dashboard.stats_overview.finance_label'), $usersAmountCount . ' Kč')
+                ->description($usersAmountCount >= 0 ? __('dashboard.stats_overview.finance_description_positive') : __('dashboard.stats_overview.finance_description_negative'))
                 ->descriptionIcon($usersAmountCount >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->chart(Arr::pluck($usersAmountChartData, 'amount'))
                 ->color($usersAmountCount >= 0 ? 'success' : 'danger'),
-            Stat::make('Přihlášen do závodů', count($activeUserEntry))
-                ->description('Jsi přihlášen ' . count($activeUserEntry) . ' ve všech spravovaných profilech.'),
-            Stat::make('Závodních profilů', $userProfilesCount)
-                ->description('Aktuálně spravuješ závodních profilů'),
+            Stat::make(__('dashboard.stats_overview.entries_label'), count($activeUserEntry))
+                ->description(__('dashboard.stats_overview.entries_description', ['count' => count($activeUserEntry)])),
+            Stat::make(__('dashboard.stats_overview.profiles_label'), $userProfilesCount)
+                ->description(__('dashboard.stats_overview.profiles_description')),
 
-            Stat::make('Závodu v roce ' . $date->format('Y'), $sportEventsCount)
-                ->description('V kalendáři je na tento rok zaneseno závodů'),
+            Stat::make(__('dashboard.stats_overview.events_label', ['year' => $date->format('Y')]), $sportEventsCount)
+                ->description(__('dashboard.stats_overview.events_description')),
         ];
     }
 

@@ -48,9 +48,26 @@ class PageResource extends Resource implements HasShieldPermissions
     public static ?int $navigationSort = 60;
     protected static ?string $model = Page::class;
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document';
-    protected static string | \UnitEnum | null $navigationGroup = 'Obsah';
-    protected static ?string $label = 'Stránka';
-    protected static ?string $pluralLabel = 'Stránky';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation_groups.content');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('content.page.navigation_label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('content.page.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('content.page.plural_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -88,7 +105,7 @@ class PageResource extends Resource implements HasShieldPermissions
                                 if ($contentFormat === 3 || $contentFormat === ContentFormat::TipTapJson) {
                                     return [
                                         RichEditor::make('content')
-                                            ->label('Obsah')
+                                            ->label(__('content.page.form.content'))
                                             ->customBlocks(RichContentBlocks::all())
                                             ->required()
                                             ->json()
@@ -177,7 +194,7 @@ class PageResource extends Resource implements HasShieldPermissions
                                 // Defaultně Markdown (ContentFormat::Markdown = 2)
                                 return [
                                     MarkdownEditor::make('content')
-                                        ->label('Obsah')
+                                        ->label(__('content.page.form.content'))
                                         ->required()
                                 ];
                             })->columns(1)
@@ -194,7 +211,7 @@ class PageResource extends Resource implements HasShieldPermissions
                     Section::make()
                         ->schema([
                             Select::make('user_id')
-                                ->label('Author')
+                                ->label(__('content.page.form.author'))
                                 ->options(User::query()->activeUsersByRole([AppRoles::Redactor])->pluck('name', 'id'))
                                 ->default(Auth::id())
                                 ->searchable()
@@ -205,7 +222,7 @@ class PageResource extends Resource implements HasShieldPermissions
                                 ->default(PageStatus::Closed)
                                 ->selectablePlaceholder(),
                             Select::make('content_format')
-                                ->label('Formát')
+                                ->label(__('content.page.form.format'))
                                 ->options(ContentFormat::class)
                                 ->default(ContentFormat::Markdown)
                                 ->reactive()
@@ -213,27 +230,27 @@ class PageResource extends Resource implements HasShieldPermissions
                                 ->required(),
 
                             Select::make('content_category_id')
-                                ->label('Kategorie')
+                                ->label(__('content.page.form.category'))
                                 ->options(ContentCategory::all()->pluck('title', 'id'))
                                 ->searchable(),
 
                             Toggle::make('page_menu')->inline()
-                                ->label('Zobrazit menu kategorie?')
+                                ->label(__('content.page.form.show_category_menu'))
                                 ->onIcon('heroicon-s-check')
                                 ->offIcon('heroicon-m-x-mark'),
 
                             TextInput::make('weight')
-                                ->label('Váha')
+                                ->label(__('content.page.form.weight'))
                                 ->maxValue(100)
                                 ->minValue(0)
                                 ->numeric()
                                 ->default(50),
 
                             Repeater::make('meta_items')
-                                ->label('Meta')
+                                ->label(__('content.page.form.meta'))
                                 ->schema([
                                     Select::make('key')
-                                        ->label('Klíč')
+                                        ->label(__('content.page.form.meta_key'))
                                         ->options([
                                             'title' => 'Title',
                                             'description' => 'Description',
@@ -256,7 +273,7 @@ class PageResource extends Resource implements HasShieldPermissions
                                             }
                                         }),
                                     TextInput::make('value')
-                                        ->label('Hodnota')
+                                        ->label(__('content.page.form.meta_value'))
                                         ->required(),
                                 ])
                                 ->columns(2)
@@ -279,20 +296,20 @@ class PageResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 TextColumn::make('title')
-                    ->label('Název')
+                    ->label(__('content.page.table.title'))
                     ->description(fn (Page $record): HtmlString => new HtmlString('<a href="' . url('/stranka/' . $record->slug) . '"target="_blank" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300">' . ($record->slug ?? '') . '</a>'))
                     ->sortable()
                     ->searchable()
                     ->size(TextSize::Large)
                     ->weight(FontWeight::Medium),
                 TextColumn::make('user.name')
-                    ->label('Autor')
+                    ->label(__('content.page.table.author'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
                     ->badge(),
                 TextColumn::make('content_format')
-                    ->label('Formát obsahu')
+                    ->label(__('content.page.table.format'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('updated_at')
@@ -353,8 +370,8 @@ class PageResource extends Resource implements HasShieldPermissions
     {
         /** @var Page $record */
         return [
-            'Autor' => $record->user?->user_identification,
-            'Zařazeno' => $record->content_category?->title,
+            __('content.page.search.author') => $record->user?->user_identification,
+            __('content.page.search.category') => $record->content_category?->title,
         ];
     }
 

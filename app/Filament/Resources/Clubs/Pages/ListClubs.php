@@ -31,26 +31,26 @@ class ListClubs extends ListRecords
                         $updateClubs = count($result->getUpdatedItems() ?? []);
 
                         Notification::make()
-                            ->title('Aktualizace klubů')
-                            ->body('Nově přidáno klubů: '.$newClubs.' | Aktualizováno klubů: '.$updateClubs)
+                            ->title(__('club.actions.update.notification_title'))
+                            ->body(__('club.actions.update.notification_body_success', ['new' => $newClubs, 'updated' => $updateClubs]))
                             ->success()
                             ->seconds(8)
                             ->send();
                     } else {
                         Notification::make()
-                            ->title('Aktualizace klubů')
-                            ->body('Něco se nepovedlo, Můžeš vyzkoušet akci zopakovat nebo kontaktuj admina s popisem chyby, děkujeme.')
+                            ->title(__('club.actions.update.notification_title'))
+                            ->body(__('club.actions.update.notification_body_error'))
                             ->danger()
                             ->send();
                     }
                 })
 
                 ->color('gray')
-                ->label('Aktualizovat')
+                ->label(__('club.actions.update.label'))
                 ->icon('heroicon-m-arrow-path')
-                ->modalHeading('Aktualizuj Kluby z ORISu')
-                ->modalDescription('Načte a uloží/aktualizuje kluby z ORISu.')
-                ->modalSubmitActionLabel('Aktualizovat')
+                ->modalHeading(__('club.actions.update.modal_heading'))
+                ->modalDescription(__('club.actions.update.modal_description'))
+                ->modalSubmitActionLabel(__('club.actions.update.modal_submit_action_label'))
                 ->schema([
                 ]),
         ];

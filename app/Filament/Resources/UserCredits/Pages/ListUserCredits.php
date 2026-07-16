@@ -50,7 +50,7 @@ class ListUserCredits extends ListRecords
         return ActionGroup::make(
             [
                 CreateAction::make()
-                    ->label('Nové vyúčtování')
+                    ->label(__('user-credit.list.new_billing_label'))
                     ->icon('heroicon-o-banknotes')
                     ->modalWidth(Width::SevenExtraLarge),
                 (new AddUserTransferBillingModal())->getAction(
@@ -65,7 +65,7 @@ class ListUserCredits extends ListRecords
         )->button()
             ->icon('heroicon-o-plus-circle')
             ->color('gray')
-            ->label('Nový záznam');
+            ->label(__('user-credit.list.new_record_label'));
     }
 
     public array $data_list = [
@@ -95,18 +95,18 @@ class ListUserCredits extends ListRecords
                 (new OrisApiService())->getEventBalance($sportEvent);
             })
             ->color('gray')
-            ->label('Načti vyúčtování z ORISu')
+            ->label(__('user-credit.actions.oris_balance.label'))
             ->icon('heroicon-o-arrow-down-tray')
-            ->modalHeading('Stáhne vyúčtování z ORIS závodu')
-            ->modalDescription('Vyber závod a načti vyúčtování. Akci můžeš provést opakovaně.')
-            ->modalSubmitActionLabel('Stáhnout vyúčtování')
+            ->modalHeading(__('user-credit.actions.oris_balance.modal_heading'))
+            ->modalDescription(__('user-credit.actions.oris_balance.modal_description'))
+            ->modalSubmitActionLabel(__('user-credit.actions.oris_balance.modal_submit_action_label'))
             ->modalIcon('heroicon-o-arrow-down-tray')
             ->modalIconColor('success')
             ->schema([
                 Grid::make(1)
                     ->schema([
                         Select::make('sportEventId')
-                            ->label('Závod/událost')
+                            ->label(__('user-credit.actions.oris_balance.sport_event'))
                             ->searchable()
                             ->allowHtml()
                             ->options(fn (): array => $this->getOrisEventOptions())
@@ -168,8 +168,8 @@ class ListUserCredits extends ListRecords
 
         if (! isset($this->orisBilledBadges[$key])) {
             $this->orisBilledBadges[$key] = $isBilled
-                ? Blade::render('<x-filament::badge size="sm" color="success">Vyúčtováno</x-filament::badge>')
-                : Blade::render('<x-filament::badge size="sm" color="warning">Čeká</x-filament::badge>');
+                ? Blade::render('<x-filament::badge size="sm" color="success">'.__('user-credit.actions.oris_balance.badge_billed').'</x-filament::badge>')
+                : Blade::render('<x-filament::badge size="sm" color="warning">'.__('user-credit.actions.oris_balance.badge_pending').'</x-filament::badge>');
         }
 
         return $this->orisBilledBadges[$key];

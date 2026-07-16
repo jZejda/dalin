@@ -94,9 +94,9 @@ class MapOverview
 
         return '<a href="admin/sport-events/' . $sportEvent->id . '/entry" target="_blank">' . $sportEvent->name . '</a>' . $eventAltName
             . '<br>'
-            . 'datum: <b>' . $sportEvent->date->format(AppHelper::DATE_FORMAT) . '</b>'
+            . __('sport-event.widgets.map.event_date') . ': <b>' . $sportEvent->date->format(AppHelper::DATE_FORMAT) . '</b>'
             . '<br>'
-            . 'místo: <b>' . $sportEvent->place . '</b>'
+            . __('sport-event.widgets.map.event_place') . ': <b>' . $sportEvent->place . '</b>'
             . '<br>'
             . 'ORIS: <b><a href="'. OrisApiService::ORIS_URL .'/Zavod?id=' . $sportEvent->oris_id . '" target="_blank">' . $sportEvent->oris_id . '</a></b>';
     }

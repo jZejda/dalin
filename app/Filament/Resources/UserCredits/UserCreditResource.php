@@ -46,15 +46,27 @@ class UserCreditResource extends Resource implements HasShieldPermissions
 
     protected static ?int $navigationSort = 40;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Správa Financí';
-
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static ?string $navigationLabel = 'Vyúčtování akcí';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation_groups.finance');
+    }
 
-    protected static ?string $label = 'Vyúčtování akcí';
+    public static function getNavigationLabel(): string
+    {
+        return __('user-credit.navigation_label');
+    }
 
-    protected static ?string $pluralLabel = 'Vyúčtování akcí';
+    public static function getModelLabel(): string
+    {
+        return __('user-credit.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('user-credit.plural_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -100,9 +112,9 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                                 Select::make('related_user_id')
                                     ->label(__('user-credit.related_user_profile'))
                                     ->options(User::all()->pluck('user_identification', 'id'))
-                                    ->hint('Vyžadováno pokud je vybrán přesun mezi uživateli.')
+                                    ->hint(__('user-credit.form.related_user_hint'))
                                     ->hintColor('warning')
-                                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Upozornění')
+                                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('user-credit.form.warning_tooltip'))
                                     ->visible(function (Get $get): bool {
                                         if ($get('credit_type') === UserCreditType::TransferCreditBetweenUsers->value) {
                                             return true;
@@ -203,7 +215,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                             $description = $record->sportEvent->alt_name;
                         } else {
                             if (! is_null($record->sportEvent?->id)) {
-                                $description = 'interní id závodu: '.$record->sportEvent->id;
+                                $description = __('user-credit.table.event_internal_id', ['id' => $record->sportEvent->id]);
                             }
                         }
 
@@ -222,7 +234,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                     })
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
-                    ->label('Registrace')
+                    ->label(__('user-credit.table.registration'))
                     ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? ''),
                 TextColumn::make('amount')
                     ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
@@ -240,16 +252,16 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                         }
 
                         if ($record->bankTransaction !== null) {
-                            return new HtmlString('<a href="' . route('filament.admin.resources.bank-transactions.index') .'">Transakce: ' . $record->bankTransaction->id . '</a>');
+                            return new HtmlString('<a href="' . route('filament.admin.resources.bank-transactions.index') .'">' . __('user-credit.table.transaction_link', ['id' => $record->bankTransaction->id]) . '</a>');
                         }
 
                         return null;
                     }),
                 ViewColumn::make('user_entry')
-                    ->label('Komentářů')
+                    ->label(__('user-credit.table.comments'))
                     ->view('filament.tables.columns.user-credit-comments-count'),
                 TextColumn::make('status')
-                    ->label('Status')
+                    ->label(__('user-credit.status'))
                     ->badge()
                     ->formatStateUsing(fn (UserCreditStatus $state): string => __("sport-event.type_enum_credit_status.{$state->value}"))
                     ->colors(self::getUserCreditStatuses())
@@ -262,13 +274,13 @@ class UserCreditResource extends Resource implements HasShieldPermissions
             ->defaultSort('updated_at', 'desc')
             ->filters([
                 SelectFilter::make('sport_event_id')
-                    ->label('Závod')
+                    ->label(__('user-credit.filters.sport_event'))
                     ->options(SportEvent::all()->sortBy('date')->pluck('sport_event_last_cost_calculate', 'id')),
                 SelectFilter::make('status')
                     ->options(self::getUserCreditStatuses())
                     ->default(''),
                 Filter::make('user_id')
-                    ->label('Není přiřazen závodník')
+                    ->label(__('user-credit.filters.unassigned_racer'))
                     ->query(fn (Builder $query): Builder => $query->where('user_id', '=', null))
                     ->default(false),
             ])

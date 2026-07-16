@@ -11,23 +11,30 @@ use Filament\Forms\Components\Select;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Table;
 use Filament\Tables;
+use Illuminate\Database\Eloquent\Model;
 
 class PageRelationManager extends RelationManager
 {
     protected static string $relationship = 'page';
 
-    protected static ?string $label = 'Stránka(y)';
-
-    protected static ?string $title = 'Stránka(y)';
-
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('content.page.relation.title');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('content.page.relation.title');
+    }
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 Select::make('content_category_id')
-                    ->label('Kategorie')
+                    ->label(__('content.page.form.category'))
                     ->options(ContentCategory::all()->pluck('title', 'id'))
                     ->searchable(),
             ]);
@@ -40,7 +47,7 @@ class PageRelationManager extends RelationManager
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('user.name')->label('Autor')
+                TextColumn::make('user.name')->label(__('content.page.table.author'))
                     ->searchable()
                     ->sortable(),
             ])

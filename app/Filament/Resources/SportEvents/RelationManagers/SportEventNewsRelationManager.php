@@ -16,16 +16,23 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class SportEventNewsRelationManager extends RelationManager
 {
     protected static string $relationship = 'sportEventNews';
 
-    protected static ?string $label = 'Novinky';
-
-    protected static ?string $title = 'Novinky';
-
     protected static ?string $recordTitleAttribute = 'sport_event_id';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('sport-event.relation_news.title');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('sport-event.relation_news.label');
+    }
 
     public function form(Schema $schema): Schema
     {

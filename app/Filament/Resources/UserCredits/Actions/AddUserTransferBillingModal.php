@@ -81,8 +81,8 @@ class AddUserTransferBillingModal
                 }
 
                 Notification::make()
-                    ->title('Cestovní vyúčtování')
-                    ->body('Cestovný vyúčtování bylo přiřazeno uživatelům')
+                    ->title(__('user-credit.actions.transfer_billing_common.notification_title'))
+                    ->body(__('user-credit.actions.transfer_billing_common.notification_body'))
                     ->success()
                     ->send();
 
@@ -92,7 +92,7 @@ class AddUserTransferBillingModal
                 return match ($userCreditType) {
                     UserCreditType::TransportBilling => __('user-credit.actions.transport_billing.action_group_label'),
                     UserCreditType::TransferCreditBetweenUsers => __('user-credit.actions.transfer_between_users_billing.action_group_label'),
-                    default => 'Přesun financi mezi členy',
+                    default => __('user-credit.actions.transfer_billing_common.default_text'),
                 };
             })
             ->icon(function () use ($userCreditType): string {
@@ -106,14 +106,14 @@ class AddUserTransferBillingModal
                 return match ($userCreditType) {
                     UserCreditType::TransportBilling => __('user-credit.actions.transport_billing.modal_heading'),
                     UserCreditType::TransferCreditBetweenUsers => __('user-credit.actions.transfer_between_users_billing.modal_heading'),
-                    default => 'Přesun financi mezi členy',
+                    default => __('user-credit.actions.transfer_billing_common.default_text'),
                 };
             })
             ->modalDescription(function () use ($userCreditType): string {
                 return match ($userCreditType) {
                     UserCreditType::TransportBilling => __('user-credit.actions.transport_billing.modal_description'),
                     UserCreditType::TransferCreditBetweenUsers => __('user-credit.actions.transfer_between_users_billing.modal_description'),
-                    default => 'Přesun financi mezi členy',
+                    default => __('user-credit.actions.transfer_billing_common.default_text'),
                 };
             })
             ->modalSubmitActionLabel(__('user-credit.actions.transport_billing.modal_submit_action_label'))
@@ -138,7 +138,7 @@ class AddUserTransferBillingModal
                         ->numeric()
                         ->minValue(1)
                         ->hintColor('default')
-                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Je možné vložit pouze kladné hodnoty.')
+                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('user-credit.actions.transfer_billing_common.amount_positive_hint'))
                         ->required(),
                     Select::make('currency')
                         ->label(__('user-credit.form.currency_title'))
@@ -154,17 +154,17 @@ class AddUserTransferBillingModal
                 // Users
                 Grid::make()->schema([
                     Select::make('user_id')
-                        ->label('Připsat částku uživateli')
+                        ->label(__('user-credit.actions.transfer_billing_common.credit_to_user'))
                         ->options(User::all()->pluck('user_identification', 'id'))
                         ->hintColor('warning')
-                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Částka bude připsána na konto tohoto uživtele.')
+                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('user-credit.actions.transfer_billing_common.credit_to_user_hint'))
                         ->required()
                         ->searchable(),
                     Select::make('related_user_id')
-                        ->label('Strhnout částku uživateli')
+                        ->label(__('user-credit.actions.transfer_billing_common.credit_from_user'))
                         ->options(User::all()->pluck('user_identification', 'id'))
                         ->hintColor('warning')
-                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Zvolená částka bude stržena tomuto uživateli.')
+                        ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('user-credit.actions.transfer_billing_common.credit_from_user_hint'))
                         ->required()
                         ->searchable(),
                 ])->columns(2),
@@ -172,7 +172,7 @@ class AddUserTransferBillingModal
                     ->label(__('user-credit.note')),
                 Select::make('sport_event_id')
                     ->label(__('user-credit.event_name'))
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Není potřeba doplňovat.')
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('user-credit.actions.transfer_billing_common.sport_event_not_required_hint'))
                     ->options(
                         SportEvent::all()
                             ->where('date', '>', Carbon::now()->subMonths(12)->format(AppHelper::MYSQL_DATE_TIME))

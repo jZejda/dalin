@@ -31,9 +31,21 @@ class ContentCategoryResource extends Resource implements HasShieldPermissions
     protected static ?int $navigationSort = 69;
     protected static ?string $model = ContentCategory::class;
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-tag';
-    protected static string | \UnitEnum | null $navigationGroup = 'Obsah';
-    protected static ?string $label = 'Kategorie';
-    protected static ?string $pluralLabel = 'Kategorie';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation_groups.content');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('filament/common.content_category.create_heading');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('filament/common.content_category.create_heading');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -133,8 +145,8 @@ class ContentCategoryResource extends Resource implements HasShieldPermissions
     {
         /** @var ContentCategory $record */
         return [
-            'Slug' => $record->slug ?? '---',
-            'Počet příspěvků' => (string)$record->page()->count(),
+            __('content.category.search.slug') => $record->slug ?? '---',
+            __('content.category.search.pages_count') => (string)$record->page()->count(),
         ];
     }
 

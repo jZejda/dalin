@@ -30,8 +30,8 @@ class UserCreditHeaderWidgets extends BaseWidget
             ->get();
 
         return [
-            Stat::make('Aktuální stav', $usersAmountCount . ' Kč')
-                ->description($usersAmountCount >= 0 ? 'Hurá na závody' : 'Bylo by fajn zaslat dar')
+            Stat::make(__('user-credit.widgets.header.balance_label'), $usersAmountCount . ' Kč')
+                ->description($usersAmountCount >= 0 ? __('user-credit.widgets.header.description_positive') : __('user-credit.widgets.header.description_negative'))
                 ->descriptionIcon($usersAmountCount >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->chart(Arr::pluck($usersAmountChartData, 'amount'))
                 ->color($usersAmountCount >= 0 ? 'success' : 'danger'),

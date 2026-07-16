@@ -506,4 +506,26 @@ return [
         EntryStatus::Edit->value => 'edited',
         EntryStatus::Cancel->value => 'cancelled',
     ],
+
+    'relation_news' => [
+        'label' => 'News',
+        'title' => 'News',
+    ],
+
+    'relation_credits' => [
+        'title' => 'Entry fees',
+        'table' => [
+            'created_at' => 'Created',
+            'user_race_profile' => 'Race profile',
+            'user' => 'User',
+            'amount_total' => 'Total',
+        ],
+    ],
+
+    'widgets' => [
+        'map' => [
+            'event_date' => 'date',
+            'event_place' => 'place',
+        ],
+    ],
 ];

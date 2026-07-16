@@ -31,8 +31,8 @@ class AddUserCreditNoteModal
 
                 if ($userCreditNote->save()) {
                     Notification::make()
-                        ->title('Poznámku jsme uložili')
-                        ->body('Děkujeme za zaslání dotazu k vyúčtování, pokusíme se to vyřešit.')
+                        ->title(__('user-credit.actions.add_note.notification_saved_title'))
+                        ->body(__('user-credit.actions.add_note.notification_saved_body'))
                         ->success()
                         ->seconds(8)
                         ->send();
@@ -40,24 +40,24 @@ class AddUserCreditNoteModal
                     $notificationUsers = User::role([AppRoles::BillingSpecialist->value, AppRoles::SuperAdmin->value])->get();
                     foreach ($notificationUsers as $recipient) {
                         Notification::make()
-                            ->title('Poznámka k vyúčtování')
-                            ->body('Uživatel: ' . Auth::user()?->name . ' | Vyúčtování ID: ' . $record->id)
+                            ->title(__('user-credit.actions.add_note.notification_billing_title'))
+                            ->body(__('user-credit.actions.add_note.notification_billing_body', ['user' => (string) Auth::user()?->name, 'id' => (string) $record->id]))
                             ->sendToDatabase($recipient);
                     }
                 }
             })
             ->color('gray')
-            ->label('Poznámka')
+            ->label(__('user-credit.actions.add_note.label'))
             ->icon('heroicon-m-pencil-square')
-            ->modalHeading('Poznámka k platbě')
-            ->modalDescription('Pokud není něco v pořádků, sem prosím napiš důvody jak to je jinak. Prosím stručně a věcně.')
-            ->modalSubmitActionLabel('Uložit poznámku')
+            ->modalHeading(__('user-credit.actions.add_note.modal_heading'))
+            ->modalDescription(__('user-credit.actions.add_note.modal_description'))
+            ->modalSubmitActionLabel(__('user-credit.actions.add_note.modal_submit_action_label'))
             ->modalContentFooter(fn (UserCredit $record) => view('filament.modals.user-add-credit-admin', [
                 'record' => $record,
             ]))
             ->schema([
                 MarkdownEditor::make('user_note')
-                    ->label('Poznámka'),
+                    ->label(__('user-credit.actions.add_note.note_label')),
             ]);
     }
 }

@@ -24,9 +24,26 @@ class SportClassDefinitionResource extends Resource implements HasShieldPermissi
 
     protected static ?int $navigationSort = 100;
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static string | \UnitEnum | null $navigationGroup = 'Správa';
-    protected static ?string $label = 'Definice kategorie';
-    protected static ?string $pluralLabel = 'Definice kategorií';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation_groups.admin');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('sport-class-definition.navigation_label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('sport-class-definition.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('sport-class-definition.plural_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -36,31 +53,31 @@ class SportClassDefinitionResource extends Resource implements HasShieldPermissi
                     ->schema([
 
                         TextInput::make('name')
-                            ->label('Název')
+                            ->label(__('sport-class-definition.form.name'))
                             ->required(),
                         Select::make('gender')
-                            ->label('Pohlaví')
+                            ->label(__('sport-class-definition.form.gender'))
                             ->options([
-                                'F' => 'Žena',
-                                'M' => 'Muž',
-                                'A' => 'Vše',
+                                'F' => __('sport-class-definition.form.gender_female'),
+                                'M' => __('sport-class-definition.form.gender_male'),
+                                'A' => __('sport-class-definition.form.gender_all'),
                             ])
                             ->required(),
 
                         TextInput::make('age_from')
-                            ->label('Věk od:')
+                            ->label(__('sport-class-definition.form.age_from'))
                             ->required(),
                         TextInput::make('age_to')
-                            ->label('Věk do:')
+                            ->label(__('sport-class-definition.form.age_to'))
                             ->required(),
 
                         Select::make('sport_id')
-                            ->label('Sport')
+                            ->label(__('sport-class-definition.form.sport'))
                             ->options(SportList::all()->pluck('short_name', 'id'))
                             ->searchable()
                             ->required(),
                         TextInput::make('oris_id')
-                            ->label('ORIS ID')
+                            ->label(__('sport-class-definition.form.oris_id'))
                             ->disabled(true),
                     ])
                     ->columns(2)
@@ -80,22 +97,22 @@ class SportClassDefinitionResource extends Resource implements HasShieldPermissi
                     ->searchable()
                     ->description(fn (SportClassDefinition $record): string => $record->class_definition_fullLabel ?? ''),
                 TextColumn::make('age_from')
-                    ->label('Věk od')
+                    ->label(__('sport-class-definition.table.age_from'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('age_to')
-                    ->label('Věk do')
+                    ->label(__('sport-class-definition.table.age_to'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('gender')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('sport.short_name')
-                    ->label('Sport')
+                    ->label(__('sport-class-definition.table.sport'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('oris_id')
-                    ->label('ORIS ID'),
+                    ->label(__('sport-class-definition.table.oris_id')),
             ])
             ->defaultPaginationPageOption(25)
             ->filters([

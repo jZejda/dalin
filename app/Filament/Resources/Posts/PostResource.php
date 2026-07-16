@@ -40,9 +40,26 @@ class PostResource extends Resource implements HasShieldPermissions
     public static ?int $navigationSort = 65;
     protected static ?string $model = Post::class;
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-newspaper';
-    protected static string | \UnitEnum | null $navigationGroup = 'Obsah';
-    protected static ?string $label = 'Novinka';
-    protected static ?string $pluralLabel = 'Novinky';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation_groups.content');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('content.post.navigation_label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('content.post.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('content.post.plural_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -55,7 +72,7 @@ class PostResource extends Resource implements HasShieldPermissions
                     Section::make()
                         ->schema([
                             TextInput::make('title')
-                                ->label('Nadpis')
+                                ->label(__('content.post.form.title'))
                                 ->required(),
 //                                ->reactive()
 //                                ->afterStateUpdated(function (\Filament\Forms\Set $set, $state) {
@@ -65,12 +82,12 @@ class PostResource extends Resource implements HasShieldPermissions
                             // Markdown editor
                             Grid::make()->schema([
                                 MarkdownEditor::make('content')
-                                    ->label('Obsah novinky')
+                                    ->label(__('content.post.form.content'))
                                     ->required()
                             ])->columns(1),
 
-                            Section::make('Dodatečné informace')
-                                ->description('Editorial pro souhrn novinky - nepovinné - dostupné po rozkliknutí')
+                            Section::make(__('content.post.form.section_additional'))
+                                ->description(__('content.post.form.section_additional_description'))
                                 ->schema([
                                     Grid::make()->schema([
                                         MarkdownEditor::make('editorial')
@@ -90,18 +107,18 @@ class PostResource extends Resource implements HasShieldPermissions
                     Section::make()
                         ->schema([
                             Toggle::make('private')->inline()
-                                ->label('Interní novinka')
+                                ->label(__('content.post.form.private'))
                                 ->onIcon('heroicon-m-bolt')
                                 ->offIcon('heroicon-s-user')
                                 ->default(true),
                             Select::make('user_id')
-                                ->label('Autor')
+                                ->label(__('content.post.form.author'))
                                 ->options(User::all()->pluck('name', 'id'))
                                 ->searchable()
                                 ->default(Auth::id())
                                 ->required(),
                             Select::make('content_mode')
-                                ->label('Formát')
+                                ->label(__('content.post.form.format'))
                                 ->options(
                                     [
 //                                        1 => 'HTML',
@@ -127,11 +144,11 @@ class PostResource extends Resource implements HasShieldPermissions
                     ->size(TextSize::Large)
                     ->weight(FontWeight::Medium),
                 TextColumn::make('user.name')
-                    ->label('Autor')
+                    ->label(__('content.post.table.author'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('content_mode')
-                    ->label('Formát obsahu')
+                    ->label(__('content.post.table.format'))
                     ->badge()
                     ->sortable(),
                 IconColumn::make('private')
@@ -177,8 +194,8 @@ class PostResource extends Resource implements HasShieldPermissions
     {
         /** @var Post $record */
         return [
-            'Autor' => $record->user?->user_identification ?? 'N/A',
-            'Stav' => ($record->private === true) ? 'Neveřejná' : 'Veřejná',
+            __('content.post.search.author') => $record->user?->user_identification ?? __('content.post.search.not_available'),
+            __('content.post.search.status') => ($record->private === true) ? __('content.post.search.private') : __('content.post.search.public'),
         ];
     }
 
@@ -211,18 +228,18 @@ class PostResource extends Resource implements HasShieldPermissions
                 ))->send();
 
                 Notification::make()
-                    ->title('E-mail novinky rozeslán')
-                    ->body('Zvoleným uživatelům byl odeslán e-mail.')
+                    ->title(__('content.post.actions.send_news_email.notification_title'))
+                    ->body(__('content.post.actions.send_news_email.notification_body'))
                     ->success()
                     ->seconds(8)
                     ->send();
             })
             ->color('gray')
-            ->label('Pošli e-mail')
+            ->label(__('content.post.actions.send_news_email.label'))
             ->icon('heroicon-s-paper-airplane')
-            ->modalHeading('Pošle e-mail k novince')
-            ->modalDescription('E-mail je odeslán sepárátně každému uživateli zvlášť. Pokud zvolíte zaslat zprávu všem, bude tato odeslána bez ohledu na uživatelské preferenci.')
-            ->modalSubmitActionLabel('Odeslat')
+            ->modalHeading(__('content.post.actions.send_news_email.modal_heading'))
+            ->modalDescription(__('content.post.actions.send_news_email.modal_description'))
+            ->modalSubmitActionLabel(__('content.post.actions.send_news_email.modal_submit_action_label'))
             ->visible(function (): bool {
                 $allowSendEmail = auth()->user()?->hasRole([AppRoles::SuperAdmin->value, AppRoles::Redactor->value]);
                 if ($allowSendEmail === true) {
@@ -235,14 +252,14 @@ class PostResource extends Resource implements HasShieldPermissions
                 Grid::make(1)
                     ->schema([
                         TextInput::make('subject')
-                            ->label('Předmět zprávy')
+                            ->label(__('content.post.actions.send_news_email.subject'))
                             ->default(fn (Post $record): string => $record->title)
                             ->required(),
                         Select::make('selection')
-                            ->label('Zvolte možnost')
+                            ->label(__('content.post.actions.send_news_email.selection'))
                             ->options([
-                                1 => 'Uživatelé kteří mají zájem o novinky',
-                                0 => 'Všem aktivním uživatelům systému'
+                                1 => __('content.post.actions.send_news_email.selection_interested'),
+                                0 => __('content.post.actions.send_news_email.selection_all'),
                             ])
                             ->default(1)
                             ->required(),

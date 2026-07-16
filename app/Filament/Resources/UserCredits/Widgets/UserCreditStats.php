@@ -15,8 +15,8 @@ class UserCreditStats extends BaseWidget
     protected function getCards(): array
     {
         return [
-            Stat::make('Nepřiřazené transakce Kč', $this->getSumUnAssignCredit()),
-            Stat::make('Počet nepřiřazených', $this->getCountUnAssignCredit()),
+            Stat::make(__('user-credit.widgets.stats.unassigned_amount'), $this->getSumUnAssignCredit()),
+            Stat::make(__('user-credit.widgets.stats.unassigned_count'), $this->getCountUnAssignCredit()),
         ];
     }
 

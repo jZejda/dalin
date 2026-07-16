@@ -25,9 +25,26 @@ class ClubResource extends Resource implements HasShieldPermissions
 
     public static ?int $navigationSort = 11;
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-identification';
-    protected static string | \UnitEnum | null $navigationGroup = 'Akce/Závody';
-    protected static ?string $label = 'Klub';
-    protected static ?string $pluralLabel = 'Kluby';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation_groups.events');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('club.navigation_label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('club.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('club.plural_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -37,12 +54,12 @@ class ClubResource extends Resource implements HasShieldPermissions
                     ->schema([
                         Grid::make()->schema([
                             TextInput::make('abbr')
-                                ->label('Zkratka')
+                                ->label(__('club.form.abbr'))
                                 ->required(),
                             TextInput::make('name')
                                 ->required(),
                             Select::make('region_id')
-                                ->label('Region')
+                                ->label(__('club.form.region'))
                                 ->options(SportRegion::all()->pluck('long_name', 'id'))
                                 ->searchable()
                                 ->required(),
@@ -65,23 +82,23 @@ class ClubResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 TextColumn::make('abbr')
-                    ->label('Zkratka')
+                    ->label(__('club.table.abbr'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('name')
-                    ->label('Název')
+                    ->label(__('club.table.name'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('region.long_name')
-                    ->label('Region')
+                    ->label(__('club.table.region'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('oris_id')
-                    ->label('ORIS ID')
+                    ->label(__('club.table.oris_id'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('oris_number')
-                    ->label('ORIS Number')
+                    ->label(__('club.table.oris_number'))
                     ->sortable()
                     ->searchable(),
             ])
