@@ -20,6 +20,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\HtmlString;
@@ -30,20 +31,26 @@ class UserRaceProfilesRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'reg_number';
 
-    protected static ?string $label = 'Závodní profil';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('users.race_profile_relation.title');
+    }
 
-    protected static ?string $title = 'Závodní profil';
+    protected static function getModelLabel(): ?string
+    {
+        return __('users.race_profile_relation.label');
+    }
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('reg_number')
-                    ->label('Registrace')
+                    ->label(__('user-race-profile.table.reg_number'))
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->hint(function (): HtmlString {
-                        return new HtmlString('<a href="'.AppHelper::getPageHelpUrl('jak-pridat-uzivateli-registraci.html').'" target="_blank">Vyplň registraci a klikni na lupu.</a>');
+                        return new HtmlString(__('user-race-profile.form.reg_number_hint', ['help_url' => AppHelper::getPageHelpUrl('jak-pridat-uzivateli-registraci.html')]));
                     })
                     ->hintColor('primary')
                     ->hintIcon('heroicon-m-question-mark-circle')
@@ -55,8 +62,8 @@ class UserRaceProfilesRelationManager extends RelationManager
                             ->action(function () use ($state, $set) {
                                 if (blank($state)) {
                                     Notification::make()
-                                        ->title('Formulář vstupy')
-                                        ->body('Vyplň prosím Registracni cislo.')
+                                        ->title(__('user-race-profile.actions.search_oris.validation_title'))
+                                        ->body(__('user-race-profile.actions.search_oris.validation_body'))
                                         ->danger()
                                         ->seconds(8)
                                         ->send();
@@ -78,8 +85,8 @@ class UserRaceProfilesRelationManager extends RelationManager
 
                                 } catch (RequestException $e) {
                                     Notification::make()
-                                        ->title('ORIS API')
-                                        ->body('Nepodařilo se načíst data.')
+                                        ->title(__('user-race-profile.actions.search_oris.notification_title'))
+                                        ->body(__('user-race-profile.actions.search_oris.error_body'))
                                         ->danger()
                                         ->seconds(8)
                                         ->send();
@@ -110,8 +117,8 @@ class UserRaceProfilesRelationManager extends RelationManager
 
                                 } catch (RequestException $e) {
                                     Notification::make()
-                                        ->title('ORIS API')
-                                        ->body('Nepodařilo se načíst data o klubovém členství uživatele z ORISU.')
+                                        ->title(__('user-race-profile.actions.search_oris.notification_title'))
+                                        ->body(__('user-race-profile.actions.search_oris.club_error_body'))
                                         ->danger()
                                         ->seconds(8)
                                         ->send();
@@ -120,8 +127,8 @@ class UserRaceProfilesRelationManager extends RelationManager
                                 }
 
                                 Notification::make()
-                                    ->title('ORIS API')
-                                    ->body('ORIS v pořádku vrátil požadovaná data.')
+                                    ->title(__('user-race-profile.actions.search_oris.notification_title'))
+                                    ->body(__('user-race-profile.actions.search_oris.success_body'))
                                     ->success()
                                     ->seconds(8)
                                     ->send();
@@ -133,10 +140,10 @@ class UserRaceProfilesRelationManager extends RelationManager
                             })
                     ),
                 Select::make('gender')
-                    ->label('Pohlaví')
+                    ->label(__('user-race-profile.form.gender'))
                     ->options([
-                        'H' => 'Muž',
-                        'D' => 'Žena',
+                        'H' => __('user-race-profile.form.gender_male'),
+                        'D' => __('user-race-profile.form.gender_female'),
                     ])
                     ->required(),
 
@@ -149,50 +156,50 @@ class UserRaceProfilesRelationManager extends RelationManager
                 TextInput::make('oris_id')
                     ->label(__('user-race-profile.table.oris_id')),
                 TextInput::make('club_user_id')
-                    ->label('Klub ORIS ID'),
+                    ->label(__('user-race-profile.form.club_user_id')),
 
-                Section::make('Adresa nepovinné')
+                Section::make(__('user-race-profile.form.section_address'))
                     ->schema([
                         TextInput::make('city')
-                            ->label('Město'),
+                            ->label(__('user-race-profile.table.city')),
                         TextInput::make('street')
-                            ->label('Ulice, číslo domu'),
+                            ->label(__('user-race-profile.form.street')),
                         TextInput::make('zip')
-                            ->label('PSČ'),
+                            ->label(__('user-race-profile.table.zip')),
 
                         TextInput::make('email')
-                            ->label('E-mail'),
+                            ->label(__('user-race-profile.table.email')),
                         TextInput::make('phone')
-                            ->label('Telefon'),
+                            ->label(__('user-race-profile.table.phone')),
                     ])
                     ->columns(2)
                     ->columnSpan(2),
-                Section::make('SI')
+                Section::make(__('user-race-profile.common.si'))
                     ->schema([
                         TextInput::make('si')
-                            ->label('Si čip')
-                            ->helperText('Preferovaný SI čip')
+                            ->label(__('user-race-profile.form.si'))
+                            ->helperText(__('user-race-profile.form.si_helper'))
                             ->numeric()
                             ->integer()
                             ->columnSpan('full'),
                     ])->columns(2)
                     ->columnSpan(2),
-                Section::make('Licence')
+                Section::make(__('user-race-profile.form.section_licence'))
                     ->schema([
                         Select::make('licence_ob')
-                            ->label('Licence OB')
+                            ->label(__('user-race-profile.form.licence_ob'))
                             ->options(
                                 self::getSportLicenceOptions()
                             )
                             ->default('-'),
                         Select::make('licence_lob')
-                            ->label('Licence LOB')
+                            ->label(__('user-race-profile.form.licence_lob'))
                             ->options(
                                 self::getSportLicenceOptions()
                             )
                             ->default('-'),
                         Select::make('licence_mtbo')
-                            ->label('Licence MTBO')
+                            ->label(__('user-race-profile.form.licence_mtbo'))
                             ->options(
                                 self::getSportLicenceOptions()
                             )
@@ -227,7 +234,7 @@ class UserRaceProfilesRelationManager extends RelationManager
                     ->label(__('user-race-profile.table.last_name')),
                 TextColumn::make('oris_id')
                     ->label(__('user-race-profile.table.oris_id')),
-                TextColumn::make('si')->label('SI')
+                TextColumn::make('si')
                     ->label(__('user-race-profile.table.si')),
             ])
             ->filters([])

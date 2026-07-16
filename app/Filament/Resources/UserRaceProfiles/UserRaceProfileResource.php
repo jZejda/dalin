@@ -39,15 +39,27 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
 
     protected static ?int $navigationSort = 35;
 
-    protected static string | \UnitEnum | null $navigationGroup = 'Uživatel';
-
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-circle';
 
-    protected static ?string $navigationLabel = 'Moje registrace';
+    public static function getNavigationGroup(): string | \UnitEnum | null
+    {
+        return __('app.navigation_groups.users');
+    }
 
-    protected static ?string $label = 'Moje registrace';
+    public static function getNavigationLabel(): string
+    {
+        return __('user-race-profile.navigation_label');
+    }
 
-    protected static ?string $pluralLabel = 'Moje registrace';
+    public static function getModelLabel(): string
+    {
+        return __('user-race-profile.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('user-race-profile.plural_label');
+    }
 
     public static function getEloquentQuery(): Builder
     {
@@ -67,7 +79,7 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                         Section::make()
                             ->schema([
                                 TextInput::make('reg_number')
-                                    ->label('Registrace')
+                                    ->label(__('user-race-profile.table.reg_number'))
                                     ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->unique(ignoreRecord: true)
                                     ->required()
@@ -79,8 +91,8 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                                             ->action(function () use ($state, $set) {
                                                 if (blank($state)) {
                                                     Notification::make()
-                                                        ->title('Formulář vstupy')
-                                                        ->body('Vyplň prosím Registrační číslo.')
+                                                        ->title(__('user-race-profile.actions.search_oris.validation_title'))
+                                                        ->body(__('user-race-profile.actions.search_oris.validation_body'))
                                                         ->danger()
                                                         ->seconds(8)
                                                         ->send();
@@ -104,8 +116,8 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
 
                                                 } catch (RequestException $e) {
                                                     Notification::make()
-                                                        ->title('ORIS API')
-                                                        ->body('Nepodařilo se načíst data.')
+                                                        ->title(__('user-race-profile.actions.search_oris.notification_title'))
+                                                        ->body(__('user-race-profile.actions.search_oris.error_body'))
                                                         ->danger()
                                                         ->seconds(8)
                                                         ->send();
@@ -113,8 +125,8 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                                                     return;
                                                 }
                                                 Notification::make()
-                                                    ->title('ORIS API')
-                                                    ->body('ORIS v pořádku vrátil požadovaná data.')
+                                                    ->title(__('user-race-profile.actions.search_oris.notification_title'))
+                                                    ->body(__('user-race-profile.actions.search_oris.success_body'))
                                                     ->success()
                                                     ->seconds(8)
                                                     ->send();
@@ -126,45 +138,45 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                                             })
                                     ),
                                 Select::make('gender')
-                                    ->label('Pohlaví')
+                                    ->label(__('user-race-profile.form.gender'))
                                     ->options([
-                                        'H' => 'Muž',
-                                        'D' => 'Žena',
+                                        'H' => __('user-race-profile.form.gender_male'),
+                                        'D' => __('user-race-profile.form.gender_female'),
                                     ])
                                     ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->required(),
 
                                 TextInput::make('first_name')
-                                    ->label('Jméno')
+                                    ->label(__('user-race-profile.table.first_name'))
                                     ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->required(),
                                 TextInput::make('last_name')
-                                    ->label('Příjmení')
+                                    ->label(__('user-race-profile.table.last_name'))
                                     ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->required(),
                             ])
                             ->columns(2),
 
-                        Section::make('Adresa nepovinné')
+                        Section::make(__('user-race-profile.form.section_address'))
                             ->schema([
                                 TextInput::make('city')
-                                    ->label('Město'),
+                                    ->label(__('user-race-profile.table.city')),
                                 TextInput::make('street')
-                                    ->label('Ulice číslo domu'),
+                                    ->label(__('user-race-profile.form.street')),
                                 TextInput::make('zip')
-                                    ->label('PSČ'),
+                                    ->label(__('user-race-profile.table.zip')),
 
                                 TextInput::make('email')
-                                    ->label('E-mail'),
+                                    ->label(__('user-race-profile.table.email')),
                                 TextInput::make('phone')
-                                    ->label('Telefon'),
+                                    ->label(__('user-race-profile.table.phone')),
                             ])
                             ->columns(2),
-                        Section::make('SI')
+                        Section::make(__('user-race-profile.common.si'))
                             ->schema([
                                 TextInput::make('si')
-                                    ->label('Si čip')
-                                    ->helperText('Preferovaný SI čip')
+                                    ->label(__('user-race-profile.form.si'))
+                                    ->helperText(__('user-race-profile.form.si_helper'))
                                     ->numeric()
                                     ->integer()
                                     ->columnSpan('full'),
@@ -175,10 +187,10 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
 
                 Group::make()
                     ->schema([
-                        Section::make('Uživatel')
+                        Section::make(__('user-race-profile.form.section_user'))
                             ->schema([
                                 TextInput::make('oris_id')
-                                    ->label('Oris ID')
+                                    ->label(__('user-race-profile.form.oris_id'))
                                     ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN)),
                                 Select::make('user_id')
                                     ->options(function () {
@@ -187,7 +199,7 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                                     ->searchable()
                                     ->disabled(! Auth::user()?->hasRole(User::ROLE_SUPER_ADMIN))
                                     ->default(Auth::id())
-                                    ->helperText('Automaticky přiřazeno uživateli')
+                                    ->helperText(__('user-race-profile.form.user_id_helper'))
                                     ->disabled(function () {
                                         if (Auth::id() === 1) {
                                             return false;
@@ -197,22 +209,22 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                                     }),
                             ]),
 
-                        Section::make('Licence')
+                        Section::make(__('user-race-profile.form.section_licence'))
                             ->schema([
                                 Select::make('licence_ob')
-                                    ->label('Licence OB')
+                                    ->label(__('user-race-profile.form.licence_ob'))
                                     ->options(
                                         self::getSportLicenceOptions()
                                     )
                                     ->default('-'),
                                 Select::make('licence_lob')
-                                    ->label('Licence LOB')
+                                    ->label(__('user-race-profile.form.licence_lob'))
                                     ->options(
                                         self::getSportLicenceOptions()
                                     )
                                     ->default('-'),
                                 Select::make('licence_mtbo')
-                                    ->label('Licence MTBO')
+                                    ->label(__('user-race-profile.form.licence_mtbo'))
                                     ->options(
                                         self::getSportLicenceOptions()
                                     )
@@ -263,24 +275,24 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                         return null;
                     }),
                 TextColumn::make('si')
-                    ->label('SI')
+                    ->label(__('user-race-profile.common.si'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('first_name')
-                    ->label('Jméno')
+                    ->label(__('user-race-profile.table.first_name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('last_name')
-                    ->label('Příjmení')
+                    ->label(__('user-race-profile.table.last_name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
-                    ->label('E-mail')
+                    ->label(__('user-race-profile.table.email'))
                     ->searchable()
                     ->sortable()
                     ->copyable(),
                 TextColumn::make('phone')
-                    ->label('Telefon')
+                    ->label(__('user-race-profile.table.phone'))
                     ->searchable()
                     ->sortable()
                     ->copyable(),

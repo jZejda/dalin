@@ -37,7 +37,7 @@ class UpdateEntryAction
                 $this->sendNotification($result, $profileName);
             })
             ->color('gray')
-            ->label('Upravit')
+            ->label(__('sport-event.actions.update_entry.label'))
             ->icon('heroicon-o-pencil-square')
             ->disabled(fn (UserEntry $record): bool => $record->sportEvent instanceof SportEvent
                 && AppHelper::allowModifyUserEntry($record->sportEvent)
@@ -46,10 +46,10 @@ class UpdateEntryAction
                 $profile = $record->userRaceProfile;
                 $name = $profile instanceof UserRaceProfile ? $profile->user_race_full_name : '';
 
-                return $name.' - úprava přihlášky';
+                return __('sport-event.actions.update_entry.modal_heading', ['profile' => $name]);
             })
-            ->modalDescription('Uprav údaje přihlášky a potvrď uložením.')
-            ->modalSubmitActionLabel('Uložit změny')
+            ->modalDescription(__('sport-event.actions.update_entry.modal_description'))
+            ->modalSubmitActionLabel(__('sport-event.actions.update_entry.modal_submit'))
             ->fillForm(fn (UserEntry $record): array => $this->fillFormData($record))
             ->schema(fn (UserEntry $record): array => $this->formSchema($record));
     }
@@ -111,12 +111,12 @@ class UpdateEntryAction
 
         return [
             Select::make('classId')
-                ->label('Vyber kategorii')
+                ->label(__('sport-event.actions.update_entry.class'))
                 ->options(fn (): array => $this->classOptions($record, $sportEvent))
                 ->searchable()
                 ->allowHtml()
                 ->required()
-                ->loadingMessage('Nahrávám kategorie...'),
+                ->loadingMessage(__('sport-event.actions.update_entry.loading_classes')),
 
             EntryFormFields::siFields(),
 
@@ -206,11 +206,13 @@ class UpdateEntryAction
     private function sendNotification(UpdateResult $result, string $profileName): void
     {
         if (! $result->success) {
+            $body = $result->orisStatusError !== null
+                ? __('sport-event.actions.update_entry.notification_body_oris_error', ['error' => $result->orisStatusError])
+                : __('sport-event.actions.update_entry.notification_body_generic_error');
+
             Notification::make()
-                ->title('Úprava přihlášky '.$profileName.' se nezdařila')
-                ->body($result->orisStatusError !== null
-                    ? 'ORIS vrátil zprávu: '.$result->orisStatusError
-                    : 'Zkus akci zopakovat, případně kontaktuj správce.')
+                ->title(__('sport-event.actions.update_entry.notification_title_failed', ['profile' => $profileName]))
+                ->body($body)
                 ->warning()->seconds(10)->send();
 
             return;
@@ -218,12 +220,12 @@ class UpdateEntryAction
 
         if ($result->wasOrisEntry) {
             Notification::make()
-                ->title('Přihláška '.$profileName.' byla upravena')
-                ->body('ORIS potvrdil úpravu, změnu si můžeš zkontrolovat na stránce závodu.')
+                ->title(__('sport-event.actions.update_entry.notification_title_oris_success', ['profile' => $profileName]))
+                ->body(__('sport-event.actions.update_entry.notification_body_oris_success'))
                 ->success()
                 ->actions([
                     ActionAction::make('view')
-                        ->label('Přejít na stránku závodu')
+                        ->label(__('sport-event.actions.update_entry.view_event_action'))
                         ->button()->openUrlInNewTab()
                         ->url(OrisApiService::ORIS_URL.'/PrehledPrihlasenych?id='.$result->orisEventId),
                 ])
@@ -233,8 +235,8 @@ class UpdateEntryAction
         }
 
         Notification::make()
-            ->title('Přihláška '.$profileName.' byla upravena')
-            ->body('Úprava proběhla pouze v našem systému.')
+            ->title(__('sport-event.actions.update_entry.notification_title_local_success', ['profile' => $profileName]))
+            ->body(__('sport-event.actions.update_entry.notification_body_local_success'))
             ->success()->seconds(8)->send();
     }
 }

@@ -62,7 +62,7 @@ class EntrySportEvent extends Page implements HasForms
         /** @var SportEvent $sportEvent */
         $sportEvent = $this->record;
 
-        return 'Detail závodu - '.$sportEvent->name;
+        return __('sport-event.pages.entry_title', ['name' => $sportEvent->name]);
     }
 
     protected function getHeaderActions(): array

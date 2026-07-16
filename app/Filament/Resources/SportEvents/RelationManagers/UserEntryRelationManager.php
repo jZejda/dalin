@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Columns\Column;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
@@ -19,7 +20,10 @@ class UserEntryRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'Přihlášky';
 
-    protected static ?string $title = 'Přihlášky';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('sport-event.relation_entries.title');
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -40,20 +44,20 @@ class UserEntryRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('class_name')
-                    ->label('Kategorie')
+                    ->label(__('sport-event.relation_entries.table.class'))
                     ->searchable(),
                 TextColumn::make('userRaceProfile.UserRaceFullName')
-                    ->label('Závodní profil'),
+                    ->label(__('sport-event.relation_entries.table.race_profile')),
                 TextColumn::make('note')
-                    ->label('Poznámka'),
+                    ->label(__('sport-event.relation_entries.table.note')),
                 TextColumn::make('club_note')
-                    ->label('Klubová poznámka'),
+                    ->label(__('sport-event.relation_entries.table.club_note')),
                 TextColumn::make('requested_start')
-                    ->label('Start v'),
+                    ->label(__('sport-event.relation_entries.table.requested_start')),
                 TextColumn::make('rent_si')
-                    ->label('Půjčit čip'),
+                    ->label(__('sport-event.relation_entries.table.rent_si')),
                 TextColumn::make('stage_x')
-                    ->label('Etapa'),
+                    ->label(__('sport-event.relation_entries.table.stage')),
             ])
             ->filters([
                 //
@@ -68,25 +72,25 @@ class UserEntryRelationManager extends RelationManager
             ->toolbarActions([
                 // Tables\Actions\DeleteBulkAction::make(),
                 ExportBulkAction::make('exportToFile')
-                    ->label('Export přihlášek')
+                    ->label(__('sport-event.relation_entries.export.label'))
                     ->exports([
                         ExcelExport::make()
                             //->modifyQueryUsing(fn ($query, $ownerRecord) => $query->where('sport_event_id', '=', 16)
                             ->askForFilename(date('Y-m-d').'_export_prihlasek')
                             ->askForWriterType()
                             ->withColumns([
-                                Column::make('si')->heading('SI'),
-                                Column::make('userRaceProfile.reg_number')->heading('Registrační číslo'),
-                                Column::make('userRaceProfile.last_name')->heading('Příjmení'),
-                                Column::make('userRaceProfile.first_name')->heading('Jméno'),
-                                Column::make('class_name')->heading('Kategorie'),
-                                Column::make('note')->heading('Poznámka'),
-                                Column::make('club_note')->heading('Klubová poznámka'),
-                                Column::make('requested_start')->heading('Požadavek na start'),
-                                Column::make('rent_si')->heading('Pujčit čip')->formatStateUsing(
-                                    fn ($state) => str_replace('=TRUE()', 'ANO', $state)
+                                Column::make('si')->heading(__('sport-event.relation_entries.export.si')),
+                                Column::make('userRaceProfile.reg_number')->heading(__('sport-event.relation_entries.export.reg_number')),
+                                Column::make('userRaceProfile.last_name')->heading(__('sport-event.relation_entries.export.last_name')),
+                                Column::make('userRaceProfile.first_name')->heading(__('sport-event.relation_entries.export.first_name')),
+                                Column::make('class_name')->heading(__('sport-event.relation_entries.export.class')),
+                                Column::make('note')->heading(__('sport-event.relation_entries.export.note')),
+                                Column::make('club_note')->heading(__('sport-event.relation_entries.export.club_note')),
+                                Column::make('requested_start')->heading(__('sport-event.relation_entries.export.requested_start')),
+                                Column::make('rent_si')->heading(__('sport-event.relation_entries.export.rent_si'))->formatStateUsing(
+                                    fn ($state) => str_replace('=TRUE()', __('sport-event.relation_entries.export.rent_si_yes'), $state)
                                 ),
-                                Column::make('stage_x')->heading('Etapa'),
+                                Column::make('stage_x')->heading(__('sport-event.relation_entries.export.stage')),
                             ]),
                     ]),
             ]);

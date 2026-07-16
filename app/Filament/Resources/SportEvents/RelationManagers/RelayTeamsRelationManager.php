@@ -18,6 +18,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class RelayTeamsRelationManager extends RelationManager
 {
@@ -25,19 +26,25 @@ class RelayTeamsRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $label = 'Štafety';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('sport-event.relation_relay_teams.title');
+    }
 
-    protected static ?string $title = 'Štafety / družstva';
+    protected static function getModelLabel(): ?string
+    {
+        return __('sport-event.relation_relay_teams.label');
+    }
 
     public function form(Schema $schema): Schema
     {
         return $schema->components([
             Grid::make()->columnSpanFull()->schema([
                 TextInput::make('name')
-                    ->label('Název týmu')
+                    ->label(__('sport-event.relation_relay_teams.name'))
                     ->required(),
                 Select::make('sport_class_id')
-                    ->label('Kategorie')
+                    ->label(__('sport-event.relation_relay_teams.class'))
                     ->options(function (): array {
                         return SportClass::query()
                             ->where('sport_event_id', $this->getOwnerRecord()->getKey())
@@ -45,7 +52,7 @@ class RelayTeamsRelationManager extends RelationManager
                             ->get(['id', 'name', 'legs'])
                             ->mapWithKeys(fn (SportClass $class): array => [
                                 $class->id => $class->legs !== null
-                                    ? $class->name.' | úseků: '.$class->legs
+                                    ? $class->name.__('sport-event.relation_relay_teams.class_option_legs_suffix', ['legs' => $class->legs])
                                     : $class->name,
                             ])
                             ->toArray();
@@ -62,15 +69,15 @@ class RelayTeamsRelationManager extends RelationManager
                         }
                     }),
                 Select::make('relay_type')
-                    ->label('Typ')
+                    ->label(__('sport-event.relation_relay_teams.relay_type'))
                     ->options([
-                        'ST' => 'Štafeta',
-                        'SS' => 'Sprintová štafeta',
-                        'DR' => 'Družstva',
+                        'ST' => __('sport-event.relation_relay_teams.relay_type_relay'),
+                        'SS' => __('sport-event.relation_relay_teams.relay_type_sprint_relay'),
+                        'DR' => __('sport-event.relation_relay_teams.relay_type_team'),
                     ])
                     ->required(),
                 TextInput::make('slots_count')
-                    ->label('Počet úseků')
+                    ->label(__('sport-event.relation_relay_teams.slots_count'))
                     ->required()
                     ->numeric()
                     ->minValue(1)
@@ -86,17 +93,17 @@ class RelayTeamsRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Tým')
+                    ->label(__('sport-event.relation_relay_teams.table.name'))
                     ->searchable(),
                 TextColumn::make('sportClass.name')
-                    ->label('Kategorie')
-                    ->placeholder('—'),
+                    ->label(__('sport-event.relation_relay_teams.table.class'))
+                    ->placeholder(__('sport-event.relation_relay_teams.table.class_placeholder')),
                 TextColumn::make('relay_type')
-                    ->label('Typ'),
+                    ->label(__('sport-event.relation_relay_teams.table.relay_type')),
                 TextColumn::make('slots_count')
-                    ->label('Úseků'),
+                    ->label(__('sport-event.relation_relay_teams.table.slots_count')),
                 TextColumn::make('occupied_slots')
-                    ->label('Obsazeno')
+                    ->label(__('sport-event.relation_relay_teams.table.occupied_slots'))
                     ->state(fn (RelayTeam $record): int => $record->members()->whereNotNull('user_race_profile_id')->count()),
             ])
             ->headerActions([

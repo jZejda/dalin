@@ -41,13 +41,22 @@ class UserResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationLabel = 'Uživatelé';
-
-    protected static ?string $label = 'Uživatel';
-
-    protected static ?string $pluralLabel = 'Uživatelé';
-
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('users.navigation_label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('users.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('users.plural_label');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -71,8 +80,8 @@ class UserResource extends Resource implements HasShieldPermissions
                                 ->required()
                                 ->maxLength(255),
                             TextInput::make('payer_variable_symbol')
-                                ->label('Variabilní symbol uživatele')
-                                ->helperText('Mělo by se jednat o první čísla registrace, tedy přesně 4 číslice.')
+                                ->label(__('users.form.payer_variable_symbol'))
+                                ->helperText(__('users.form.payer_variable_symbol_helper'))
                                 ->minLength(4)
                                 ->maxLength(4),
                             TextInput::make('password')
@@ -85,7 +94,13 @@ class UserResource extends Resource implements HasShieldPermissions
                                 ->required(static fn (Page $livewire): bool => $livewire instanceof CreateUser)
                                 ->dehydrated(static fn (?string $state): bool => filled($state))
                                 ->label(
-                                    static fn (Page $livewire): string => ($livewire instanceof EditUser) ? 'Nové heslo' : 'Heslo',
+                                    static function (Page $livewire): string {
+                                        if ($livewire instanceof EditUser) {
+                                            return __('users.form.new_password');
+                                        }
+
+                                        return __('users.form.password');
+                                    },
                                 ),
                         ])
                         ->columns(1)
@@ -98,12 +113,12 @@ class UserResource extends Resource implements HasShieldPermissions
                     Section::make()
                         ->schema([
                             Text::make(
-                                str('**Info:** Uživateli je potřeba přiřadit minimálně jednu z rolí, jinak nebude mít oprávnění k žádné akci.')
+                                str(__('users.form.roles_warning'))
                                 ->inlineMarkdown()
                                 ->toHtmlString()
                             )->color('warning'),
                             Select::make('roles')
-                                ->label('Role')
+                                ->label(__('users.form.roles'))
                                 ->multiple()
                                 ->searchable()
                                 ->relationship('roles', 'name')
@@ -130,7 +145,7 @@ class UserResource extends Resource implements HasShieldPermissions
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Jméno')
+                    ->label(__('users.table.name'))
                     ->size(TextSize::Large)
                     ->color(function (User $model): string {
                         if (!$model->active) {
@@ -141,25 +156,25 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
-                    ->label('E-mail')
+                    ->label(__('users.table.email'))
                     ->size(TextSize::Large)
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('payer_variable_symbol')
-                    ->label('VS')
+                    ->label(__('users.table.variable_symbol'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('roles.name')
                     ->badge()
                     ->separator(',')
-                    ->label('Role')
+                    ->label(__('users.table.roles'))
                     ->formatStateUsing(fn (string $state): string => __("app-role.app_role_enum.{$state}"))
                     ->searchable(),
                 TextColumn::make('created_at')
-                    ->label('Vytvořeno')
+                    ->label(__('users.table.created_at'))
                     ->dateTime(AppHelper::DATE_FORMAT),
                 TextColumn::make('updated_at')
-                    ->label('Upraveno')
+                    ->label(__('users.table.updated_at'))
                     ->dateTime(AppHelper::DATE_FORMAT),
             ])
             ->filters([
@@ -219,17 +234,18 @@ class UserResource extends Resource implements HasShieldPermissions
 
     private static function resetUserPasswordAction(): Action
     {
-        return Action::make('Resetovat heslo')
+        return Action::make('reset_password')
+            ->label(__('users.actions.reset_password.label'))
             ->icon('heroicon-m-arrow-uturn-right')
             ->color('danger')
-            ->modalHeading('Nové heslo')
+            ->modalHeading(__('users.actions.reset_password.modal_heading'))
             ->modalDescription(function (User $user): HtmlString {
-                return new HtmlString('Resetuje heslo uživateli.<br><br> Po potvrzení se uživatelovi: '. $user->userIdentification .' <strong>zašle e-mail s novým heslem.</strong>');
+                return new HtmlString(__('users.actions.reset_password.modal_description', ['user' => $user->userIdentification]));
             })
             ->modalIcon('heroicon-m-arrow-uturn-right')
             ->schema([
                 TextInput::make('password')
-                    ->label('Nové heslo')
+                    ->label(__('users.actions.reset_password.field_password'))
                     ->required()
                     ->readOnly()
                     ->default(Str::random(AppHelper::GENERATED_PASSWORD_LENGTH)),
@@ -238,8 +254,8 @@ class UserResource extends Resource implements HasShieldPermissions
             ->action(function (User $user, array $data): void {
                 (new UserSendPassword())->sendNewPassword($user, $data['password'], UserPasswordSend::ACTION_RESET_PASSWORD);
                 Notification::make()
-                    ->title('Reset hesla')
-                    ->body('Nové heslo bylo resetováno a odesláno uživateli na jeho e-mailovou schránku: ' . $user->email . '.')
+                    ->title(__('users.actions.reset_password.notification_title'))
+                    ->body(__('users.actions.reset_password.notification_body', ['email' => $user->email]))
                     ->success()
                     ->send();
             });
@@ -247,20 +263,27 @@ class UserResource extends Resource implements HasShieldPermissions
 
     private static function activeDeactiveUser(): Action
     {
-        return Action::make('Změnit stav')
+        return Action::make('change_status')
+            ->label(__('users.actions.change_status.label'))
             ->icon('heroicon-m-power')
-            ->modalHeading('Změnit stav uživatele')
+            ->modalHeading(__('users.actions.change_status.modal_heading'))
             ->modalDescription(function (User $user): HtmlString {
-                $currentStatus = $user->active ? 'aktivní' : 'neaktivní';
-                return new HtmlString("Aktuální stav uživatele {$user->userIdentification} je <strong>{$currentStatus}</strong>.<br>Opravdu chcete změnit jeho stav?");
+                $currentStatus = $user->active
+                    ? __('users.actions.change_status.current_status_active')
+                    : __('users.actions.change_status.current_status_inactive');
+
+                return new HtmlString(__('users.actions.change_status.modal_description', [
+                    'user' => $user->userIdentification,
+                    'status' => $currentStatus,
+                ]));
             })
             ->modalIcon('heroicon-m-power')
             ->schema([
                 Select::make('active')
-                    ->label('Stav uživatele')
+                    ->label(__('users.actions.change_status.field_status'))
                     ->options([
-                        1 => 'Aktivní',
-                        0 => 'Neaktivní'
+                        1 => __('users.actions.change_status.status_active'),
+                        0 => __('users.actions.change_status.status_inactive'),
                     ])
                     ->default(fn (User $user) => (int)$user->active)
                     ->required(),
@@ -269,10 +292,16 @@ class UserResource extends Resource implements HasShieldPermissions
                 $user->active = $data['active'];
                 $user->save();
 
-                $status = $data['active'] ? 'aktivován' : 'deaktivován';
+                $status = $data['active']
+                    ? __('users.actions.change_status.activated')
+                    : __('users.actions.change_status.deactivated');
+
                 Notification::make()
-                    ->title('Změna stavu uživatele')
-                    ->body("Uživatel {$user->userIdentification} byl {$status}.")
+                    ->title(__('users.actions.change_status.notification_title'))
+                    ->body(__('users.actions.change_status.notification_body', [
+                        'user' => $user->userIdentification,
+                        'status' => $status,
+                    ]))
                     ->success()
                     ->send();
             });

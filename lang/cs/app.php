@@ -20,6 +20,15 @@ return [
         'actions' => 'Akce',
     ],
 
+    // Shared navigation groups (Filament sidebar)
+    'navigation_groups' => [
+        'users'   => 'Uživatel',
+        'finance' => 'Správa Financí',
+        'content' => 'Obsah',
+        'events'  => 'Akce/Závody',
+        'admin'   => 'Správa',
+    ],
+
     // Roles
     'tables' => [
         'actions_tooltip' => 'Další akce',

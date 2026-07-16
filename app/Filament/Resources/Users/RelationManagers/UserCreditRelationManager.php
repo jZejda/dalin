@@ -21,6 +21,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Columns\Column;
@@ -32,10 +33,20 @@ class UserCreditRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'amount';
 
-    protected static ?string $label = 'Finance';
-    protected static ?string $pluralLabel = 'Finance';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('users.user_credit_relation.title');
+    }
 
-    protected static ?string $title = 'Finance';
+    protected static function getModelLabel(): ?string
+    {
+        return __('users.user_credit_relation.label');
+    }
+
+    protected static function getPluralModelLabel(): ?string
+    {
+        return __('users.user_credit_relation.plural_label');
+    }
 
     /**
      * Disable lazy loading so the relation manager mounts within the initial
@@ -70,19 +81,18 @@ class UserCreditRelationManager extends RelationManager
                     ->label(__('user-credit.table.created_at_title'))
                     ->dateTime(AppHelper::DATE_FORMAT)
                     ->description(function (UserCredit $record): string {
-                        return 'id: '. $record->id;
+                        return __('users.user_credit_relation.table.record_id', ['id' => $record->id]);
                     })
                     ->sortable(),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
-                    //->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name != null ? $record->sportEvent?->alt_name : 'nepřiřazeno k závodu')
                     ->description(function (UserCredit $record): string {
                         $description = '';
                         if (!is_null($record->sportEvent?->alt_name)) {
                             $description = $record->sportEvent->alt_name;
                         } else {
                             if (!is_null($record->sportEvent?->id)) {
-                                $description = 'interní id závodu: ' . $record->sportEvent->id;
+                                $description = __('users.user_credit_relation.table.event_internal_id', ['id' => $record->sportEvent->id]);
                             }
                         }
                         return $description;
@@ -90,7 +100,7 @@ class UserCreditRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
-                    ->label('Registrace závodníka')
+                    ->label(__('users.user_credit_relation.table.registration'))
                     ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? '')
                     ->sortable()
                     ->searchable(),
@@ -98,9 +108,9 @@ class UserCreditRelationManager extends RelationManager
                     ->icon(fn (UserCredit $record): string => $record->amount >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                     ->color(fn (UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')
                     ->label(__('user-credit.table.amount_title'))
-                    ->summarize(Sum::make())->money('CZK')->label('Celkem'),
+                    ->summarize(Sum::make())->money('CZK')->label(__('users.user_credit_relation.table.amount_total')),
                 ViewColumn::make('user_entry')
-                    ->label('Komentářů')
+                    ->label(__('users.user_credit_relation.table.comments'))
                     ->view('filament.tables.columns.user-credit-comments-count'),
                 TextColumn::make('sourceUser.name')
                     ->label(__('user-credit.table.source_user_title')),
@@ -109,15 +119,15 @@ class UserCreditRelationManager extends RelationManager
             ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('sport_event_id')
-                    ->label('Závod')
+                    ->label(__('users.user_credit_relation.filters.sport_event'))
                     ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id'))
                     ->default(fn (): ?int => request()->integer('sport_event_id') ?: null),
                 Filter::make('created_at')
                     ->schema([
                         DatePicker::make('created_from')
-                            ->label('Datum od'),
+                            ->label(__('users.user_credit_relation.filters.created_from')),
                         DatePicker::make('created_until')
-                            ->label('Datum do'),
+                            ->label(__('users.user_credit_relation.filters.created_until')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -144,7 +154,7 @@ class UserCreditRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 ExportBulkAction::make('exportToFile')
-                    ->label('Export financi uživatele')
+                    ->label(__('users.user_credit_relation.actions.export.label'))
                     ->exports([
                         ExcelExport::make()
                             //->modifyQueryUsing(fn ($query, $ownerRecord) => $query->where('sport_event_id', '=', 16)
@@ -152,13 +162,13 @@ class UserCreditRelationManager extends RelationManager
                             ->askForWriterType()
                             ->withColumns([
                                 Column::make('created_at')
-                                    ->heading('Vytvořeno dne')
+                                    ->heading(__('users.user_credit_relation.actions.export.col_created_at'))
                                     ->formatStateUsing(fn ($state) => Carbon::parse($state)->format(AppHelper::DATE_FORMAT)),
-                                Column::make('sportEvent.name')->heading('Název události'),
-                                Column::make('sportEvent.alt_name')->heading('Alternativní název'),
-                                Column::make('userRaceProfile.reg_number')->heading('Registrace'),
-                                Column::make('amount')->heading('Částka'),
-                                Column::make('sourceUser.name')->heading('Zapsal'),
+                                Column::make('sportEvent.name')->heading(__('users.user_credit_relation.actions.export.col_event_name')),
+                                Column::make('sportEvent.alt_name')->heading(__('users.user_credit_relation.actions.export.col_event_alt_name')),
+                                Column::make('userRaceProfile.reg_number')->heading(__('users.user_credit_relation.actions.export.col_reg_number')),
+                                Column::make('amount')->heading(__('users.user_credit_relation.actions.export.col_amount')),
+                                Column::make('sourceUser.name')->heading(__('users.user_credit_relation.actions.export.col_source_user')),
                             ]),
                     ]),
             ]);

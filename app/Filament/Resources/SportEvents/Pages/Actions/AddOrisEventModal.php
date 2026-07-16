@@ -35,15 +35,15 @@ class AddOrisEventModal
 
                     if ($onlyUpdate !== null) {
                         Notification::make()
-                            ->title('Závod ID ' . intval($data['oris_id']) . ' byl zaktualizován')
-                            ->body('V systému se již tento závod nachází, stávající závod byl pouze zaktualizován s ORISem.')
+                            ->title(__('sport-event.actions.add_oris_event.notification_title_updated', ['id' => intval($data['oris_id'])]))
+                            ->body(__('sport-event.actions.add_oris_event.notification_body_updated'))
                             ->warning()
                             ->seconds(8)
                             ->send();
                     } else {
                         Notification::make()
-                            ->title('Závod ID ' . intval($data['oris_id']) . ' byl vytvořen')
-                            ->body('V systému byl založen nový závod s kategoriemi a dostupnými službami. Data jsou aktuální oproti ORISu.')
+                            ->title(__('sport-event.actions.add_oris_event.notification_title_created', ['id' => intval($data['oris_id'])]))
+                            ->body(__('sport-event.actions.add_oris_event.notification_body_created'))
                             ->success()
                             ->seconds(8)
                             ->send();
@@ -51,11 +51,11 @@ class AddOrisEventModal
                 }
             })
             ->color('gray')
-            ->label('Přidej závod z ORISU')
+            ->label(__('sport-event.actions.add_oris_event.label'))
             ->icon('heroicon-o-plus-circle')
-            ->modalHeading('Přidej závod z ORISU')
-            ->modalDescription('Přidá do systému zvolený závod s daty které aktuálně poskytuje ORIS')
-            ->modalSubmitActionLabel('Přidej závod')
+            ->modalHeading(__('sport-event.actions.add_oris_event.modal_heading'))
+            ->modalDescription(__('sport-event.actions.add_oris_event.modal_description'))
+            ->modalSubmitActionLabel(__('sport-event.actions.add_oris_event.modal_submit'))
             ->visible(
                 auth()->user() !== null && auth()->user()->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster])
             )
@@ -63,37 +63,37 @@ class AddOrisEventModal
                 Grid::make(2)
                     ->schema([
                         Select::make('sport_id')
-                            ->label('Vyber typ sportu')
+                            ->label(__('sport-event.actions.add_oris_event.sport_type'))
                             ->options(SportList::all()->pluck('short_name', 'id'))
                             ->required()
                             ->default(1)
                             ->searchable(),
                         Select::make('oris_all')
-                            ->label('Zobrazit i neoficiální závody')
+                            ->label(__('sport-event.actions.add_oris_event.show_unofficial'))
                             ->options([
-                                0 => 'Pouze oficiální',
-                                1 => 'Všechny'
+                                0 => __('sport-event.actions.add_oris_event.official_only'),
+                                1 => __('sport-event.actions.add_oris_event.all'),
                             ])
                             ->required()
                             ->default(0),
                         Grid::make()->schema([
                             Select::make('region_id')
-                                ->label('Region')
+                                ->label(__('sport-event.actions.add_oris_event.region'))
                                 ->options(SportRegion::all()->pluck('long_name', 'short_name'))
                                 ->searchable(),
                         ])->columns(1),
                         DatePicker::make('datefrom')
-                            ->label('Datum od')
+                            ->label(__('sport-event.actions.add_oris_event.date_from'))
                             ->default(Carbon::now()->format(AppHelper::DB_DATE_TIME)),
                         DatePicker::make('dateto')
-                            ->label('Datum do')
+                            ->label(__('sport-event.actions.add_oris_event.date_to'))
                             ->default(Carbon::now()->addMonths(6)->format(AppHelper::DB_DATE_TIME)),
 
 
                         Grid::make()->schema([
                             Select::make('oris_id')
-                                ->label('ORIS ID')
-                                ->hint('Hledej podle kritérií na ORISu')
+                                ->label(__('sport-event.actions.add_oris_event.oris_id'))
+                                ->hint(__('sport-event.actions.add_oris_event.oris_id_hint'))
                                 ->hintIcon('heroicon-m-exclamation-triangle')
                                 ->required()
                                 ->searchable()
@@ -139,7 +139,7 @@ class AddOrisEventModal
 
                                             } catch (RequestException $e) {
                                                 Notification::make()
-                                                    ->title('Nepodařilo se načíst data.')
+                                                    ->title(__('sport-event.common.oris_fetch_error'))
                                                     ->danger()
                                                     ->send();
                                                 return;

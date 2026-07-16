@@ -35,8 +35,8 @@ class ExportsData
                 if ($data['export_type'] === 'userEntryXlsx') {
 
                     Notification::make()
-                        ->title('Export přihlášek proběhl v pořádku')
-                        ->body('Souboru excelu přihlášených uživatelů otevřete z disku.')
+                        ->title(__('sport-event.actions.export.notification_title'))
+                        ->body(__('sport-event.actions.export.notification_body_xlsx'))
                         ->success()
                         ->seconds(15)
                         ->send();
@@ -45,8 +45,8 @@ class ExportsData
                     return (new UserEntryController())->exportXlsx($this->sportEvent->id);
                 } elseif ($data['export_type'] === 'IofV3EntryList') {
                     Notification::make()
-                        ->title('Export přihlášek proběhl v pořádku')
-                        ->body('Souboru xml iof v3 přihlášených uživatelů otevřete z disku.')
+                        ->title(__('sport-event.actions.export.notification_title'))
+                        ->body(__('sport-event.actions.export.notification_body_iof'))
                         ->success()
                         ->seconds(15)
                         ->send();
@@ -55,8 +55,8 @@ class ExportsData
                     return response()->redirectTo(route('admin.export.event-entry-iof', ['eventId' => $this->sportEvent->id]));
                 } elseif ($data['export_type'] === 'CSOS') {
                     Notification::make()
-                        ->title('Export přihlášek proběhl v pořádku')
-                        ->body('Souboru txt CSOS přihlášených uživatelů otevřete z disku.')
+                        ->title(__('sport-event.actions.export.notification_title'))
+                        ->body(__('sport-event.actions.export.notification_body_csos'))
                         ->success()
                         ->seconds(15)
                         ->send();
@@ -68,21 +68,21 @@ class ExportsData
                 }
             })
             ->color('gray')
-            ->label('Export')
+            ->label(__('sport-event.actions.export.label'))
             ->icon('heroicon-o-document-arrow-down')
-            ->modalHeading('Vytvoří export podle zadání')
-            ->modalDescription('Zvol požadovaný export.')
-            ->modalSubmitActionLabel('Exportovat')
+            ->modalHeading(__('sport-event.actions.export.modal_heading'))
+            ->modalDescription(__('sport-event.actions.export.modal_description'))
+            ->modalSubmitActionLabel(__('sport-event.actions.export.modal_submit'))
             ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster, AppRoles::EventOrganizer]))
             ->schema([
                 Grid::make(1)
                     ->schema([
                         Select::make('export_type')
-                            ->label('Nabízené exporty')
+                            ->label(__('sport-event.actions.export.export_type'))
                             ->options([
-                                'userEntryXlsx' => 'Přihlášky | Excel (*.xlsx)',
-                                'IofV3EntryList' => 'Přihlášky | IOF XML v3 (*.xml) - EXPERIMENTAL',
-                                'CSOS' => 'Přihlášky | ČSOS (*.txt)',
+                                'userEntryXlsx' => __('sport-event.actions.export.export_type_xlsx'),
+                                'IofV3EntryList' => __('sport-event.actions.export.export_type_iof'),
+                                'CSOS' => __('sport-event.actions.export.export_type_csos'),
                             ])
                             ->required(),
                     ]),

@@ -1,0 +1,509 @@
+<?php
+
+use App\Enums\EntryStatus;
+use App\Enums\ServiceOrderStatus;
+use App\Enums\SportEventTransportType;
+use App\Enums\SportEventType;
+use App\Enums\SportEventMarkerType;
+use App\Enums\SportEventLinkType;
+use App\Enums\UserCreditStatus;
+use App\Enums\UserCreditType;
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | SportEvent Resource
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines contain the default strings in SportEvent
+    | resource.
+    |
+    */
+
+    'navigation_label' => 'Race',
+    'label' => 'Race / event',
+    'plural_label' => 'Races / events',
+
+    'event_type' => 'Event type',
+
+    'transport_type' => 'Transport type',
+
+    'event_news' => [
+        'content' => 'News content',
+        'date' => 'News date',
+    ],
+
+    'common' => [
+        'place' => 'Place',
+        'oris_api_title' => 'ORIS API',
+        'oris_fetch_error' => 'Failed to load data.',
+    ],
+
+    'table' => [
+        'entry_type' => 'Type',
+        'name' => 'Name',
+        'last_update_tooltip' => 'Last bulk update: :date',
+        'date' => 'Date',
+        'forecast' => 'Forecast',
+        'entries_count_short' => 'Ent.',
+        'dates' => 'Dates',
+        'clubs' => 'Club(s)',
+        'region' => 'Region',
+        'oris_id' => 'ORIS ID',
+        'oris_id_tooltip_enabled' => 'Entry via ORIS',
+        'oris_id_tooltip_disabled' => 'The race has no assigned ORIS ID, entries will only be made into the internal system.',
+    ],
+
+    'filters' => [
+        'sport' => 'Sport',
+        'newer_than' => 'Races newer than: :date',
+        'discipline' => 'Discipline',
+        'level' => 'level',
+    ],
+
+    'form' => [
+        'oris_id' => 'ORIS ID',
+        'oris_id_hint' => 'unique race ID on the ORIS website',
+        'name' => 'Race/event name',
+        'date' => 'Date from',
+        'date_end' => 'Date to',
+        'date_end_hint' => 'Use for multi-day races',
+        'stages' => 'Stages',
+        'stages_hint' => 'Only for stage races',
+        'alt_name' => 'Alternative race name',
+        'alt_name_hint' => 'Will not be automatically updated by the cron.',
+        'place' => 'Place',
+        'gps_lat' => 'GPS Lat',
+        'gps_lon' => 'GPS Lon',
+        'entry_desc' => 'Description',
+        'event_info' => 'Info',
+        'event_warning' => 'Warning',
+        'section_dates' => 'Dates',
+        'section_dates_description' => 'You can disable the automatic update for the 2nd and 3rd deadline.',
+        'start_time' => 'Start time',
+        'entry_date_1' => 'First deadline',
+        'entry_date_2' => 'Second deadline',
+        'entry_date_3' => 'Third deadline',
+        'section_other' => 'Other parameters',
+        'section_other_description' => 'Other parameters of the race/event',
+        'discipline' => 'Discipline',
+        'sport' => 'Sport',
+        'level' => 'Level',
+        'organization_max_items' => 'Only two clubs can be defined',
+        'use_oris_for_entries' => 'Uses ORIS?',
+        'dont_update_excluded' => 'Do not update',
+        'cancelled' => 'Cancelled',
+    ],
+
+    'entry_form' => [
+        'si' => 'SI chip number',
+        'rent_si' => 'Rent a chip',
+        'rent_si_no' => 'No',
+        'rent_si_yes' => 'Yes ',
+        'stages' => 'Select stages',
+        'additional_info_section' => 'Additional information',
+        'additional_info_section_description' => 'Add further entry details after expanding.',
+        'note' => 'Note',
+        'note_hint' => 'Note to the organizer.',
+        'club_note' => 'Club note',
+        'club_note_hint' => 'Internal note.',
+        'requested_start' => 'Requested start',
+        'requested_start_hint_link_text' => 'Please read the help.',
+        'start_hint_select' => 'Start request template',
+        'start_hint_group_single' => 'Single-stage',
+        'start_hint_group_multi' => 'Multi-stage',
+        'start_hint_e0_early' => 'E0 - Early',
+        'start_hint_e0_late' => 'E0 - Late',
+        'start_hint_e0_similarly' => 'E0 - Similarly',
+        'start_hint_e0_variously' => 'E0 - Variously',
+        'start_hint_e0_note' => 'E0 - Note',
+        'start_hint_e123_early' => 'E123 - Early',
+        'start_hint_e123_late' => 'E123 - Late',
+        'start_hint_e123_similarly' => 'E123 - Similarly',
+        'start_hint_e123_variously' => 'E123 - Variously',
+        'start_hint_e123_note' => 'E123 - Note',
+    ],
+
+    'entries_table' => [
+        'class' => 'Class',
+        'team' => 'Team',
+        'team_placeholder' => '—',
+        'registration' => 'Registration',
+        'note' => 'Internal note',
+        'club_note' => 'Club note',
+        'start' => 'Start at',
+        'start_placeholder' => '—',
+        'rent_si' => 'Rent a chip',
+        'stages' => 'Stages',
+        'status' => 'Entry status',
+        'created_at' => 'Created',
+    ],
+
+    'actions' => [
+        'search_by_oris_id' => [
+            'notification_title_missing' => 'Form data',
+            'notification_body_missing' => 'Please fill in the race ORIS ID.',
+        ],
+
+        'update_event' => [
+            'label' => 'Update race',
+            'modal_heading' => 'Update race from ORIS',
+            'modal_description' => 'Updates the race with the current data in ORIS',
+            'modal_submit' => 'Update',
+            'notification_title' => 'Race update',
+            'notification_body_success' => 'The race was successfully updated',
+            'notification_body_error' => 'Something went wrong. You can try the action again or contact the admin with a description of the error, thank you.',
+        ],
+
+        'add_oris_event' => [
+            'label' => 'Add race from ORIS',
+            'modal_heading' => 'Add race from ORIS',
+            'modal_description' => 'Adds the selected race to the system with the data currently provided by ORIS',
+            'modal_submit' => 'Add race',
+            'sport_type' => 'Select sport type',
+            'show_unofficial' => 'Also show unofficial races',
+            'official_only' => 'Official only',
+            'all' => 'All',
+            'region' => 'Region',
+            'date_from' => 'Date from',
+            'date_to' => 'Date to',
+            'oris_id' => 'ORIS ID',
+            'oris_id_hint' => 'Search using criteria on ORIS',
+            'notification_title_updated' => 'Race ID :id was updated',
+            'notification_body_updated' => 'This race already exists in the system, the existing race was only updated with ORIS.',
+            'notification_title_created' => 'Race ID :id was created',
+            'notification_body_created' => 'A new race was created in the system with classes and available services. The data is up to date with ORIS.',
+        ],
+
+        'send_notification' => [
+            'label' => 'Send notification',
+            'tooltip' => 'Allows sending a manual notification to the selected channel.',
+            'modal_heading' => 'Send a notification about the race/event',
+            'modal_description' => 'A notification can be sent to various channels about objects, any objects in the list',
+            'modal_submit' => 'Yes, send notification',
+            'event' => 'Race/event',
+            'notification_type' => 'Notification type',
+            'notification_type_new' => 'New event',
+            'notification_type_update' => 'Updated event',
+            'channel' => 'Channel',
+            'channel_discord' => 'Discord',
+            'channel_email' => 'Email',
+            'notification_title' => 'Notification sent',
+            'notification_body' => 'You sent a notification about a specific race to the selected channel',
+        ],
+
+        'send_mail' => [
+            'label' => 'Send email',
+            'modal_heading' => 'Send an email message about the race/event',
+            'modal_description' => 'The email is sent from the queue every 5 minutes.',
+            'modal_submit' => 'Send',
+            'subject' => 'Message subject',
+            'reply_to' => 'Reply-to address',
+            'content' => 'Message',
+            'notification_title' => 'Email sent',
+            'notification_body' => 'An email was sent to the registered users.',
+        ],
+
+        'export' => [
+            'label' => 'Export',
+            'modal_heading' => 'Creates an export based on the selection',
+            'modal_description' => 'Choose the required export.',
+            'modal_submit' => 'Export',
+            'export_type' => 'Available exports',
+            'export_type_xlsx' => 'Entries | Excel (*.xlsx)',
+            'export_type_iof' => 'Entries | IOF XML v3 (*.xml) - EXPERIMENTAL',
+            'export_type_csos' => 'Entries | CSOS (*.txt)',
+            'notification_title' => 'Entry export completed successfully',
+            'notification_body_xlsx' => 'Open the Excel file of registered users from disk.',
+            'notification_body_iof' => 'Open the IOF XML v3 file of registered users from disk.',
+            'notification_body_csos' => 'Open the CSOS txt file of registered users from disk.',
+        ],
+
+        'create_entry' => [
+            'label_self' => 'Enter the race',
+            'label_all' => 'Enter anyone',
+            'modal_heading' => 'Race entry',
+            'modal_description' => 'Select a race profile, find a suitable class and enter.',
+            'modal_submit' => 'Enter',
+            'race_profile' => 'Select a race profile',
+            'class' => 'Select a class',
+            'relay_slot' => 'Free spot on a team',
+            'loading_classes' => 'Loading classes...',
+            'notification_title_ineligible' => 'It is not possible to enter the race with the given race profile',
+            'notification_body_ineligible' => 'Check that the race profile has the ORIS ID filled in, and check for a valid registration for the current year. Some races cannot be entered as an unregistered participant.',
+            'notification_title_oris_ok' => 'ORIS successfully returned the requested data.',
+            'notification_title_relay_success' => 'The entry was successfully created',
+            'notification_body_relay_success' => 'The entry was made into the internal relay roster.',
+            'notification_title_relay_failed' => 'The entry could not be created',
+            'notification_body_relay_failed' => 'The selected team is probably already full or does not exist.',
+            'notification_title' => 'Entry  :profile to class: :class',
+            'notification_body_oris_error' => 'It was not made. ORIS returned the message: :error',
+            'notification_body_oris_success' => 'Check the entry on the race pages directly in ORIS.',
+            'notification_body_local_success' => 'The entry was made only in the internal system',
+            'view_event_action' => 'Go to the race page',
+        ],
+
+        'delete_entry' => [
+            'label' => 'Withdraw',
+            'modal_heading' => ':profile - withdrawal from the race',
+            'modal_description' => 'The withdrawal will proceed if.',
+            'modal_submit' => 'Withdraw',
+            'notification_title_failed' => 'Something went wrong',
+            'notification_body_failed' => 'Send this to the administrator: :error',
+            'notification_title_success' => 'We have successfully withdrawn :profile from the race',
+            'notification_body_oris' => 'We recommend checking the withdrawal on ORIS.',
+            'notification_body_local' => 'The withdrawal was made only in our system.',
+            'view_event_action' => 'Go to the race URL',
+        ],
+
+        'update_entry' => [
+            'label' => 'Edit',
+            'modal_heading' => ':profile - edit entry',
+            'modal_description' => 'Edit the entry details and confirm by saving.',
+            'modal_submit' => 'Save changes',
+            'class' => 'Select a class',
+            'loading_classes' => 'Loading classes...',
+            'notification_title_failed' => 'Editing the entry of :profile failed',
+            'notification_body_oris_error' => 'ORIS returned the message: :error',
+            'notification_body_generic_error' => 'Try the action again, or contact the administrator.',
+            'notification_title_oris_success' => 'The entry of :profile was updated',
+            'notification_body_oris_success' => 'ORIS confirmed the change, you can check it on the race page.',
+            'notification_title_local_success' => 'The entry of :profile was updated',
+            'notification_body_local_success' => 'The change was made only in our system.',
+            'view_event_action' => 'Go to the race page',
+        ],
+
+        'assign_payment' => [
+            'label' => 'Assign payment',
+            'modal_heading' => 'Assign a payment to the selected race profiles',
+            'modal_description' => 'Enter the payment type and amount. A record will be created in the billing for each selected profile.',
+            'modal_submit' => 'Assign payment',
+            'payment_category' => 'Payment type',
+            'amount' => 'Amount (CZK)',
+            'amount_hint' => 'Enter a positive amount. It will be saved as negative (expense).',
+            'note' => 'Note',
+            'note_hint' => 'Optional.',
+            'entry_fee_option' => 'Entry fee',
+            'service_option' => 'Service: :service',
+            'notification_title' => 'Payments assigned',
+            'notification_body' => 'Records created: :count',
+        ],
+    ],
+
+    'pages' => [
+        'create' => [
+            'notification_title' => 'New race created',
+            'notification_body' => 'User: :user | Name: :name',
+        ],
+        'entry_title' => 'Race detail - :name',
+        'list' => [
+            'tab_races' => 'Races',
+            'tab_training' => 'Training',
+            'tab_training_camp' => 'Training camp',
+            'tab_other' => 'Other',
+            'tab_all' => 'All',
+        ],
+    ],
+
+    'relation_classes' => [
+        'label' => 'Class',
+        'title' => 'Classes',
+        'name' => 'Class name',
+        'class_definition' => 'Class definition (age/gender)',
+        'distance' => 'Distance',
+        'climbing' => 'Climb',
+        'controls' => 'Controls',
+        'fee' => 'Fee',
+        'legs' => 'Number of relay legs',
+        'table' => [
+            'name' => 'Class',
+            'oris_id' => 'ORIS ID',
+            'distance' => 'Distance',
+            'climbing' => 'Climb',
+            'controls' => 'Controls',
+            'fee' => 'Price',
+            'legs' => 'Legs',
+        ],
+    ],
+
+    'relation_services' => [
+        'label' => 'Service',
+        'title' => 'Services',
+        'name' => 'Service name',
+        'last_booking' => 'Last possible order date',
+        'unit_price' => 'Price per unit',
+        'qty_available' => 'Available',
+        'qty_ordered' => 'Already ordered',
+        'table' => [
+            'name' => 'Service name',
+            'last_booking' => 'Last order date',
+            'unit_price' => 'Price per unit',
+            'qty_available' => 'Available',
+            'qty_remaining' => 'Remaining',
+        ],
+    ],
+
+    'relation_markers' => [
+        'label' => 'Points of interest',
+        'title' => 'Points of interest',
+        'name' => 'Point name',
+        'lat' => 'GPS Lat',
+        'lon' => 'GPS Lon',
+        'desc' => 'Point description',
+        'type' => 'Point type',
+        'table' => [
+            'name' => 'Point name',
+            'desc' => 'Point description',
+            'lat' => 'Latitude',
+            'lon' => 'Longitude',
+            'type' => 'Point type',
+        ],
+    ],
+
+    'relation_links' => [
+        'label' => 'Links',
+        'title' => 'Links',
+        'name_cz' => 'Link name (Czech)',
+        'name_en' => 'Link name (English)',
+        'description_cz' => 'Link description (Czech)',
+        'description_en' => 'Link description (English)',
+        'source_url' => 'Link URL',
+        'source_type' => 'Link type',
+        'internal' => 'Link',
+        'internal_external_option' => 'External link',
+        'table' => [
+            'name_cz' => 'Link (Czech)',
+            'name_en' => 'Link (English)',
+            'source_url' => 'Link',
+        ],
+    ],
+
+    'relation_relay_teams' => [
+        'label' => 'Relays',
+        'title' => 'Relays / teams',
+        'name' => 'Team name',
+        'class' => 'Class',
+        'class_option_legs_suffix' => ' | legs: :legs',
+        'relay_type' => 'Type',
+        'relay_type_relay' => 'Relay',
+        'relay_type_sprint_relay' => 'Sprint relay',
+        'relay_type_team' => 'Teams',
+        'slots_count' => 'Number of legs',
+        'table' => [
+            'name' => 'Team',
+            'class' => 'Class',
+            'class_placeholder' => '—',
+            'relay_type' => 'Type',
+            'slots_count' => 'Legs',
+            'occupied_slots' => 'Occupied',
+        ],
+    ],
+
+    'relation_entries' => [
+        'title' => 'Entries',
+        'table' => [
+            'class' => 'Class',
+            'race_profile' => 'Race profile',
+            'note' => 'Note',
+            'club_note' => 'Club note',
+            'requested_start' => 'Start at',
+            'rent_si' => 'Rent a chip',
+            'stage' => 'Stage',
+        ],
+        'export' => [
+            'label' => 'Export entries',
+            'si' => 'SI',
+            'reg_number' => 'Registration number',
+            'last_name' => 'Last name',
+            'first_name' => 'First name',
+            'class' => 'Class',
+            'note' => 'Note',
+            'club_note' => 'Club note',
+            'requested_start' => 'Start request',
+            'rent_si' => 'Rent a chip',
+            'rent_si_yes' => 'YES',
+            'stage' => 'Stage',
+        ],
+    ],
+
+    'type_enum_credit_status' => [
+        UserCreditStatus::Done->value => 'done',
+        UserCreditStatus::UnAssign->value => 'unassigned',
+        UserCreditStatus::Open->value => 'open',
+    ],
+
+    'type_enum_credit_type' => [
+        UserCreditType::CashOut->value => 'Expense',
+        UserCreditType::UserDonation->value => 'Extraordinary membership deposit',
+        UserCreditType::MembershipFees->value => 'Membership fees',
+        UserCreditType::TransferCreditBetweenUsers->value => 'Transfer between users',
+        UserCreditType::InitialDeposit->value => 'Initial deposit',
+        UserCreditType::TransportBilling->value => 'Travel billing',
+        UserCreditType::ServiceFee->value => 'Additional service',
+        UserCreditType::MarketplaceBilling->value => 'Marketplace purchase',
+    ],
+
+    'service_order_status_enum' => [
+        ServiceOrderStatus::Ordered->value => 'Ordered',
+        ServiceOrderStatus::Cancelled->value => 'Cancelled',
+        ServiceOrderStatus::Billed->value => 'Billed',
+    ],
+
+    'type_enum' => [
+        SportEventType::Race->value => 'Race',
+        SportEventType::Training->value => 'Training',
+        SportEventType::TrainingCamp->value => 'Training camp',
+        SportEventType::Other->value => 'Other',
+    ],
+
+    'transport_type_enum' => [
+        SportEventTransportType::ClubOnly->value => 'Transport provided by the club',
+        SportEventTransportType::Combined->value => 'Combined (club + own)',
+        SportEventTransportType::SelfOnly->value => 'Own transport',
+        SportEventTransportType::None->value => 'No transport',
+    ],
+
+    'type_enum_markers' => [
+        SportEventMarkerType::DefaultMarker->value => 'General point',
+        SportEventMarkerType::ObRaceSimple->value => 'Single-day race',
+        SportEventMarkerType::ObRaceDot->value => 'Single-day race dot',
+        SportEventMarkerType::ObRaceStages->value => 'Single-day stage race',
+        SportEventMarkerType::StageStart->value => 'Stage start',
+        SportEventMarkerType::Parking->value => 'Parking',
+        SportEventMarkerType::Other->value => 'Other',
+        SportEventMarkerType::Training->value => 'Training',
+        SportEventMarkerType::TrainingCamp->value => 'Training camp',
+    ],
+
+    'type_enum_links' => [
+        SportEventLinkType::Invitation->value => 'Bulletin',
+        SportEventLinkType::Information->value => 'Instructions',
+        SportEventLinkType::StartList->value => 'Start list',
+        SportEventLinkType::Results->value => 'Results',
+        SportEventLinkType::CompetitionCentreMap->value => 'Assembly area map',
+        SportEventLinkType::SplitTimes->value => 'Split times',
+        SportEventLinkType::Photos->value => 'Photos',
+        SportEventLinkType::Video->value => 'Video',
+        SportEventLinkType::MapSamples->value => 'Map samples',
+        SportEventLinkType::OldMap->value => 'Old map',
+        SportEventLinkType::RouteChoices->value => 'Route choices',
+        SportEventLinkType::ClubStartList->value => 'Start list by clubs',
+        SportEventLinkType::EventWebsite->value => 'Race website',
+        SportEventLinkType::ResultsForRanking->value => 'Results for ranking',
+        SportEventLinkType::ResultsForCups->value => 'Results for the cup standings',
+        SportEventLinkType::ResultsOfClass->value => 'Class results',
+        SportEventLinkType::ResultsForCupsAB->value => 'Results for the A,B cup standings',
+        SportEventLinkType::ResultsForMastersRanking->value => 'Results for masters ranking',
+
+        SportEventLinkType::Accommodation->value => 'Accommodation',
+        SportEventLinkType::Livelox->value => 'Livelox',
+        SportEventLinkType::Other->value => 'Other',
+    ],
+
+    'type_enum_entry_status' => [
+        EntryStatus::Create->value => 'created',
+        EntryStatus::Edit->value => 'edited',
+        EntryStatus::Cancel->value => 'cancelled',
+    ],
+];

@@ -47,11 +47,11 @@ class CreateEntryAction
                     || ! Auth::user()?->canCreateEntry();
             })
             ->color($registerAll ? 'gray' : 'primary')
-            ->label($registerAll ? 'Přihlásit kohokoliv' : 'Přihlásit na závod')
+            ->label($registerAll ? __('sport-event.actions.create_entry.label_all') : __('sport-event.actions.create_entry.label_self'))
             ->icon($registerAll ? 'heroicon-o-users' : 'heroicon-o-plus-circle')
-            ->modalHeading('Přihlášení na závod')
-            ->modalDescription('Vyber závodní profil, vyhledej vhodné kategorie a přihlas se.')
-            ->modalSubmitActionLabel('Přihlásit')
+            ->modalHeading(__('sport-event.actions.create_entry.modal_heading'))
+            ->modalDescription(__('sport-event.actions.create_entry.modal_description'))
+            ->modalSubmitActionLabel(__('sport-event.actions.create_entry.modal_submit'))
             ->schema($this->formSchema($registerAll));
     }
 
@@ -62,7 +62,7 @@ class CreateEntryAction
 
         return [
             Select::make('raceProfileId')
-                ->label('Vyberte závodní profil')
+                ->label(__('sport-event.actions.create_entry.race_profile'))
                 ->options(
                     $registerAll
                         ? (new UserRaceProfiles())->getUserRaceProfiles($sportEvent, true)
@@ -104,9 +104,8 @@ class CreateEntryAction
 
                         if ($orisResponse === null) {
                             Notification::make()
-                                ->title('Na závod není možné se uvedeným závodním profilem přihlásit')
-                                ->body('Překontrolujte zdali mát v závodním profilu vyplněno ORISID, dále zkontrolujte platnou registraci na daný rok,
-                                    Na některé závody není možné jako neregistrovaný se přihlásit.')
+                                ->title(__('sport-event.actions.create_entry.notification_title_ineligible'))
+                                ->body(__('sport-event.actions.create_entry.notification_body_ineligible'))
                                 ->danger()
                                 ->seconds(10)
                                 ->send();
@@ -120,7 +119,7 @@ class CreateEntryAction
                         }
                     } catch (RequestException $e) {
                         Notification::make()
-                            ->title('Nepodařilo se načíst data.')
+                            ->title(__('sport-event.common.oris_fetch_error'))
                             ->danger()
                             ->duration(8);
 
@@ -128,7 +127,7 @@ class CreateEntryAction
                     }
 
                     Notification::make()
-                        ->title('ORIS v pořádku vrátil požadovaná data.')
+                        ->title(__('sport-event.actions.create_entry.notification_title_oris_ok'))
                         ->success();
 
                     $set('specific_response_class_id', $selectData);
@@ -136,7 +135,7 @@ class CreateEntryAction
                 }),
 
             Select::make('classId')
-                ->label('Vyber kategorii')
+                ->label(__('sport-event.actions.create_entry.class'))
                 ->options(function (callable $get) use ($sportEvent): array {
                     if ($sportEvent->oris_id !== null && $sportEvent->use_oris_for_entries) {
                         return $get('specific_response_class_id') ?? [];
@@ -148,10 +147,10 @@ class CreateEntryAction
                 ->allowHtml()
                 ->required(fn (): bool => ! $sportEvent->isRelayDiscipline())
                 ->visible(fn (): bool => ! $sportEvent->isRelayDiscipline())
-                ->loadingMessage('Nahrávám kategorie...'),
+                ->loadingMessage(__('sport-event.actions.create_entry.loading_classes')),
 
             Select::make('relayTeamMemberId')
-                ->label('Volné místo v týmu')
+                ->label(__('sport-event.actions.create_entry.relay_slot'))
                 ->options(fn () => (new RelaySlotManager())->availableSlots($sportEvent))
                 ->allowHtml()
                 ->searchable()
@@ -171,13 +170,13 @@ class CreateEntryAction
         if ($sportEvent->isRelayDiscipline()) {
             if ($result->success) {
                 Notification::make()
-                    ->title('Přihláška byla úspěšně vytvořena')
-                    ->body('Přihláška byla provedena do interní relay sestavy.')
+                    ->title(__('sport-event.actions.create_entry.notification_title_relay_success'))
+                    ->body(__('sport-event.actions.create_entry.notification_body_relay_success'))
                     ->success()->seconds(8)->send();
             } else {
                 Notification::make()
-                    ->title('Přihlášku se nepodařilo vytvořit')
-                    ->body('Vybraný tým je pravděpodobně již obsazen nebo neexistuje.')
+                    ->title(__('sport-event.actions.create_entry.notification_title_relay_failed'))
+                    ->body(__('sport-event.actions.create_entry.notification_body_relay_failed'))
                     ->warning()->seconds(8)->send();
             }
 
@@ -186,12 +185,15 @@ class CreateEntryAction
 
         $profileName = $result->userRaceProfile?->user_race_full_name;
         $className = $result->sportClass?->name;
-        $title = 'Přihláška  '.$profileName.' do kategorie: '.$className;
+        $title = __('sport-event.actions.create_entry.notification_title', [
+            'profile' => $profileName,
+            'class' => $className,
+        ]);
 
         if ($result->orisStatusError !== null) {
             Notification::make()
                 ->title($title)
-                ->body('Nebyla provedena. ORIS vrátil zprávu: '.$result->orisStatusError)
+                ->body(__('sport-event.actions.create_entry.notification_body_oris_error', ['error' => $result->orisStatusError]))
                 ->warning()->seconds(8)->send();
 
             return;
@@ -200,11 +202,11 @@ class CreateEntryAction
         if ($result->success && $result->orisEventId !== null) {
             Notification::make()
                 ->title($title)
-                ->body('Přihlášku si zkontroluj na stránkách závodu přímo v ORISu.')
+                ->body(__('sport-event.actions.create_entry.notification_body_oris_success'))
                 ->success()
                 ->actions([
                     ActionAction::make('view')
-                        ->label('Přejít na stránku závodu')
+                        ->label(__('sport-event.actions.create_entry.view_event_action'))
                         ->button()->openUrlInNewTab()
                         ->url(OrisApiService::ORIS_URL.'/PrehledPrihlasenych?id='.$result->orisEventId),
                 ])
@@ -216,7 +218,7 @@ class CreateEntryAction
         if ($result->success) {
             Notification::make()
                 ->title($title)
-                ->body('Přihláška byla provedena pouze v interním systému')
+                ->body(__('sport-event.actions.create_entry.notification_body_local_success'))
                 ->success()->seconds(8)->send();
         }
     }

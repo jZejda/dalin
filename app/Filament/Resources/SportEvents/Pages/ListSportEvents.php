@@ -38,7 +38,7 @@ class ListSportEvents extends ListRecords
         return [
             CreateAction::make(),
             (new AddOrisEventModal())->getAction(),
-            $this->getNotifiAction()->tooltip('Umožní poslat ručně notifikaci na vybraný kanál.'),
+            $this->getNotifiAction()->tooltip(__('sport-event.actions.send_notification.tooltip')),
         ];
     }
 
@@ -70,25 +70,25 @@ class ListSportEvents extends ListRecords
         } else {
             // Default filters
             $tabs['race'] = Tab::make()
-                ->label('Závody')
+                ->label(__('sport-event.pages.list.tab_races'))
                 ->badgeColor('success')
                 ->icon('heroicon-m-flag')
                 ->modifyQueryUsing(fn (Builder $query) => $query
                     ->where('event_type', '=', SportEventType::Race));
             $tabs['traing'] = Tab::make()
-                ->label('Trénink')
+                ->label(__('sport-event.pages.list.tab_training'))
                 ->badgeColor('success')
                 ->icon('heroicon-m-clock')
                 ->modifyQueryUsing(fn (Builder $query) => $query
                     ->where('event_type', '=', SportEventType::Training));
             $tabs['trainingCamp'] = Tab::make()
-                ->label('Soustředění')
+                ->label(__('sport-event.pages.list.tab_training_camp'))
                 ->badgeColor('success')
                 ->icon('heroicon-m-calendar-days')
                 ->modifyQueryUsing(fn (Builder $query) => $query
                     ->where('event_type', '=', SportEventType::TrainingCamp));
             $tabs['other'] = Tab::make()
-                ->label('Ostatní')
+                ->label(__('sport-event.pages.list.tab_other'))
                 ->badgeColor('success')
                 ->icon('heroicon-m-exclamation-circle')
                 ->modifyQueryUsing(fn (Builder $query) => $query
@@ -96,7 +96,7 @@ class ListSportEvents extends ListRecords
         }
 
         $tabs['all'] = Tab::make()
-            ->label('Vše');
+            ->label(__('sport-event.pages.list.tab_all'));
 
         return $tabs;
     }
@@ -196,41 +196,41 @@ class ListSportEvents extends ListRecords
                     $sportEvent = SportEvent::query()->where('id', '=', $data['sportEventId'])->first();
                     (new RaceEventAddedNotification($sportEvent, $data['notificationType']))->sendNotification();
                     Notification::make()
-                        ->title('Notifikace odeslána')
-                        ->body('Na zvolený kanál jsi zaslal notifikaci ke konkrétnímu závodu')
+                        ->title(__('sport-event.actions.send_notification.notification_title'))
+                        ->body(__('sport-event.actions.send_notification.notification_body'))
                         ->success()
                         ->seconds(8)
                         ->send();
                 })
                 ->color('gray')
-                ->label('Pošli notifikaci')
+                ->label(__('sport-event.actions.send_notification.label'))
                 ->icon('heroicon-s-paper-airplane')
-                ->modalHeading('Pošli notifikaci k závodu/akci')
-                ->modalDescription('Notifikace je možná poslat do různých kanálů na objekty, jakékoliv objekty v listu')
-                ->modalSubmitActionLabel('Ano poslat notifikaci')
+                ->modalHeading(__('sport-event.actions.send_notification.modal_heading'))
+                ->modalDescription(__('sport-event.actions.send_notification.modal_description'))
+                ->modalSubmitActionLabel(__('sport-event.actions.send_notification.modal_submit'))
                 ->visible(Auth::user()?->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]) ?? false)
                 ->schema([
                     Grid::make(2)
                         ->schema([
                             Select::make('sportEventId')
-                                ->label('Závod/událost')
+                                ->label(__('sport-event.actions.send_notification.event'))
                                 ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id'))
                                 ->required()
                                 ->columnSpan(2)
                                 ->searchable(),
                             Select::make('notificationType')
-                                ->label('Typ upozornění')
+                                ->label(__('sport-event.actions.send_notification.notification_type'))
                                 ->options([
-                                    DiscordWebhookHelper::CONTENT_STATUS_NEW => 'Nová událost',
-                                    DiscordWebhookHelper::CONTENT_STATUS_UPDATE => 'Upravená událost'
+                                    DiscordWebhookHelper::CONTENT_STATUS_NEW => __('sport-event.actions.send_notification.notification_type_new'),
+                                    DiscordWebhookHelper::CONTENT_STATUS_UPDATE => __('sport-event.actions.send_notification.notification_type_update'),
                                 ])
                                 ->default(DiscordWebhookHelper::CONTENT_STATUS_NEW)
                                 ->required(),
                             Select::make('chanelId')
-                                ->label('Kanál')
+                                ->label(__('sport-event.actions.send_notification.channel'))
                                 ->options([
-                                    1 => 'Discord',
-                                    2 => 'E-mail'
+                                    1 => __('sport-event.actions.send_notification.channel_discord'),
+                                    2 => __('sport-event.actions.send_notification.channel_email'),
                                 ])
                                 ->default(1)
                                 ->required(),

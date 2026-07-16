@@ -17,16 +17,23 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class SportServicesRelationManager extends RelationManager
 {
     protected static string $relationship = 'sportServices';
 
-    protected static ?string $label = 'Služba';
-
-    protected static ?string $title = 'Služby';
-
     protected static ?string $recordTitleAttribute = 'service_name_cz';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('sport-event.relation_services.title');
+    }
+
+    protected static function getModelLabel(): ?string
+    {
+        return __('sport-event.relation_services.label');
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -34,25 +41,25 @@ class SportServicesRelationManager extends RelationManager
             ->components([
                 Grid::make()->columnSpanFull()->schema([
                     TextInput::make('service_name_cz')
-                        ->label('Název služby')
+                        ->label(__('sport-event.relation_services.name'))
                         ->required(),
                 ])->columns(1),
                 DateTimePicker::make('last_booking_date_time')
-                    ->label('Datum poslední možné objednávky')
+                    ->label(__('sport-event.relation_services.last_booking'))
                     ->required(),
                 TextInput::make('unit_price')
-                    ->label('Cena za jednotku')
+                    ->label(__('sport-event.relation_services.unit_price'))
                     ->required()
                     ->numeric()
                     ->inputMode('decimal')
                     ->minValue(0),
                 TextInput::make('qty_available')
-                    ->label('Volných')
+                    ->label(__('sport-event.relation_services.qty_available'))
                     ->numeric()
                     ->inputMode('decimal')
                     ->minValue(0),
                 TextInput::make('qty_already_ordered')
-                    ->label('Již objednáno')
+                    ->label(__('sport-event.relation_services.qty_ordered'))
                     ->numeric()
                     ->inputMode('decimal')
                     ->minValue(0),
@@ -64,22 +71,22 @@ class SportServicesRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('service_name_cz')
-                    ->label('Název služby')
+                    ->label(__('sport-event.relation_services.table.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('last_booking_date_time')
                     ->icon('heroicon-o-calendar')
-                    ->label('Datum poslední objednávky')
+                    ->label(__('sport-event.relation_services.table.last_booking'))
                     ->dateTime(AppHelper::DATE_TIME_FULL_FORMAT)
                     ->sortable(),
                 TextColumn::make('unit_price')
-                    ->label('Cena za jednotku')
+                    ->label(__('sport-event.relation_services.table.unit_price'))
                     ->sortable(),
                 TextColumn::make('qty_available')
-                    ->label('Volných')
+                    ->label(__('sport-event.relation_services.table.qty_available'))
                     ->sortable(),
                 TextColumn::make('qty_already_ordered')
-                    ->label('Zbývá')
+                    ->label(__('sport-event.relation_services.table.qty_remaining'))
                     ->sortable(),
             ])
             ->filters([

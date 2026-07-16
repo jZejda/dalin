@@ -62,7 +62,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Http;
-use UnitEnum;
 
 class SportEventResource extends Resource implements HasShieldPermissions
 {
@@ -72,15 +71,27 @@ class SportEventResource extends Resource implements HasShieldPermissions
 
     protected static string | BackedEnum | null $navigationIcon = 'heroicon-o-calendar';
 
-    protected static string | UnitEnum | null $navigationGroup = 'Akce/Závody';
-
-    protected static ?string $navigationLabel = 'Závod';
-
-    protected static ?string $label = 'Závod / událost';
-
-    protected static ?string $pluralLabel = 'Závody / události';
-
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('app.navigation_groups.events');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('sport-event.navigation_label');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('sport-event.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('sport-event.plural_label');
+    }
 
     public static function table(Table $table): Table
     {
@@ -88,7 +99,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
             ->recordUrl(fn (Model $record): string => route('filament.admin.resources.sport-events.entry', ['record' => $record]), )
             ->columns([
                 ViewColumn::make('entry_type')
-                    ->label('Typ')
+                    ->label(__('sport-event.table.entry_type'))
                     ->view('filament.tables.columns.entryType')
                     ->alignment(Alignment::Center)
                     ->visibleFrom('md'),
@@ -98,16 +109,16 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->tooltip(
                         fn (
                             SportEvent $record
-                        ): string => $record->last_update ? 'Poslední hromadná aktualizace: '.$record->last_update->format(
-                            AppHelper::DATE_TIME_FORMAT
-                        ) : ''
+                        ): string => $record->last_update ? __('sport-event.table.last_update_tooltip', [
+                            'date' => $record->last_update->format(AppHelper::DATE_TIME_FORMAT),
+                        ]) : ''
                     )
-                    ->label('Název')
+                    ->label(__('sport-event.table.name'))
                     ->view('filament.tables.columns.entry-name'),
 
                 TextColumn::make('date')
                     ->icon('heroicon-o-calendar')
-                    ->label('Datum')
+                    ->label(__('sport-event.table.date'))
                     ->dateTime(AppHelper::DATE_FORMAT)
                     ->sortable()
                     ->searchable()
@@ -121,11 +132,11 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     }),
 
                 ViewColumn::make('entry_weather')
-                    ->label('Předpověď')
+                    ->label(__('sport-event.table.forecast'))
                     ->view('filament.tables.columns.entry-forecast'),
 
                 ViewColumn::make('user_entry')
-                    ->label('Př.')
+                    ->label(__('sport-event.table.entries_count_short'))
                     ->view('filament.tables.columns.entry-user-counts'),
 
 //                TextColumn::make('place')
@@ -137,25 +148,25 @@ class SportEventResource extends Resource implements HasShieldPermissions
 //                    ->alignLeft(),
 
                 ViewColumn::make('entries')
-                    ->label('Termíny')
+                    ->label(__('sport-event.table.dates'))
                     ->view('filament.tables.columns.entryDates'),
 
                 TextColumn::make('organization')
-                    ->label('Klub(y)')
+                    ->label(__('sport-event.table.clubs'))
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('region')->label('Region'),
+                TextColumn::make('region')->label(__('sport-event.table.region')),
 
                 TextColumn::make('oris_id')
                     ->badge()
-                    ->label('ORIS ID')
+                    ->label(__('sport-event.table.oris_id'))
                     ->tooltip(
                         fn (SportEvent $record): string => EmptyType::intNotEmpty(
                             $record->oris_id
                         ) && $record->use_oris_for_entries
-                            ? 'Přihláška do ORISu'
-                            : 'Závod nemá přiděleno ORIS ID, přihlášení bude pouze do interního systému.'
+                            ? __('sport-event.table.oris_id_tooltip_enabled')
+                            : __('sport-event.table.oris_id_tooltip_disabled')
                     )
                     ->color(
                         fn (SportEvent $record): string => EmptyType::intNotEmpty(
@@ -179,7 +190,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                     ->label(__('sport-event.event_type'))
                     ->options(SportEventType::enumArray()),
                 SelectFilter::make('sport_id')
-                    ->label('Sport')
+                    ->label(__('sport-event.filters.sport'))
                     ->options(SportList::all()->pluck('short_name', 'id')),
                    // ->default(1),
                 Filter::make('date')
@@ -197,14 +208,16 @@ class SportEventResource extends Resource implements HasShieldPermissions
                             return null;
                         }
 
-                        return 'Závody novější: '.Carbon::parse($data['date'])->format(AppHelper::DATE_FORMAT);
+                        return __('sport-event.filters.newer_than', [
+                            'date' => Carbon::parse($data['date'])->format(AppHelper::DATE_FORMAT),
+                        ]);
                     })->default(now()->subDays(7)),
                 SelectFilter::make('discipline_id')
-                    ->label('Disciplína')
+                    ->label(__('sport-event.filters.discipline'))
                     ->multiple()
                     ->options(SportDiscipline::all()->pluck('long_name', 'id')),
                 SelectFilter::make('level_id')
-                    ->label('level')
+                    ->label(__('sport-event.filters.level'))
                     ->options(SportLevel::all()->pluck('long_name', 'oris_id')),
             ])
             ->recordActions([
@@ -248,8 +261,8 @@ class SportEventResource extends Resource implements HasShieldPermissions
                             ->schema([
                                 Grid::make()->schema([
                                     TextInput::make('oris_id')
-                                        ->label('ORIS ID')
-                                        ->hint('unikátní ID závodu na ORIS stránkách')
+                                        ->label(__('sport-event.form.oris_id'))
+                                        ->hint(__('sport-event.form.oris_id_hint'))
                                         ->hintIcon('heroicon-m-exclamation-triangle')
                                         ->suffixAction(
                                             fn ($state, Set $set, callable $get) => Action::make(
@@ -259,8 +272,8 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                                 ->action(function () use ($state, $set, $get) {
                                                     if (blank($state)) {
                                                         Notification::make()
-                                                            ->title('Formulářová data')
-                                                            ->body('Vyplň prosím ORIS ID závodu.')
+                                                            ->title(__('sport-event.actions.search_by_oris_id.notification_title_missing'))
+                                                            ->body(__('sport-event.actions.search_by_oris_id.notification_body_missing'))
                                                             ->danger()
                                                             ->seconds(8)
                                                             ->send();
@@ -283,8 +296,8 @@ class SportEventResource extends Resource implements HasShieldPermissions
 
                                                     } catch (RequestException $e) {
                                                         Notification::make()
-                                                            ->title('ORIS API')
-                                                            ->body('Nepodařilo se načíst data.')
+                                                            ->title(__('sport-event.common.oris_api_title'))
+                                                            ->body(__('sport-event.common.oris_fetch_error'))
                                                             ->danger()
                                                             ->seconds(8)
                                                             ->send();
@@ -352,50 +365,50 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                         ->visible(fn (): bool => AppSetting::isTransportModuleEnabled()),
 
                                     TextInput::make('name')
-                                        ->label('Název závodu/akce')
+                                        ->label(__('sport-event.form.name'))
                                         ->required(),
 
                                 ])->columns(3)->columnSpan(3),
 
                                 Grid::make()->schema([
                                     DatePicker::make('date')
-                                        ->label('Datum od')
+                                        ->label(__('sport-event.form.date'))
                                         ->displayFormat(AppHelper::DATE_FORMAT)
                                         ->required(),
                                     DatePicker::make('date_end')
-                                        ->label('Datum do')
+                                        ->label(__('sport-event.form.date_end'))
                                         ->displayFormat(AppHelper::DATE_FORMAT)
-                                        ->hint('Použij u vícedenních závodů'),
+                                        ->hint(__('sport-event.form.date_end_hint')),
                                     TextInput::make('stages')
-                                        ->label('Etap')
-                                        ->hint('Pouze pro etapové závody')
+                                        ->label(__('sport-event.form.stages'))
+                                        ->hint(__('sport-event.form.stages_hint'))
                                         ->hintIcon('heroicon-m-exclamation-triangle')
                                         ->hintColor('warning'),
                                 ])->columns(3)->columnSpan(3),
 
                                 Grid::make()->schema([
                                     TextInput::make('alt_name')
-                                        ->label('Alternativní název závodu')
-                                        ->hint('Nebude automaticky aktualizován cronem.'),
+                                        ->label(__('sport-event.form.alt_name'))
+                                        ->hint(__('sport-event.form.alt_name_hint')),
                                     TextInput::make('place')
-                                        ->label('Místo'),
+                                        ->label(__('sport-event.form.place')),
 
                                     TextInput::make('gps_lat')
-                                        ->label('GPS Lat')
+                                        ->label(__('sport-event.form.gps_lat'))
                                         ->numeric(),
 
                                     TextInput::make('gps_lon')
-                                        ->label('GPS Lon')
+                                        ->label(__('sport-event.form.gps_lon'))
                                         ->numeric(),
                                 ])->columns(2)->columnSpan(3),
 
                                 Grid::make()->schema([
                                     MarkdownEditor::make('entry_desc')
-                                        ->label('Popis'),
+                                        ->label(__('sport-event.form.entry_desc')),
                                     TextInput::make('event_info')
-                                        ->label('Info'),
+                                        ->label(__('sport-event.form.event_info')),
                                     TextInput::make('event_warning')
-                                        ->label('Upozornění'),
+                                        ->label(__('sport-event.form.event_warning')),
                                 ])->columns(1)->columnSpan(3),
                             ])
                             ->columns(2),
@@ -404,42 +417,42 @@ class SportEventResource extends Resource implements HasShieldPermissions
 
                 Group::make()
                     ->schema([
-                        Section::make('Termíny')
-                            ->description('Možné vypnout automatickou aktualizaci na 2. a 3. termín.')
+                        Section::make(__('sport-event.form.section_dates'))
+                            ->description(__('sport-event.form.section_dates_description'))
                             ->schema([
-                                TextInput::make('start_time')->label('Čas startu'),
+                                TextInput::make('start_time')->label(__('sport-event.form.start_time')),
                                 DateTimePicker::make('entry_date_1')->displayFormat(
                                     AppHelper::DATE_TIME_FULL_FORMAT
-                                )->label('První termín'),
+                                )->label(__('sport-event.form.entry_date_1')),
                                 Grid::make()->schema([
                                     DateTimePicker::make('entry_date_2')->displayFormat(
                                         AppHelper::DATE_TIME_FULL_FORMAT
-                                    )->label('Druhý termín'),
+                                    )->label(__('sport-event.form.entry_date_2')),
                                     DateTimePicker::make('entry_date_3')->displayFormat(
                                         AppHelper::DATE_TIME_FULL_FORMAT
-                                    )->label('Třetí termín'),
+                                    )->label(__('sport-event.form.entry_date_3')),
                                 ])->columns(2),
                             ]),
 
-                        Section::make('Ostatní parametry')
-                            ->description('Ostatní parametry závodu/akce')
+                        Section::make(__('sport-event.form.section_other'))
+                            ->description(__('sport-event.form.section_other_description'))
                             ->schema([
                                 Grid::make()->schema([
                                     Select::make('discipline_id')
-                                        ->label('Disciplína')
+                                        ->label(__('sport-event.form.discipline'))
                                         ->default(1)
                                         ->options(SportDiscipline::all()->pluck('long_name', 'id'))
                                         ->searchable()
                                         ->required(),
                                     Select::make('sport_id')
-                                        ->label('Sport')
+                                        ->label(__('sport-event.form.sport'))
                                         ->default(1)
                                         ->options(SportList::all()->pluck('short_name', 'id'))
                                         ->searchable()
                                         ->required(),
 
                                     Select::make('level_id')
-                                        ->label('Level')
+                                        ->label(__('sport-event.form.level'))
                                         ->default(6)
                                         ->options(SportLevel::all()->pluck('long_name', 'oris_id'))
                                         ->searchable()
@@ -449,7 +462,7 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                         ->multiple()
                                         ->default([config('site-config.club.abbr')])
                                         ->options(Club::all()->pluck('name', 'abbr'))
-                                        ->maxItemsMessage('Je možné definovat pouze dva kluby')
+                                        ->maxItemsMessage(__('sport-event.form.organization_max_items'))
                                         ->maxItems(2)
                                         ->searchable(),
                                 ])->columns(2),
@@ -459,19 +472,19 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                     ->searchable(),
                                 Grid::make()->schema([
                                     Toggle::make('use_oris_for_entries')
-                                        ->label('Používá ORIS?')
+                                        ->label(__('sport-event.form.use_oris_for_entries'))
                                         ->inline(false)
                                         ->onIcon('heroicon-s-check')
                                         ->offIcon('heroicon-m-x-mark'),
 
                                     Toggle::make('dont_update_excluded')
-                                        ->label('Neaktualizovat')
+                                        ->label(__('sport-event.form.dont_update_excluded'))
                                         ->inline(false)
                                         ->onIcon('heroicon-s-check')
                                         ->offIcon('heroicon-m-x-mark')
                                         ->default(true),
                                     Toggle::make('cancelled')
-                                        ->label('Zrušeno')
+                                        ->label(__('sport-event.form.cancelled'))
                                         ->inline(false)
                                         ->onIcon('heroicon-s-check')
                                         ->offIcon('heroicon-m-x-mark')
@@ -523,8 +536,8 @@ class SportEventResource extends Resource implements HasShieldPermissions
     {
         /** @var SportEvent $record */
         return [
-            'Název' => $record->name,
-            'Místo' => $record->place,
+            __('sport-event.table.name') => $record->name,
+            __('sport-event.common.place') => $record->place,
         ];
     }
 

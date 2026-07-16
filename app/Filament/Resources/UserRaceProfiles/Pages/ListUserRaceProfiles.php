@@ -34,26 +34,26 @@ class ListUserRaceProfiles extends ListRecords
                 if ($result) {
 
                     Notification::make()
-                        ->title('Aktualizace členství závodníků v klubu proběhla v pořádku')
-                        ->body('Členství v klubu proběhlo v pořádku')
+                        ->title(__('user-race-profile.actions.update_club_oris_id.notification_success_title'))
+                        ->body(__('user-race-profile.actions.update_club_oris_id.notification_success_body'))
                         ->success()
                         ->seconds(8)
                         ->send();
                 } else {
                     Notification::make()
-                        ->title('Něco se nepovedlo')
-                        ->body('Něco se nepovedlo, Můžeš vyzkoušet akci zopakovat nebo kontaktuj admina s popisem chyby, děkujeme.')
+                        ->title(__('user-race-profile.actions.update_club_oris_id.notification_error_title'))
+                        ->body(__('user-race-profile.actions.update_club_oris_id.notification_error_body'))
                         ->danger()
                         ->send();
                 }
             })
 
             ->color('gray')
-            ->label('Aktualizovat ID členů v ORISu')
+            ->label(__('user-race-profile.actions.update_club_oris_id.label'))
             ->icon('heroicon-m-arrow-path')
-            ->modalHeading('Aktualizovat ID členů v ORISu')
-            ->modalDescription('Provede hromadnou aktualizaci ID členů oproti ORISU, potřebné pro přihlášky na závod.')
-            ->modalSubmitActionLabel('Aktualizovat')
+            ->modalHeading(__('user-race-profile.actions.update_club_oris_id.modal_heading'))
+            ->modalDescription(__('user-race-profile.actions.update_club_oris_id.modal_description'))
+            ->modalSubmitActionLabel(__('user-race-profile.actions.update_club_oris_id.modal_submit'))
             ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value]))
             ->schema([
             ]);

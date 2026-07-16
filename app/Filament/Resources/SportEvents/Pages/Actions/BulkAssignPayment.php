@@ -32,28 +32,28 @@ class BulkAssignPayment
     public static function make(SportEvent $sportEvent): BulkAction
     {
         return BulkAction::make('assignEventPayment')
-            ->label('Přiřadit platbu')
+            ->label(__('sport-event.actions.assign_payment.label'))
             ->icon('heroicon-o-banknotes')
             ->color('primary')
-            ->modalHeading('Přiřazení platby vybraným závodním profilům')
-            ->modalDescription('Zadej typ platby a částku. Pro každý vybraný profil vznikne záznam ve vyúčtování.')
-            ->modalSubmitActionLabel('Přiřadit platbu')
+            ->modalHeading(__('sport-event.actions.assign_payment.modal_heading'))
+            ->modalDescription(__('sport-event.actions.assign_payment.modal_description'))
+            ->modalSubmitActionLabel(__('sport-event.actions.assign_payment.modal_submit'))
             ->visible(fn (): bool => Auth::user()?->hasRole([AppRoles::BillingSpecialist, AppRoles::SuperAdmin]) ?? false)
             ->schema([
                 Select::make('payment_category')
-                    ->label('Typ platby')
+                    ->label(__('sport-event.actions.assign_payment.payment_category'))
                     ->options(self::paymentCategoryOptions($sportEvent))
                     ->default(self::PAYMENT_CATEGORY_ENTRY_FEE)
                     ->required(),
                 TextInput::make('amount')
-                    ->label('Částka (Kč)')
+                    ->label(__('sport-event.actions.assign_payment.amount'))
                     ->numeric()
                     ->minValue(0.01)
                     ->required()
-                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Zadej kladnou částku. Uloží se jako záporná (výdaj).'),
+                    ->hintIcon('heroicon-m-question-mark-circle', tooltip: __('sport-event.actions.assign_payment.amount_hint')),
                 MarkdownEditor::make('note')
-                    ->label('Poznámka')
-                    ->hint('Nepovinné.'),
+                    ->label(__('sport-event.actions.assign_payment.note'))
+                    ->hint(__('sport-event.actions.assign_payment.note_hint')),
             ])
             ->action(function (Collection $records, array $data) use ($sportEvent): void {
                 $created = 0;
@@ -95,8 +95,8 @@ class BulkAssignPayment
                 });
 
                 Notification::make()
-                    ->title('Platby přiřazeny')
-                    ->body('Vytvořeno záznamů: '.$created)
+                    ->title(__('sport-event.actions.assign_payment.notification_title'))
+                    ->body(__('sport-event.actions.assign_payment.notification_body', ['count' => $created]))
                     ->success()
                     ->send();
             })
@@ -109,7 +109,7 @@ class BulkAssignPayment
     private static function paymentCategoryOptions(SportEvent $sportEvent): array
     {
         $options = [
-            self::PAYMENT_CATEGORY_ENTRY_FEE => 'Startovné',
+            self::PAYMENT_CATEGORY_ENTRY_FEE => __('sport-event.actions.assign_payment.entry_fee_option'),
         ];
 
         $services = SportService::query()
@@ -118,7 +118,9 @@ class BulkAssignPayment
 
         foreach ($services as $service) {
             $key = self::PAYMENT_CATEGORY_SERVICE_PREFIX.$service->id;
-            $options[$key] = 'Služba: '.($service->service_name_cz ?? ('#'.$service->id));
+            $options[$key] = __('sport-event.actions.assign_payment.service_option', [
+                'service' => $service->service_name_cz ?? ('#'.$service->id),
+            ]);
         }
 
         return $options;

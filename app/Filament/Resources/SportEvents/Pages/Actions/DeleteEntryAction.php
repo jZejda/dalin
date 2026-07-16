@@ -29,7 +29,7 @@ class DeleteEntryAction
                 $this->sendNotification($result, $deletedRaceProfile);
             })
             ->color(fn (UserEntry $userEntry): string => Auth::user()?->id === $userEntry->userRaceProfile?->user?->id ? 'danger' : 'warning')
-            ->label('Odhlásit')
+            ->label(__('sport-event.actions.delete_entry.label'))
             ->icon('heroicon-o-trash')
             ->disabled(fn (UserEntry $record): bool => $record->sportEvent instanceof \App\Models\SportEvent
                 && AppHelper::allowModifyUserEntry($record->sportEvent)
@@ -38,11 +38,11 @@ class DeleteEntryAction
                 $profile = $record->userRaceProfile;
                 $name = $profile instanceof \App\Models\UserRaceProfile ? $profile->user_race_full_name : '';
 
-                return $name.' - odhlášení ze závodu';
+                return __('sport-event.actions.delete_entry.modal_heading', ['profile' => $name]);
             })
             ->modalContent(view('filament.modals.user-cancel-entry'))
-            ->modalDescription('Odhlášení proběhne pokud.')
-            ->modalSubmitActionLabel('Odhlásit');
+            ->modalDescription(__('sport-event.actions.delete_entry.modal_description'))
+            ->modalSubmitActionLabel(__('sport-event.actions.delete_entry.modal_submit'));
     }
 
     public function shouldHide(UserEntry $userEntry): bool
@@ -70,8 +70,8 @@ class DeleteEntryAction
     {
         if (! $result->success) {
             Notification::make()
-                ->title('Něco se nepovedlo')
-                ->body('Toto pošli správci: '.$result->orisStatusError)
+                ->title(__('sport-event.actions.delete_entry.notification_title_failed'))
+                ->body(__('sport-event.actions.delete_entry.notification_body_failed', ['error' => $result->orisStatusError]))
                 ->warning()->send();
 
             return;
@@ -79,11 +79,11 @@ class DeleteEntryAction
 
         if ($result->wasOrisEntry) {
             Notification::make()
-                ->title('Úspěšně jsme odhlásili '.$profileName.' ze závodu')
-                ->body('Odhlášku doporučujeme zkontrolovat na ORISu.')
+                ->title(__('sport-event.actions.delete_entry.notification_title_success', ['profile' => $profileName]))
+                ->body(__('sport-event.actions.delete_entry.notification_body_oris'))
                 ->actions([
                     ActionAction::make('view')
-                        ->label('Přejít na url závodu')
+                        ->label(__('sport-event.actions.delete_entry.view_event_action'))
                         ->button()->openUrlInNewTab()
                         ->url(OrisApiService::ORIS_URL.'/Zavod?id='.$result->orisEventId),
                 ])
@@ -93,8 +93,8 @@ class DeleteEntryAction
         }
 
         Notification::make()
-            ->title('Úspěšně jsme odhlásili '.$profileName.' ze závodu')
-            ->body('Odhlášku proběhlo pouze v našem systému.')
+            ->title(__('sport-event.actions.delete_entry.notification_title_success', ['profile' => $profileName]))
+            ->body(__('sport-event.actions.delete_entry.notification_body_local'))
             ->warning()->send();
     }
 }

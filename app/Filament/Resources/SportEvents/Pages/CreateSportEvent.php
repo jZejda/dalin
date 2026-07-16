@@ -40,8 +40,11 @@ class CreateSportEvent extends CreateRecord
 
         foreach ($recipients as $recipient) {
             Notification::make()
-                ->title('Vytvořen nový závod')
-                ->body('Uživatel: ' . $recipientOrigin->name . ' | Název: ' . $sportEvent->name)
+                ->title(__('sport-event.pages.create.notification_title'))
+                ->body(__('sport-event.pages.create.notification_body', [
+                    'user' => $recipientOrigin->name,
+                    'name' => $sportEvent->name,
+                ]))
                 ->sendToDatabase($recipient);
         }
     }

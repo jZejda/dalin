@@ -18,6 +18,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class SportClassesRelationManager extends RelationManager
 {
@@ -25,9 +26,15 @@ class SportClassesRelationManager extends RelationManager
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $label = 'Kategorie';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('sport-event.relation_classes.title');
+    }
 
-    protected static ?string $title = 'Kategorie';
+    protected static function getModelLabel(): ?string
+    {
+        return __('sport-event.relation_classes.label');
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -35,37 +42,37 @@ class SportClassesRelationManager extends RelationManager
             ->components([
                 Grid::make()->columnSpanFull()->schema([
                     TextInput::make('name')
-                        ->label('Název kategorie')
+                        ->label(__('sport-event.relation_classes.name'))
                         ->required(),
                     Select::make('class_definition_id')
-                        ->label('Definice kategorie (věk/gender)')
+                        ->label(__('sport-event.relation_classes.class_definition'))
                         ->required()
                         ->options(SportClassDefinition::all()->pluck('class_definition_full_label', 'id'))
                         ->searchable(),
                 ])->columns(2),
                 TextInput::make('distance')
-                    ->label('Délka')
+                    ->label(__('sport-event.relation_classes.distance'))
                     ->suffix('km')
                     ->numeric()
                     ->inputMode('decimal')
                     ->minValue(0),
                 TextInput::make('climbing')
-                    ->label('Převýšení')
+                    ->label(__('sport-event.relation_classes.climbing'))
                     ->suffix('m')
                     ->numeric()
                     ->inputMode('decimal')
                     ->minValue(0),
                 TextInput::make('controls')
-                    ->label('Kontrol')
+                    ->label(__('sport-event.relation_classes.controls'))
                     ->numeric()
                     ->minValue(0),
                 TextInput::make('fee')
-                    ->label('Poplatek')
+                    ->label(__('sport-event.relation_classes.fee'))
                     ->numeric()
                     ->inputMode('decimal')
                     ->minValue(0),
                 TextInput::make('legs')
-                    ->label('Počet úseků štafety')
+                    ->label(__('sport-event.relation_classes.legs'))
                     ->numeric()
                     ->integer()
                     ->minValue(1),
@@ -78,17 +85,17 @@ class SportClassesRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Kategorie')
+                    ->label(__('sport-event.relation_classes.table.name'))
                     ->description(
                         fn (SportClass $record): string => $record->classDefinition->class_definition_fullLabel ?? ''
                     )
                     ->searchable(),
-                TextColumn::make('oris_id')->label('ORIS ID'),
-                TextColumn::make('distance')->label('Vzdálenost'),
-                TextColumn::make('climbing')->label('Stoupání'),
-                TextColumn::make('controls')->label('Kontrol'),
-                TextColumn::make('fee')->label('Cena'),
-                TextColumn::make('legs')->label('Úseků'),
+                TextColumn::make('oris_id')->label(__('sport-event.relation_classes.table.oris_id')),
+                TextColumn::make('distance')->label(__('sport-event.relation_classes.table.distance')),
+                TextColumn::make('climbing')->label(__('sport-event.relation_classes.table.climbing')),
+                TextColumn::make('controls')->label(__('sport-event.relation_classes.table.controls')),
+                TextColumn::make('fee')->label(__('sport-event.relation_classes.table.fee')),
+                TextColumn::make('legs')->label(__('sport-event.relation_classes.table.legs')),
             ])
             ->filters([
                 //

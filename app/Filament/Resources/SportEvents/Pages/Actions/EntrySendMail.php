@@ -38,30 +38,30 @@ class EntrySendMail
                 ))->send();
 
                 Notification::make()
-                    ->title('E-mail rozeslán')
-                    ->body('Přihlášeným uživatelům byl odeslán e-mail.')
+                    ->title(__('sport-event.actions.send_mail.notification_title'))
+                    ->body(__('sport-event.actions.send_mail.notification_body'))
                     ->success()
                     ->seconds(8)
                     ->send();
             })
             ->color('gray')
-            ->label('Pošli e-mail')
+            ->label(__('sport-event.actions.send_mail.label'))
             ->icon('heroicon-s-paper-airplane')
-            ->modalHeading('Pošle e-mailovou zprávu k závodu/akci')
-            ->modalDescription('E-mail je odesílán z fronty každý 5 minut.')
-            ->modalSubmitActionLabel('Odeslat')
+            ->modalHeading(__('sport-event.actions.send_mail.modal_heading'))
+            ->modalDescription(__('sport-event.actions.send_mail.modal_description'))
+            ->modalSubmitActionLabel(__('sport-event.actions.send_mail.modal_submit'))
             ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin->value, AppRoles::EventMaster->value]))
             ->schema([
                 Grid::make(1)
                     ->schema([
                         TextInput::make('subject')
-                            ->label('Předmět zprávy')
+                            ->label(__('sport-event.actions.send_mail.subject'))
                             ->required(),
                         TextInput::make('replyTo')
-                            ->label('Adresa pro odpovědi')
+                            ->label(__('sport-event.actions.send_mail.reply_to'))
                             ->default(Auth::user()?->email),
                         MarkdownEditor::make('content')
-                            ->label('Zpráva')
+                            ->label(__('sport-event.actions.send_mail.content'))
                             ->required(),
                     ]),
 

@@ -32,27 +32,27 @@ class EntryUpdateEvent
 
                 if ($result) {
                     Notification::make()
-                        ->title('Aktualizace závodu')
-                        ->body('Závod byl úspěšně aktualizován')
+                        ->title(__('sport-event.actions.update_event.notification_title'))
+                        ->body(__('sport-event.actions.update_event.notification_body_success'))
                         ->success()
                         ->seconds(8)
                         ->send();
                 } else {
                     Notification::make()
-                        ->title('Aktualizace závodu')
-                        ->body('Něco se nepovedlo, Můžeš vyzkoušet akci zopakovat nebo kontaktuj admina s popisem chyby, děkujeme.')
+                        ->title(__('sport-event.actions.update_event.notification_title'))
+                        ->body(__('sport-event.actions.update_event.notification_body_error'))
                         ->danger()
                         ->send();
                 }
             })
 
             ->color('gray')
-            ->label('Aktualizovat závod')
+            ->label(__('sport-event.actions.update_event.label'))
             ->disabled($this->disabledButton())
             ->icon('heroicon-m-arrow-path')
-            ->modalHeading('Aktualizovat závod z ORISu')
-            ->modalDescription('Provede aktualizaci závodu s aktuálními daty v ORISu')
-            ->modalSubmitActionLabel('Aktualizovat')
+            ->modalHeading(__('sport-event.actions.update_event.modal_heading'))
+            ->modalDescription(__('sport-event.actions.update_event.modal_description'))
+            ->modalSubmitActionLabel(__('sport-event.actions.update_event.modal_submit'))
             ->schema([
             ]);
     }

@@ -17,46 +17,53 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class SportEventLinkRelationManager extends RelationManager
 {
     protected static string $relationship = 'sportEventLinks';
 
-    protected static ?string $label = 'Odkazy';
-
-    protected static ?string $title = 'Odkazy';
-
     protected static ?string $recordTitleAttribute = 'name_cz';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('sport-event.relation_links.title');
+    }
+
+    protected static function getModelLabel(): ?string
+    {
+        return __('sport-event.relation_links.label');
+    }
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name_cz')
-                    ->label('Název odkazu česky')
+                    ->label(__('sport-event.relation_links.name_cz'))
                     ->required(),
                 TextInput::make('name_en')
-                    ->label('Název odkazu anglicky')
+                    ->label(__('sport-event.relation_links.name_en'))
                     ->required(),
                 TextInput::make('description_cz')
-                    ->label('Popis odkazu česky'),
+                    ->label(__('sport-event.relation_links.description_cz')),
                 TextInput::make('description_en')
-                    ->label('Popis odkazu anglicky'),
+                    ->label(__('sport-event.relation_links.description_en')),
                 Grid::make()->columnSpanFull()->schema([
                     TextInput::make('source_url')
-                        ->label('URL odkazu')
+                        ->label(__('sport-event.relation_links.source_url'))
                         ->url()
                         ->required(),
                 ])->columns(1),
                 Select::make('source_type')
-                    ->label('Typ odkazu')
+                    ->label(__('sport-event.relation_links.source_type'))
                     ->required()
                     ->options(SportEventLinkType::enumArray()),
                 Select::make('internal')
-                    ->label('Odkaz')
+                    ->label(__('sport-event.relation_links.internal'))
                     ->required()
                     ->options([
-                        0 => 'Externí odkaz',
+                        0 => __('sport-event.relation_links.internal_external_option'),
                     ])
                     ->default(0)
                     ->disabled(),
@@ -68,14 +75,14 @@ class SportEventLinkRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('name_cz')
-                    ->label('Odkaz česky')
+                    ->label(__('sport-event.relation_links.table.name_cz'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name_en')
-                    ->label('Odkaz anglicky')
+                    ->label(__('sport-event.relation_links.table.name_en'))
                     ->sortable(),
                 TextColumn::make('source_url')
-                    ->label('Odkaz'),
+                    ->label(__('sport-event.relation_links.table.source_url')),
             ])
             ->filters([
                 //

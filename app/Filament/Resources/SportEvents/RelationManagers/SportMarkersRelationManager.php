@@ -17,16 +17,23 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class SportMarkersRelationManager extends RelationManager
 {
     protected static string $relationship = 'sportEventMarkers';
 
-    protected static ?string $label = 'Body zájmu';
-
-    protected static ?string $title = 'Body zájmu';
-
     protected static ?string $recordTitleAttribute = 'label';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('sport-event.relation_markers.title');
+    }
+
+    protected static function getModelLabel(): ?string
+    {
+        return __('sport-event.relation_markers.label');
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -34,21 +41,21 @@ class SportMarkersRelationManager extends RelationManager
             ->components([
                 Grid::make()->columnSpanFull()->schema([
                     TextInput::make('label')
-                        ->label('Název bodu')
+                        ->label(__('sport-event.relation_markers.name'))
                         ->required(),
                 ])->columns(1),
                 TextInput::make('lat')
-                    ->label('GPS Lat')
+                    ->label(__('sport-event.relation_markers.lat'))
                     ->required()
                     ->numeric(),
                 TextInput::make('lon')
-                    ->label('GPS Lon')
+                    ->label(__('sport-event.relation_markers.lon'))
                     ->required()
                     ->numeric(),
                 TextInput::make('desc')
-                    ->label('Popis bodu'),
+                    ->label(__('sport-event.relation_markers.desc')),
                 Select::make('type')
-                    ->label('Typ bodu')
+                    ->label(__('sport-event.relation_markers.type'))
                     ->required()
                     ->options(SportEventMarkerType::enumArray()),
             ]);
@@ -59,20 +66,20 @@ class SportMarkersRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('label')
-                    ->label('Název bodu')
+                    ->label(__('sport-event.relation_markers.table.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('desc')
-                    ->label('Popis bodu')
+                    ->label(__('sport-event.relation_markers.table.desc'))
                     ->sortable(),
                 TextColumn::make('lat')
-                    ->label('Latitude')
+                    ->label(__('sport-event.relation_markers.table.lat'))
                     ->sortable(),
                 TextColumn::make('lon')
-                    ->label('Longitude')
+                    ->label(__('sport-event.relation_markers.table.lon'))
                     ->sortable(),
                 TextColumn::make('type')
-                    ->label('Typ bodu')
+                    ->label(__('sport-event.relation_markers.table.type'))
                     ->sortable(),
             ])
             ->filters([
