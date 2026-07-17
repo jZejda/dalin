@@ -181,6 +181,14 @@ Svou práci ukonči napsáním testů. Upozorni na případná rizika nebo závi
 - Typuj proměnné explicitně kde je to nutné pro PHPStan
 - Vyhýbej se `mixed` bez nutnosti
 
+## Lokalizace (CZ/EN)
+
+Aplikace je plně dvojjazyčná — všechny UI texty jdou přes `__()` s klíči v `lang/{cs,en}/`.
+
+- V asercích na UI texty **nikdy nepoužívej hardcoded české řetězce** — assertuj přes `__('domena.klíč')`, aby test nebyl závislý na aktuálním locale
+- Paritu klíčů cs/en hlídá `tests/Feature/LangParityTest.php` — pokud tvůj test odhalí chybějící klíč, nahlas to, neopravuj lang soubory sám
+- Testy mailů: `User` implementuje `HasLocalePreference`, mail se renderuje v jazyce příjemce — při testu obsahu mailu nastav uživateli `locale` explicitně
+
 ## Doménové pojmy
 
 | Kód | Česky |

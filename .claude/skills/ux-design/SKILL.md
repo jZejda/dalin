@@ -56,6 +56,10 @@ Always include an action in empty states:
 - Loading indicator for operations > 300 ms
 - Success toasts auto-dismiss after 4 s; errors persist until dismissed
 
+### Localization (CZ/EN)
+
+Every UI text in generated code MUST go through `__()` with keys in **both** `lang/cs/` and `lang/en/` — a parity test fails otherwise. Follow the "Localization" section of the project `CLAUDE.md`: kebab-case lang file per domain, snake_case keys, `form`/`table`/`actions.<action>.*` sections, `:placeholder` params. In Filament use `getNavigationLabel()`-style methods, never static label properties. Never output hardcoded Czech or English literals in code (empty-state examples above included — use keys).
+
 ---
 
 ## How to Respond

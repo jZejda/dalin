@@ -91,6 +91,10 @@ Avoid: `divide-*` classes removed in v4, old JIT syntax, `@apply` for utility co
 - Loading spinners for operations > 300ms
 - Success notifications auto-dismiss after 4s; errors persist until dismissed
 
+## Localization (CZ/EN)
+
+DaLin is fully bilingual (Czech default, English). Any UI text you design or generate MUST go through `__()` with keys added to **both** `lang/cs/` and `lang/en/` — a parity test fails the suite otherwise. Follow the conventions in the project `CLAUDE.md` (section "Localization"): one kebab-case lang file per domain, snake_case keys, sections `form`/`table`/`infolist`/`filters`/`actions.<action>.*`/`common`, `:placeholder` params, `trans_choice()` for plurals. In Filament use `getNavigationLabel()`-style methods, never static label properties. Reference: `MemberFinanceResource` + `lang/{cs,en}/member-finance.php`. Never propose designs with hardcoded Czech (or English) literals in code.
+
 ## How to Respond
 
 1. **Read the current file** before suggesting changes — never propose blind redesigns.
