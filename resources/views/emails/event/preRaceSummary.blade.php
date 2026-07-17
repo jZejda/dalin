@@ -1,33 +1,35 @@
 @php
     use App\Services\OrisApiService;
+
+    $days = $event->date_end && $event->date_end->ne($event->date) ? $event->date->diffInDays($event->date_end) + 1 : null;
 @endphp
 
 <x-mail::message>
 
-## Souhrn před závodem: {{ $event->name }}
+## {{ __('mail/pre-race-summary.body.heading', ['event' => $event->name]) }}
 
 {{ $event->alt_name }}
 
 @component('mail::divider')
-### Informace o akci
+### {{ __('mail/pre-race-summary.body.info_heading') }}
 @endcomponent
 
 @component('mail::table')
 | | |
 |:---|:---|
-| **Datum** | {{ $event->date->format('d.m.Y') }}@if($event->date_end && $event->date_end->ne($event->date)) – {{ $event->date_end->format('d.m.Y') }} ({{ $event->date->diffInDays($event->date_end) + 1 }} {{ $event->date->diffInDays($event->date_end) + 1 === 1 ? 'den' : 'dny' }})@endif |
-| **Start první etapy** | {{ $event->start_time ?? '–' }} |
+| **{{ __('mail/pre-race-summary.body.date_label') }}** | {{ $event->date->format('d.m.Y') }}@if($days !== null) – {{ $event->date_end->format('d.m.Y') }} ({{ trans_choice('mail/pre-race-summary.body.days_count', $days, ['count' => $days]) }})@endif |
+| **{{ __('mail/pre-race-summary.body.start_time_label') }}** | {{ $event->start_time ?? '–' }} |
 @if($event->oris_id)
-| **ORIS** | [Závod {{ $event->oris_id }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{ $event->oris_id }}) |
+| **{{ __('mail/pre-race-summary.body.oris_label') }}** | [{{ __('mail/pre-race-summary.body.oris_link_text', ['id' => $event->oris_id]) }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{ $event->oris_id }}) |
 @endif
 @endcomponent
 
 ---
 
-### Závodní profily
+### {{ __('mail/pre-race-summary.body.profiles_heading') }}
 
 @component('mail::table')
-| Reg. číslo | Jméno | Kategorie | +min | Délka | Kontroly | Převýšení |
+| {{ __('mail/pre-race-summary.body.reg_number_label') }} | {{ __('mail/pre-race-summary.body.name_label') }} | {{ __('mail/pre-race-summary.body.category_label') }} | {{ __('mail/pre-race-summary.body.plus_min_label') }} | {{ __('mail/pre-race-summary.body.distance_label') }} | {{ __('mail/pre-race-summary.body.controls_label') }} | {{ __('mail/pre-race-summary.body.climbing_label') }} |
 |:---|:---|:---|:---|:---|:---|:---|
 @foreach($entries as $entry)
 @php
@@ -59,7 +61,7 @@
 
 ---
 
-### Popis akce
+### {{ __('mail/pre-race-summary.body.description_heading') }}
 
 {{ $event->event_info }}
 @endif
@@ -68,10 +70,10 @@
 
 ---
 
-### Linky
+### {{ __('mail/pre-race-summary.body.links_heading') }}
 
 @component('mail::table')
-| Název | Odkaz |
+| {{ __('mail/pre-race-summary.body.link_name_label') }} | {{ __('mail/pre-race-summary.body.link_url_label') }} |
 |:---|:---|
 @foreach($event->sportEventLinks as $link)
 | {{ $link->name_cz ?? $link->description_cz ?? '–' }} | @if($link->source_url)[{{ $link->name_cz ?? $link->source_url }}]({{ $link->source_url }})@else–@endif |
@@ -83,7 +85,7 @@
 
 ---
 
-### Novinky
+### {{ __('mail/pre-race-summary.body.news_heading') }}
 
 @foreach($event->sportEventNews as $news)
 **{{ $news->date->format('d.m.Y') }}**

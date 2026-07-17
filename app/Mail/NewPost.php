@@ -28,7 +28,7 @@ class NewPost extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name') . ' - Novinky' . ($this->subject !== null ? ' - ' . $this->subject : ''),
+            subject: config('app.name') . ' - ' . __('mail/new-post.subject.new_post') . ($this->subject !== null ? ' - ' . $this->subject : ''),
         );
     }
 

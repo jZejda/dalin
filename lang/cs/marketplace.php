@@ -97,6 +97,24 @@ return [
     'mail' => [
         'offer_closed_subject' => 'Nabídka na tržišti byla ukončena',
         'announcement_subject' => 'Nová nabídka na tržišti',
+
+        'announcement_heading' => 'Nová nabídka na tržišti',
+        'announcement_intro' => '**:user** vystavil nabídku **:title**.',
+        'announcement_intro_club' => '**:user** vystavil za oddíl nabídku **:title**.',
+        'announcement_orders_until' => 'Objednávky do **:date**.',
+        'announcement_products_heading' => 'Nabízené produkty:',
+        'announcement_price_per_unit' => ':price Kč/ks',
+        'qty_suffix' => ':qty ks',
+        'free_product_label' => 'zdarma / výměna',
+
+        'offer_closed_heading' => 'Nabídka na tržišti byla ukončena',
+        'offer_closed_intro' => 'Nabídka **:title** od **:author** byla ukončena :date.',
+        'offer_closed_author_note' => 'Objednávky členů najdeš v aplikaci na stránce Moje nabídky. Po realizaci nákupu můžeš nabídku rozúčtovat podle objednaných kusů.',
+        'offer_closed_orders_heading' => 'Tvoje objednávky v této nabídce:',
+        'offer_closed_unit_price' => '× :price Kč',
+        'offer_closed_total_price' => '**:total Kč**',
+        'offer_closed_footer_credit' => 'Položky se stržením z konta ti budou naúčtovány při rozúčtování nabídky.',
+        'offer_closed_footer_direct' => 'Přímé platby proběhnou po domluvě se zadavatelem.',
     ],
 
     'order_action' => 'Objednat',

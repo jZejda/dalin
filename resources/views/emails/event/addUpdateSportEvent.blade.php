@@ -5,14 +5,14 @@
 
 <x-mail::message>
 
-## Změny v seznamu závodů
+## {{ __('mail/add-update-sport-event.body.heading') }}
 
-Vybrané informace o změnách v přihláškovém systému {{ Config::get('site-config.club.abbr') }}.
+{{ __('mail/add-update-sport-event.body.intro', ['club' => Config::get('site-config.club.abbr')]) }}
 
-Do systému byly přidány závody:
+{{ __('mail/add-update-sport-event.body.events_intro') }}
 
 @component('mail::table')
-    | Závod              | Přihláška do         |
+    | {{ __('mail/add-update-sport-event.body.table_event') }}              | {{ __('mail/add-update-sport-event.body.table_entry_until') }}         |
     | :----------------- |:------------- |
     @foreach ($sportEvents as $sportEvent)
         | {{$sportEvent->name }}<br>@if(EmptyType::stringNotEmpty($sportEvent->alt_name)) {{Str::limit($sportEvent->alt_name, 35)}}@endif  | {{\Carbon\Carbon::parse($sportEvent->date)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT)}}  |
@@ -21,11 +21,11 @@ Do systému byly přidány závody:
 
 @component('mail::divider')
 
-## Pokus
+## {{ __('mail/add-update-sport-event.body.divider_heading') }}
 
-Odhlášení ze zasílání těchto zpráv můžete upravit přímo v klientské sekci v nastavení.
+{{ __('mail/add-update-sport-event.body.unsubscribe_note') }}
 @endcomponent
 
-Mějte se fajn a jezděte na závody - {{ Config::get('site-config.club.abbr') }}
+{{ __('mail/add-update-sport-event.body.signoff', ['club' => Config::get('site-config.club.abbr')]) }}
 
 </x-mail::message>

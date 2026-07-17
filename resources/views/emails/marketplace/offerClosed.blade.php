@@ -1,33 +1,31 @@
 <x-mail::message>
 
-## Nabídka na tržišti byla ukončena
+## {{ __('marketplace.mail.offer_closed_heading') }}
 
 @component('mail::divider')
-Nabídka **{{ $offer->title }}** od **{{ $offer->user?->name }}** byla ukončena
-{{ $offer->closed_at?->format('j. n. Y H:i') }}.
+{{ __('marketplace.mail.offer_closed_intro', ['title' => $offer->title, 'author' => $offer->user?->name, 'date' => $offer->closed_at?->format('j. n. Y H:i')]) }}
 @endcomponent
 
 @if ($isAuthor)
-Objednávky členů najdeš v aplikaci na stránce Moje nabídky. Po realizaci nákupu
-můžeš nabídku rozúčtovat podle objednaných kusů.
+{{ __('marketplace.mail.offer_closed_author_note') }}
 @endif
 
 @if ($recipientOrders->isNotEmpty())
-Tvoje objednávky v této nabídce:
+{{ __('marketplace.mail.offer_closed_orders_heading') }}
 
 @foreach ($recipientOrders as $order)
-- **{{ $order->marketProduct?->name }}** — {{ $order->qty }} ks
+- **{{ $order->marketProduct?->name }}** — {{ __('marketplace.mail.qty_suffix', ['qty' => $order->qty]) }}
 @if ($order->unit_price > 0)
-× {{ number_format($order->unit_price, 2, ',', ' ') }} Kč
-= **{{ number_format($order->totalAmount(), 2, ',', ' ') }} Kč**
+{{ __('marketplace.mail.offer_closed_unit_price', ['price' => number_format($order->unit_price, 2, ',', ' ')]) }}
+= {{ __('marketplace.mail.offer_closed_total_price', ['total' => number_format($order->totalAmount(), 2, ',', ' ')]) }}
 ({{ $order->marketProduct?->payment_method->getLabel() }})
 @else
-(zdarma / výměna)
+({{ __('marketplace.mail.free_product_label') }})
 @endif
 @endforeach
 
-Položky se stržením z konta ti budou naúčtovány při rozúčtování nabídky.
-Přímé platby proběhnou po domluvě se zadavatelem.
+{{ __('marketplace.mail.offer_closed_footer_credit') }}
+{{ __('marketplace.mail.offer_closed_footer_direct') }}
 @endif
 
 </x-mail::message>

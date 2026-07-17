@@ -1,22 +1,21 @@
 <x-mail::message>
 
-## Konec přihlášek - 1 termín
+## {{ __('mail/sport-event-nearest.body.heading') }}
 
-Blíží se konec přihlášek na závody vypsané níže. Do termínu přihlášení zbývají necelé **dva dny**.
-Přihlášení proveď podle pokynů v administraci.
+{{ __('mail/sport-event-nearest.body.intro') }}
 
 @component('mail::table')
-    | Přihláška do       | Název akce/závodu        |
+    | {{ __('mail/sport-event-nearest.body.table_entry_until') }}       | {{ __('mail/sport-event-nearest.body.table_event_name') }}        |
     | :----------------- |:------------- |
     @foreach ($sportEvents as $sportEvent)
         | {{  \Carbon\Carbon::parse($sportEvent->date)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}  | {{$sportEvent->name }}  |
     @endforeach
 @endcomponent
 
-Mějte se fajn a jezděte na závody - ABM
+{{ __('mail/sport-event-nearest.body.signoff', ['club' => Config::get('site-config.club.abbr')]) }}
 
 @component('mail::subcopy')
-    Odhlášení ze zasílání těchto zpráv můžete upravit přímo v klientské sekci v nastavení.
+    {{ __('mail/sport-event-nearest.body.unsubscribe_note') }}
 @endcomponent
 
 </x-mail::message>

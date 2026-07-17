@@ -10,19 +10,19 @@ use Illuminate\Support\Carbon;
 
 <x-mail::message>
 
-## Konec přihlášek závodu
+## {{ __('mail/entry-ends-to-pay.body.heading') }}
 
-Aktuálně končí **{{$deadline}} termín** přihlášek k závodu vypsaných níže. Prosím o uhrazení startovného přihlášených členů.
+{{ __('mail/entry-ends-to-pay.body.intro', ['deadline' => $deadline]) }}
 
 @if(!is_null($sportEvents))
 @component('mail::divider')
-## {{$deadline}} termín přihlášek
+## {{ __('mail/entry-ends-to-pay.body.deadline_heading', ['deadline' => $deadline]) }}
 
-Závody u kterých právě končí **{{$deadline}} termín** přihlášek.
+{{ __('mail/entry-ends-to-pay.body.deadline_text', ['deadline' => $deadline]) }}
 @endcomponent
 
 @component('mail::table')
-    | Přihláška do       | Název akce/závodu        | ORIS ID
+    | {{ __('mail/entry-ends-to-pay.body.table_entry_until') }}       | {{ __('mail/entry-ends-to-pay.body.table_event_name') }}        | {{ __('mail/entry-ends-to-pay.body.table_oris_id') }}
     | :----------------- |:------------- |:------------- |
     @foreach ($sportEvents as $event)
         @if ($deadline === 1)

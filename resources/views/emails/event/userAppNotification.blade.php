@@ -1,16 +1,15 @@
 <x-mail::message>
 
-## Hromadná zpráva
+## {{ __('mail/user-app-notification.body.heading') }}
 
-Upozornění z interního systému {{ Config::get('site-config.club.abbr') }} na vybrané uživatele systému.
+{{ __('mail/user-app-notification.body.intro', ['abbr' => Config::get('site-config.club.abbr')]) }}
 
 @component('mail::divider')
-Zpráva od uživatele **{{ $user->name }}**.
+{{ __('mail/user-app-notification.body.from_user', ['name' => $user->name]) }}
 
-- Zpráva zaslána dne: **{{ \Carbon\Carbon::now()->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) ?? ''}}**
+- {{ __('mail/user-app-notification.body.sent_at', ['date' => \Carbon\Carbon::now()->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) ?? '']) }}
 @endcomponent
 
 {{ $content }}
 
 </x-mail::message>
-

@@ -30,7 +30,7 @@ class EntryEndsToPay extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name') . ' - Zaslání platby k ' . $this->deadline . ' termínu závodů',
+            subject: config('app.name') . ' - ' . __('mail/entry-ends-to-pay.subject.entry_ends_to_pay', ['deadline' => $this->deadline]),
         );
     }
 

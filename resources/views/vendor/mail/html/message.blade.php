@@ -20,7 +20,7 @@
 
 <x-slot:after>
 <x-mail::after>
-Zrušit zasílání zpráv můžete z klientské sekce. Případně prostudujte [nápovědu](http://jirizejda.cz/dalin/napoveda/).
+{{ __('mail/common.footer.unsubscribe_note', ['url' => 'http://jirizejda.cz/dalin/napoveda/']) }}
 </x-mail::after>
 </x-slot:after>
 

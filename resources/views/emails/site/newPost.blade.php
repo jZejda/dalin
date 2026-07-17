@@ -5,9 +5,9 @@
 @endphp
 
 <x-mail::message>
-## Novinka v interní sekci
+## {{ __('mail/new-post.body.heading') }}
 
-V členské sekci byla zveřejněna novinka.
+{{ __('mail/new-post.body.intro') }}
 
 ----
 

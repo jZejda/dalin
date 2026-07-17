@@ -55,6 +55,28 @@ return [
         'request_rejected_subject' => 'Žádost o spolujízdu zamítnuta',
         'request_cancelled_subject' => 'Spolujezdec zrušil rezervaci',
         'offer_cancelled_subject' => 'Nabídka dopravy byla zrušena',
+
+        'offer_cancelled_heading' => 'Nabídka dopravy byla zrušena',
+        'offer_cancelled_intro' => 'Řidič **:driver** zrušil nabídku dopravy na závod **:event**, ve které jsi měl žádost o místo.',
+        'try_another_offer_footer' => 'Zkus jinou nabídku dopravy na stránce Doprava u závodu.',
+
+        'request_cancelled_heading' => 'Spolujezdec zrušil rezervaci',
+        'request_cancelled_intro' => '**:passenger** zrušil svou rezervaci ve tvé nabídce dopravy na závod **:event**.',
+        'request_cancelled_seats_label' => 'Počet uvolněných míst',
+        'request_cancelled_footer' => 'Místa jsou opět volná pro další zájemce.',
+
+        'request_created_heading' => 'Nová žádost o spolujízdu',
+        'request_created_intro' => '**:passenger** má zájem o místo ve tvé nabídce dopravy na závod **:event**.',
+        'request_created_cta' => 'Žádost můžeš vyřídit rovnou z tohoto e-mailu:',
+        'request_created_approve_button' => 'Schválit žádost',
+        'request_created_reject_button' => 'Zamítnout žádost',
+        'request_created_footer' => 'Odkazy platí do dne konání závodu. Žádosti najdeš i v aplikaci na stránce Doprava u závodu.',
+
+        'request_decided_heading_approved' => 'Tvoje žádost o spolujízdu byla schválena 🎉',
+        'request_decided_heading_rejected' => 'Tvoje žádost o spolujízdu byla zamítnuta',
+        'request_decided_race_label' => 'Závod',
+        'request_decided_driver_label' => 'Řidič',
+        'request_decided_footer_approved' => 'Místo v autě je pro tebe rezervované. Detaily domluv přímo s řidičem.',
     ],
 
     'direction_enum' => [

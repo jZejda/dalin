@@ -15,7 +15,7 @@ class UsersInDebit extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name') . ' - Uživatelé s nízkým kreditem',
+            subject: config('app.name') . ' - ' . __('mail/users-in-debit.subject.users_in_debit'),
         );
     }
 

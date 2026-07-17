@@ -1,27 +1,26 @@
 <x-mail::message>
 
-## Nová žádost o spolujízdu
+## {{ __('transport.mail.request_created_heading') }}
 
 @component('mail::divider')
-**{{ $transportRequest->user?->name }}** má zájem o místo ve tvé nabídce dopravy na závod
-**{{ $transportRequest->transportOffer?->sportEvent?->name }}**.
+{{ __('transport.mail.request_created_intro', ['passenger' => $transportRequest->user?->name, 'event' => $transportRequest->transportOffer?->sportEvent?->name]) }}
 
-- Směr: **{{ $transportRequest->direction->label() }}**
-- Počet míst: **{{ $transportRequest->seats }}**
-- Odkud: **{{ $transportRequest->transportOffer?->departure_place }}**
-- Vozidlo: **{{ $transportRequest->transportOffer?->vehicle?->name }}**
+- {{ __('transport.direction') }}: **{{ $transportRequest->direction->label() }}**
+- {{ __('transport.seats') }}: **{{ $transportRequest->seats }}**
+- {{ __('transport.departure_place') }}: **{{ $transportRequest->transportOffer?->departure_place }}**
+- {{ __('transport.vehicle') }}: **{{ $transportRequest->transportOffer?->vehicle?->name }}**
 @endcomponent
 
-Žádost můžeš vyřídit rovnou z tohoto e-mailu:
+{{ __('transport.mail.request_created_cta') }}
 
 <x-mail::button :url="$approveUrl" color="success">
-Schválit žádost
+{{ __('transport.mail.request_created_approve_button') }}
 </x-mail::button>
 
 <x-mail::button :url="$rejectUrl" color="error">
-Zamítnout žádost
+{{ __('transport.mail.request_created_reject_button') }}
 </x-mail::button>
 
-Odkazy platí do dne konání závodu. Žádosti najdeš i v aplikaci na stránce Doprava u závodu.
+{{ __('transport.mail.request_created_footer') }}
 
 </x-mail::message>

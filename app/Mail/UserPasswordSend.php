@@ -34,9 +34,9 @@ class UserPasswordSend extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         if ($this->action === self::ACTION_SEND_PASSWORD) {
-            $actionSubject = 'Zaslání hesla k portálu';
+            $actionSubject = __('mail/user-password-send.subject.send_password');
         } else {
-            $actionSubject = 'Reset hesla k portálu';
+            $actionSubject = __('mail/user-password-send.subject.reset_password');
         }
 
         return new Envelope(

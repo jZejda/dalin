@@ -26,7 +26,7 @@ class NewPosts extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name') . ' - Novinky',
+            subject: config('app.name') . ' - ' . __('mail/new-posts.subject.new_posts'),
         );
     }
 

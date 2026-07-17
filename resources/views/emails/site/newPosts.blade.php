@@ -1,7 +1,7 @@
 <x-mail::message>
-## Byla zveřejněna novinka
+## {{ __('mail/new-posts.body.heading') }}
 
-Něco nového na stránkách :-).
+{{ __('mail/new-posts.body.intro') }}
 
 
 @foreach ($postContent as $post)

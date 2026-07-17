@@ -5,18 +5,20 @@
 
 <x-mail::message>
 
-## Uživatelé s nízkým kreditem
+## {{ __('mail/users-in-debit.body.heading') }}
 
-Měsíční výpis uživatelů {{ Config::get('site-config.club.abbr') }} klubu k dnešnímu dni
-{{ Carbon::now()->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}, kteří k prvnímu mají nízký kredit na kontě.
+{{ __('mail/users-in-debit.body.intro', [
+    'club' => Config::get('site-config.club.abbr'),
+    'date' => Carbon::now()->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT),
+]) }}
 
-Prosím o kontrolu s následnou informací k uživatelům:
+{{ __('mail/users-in-debit.body.check_note') }}
 
 @component('mail::table')
-    | Uživatel              | Stav konta Kč         |
+    | {{ __('mail/users-in-debit.body.table_header_user') }} | {{ __('mail/users-in-debit.body.table_header_balance') }} |
     | :----------------- |:------------- |
     @foreach ($usersData as $user)
-        | {{$user['fullName'] }} ({{$user['email']}})  | {{$user['debit'] }} Kč |
+        | {{$user['fullName'] }} ({{$user['email']}})  | {{ __('mail/users-in-debit.body.table_row_debit', ['debit' => $user['debit']]) }} |
     @endforeach
 @endcomponent
 

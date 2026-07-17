@@ -28,7 +28,7 @@ class EventEntryEnds extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name') . ' - Blíží se konec přihlášek závodů',
+            subject: config('app.name') . ' - ' . __('mail/event-entry-ends.subject.event_entry_ends'),
         );
     }
 

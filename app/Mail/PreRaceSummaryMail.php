@@ -26,7 +26,7 @@ class PreRaceSummaryMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name') . ' - Souhrn před závodem: ' . $this->event->name,
+            subject: config('app.name') . ' - ' . __('mail/pre-race-summary.subject.pre_race_summary', ['event' => $this->event->name]),
         );
     }
 

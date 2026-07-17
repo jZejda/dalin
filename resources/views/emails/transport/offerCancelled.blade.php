@@ -1,15 +1,14 @@
 <x-mail::message>
 
-## Nabídka dopravy byla zrušena
+## {{ __('transport.mail.offer_cancelled_heading') }}
 
 @component('mail::divider')
-Řidič **{{ $transportRequest->transportOffer?->user?->name }}** zrušil nabídku dopravy na závod
-**{{ $transportRequest->transportOffer?->sportEvent?->name }}**, ve které jsi měl žádost o místo.
+{{ __('transport.mail.offer_cancelled_intro', ['driver' => $transportRequest->transportOffer?->user?->name, 'event' => $transportRequest->transportOffer?->sportEvent?->name]) }}
 
-- Směr: **{{ $transportRequest->direction->label() }}**
-- Počet míst: **{{ $transportRequest->seats }}**
+- {{ __('transport.direction') }}: **{{ $transportRequest->direction->label() }}**
+- {{ __('transport.seats') }}: **{{ $transportRequest->seats }}**
 @endcomponent
 
-Zkus jinou nabídku dopravy na stránce Doprava u závodu.
+{{ __('transport.mail.try_another_offer_footer') }}
 
 </x-mail::message>

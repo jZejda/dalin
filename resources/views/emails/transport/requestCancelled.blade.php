@@ -1,15 +1,14 @@
 <x-mail::message>
 
-## Spolujezdec zrušil rezervaci
+## {{ __('transport.mail.request_cancelled_heading') }}
 
 @component('mail::divider')
-**{{ $transportRequest->user?->name }}** zrušil svou rezervaci ve tvé nabídce dopravy na závod
-**{{ $transportRequest->transportOffer?->sportEvent?->name }}**.
+{{ __('transport.mail.request_cancelled_intro', ['passenger' => $transportRequest->user?->name, 'event' => $transportRequest->transportOffer?->sportEvent?->name]) }}
 
-- Směr: **{{ $transportRequest->direction->label() }}**
-- Počet uvolněných míst: **{{ $transportRequest->seats }}**
+- {{ __('transport.direction') }}: **{{ $transportRequest->direction->label() }}**
+- {{ __('transport.mail.request_cancelled_seats_label') }}: **{{ $transportRequest->seats }}**
 @endcomponent
 
-Místa jsou opět volná pro další zájemce.
+{{ __('transport.mail.request_cancelled_footer') }}
 
 </x-mail::message>

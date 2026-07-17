@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
@@ -17,7 +19,7 @@ class AddUpdateSportEvent extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name') . ' - Změny v kalendáři závodů',
+            subject: config('app.name') . ' - ' . __('mail/add-update-sport-event.subject.add_update_sport_event'),
         );
     }
 

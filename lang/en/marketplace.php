@@ -97,6 +97,24 @@ return [
     'mail' => [
         'offer_closed_subject' => 'The marketplace offer has ended',
         'announcement_subject' => 'New marketplace offer',
+
+        'announcement_heading' => 'New marketplace offer',
+        'announcement_intro' => '**:user** created an offer **:title**.',
+        'announcement_intro_club' => '**:user** created an offer on behalf of the club **:title**.',
+        'announcement_orders_until' => 'Orders until **:date**.',
+        'announcement_products_heading' => 'Offered products:',
+        'announcement_price_per_unit' => ':price CZK/pc',
+        'qty_suffix' => ':qty pcs',
+        'free_product_label' => 'free / exchange',
+
+        'offer_closed_heading' => 'The marketplace offer has ended',
+        'offer_closed_intro' => 'The offer **:title** by **:author** has ended :date.',
+        'offer_closed_author_note' => 'You can find members\' orders in the app on the My offers page. Once the purchase is completed, you can bill the offer according to the ordered pieces.',
+        'offer_closed_orders_heading' => 'Your orders in this offer:',
+        'offer_closed_unit_price' => '× :price CZK',
+        'offer_closed_total_price' => '**:total CZK**',
+        'offer_closed_footer_credit' => 'Items with account deduction will be charged to you when the offer is billed.',
+        'offer_closed_footer_direct' => 'Direct payments will happen after arrangement with the offer author.',
     ],
 
     'order_action' => 'Order',

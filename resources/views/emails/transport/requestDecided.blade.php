@@ -1,24 +1,24 @@
 <x-mail::message>
 
 @if($transportRequest->isApproved())
-## Tvoje žádost o spolujízdu byla schválena 🎉
+## {{ __('transport.mail.request_decided_heading_approved') }}
 @else
-## Tvoje žádost o spolujízdu byla zamítnuta
+## {{ __('transport.mail.request_decided_heading_rejected') }}
 @endif
 
 @component('mail::divider')
-Závod: **{{ $transportRequest->transportOffer?->sportEvent?->name }}**
+{{ __('transport.mail.request_decided_race_label') }}: **{{ $transportRequest->transportOffer?->sportEvent?->name }}**
 
-- Řidič: **{{ $transportRequest->transportOffer?->user?->name }}**
-- Směr: **{{ $transportRequest->direction->label() }}**
-- Počet míst: **{{ $transportRequest->seats }}**
-- Odkud: **{{ $transportRequest->transportOffer?->departure_place }}**
+- {{ __('transport.mail.request_decided_driver_label') }}: **{{ $transportRequest->transportOffer?->user?->name }}**
+- {{ __('transport.direction') }}: **{{ $transportRequest->direction->label() }}**
+- {{ __('transport.seats') }}: **{{ $transportRequest->seats }}**
+- {{ __('transport.departure_place') }}: **{{ $transportRequest->transportOffer?->departure_place }}**
 @endcomponent
 
 @if($transportRequest->isApproved())
-Místo v autě je pro tebe rezervované. Detaily domluv přímo s řidičem.
+{{ __('transport.mail.request_decided_footer_approved') }}
 @else
-Zkus jinou nabídku dopravy na stránce Doprava u závodu.
+{{ __('transport.mail.try_another_offer_footer') }}
 @endif
 
 </x-mail::message>

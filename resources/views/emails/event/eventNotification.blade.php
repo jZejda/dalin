@@ -1,15 +1,21 @@
+@php
+    $altNamePart = null;
+    if (!is_null($sportEvent->alt_name)) {
+        $altNamePart = ' | ' . $sportEvent->alt_name;
+    }
+@endphp
+
 <x-mail::message>
 
-## Notifikace k závodu
+## {{ __('mail/user-entry-notification.body.heading') }}
 
 @component('mail::divider')
-Zpráva k závodu **{{ $sportEvent->name }}** @if(!is_null($sportEvent->alt_name)) | {{ $sportEvent->alt_name }} @endif odeslána na všechny aktuálně přihlášené závodníky.
+{{ __('mail/user-entry-notification.body.intro', ['name' => $sportEvent->name, 'alt_name' => $altNamePart ?? '']) }}
 
-- Datum: **{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $sportEvent->date)->format(\App\Shared\Helpers\AppHelper::DATE_FORMAT) ?? ''}}**
-- Místo: **{{ $sportEvent->place ?? ''}}**
+- {{ __('mail/user-entry-notification.body.date_line', ['date' => \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $sportEvent->date)->format(\App\Shared\Helpers\AppHelper::DATE_FORMAT) ?? '']) }}
+- {{ __('mail/user-entry-notification.body.place_line', ['place' => $sportEvent->place ?? '']) }}
 @endcomponent
 
 {{ $content }}
 
 </x-mail::message>
-

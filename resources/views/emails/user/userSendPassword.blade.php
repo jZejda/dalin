@@ -2,39 +2,49 @@
 
 use App\Mail\UserPasswordSend;
 use App\Models\User;
+use Illuminate\Support\Facades\URL;
 
 /** @var string $newPassword */
 /** @var User $user */
 /** @var string $action */
+
+$isNewAccount = $action === UserPasswordSend::ACTION_SEND_PASSWORD;
+$loginUrl = URL::to('/') . '/admin/login';
+$club = config('site-config.club.abbr');
 ?>
 
 <x-mail::message>
 
-## {{ $action === UserPasswordSend::ACTION_SEND_PASSWORD ? 'Heslo' : 'Reset hesla'  }} do členské sekce - {!!config('site-config.club.abbr')!!}.
+@if ($isNewAccount)
+## {{ __('mail/user-password-send.body.heading_new_account', ['club' => $club]) }}
 
-{{ $action === UserPasswordSend::ACTION_SEND_PASSWORD ? 'Byl vám vytvořen nový účet ' : 'Bylo vám resetováno heslo '  }} v přihláškovém systému oddílu {!!config('site-config.club.abbr')!!}.
+{{ __('mail/user-password-send.body.intro_new_account', ['club' => $club]) }}
+@else
+## {{ __('mail/user-password-send.body.heading_reset', ['club' => $club]) }}
+
+{{ __('mail/user-password-send.body.intro_reset', ['club' => $club]) }}
+@endif
 
 @component('mail::divider')
-Adresa: **[{!! \Illuminate\Support\Facades\URL::to('/') !!}/admin/login]({!! \Illuminate\Support\Facades\URL::to('/') !!}/admin/login)**
+{{ __('mail/user-password-send.body.address_label') }}: **[{{ $loginUrl }}]({{ $loginUrl }})**
 
-Jméno: **{{ $user->name }}**
+{{ __('mail/user-password-send.body.name_label') }}: **{{ $user->name }}**
 
-Login: **{{ $user->email }}**
+{{ __('mail/user-password-send.body.login_label') }}: **{{ $user->email }}**
 
-Heslo: **{{ $newPassword }}**
+{{ __('mail/user-password-send.body.password_label') }}: **{{ $newPassword }}**
 
 
 @endcomponent
 
-### Nápověda / Řešení potíží
+### {{ __('mail/user-password-send.body.help_heading') }}
 
-Pro více informací, jak pracovat s aplikací, navštivte prosím naši nápovědu na [této stránce]({{ \App\Shared\Helpers\AppHelper::getPageHelpUrl('') }}).
-V případě problémů s přihlášením, směřujte případné dotazy na email {!! config('site-config.club.technical_email') !!}.
-Vygenerované heslo si lze po přihlášení v systému změnit.
+{{ __('mail/user-password-send.body.help_text', ['url' => \App\Shared\Helpers\AppHelper::getPageHelpUrl('')]) }}
+{{ __('mail/user-password-send.body.help_login_issues', ['email' => config('site-config.club.technical_email')]) }}
+{{ __('mail/user-password-send.body.help_password_change') }}
 
-#### Mohlo by se hodit
+#### {{ __('mail/user-password-send.body.tips_heading') }}
 
-Heslo si nejlépe ulož do některého důvěryhodného správce hesel jako například [KeePassXC](https://keepassxc.org/),
-[BitWarden](https://bitwarden.com/) a pod.
+{{ __('mail/user-password-send.body.tips_text') }}
 
 </x-mail::message>
