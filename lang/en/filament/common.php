@@ -21,7 +21,6 @@ return [
     'content_category' => [
         'title' => 'Category name',
         'description' => 'Category description',
-        'slug' => 'URL link',
         'race_relation' => 'Race/event session',
 
         'create_heading' => 'Category',
