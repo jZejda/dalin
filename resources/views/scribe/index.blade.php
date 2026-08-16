@@ -137,7 +137,7 @@
     </ul>
 
     <ul class="toc-footer" id="last-updated">
-        <li>Last updated: July 15, 2026</li>
+        <li>Last updated: July 16, 2026</li>
     </ul>
 </div>
 
@@ -145,17 +145,19 @@
     <div class="dark-box"></div>
     <div class="content">
         <h1 id="introduction">Introduction</h1>
-<p>Start (and never finish) side projects with this API.</p>
+<p>DaLin je klubový informační systém pro správu oddílů orientačních sportů — závody a přihlášky s napojením na ORIS, členské finance, novinky a obsah klubu. REST API v1 zpřístupňuje seznam závodů a jejich detail, závodní profily člena, vytváření a rušení přihlášek, zůstatek členského konta a klubové příspěvky a stránky. Všechny endpointy vyžadují platný API klíč v hlavičce <code>x-apikey</code> — klíč si každý člen vygeneruje v aplikaci na stránce <strong>Uživatelská nastavení</strong>.</p>
 <aside>
     <strong>Base URL</strong>: <code>https://demo.dalin.cz</code>
 </aside>
-<pre><code>This documentation aims to provide all the information you need to work with our API.
+<pre><code>Tato dokumentace popisuje vše potřebné pro práci s DaLin API.
 
-&lt;aside&gt;As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
-You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).&lt;/aside&gt;</code></pre>
+&lt;aside&gt;Při procházení uvidíš vpravo v tmavém panelu ukázky volání API v různých programovacích jazycích (na mobilu jako součást obsahu).
+Jazyk ukázek přepneš záložkami vpravo nahoře (na mobilu v menu vlevo nahoře).&lt;/aside&gt;</code></pre>
 
         <h1 id="authenticating-requests">Authenticating requests</h1>
-<p>This API is not authenticated.</p>
+<p>To authenticate requests, include a <strong><code>x-apikey</code></strong> header with the value <strong><code>"{YOUR_API_KEY}"</code></strong>.</p>
+<p>All authenticated endpoints are marked with a <code>requires authentication</code> badge in the documentation below.</p>
+<p>API klíč si vygeneruješ v aplikaci na stránce <b>Uživatelská nastavení</b>. Klíč posílej v hlavičce <code>x-apikey</code> každého požadavku.</p>
 
         <h1 id="v1">V1</h1>
 
@@ -168,6 +170,7 @@ You can switch the language used with the tabs at the top right (or from the nav
                                         <h2 id="v1-GETapi-v1-user-race-profiles">Seznam závodních profilů</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Vrátí závodní profily přihlášeného uživatele (výchozí jen aktivní).</p>
@@ -183,6 +186,7 @@ $response = $client-&gt;get(
     $url,
     [
         'headers' =&gt; [
+            'x-apikey' =&gt; '{YOUR_API_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -198,6 +202,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "https://demo.dalin.cz/api/v1/user/race-profiles?all=" \
+    --header "x-apikey: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -214,6 +219,7 @@ Object.keys(params)
     .forEach(key =&gt; url.searchParams.append(key, params[key]));
 
 const headers = {
+    "x-apikey": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -283,7 +289,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-user-race-profiles" data-method="GET"
       data-path="api/v1/user/race-profiles"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -313,6 +319,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/user/race-profiles</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-apikey</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-apikey" class="auth-value"               data-endpoint="GETapi-v1-user-race-profiles"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -365,6 +383,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="v1-GETapi-v1-user-entry">Seznam přihlášek uživatele</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Vrátí přihlášky všech závodních profilů uživatele, výchozí od dneška dál.</p>
@@ -380,6 +399,7 @@ $response = $client-&gt;get(
     $url,
     [
         'headers' =&gt; [
+            'x-apikey' =&gt; '{YOUR_API_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -390,8 +410,8 @@ $response = $client-&gt;get(
             'per_page' =&gt; '20',
         ],
         'json' =&gt; [
-            'from' =&gt; '2026-07-15',
-            'to' =&gt; '2026-07-15',
+            'from' =&gt; '2026-07-16',
+            'to' =&gt; '2026-07-16',
             'per_page' =&gt; 1,
         ],
     ]
@@ -403,11 +423,12 @@ print_r(json_decode((string) $body));</code></pre></div>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "https://demo.dalin.cz/api/v1/user/entry?from=2026-01-01&amp;to=2026-12-31&amp;page=1&amp;per_page=20" \
+    --header "x-apikey: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"from\": \"2026-07-15\",
-    \"to\": \"2026-07-15\",
+    \"from\": \"2026-07-16\",
+    \"to\": \"2026-07-16\",
     \"per_page\": 1
 }"
 </code></pre></div>
@@ -428,13 +449,14 @@ Object.keys(params)
     .forEach(key =&gt; url.searchParams.append(key, params[key]));
 
 const headers = {
+    "x-apikey": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
 let body = {
-    "from": "2026-07-15",
-    "to": "2026-07-15",
+    "from": "2026-07-16",
+    "to": "2026-07-16",
     "per_page": 1
 };
 
@@ -511,7 +533,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-user-entry" data-method="GET"
       data-path="api/v1/user/entry"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -541,6 +563,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/user/entry</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-apikey</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-apikey" class="auth-value"               data-endpoint="GETapi-v1-user-entry"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -622,10 +656,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-user-entry"
-               value="2026-07-15"
+               value="2026-07-16"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-15</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
@@ -634,10 +668,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="to"                data-endpoint="GETapi-v1-user-entry"
-               value="2026-07-15"
+               value="2026-07-16"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-15</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>per_page</code></b>&nbsp;&nbsp;
@@ -656,6 +690,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="v1-POSTapi-v1-user-entry">Vytvoření přihlášky na závod</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Přihlásí závodní profil uživatele na závod — včetně štafet, etap a ORIS závodů.</p>
@@ -671,6 +706,7 @@ $response = $client-&gt;post(
     $url,
     [
         'headers' =&gt; [
+            'x-apikey' =&gt; '{YOUR_API_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -695,6 +731,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request POST \
     "https://demo.dalin.cz/api/v1/user/entry" \
+    --header "x-apikey: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
@@ -720,6 +757,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 );
 
 const headers = {
+    "x-apikey": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -822,7 +860,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-POSTapi-v1-user-entry" data-method="POST"
       data-path="api/v1/user/entry"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -852,6 +890,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/user/entry</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-apikey</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-apikey" class="auth-value"               data-endpoint="POSTapi-v1-user-entry"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -1014,6 +1064,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="v1-DELETEapi-v1-user-entry--userEntry_id-">Zrušení přihlášky</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Zruší přihlášku uživatele, u ORIS závodů včetně odhlášení v ORISu.</p>
@@ -1029,6 +1080,7 @@ $response = $client-&gt;delete(
     $url,
     [
         'headers' =&gt; [
+            'x-apikey' =&gt; '{YOUR_API_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -1041,6 +1093,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request DELETE \
     "https://demo.dalin.cz/api/v1/user/entry/1" \
+    --header "x-apikey: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -1051,6 +1104,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 );
 
 const headers = {
+    "x-apikey": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -1113,7 +1167,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-DELETEapi-v1-user-entry--userEntry_id-" data-method="DELETE"
       data-path="api/v1/user/entry/{userEntry_id}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -1143,6 +1197,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/user/entry/{userEntry_id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-apikey</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-apikey" class="auth-value"               data-endpoint="DELETEapi-v1-user-entry--userEntry_id-"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -1197,6 +1263,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="v1-GETapi-v1-user-credit-balance">Zůstatek konta uživatele</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Vrátí aktuální zůstatek kreditu přihlášeného uživatele.</p>
@@ -1212,6 +1279,7 @@ $response = $client-&gt;get(
     $url,
     [
         'headers' =&gt; [
+            'x-apikey' =&gt; '{YOUR_API_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -1224,6 +1292,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "https://demo.dalin.cz/api/v1/user/credit-balance" \
+    --header "x-apikey: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -1234,6 +1303,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 );
 
 const headers = {
+    "x-apikey": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -1279,7 +1349,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-user-credit-balance" data-method="GET"
       data-path="api/v1/user/credit-balance"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -1309,6 +1379,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/user/credit-balance</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-apikey</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-apikey" class="auth-value"               data-endpoint="GETapi-v1-user-credit-balance"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -1342,6 +1424,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                                         <h2 id="v1-GETapi-v1-sport-event">Seznam závodů a akcí</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Vrátí stránkovaný seznam závodů a akcí klubu s možností filtrování.</p>
@@ -1357,6 +1440,7 @@ $response = $client-&gt;get(
     $url,
     [
         'headers' =&gt; [
+            'x-apikey' =&gt; '{YOUR_API_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -1369,8 +1453,8 @@ $response = $client-&gt;get(
             'per_page' =&gt; '20',
         ],
         'json' =&gt; [
-            'from' =&gt; '2026-07-15',
-            'to' =&gt; '2026-07-15',
+            'from' =&gt; '2026-07-16',
+            'to' =&gt; '2026-07-16',
             'class_definition_id' =&gt; 16,
             'per_page' =&gt; 22,
         ],
@@ -1383,11 +1467,12 @@ print_r(json_decode((string) $body));</code></pre></div>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "https://demo.dalin.cz/api/v1/sport-event?from=2026-01-01&amp;to=2026-12-31&amp;event_type=race&amp;class_definition_id=15&amp;page=1&amp;per_page=20" \
+    --header "x-apikey: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json" \
     --data "{
-    \"from\": \"2026-07-15\",
-    \"to\": \"2026-07-15\",
+    \"from\": \"2026-07-16\",
+    \"to\": \"2026-07-16\",
     \"class_definition_id\": 16,
     \"per_page\": 22
 }"
@@ -1411,13 +1496,14 @@ Object.keys(params)
     .forEach(key =&gt; url.searchParams.append(key, params[key]));
 
 const headers = {
+    "x-apikey": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
 
 let body = {
-    "from": "2026-07-15",
-    "to": "2026-07-15",
+    "from": "2026-07-16",
+    "to": "2026-07-16",
     "class_definition_id": 16,
     "per_page": 22
 };
@@ -1508,7 +1594,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-sport-event" data-method="GET"
       data-path="api/v1/sport-event"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -1538,6 +1624,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/sport-event</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-apikey</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-apikey" class="auth-value"               data-endpoint="GETapi-v1-sport-event"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -1643,10 +1741,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="from"                data-endpoint="GETapi-v1-sport-event"
-               value="2026-07-15"
+               value="2026-07-16"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-15</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>to</code></b>&nbsp;&nbsp;
@@ -1655,10 +1753,10 @@ You can check the Dev Tools console for debugging information.</code></pre>
  &nbsp;
                 <input type="text" style="display: none"
                               name="to"                data-endpoint="GETapi-v1-sport-event"
-               value="2026-07-15"
+               value="2026-07-16"
                data-component="body">
     <br>
-<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-15</code></p>
+<p>Must be a valid date in the format <code>Y-m-d</code>. Example: <code>2026-07-16</code></p>
         </div>
                 <div style=" padding-left: 28px;  clear: unset;">
             <b style="line-height: 2;"><code>event_type</code></b>&nbsp;&nbsp;
@@ -1701,6 +1799,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="v1-GETapi-v1-sport-event--sportEvent_id-">Detail závodu</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Vrátí detail závodu včetně kategorií, štafet a možností etap pro přihlášení.</p>
@@ -1716,6 +1815,7 @@ $response = $client-&gt;get(
     $url,
     [
         'headers' =&gt; [
+            'x-apikey' =&gt; '{YOUR_API_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -1728,6 +1828,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "https://demo.dalin.cz/api/v1/sport-event/1" \
+    --header "x-apikey: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -1738,6 +1839,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 );
 
 const headers = {
+    "x-apikey": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -1895,7 +1997,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-sport-event--sportEvent_id-" data-method="GET"
       data-path="api/v1/sport-event/{sportEvent_id}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -1925,6 +2027,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/sport-event/{sportEvent_id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-apikey</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-apikey" class="auth-value"               data-endpoint="GETapi-v1-sport-event--sportEvent_id-"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -1983,6 +2097,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                                         <h2 id="v1-GETapi-v1-post">Seznam příspěvků</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Vrátí stránkovaný seznam novinek a příspěvků klubu.</p>
@@ -1998,6 +2113,7 @@ $response = $client-&gt;get(
     $url,
     [
         'headers' =&gt; [
+            'x-apikey' =&gt; '{YOUR_API_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -2016,6 +2132,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "https://demo.dalin.cz/api/v1/post?from=2024-12-31&amp;to=2024-12-31&amp;page=1&amp;per_page=architecto" \
+    --header "x-apikey: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -2035,6 +2152,7 @@ Object.keys(params)
     .forEach(key =&gt; url.searchParams.append(key, params[key]));
 
 const headers = {
+    "x-apikey": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -2102,7 +2220,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-post" data-method="GET"
       data-path="api/v1/post"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -2132,6 +2250,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/post</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-apikey</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-apikey" class="auth-value"               data-endpoint="GETapi-v1-post"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -2210,6 +2340,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="v1-GETapi-v1-post--post_id-">Detail příspěvku</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Vrátí detail konkrétního příspěvku podle ID.</p>
@@ -2225,6 +2356,7 @@ $response = $client-&gt;get(
     $url,
     [
         'headers' =&gt; [
+            'x-apikey' =&gt; '{YOUR_API_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -2237,6 +2369,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "https://demo.dalin.cz/api/v1/post/1" \
+    --header "x-apikey: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -2247,6 +2380,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 );
 
 const headers = {
+    "x-apikey": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -2351,7 +2485,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-post--post_id-" data-method="GET"
       data-path="api/v1/post/{post_id}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -2381,6 +2515,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/post/{post_id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-apikey</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-apikey" class="auth-value"               data-endpoint="GETapi-v1-post--post_id-"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -2427,6 +2573,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                                         <h2 id="v1-GETapi-v1-page">Seznam stránek</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Vrátí stránkovaný seznam obsahových stránek klubu.</p>
@@ -2442,6 +2589,7 @@ $response = $client-&gt;get(
     $url,
     [
         'headers' =&gt; [
+            'x-apikey' =&gt; '{YOUR_API_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -2462,6 +2610,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "https://demo.dalin.cz/api/v1/page?from=2024-12-31&amp;to=2024-12-31&amp;page=1&amp;per_page=20&amp;status=open&amp;content_category_id=1" \
+    --header "x-apikey: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -2483,6 +2632,7 @@ Object.keys(params)
     .forEach(key =&gt; url.searchParams.append(key, params[key]));
 
 const headers = {
+    "x-apikey": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -2550,7 +2700,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-page" data-method="GET"
       data-path="api/v1/page"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -2580,6 +2730,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/page</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-apikey</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-apikey" class="auth-value"               data-endpoint="GETapi-v1-page"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;
@@ -2682,6 +2844,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
                     <h2 id="v1-GETapi-v1-page--page_id-">Detail stránky</h2>
 
 <p>
+<small class="badge badge-darkred">requires authentication</small>
 </p>
 
 <p>Vrátí detail konkrétní obsahové stránky podle ID.</p>
@@ -2697,6 +2860,7 @@ $response = $client-&gt;get(
     $url,
     [
         'headers' =&gt; [
+            'x-apikey' =&gt; '{YOUR_API_KEY}',
             'Content-Type' =&gt; 'application/json',
             'Accept' =&gt; 'application/json',
         ],
@@ -2709,6 +2873,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 <div class="bash-example">
     <pre><code class="language-bash">curl --request GET \
     --get "https://demo.dalin.cz/api/v1/page/1" \
+    --header "x-apikey: {YOUR_API_KEY}" \
     --header "Content-Type: application/json" \
     --header "Accept: application/json"</code></pre></div>
 
@@ -2719,6 +2884,7 @@ print_r(json_decode((string) $body));</code></pre></div>
 );
 
 const headers = {
+    "x-apikey": "{YOUR_API_KEY}",
     "Content-Type": "application/json",
     "Accept": "application/json",
 };
@@ -2839,7 +3005,7 @@ You can check the Dev Tools console for debugging information.</code></pre>
 </span>
 <form id="form-GETapi-v1-page--page_id-" data-method="GET"
       data-path="api/v1/page/{page_id}"
-      data-authed="0"
+      data-authed="1"
       data-hasfiles="0"
       data-isarraybody="0"
       autocomplete="off"
@@ -2869,6 +3035,18 @@ You can check the Dev Tools console for debugging information.</code></pre>
             <b><code>api/v1/page/{page_id}</code></b>
         </p>
                 <h4 class="fancy-heading-panel"><b>Headers</b></h4>
+                                <div style="padding-left: 28px; clear: unset;">
+                <b style="line-height: 2;"><code>x-apikey</code></b>&nbsp;&nbsp;
+&nbsp;
+ &nbsp;
+ &nbsp;
+                <input type="text" style="display: none"
+                              name="x-apikey" class="auth-value"               data-endpoint="GETapi-v1-page--page_id-"
+               value="{YOUR_API_KEY}"
+               data-component="header">
+    <br>
+<p>Example: <code>{YOUR_API_KEY}</code></p>
+            </div>
                                 <div style="padding-left: 28px; clear: unset;">
                 <b style="line-height: 2;"><code>Content-Type</code></b>&nbsp;&nbsp;
 &nbsp;

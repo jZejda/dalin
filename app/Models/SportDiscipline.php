@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $short_name
  * @property string $long_name
+ * @property bool $relays
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
@@ -26,13 +27,19 @@ class SportDiscipline extends Model
     protected $fillable = [
         'short_name',
         'long_name',
+        'relays',
     ];
 
-    /** @var list<string> */
-    public const RELAY_SHORT_NAMES = ['ST', 'SS', 'DR'];
+    /** @return array<string, string> */
+    protected function casts(): array
+    {
+        return [
+            'relays' => 'boolean',
+        ];
+    }
 
     public function isRelayDiscipline(): bool
     {
-        return in_array($this->short_name, self::RELAY_SHORT_NAMES, true);
+        return (bool) $this->relays;
     }
 }

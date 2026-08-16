@@ -255,8 +255,9 @@ describe('UpdateEntryAction::shouldHide', function (): void {
 
     test('hidden for relay events even for EventMaster', function (): void {
         $discipline = new SportDiscipline();
-        $discipline->short_name = 'ST';
+        $discipline->short_name = 'RE';
         $discipline->long_name = 'Štafety update';
+        $discipline->relays = true;
         $discipline->saveOrFail();
 
         $relayEvent = SportEvent::factory()->create([

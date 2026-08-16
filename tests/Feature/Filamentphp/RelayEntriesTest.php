@@ -28,8 +28,9 @@ beforeEach(function (): void {
 
 test('relay event creates default team with three slots', function (): void {
     $relayDiscipline = SportDiscipline::query()->create([
-        'short_name' => 'ST',
+        'short_name' => 'RE',
         'long_name' => 'Štafety',
+        'relays' => true,
     ]);
 
     $event = SportEvent::factory()->create([
@@ -60,8 +61,9 @@ test('non relay event does not create default relay team', function (): void {
 
 test('relay team extends member slots when slots count increases', function (): void {
     $relayDiscipline = SportDiscipline::query()->create([
-        'short_name' => 'DR',
+        'short_name' => 'TE',
         'long_name' => 'Družstva',
+        'relays' => true,
     ]);
 
     $event = SportEvent::factory()->create([
@@ -80,8 +82,9 @@ test('relay event keeps already entered profile available for another team slot'
     DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
     $relayDiscipline = SportDiscipline::query()->create([
-        'short_name' => 'SS',
+        'short_name' => 'SR',
         'long_name' => 'Sprintové štafety',
+        'relays' => true,
     ]);
 
     $event = SportEvent::factory()->create([
