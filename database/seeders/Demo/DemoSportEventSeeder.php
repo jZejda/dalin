@@ -32,7 +32,7 @@ class DemoSportEventSeeder extends Seeder
             'Závod škol', 'Veteránský závod', 'Dálkový závod', 'Středoškolský přebor',
         ];
 
-        $disciplines = [1, 2, 3, 4, 5]; // KL, KT, SP, DT, ST
+        $disciplines = [1, 2, 3, 4, 5]; // LD, MD, SP, UD, RE
         $levels = [2, 3, 4, 5, 6, 8];   // ŽA, ŽB, OŽ, E, OST, ČP
         $types = [SportEventType::Race->value, SportEventType::Training->value];
 

@@ -15,7 +15,7 @@ use Illuminate\Support\Carbon;
 
 class DemoRelaySeeder extends Seeder
 {
-    private const int RELAY_DISCIPLINE_ID = 5; // ST
+    private const int RELAY_DISCIPLINE_ID = 5; // RE
 
     public function run(): void
     {

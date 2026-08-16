@@ -16,7 +16,7 @@ return new class () extends Migration {
             $table->integer('oris_id')->nullable();
             $table->unsignedBigInteger('class_definition_id');
             $table->foreign('class_definition_id')->references('id')->on('sport_class_definitions');
-            $table->string('name', 16)->nullable();
+            $table->string('name', 32)->nullable();
             $table->string('distance')->nullable();
             $table->string('climbing')->nullable();
             $table->string('controls')->nullable();

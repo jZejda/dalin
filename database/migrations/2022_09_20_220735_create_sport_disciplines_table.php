@@ -14,8 +14,9 @@ return new class () extends Migration {
     {
         Schema::create('sport_disciplines', function (Blueprint $table) {
             $table->id();
-            $table->string('short_name', 3);
+            $table->string('short_name', 16);
             $table->string('long_name', 120);
+            $table->tinyInteger('relays')->default(0);
             $table->timestamps();
         });
     }

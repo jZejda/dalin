@@ -13,14 +13,14 @@ return [
     'title' => config('app.name') . ' API Documentation',
 
     // A short description of your API. Will be included in the docs webpage, Postman collection and OpenAPI spec.
-    'description' => 'Start (and never finish) side projects with this API.',
+    'description' => 'DaLin je klubový informační systém pro správu oddílů orientačních sportů — závody a přihlášky s napojením na ORIS, členské finance, novinky a obsah klubu. REST API v1 zpřístupňuje seznam závodů a jejich detail, závodní profily člena, vytváření a rušení přihlášek, zůstatek členského konta a klubové příspěvky a stránky. Všechny endpointy vyžadují platný API klíč v hlavičce `x-apikey` — klíč si každý člen vygeneruje v aplikaci na stránce **Uživatelská nastavení**.',
 
     // Text to place in the "Introduction" section, right after the `description`. Markdown and HTML are supported.
     'intro_text' => <<<INTRO
-        This documentation aims to provide all the information you need to work with our API.
+        Tato dokumentace popisuje vše potřebné pro práci s DaLin API.
 
-        <aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
-        You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
+        <aside>Při procházení uvidíš vpravo v tmavém panelu ukázky volání API v různých programovacích jazycích (na mobilu jako součást obsahu).
+        Jazyk ukázek přepneš záložkami vpravo nahoře (na mobilu v menu vlevo nahoře).</aside>
     INTRO,
 
     // The base URL displayed in the docs.
@@ -107,17 +107,18 @@ return [
     // How is your API authenticated? This information will be used in the displayed docs, generated examples and response calls.
     'auth' => [
         // Set this to true if ANY endpoints in your API use authentication.
-        'enabled' => false,
+        'enabled' => true,
 
         // Set this to true if your API should be authenticated by default. If so, you must also set `enabled` (above) to true.
         // You can then use @unauthenticated or @authenticated on individual endpoints to change their status from the default.
-        'default' => false,
+        // Every documented endpoint sits behind the ApiKeyAuth middleware, so authenticated is the default.
+        'default' => true,
 
         // Where is the auth value meant to be sent in a request?
-        'in' => AuthIn::BEARER->value,
+        'in' => AuthIn::HEADER->value,
 
         // The name of the auth parameter (e.g. token, key, apiKey) or header (e.g. Authorization, Api-Key).
-        'name' => 'key',
+        'name' => 'x-apikey',
 
         // The value of the parameter to be used by Scribe to authenticate response calls.
         // This will NOT be included in the generated documentation. If empty, Scribe will use a random value.
@@ -125,10 +126,10 @@ return [
 
         // Placeholder your users will see for the auth parameter in the example requests.
         // Set this to null if you want Scribe to use a random value as placeholder instead.
-        'placeholder' => '{YOUR_AUTH_KEY}',
+        'placeholder' => '{YOUR_API_KEY}',
 
         // Any extra authentication-related info for your users. Markdown and HTML are supported.
-        'extra_info' => 'You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.',
+        'extra_info' => 'API klíč si vygeneruješ v aplikaci na stránce <b>Uživatelská nastavení</b>. Klíč posílej v hlavičce <code>x-apikey</code> každého požadavku.',
     ],
 
     // Example requests for each endpoint will be shown in each of these languages.
@@ -161,7 +162,9 @@ return [
         'enabled' => true,
 
         'overrides' => [
-            // 'info.version' => '2.0.0',
+            'info.contact.name' => 'DaLin',
+            'info.contact.url' => 'https://github.com/jZejda/dalin',
+            'info.contact.email' => 'zejda.jiri@gmail.com',
         ],
 
         // Additional generators to use when generating the OpenAPI spec.

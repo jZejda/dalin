@@ -50,11 +50,12 @@ function ensureRoleExists(string $roleName): void
     app()[PermissionRegistrar::class]->forgetCachedPermissions();
 }
 
-function makeRelayDiscipline(string $shortName = 'ST', string $longName = 'Štafety'): SportDiscipline
+function makeRelayDiscipline(string $shortName = 'RE', string $longName = 'Štafety'): SportDiscipline
 {
     $discipline = new SportDiscipline();
     $discipline->short_name = $shortName;
     $discipline->long_name = $longName;
+    $discipline->relays = true;
     $discipline->saveOrFail();
 
     return $discipline;
