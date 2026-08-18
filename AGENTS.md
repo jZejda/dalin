@@ -80,6 +80,38 @@ make migrate-test-database  # Reset test database
 make clear                  # Clear all caches
 ```
 
+## Deployment
+
+Deploys run through [Deployer 8](https://deployer.org/docs/8.x) (`deployer/deployer`, dev dependency).
+Config lives in `deploy.php` in the project root — **gitignored**, because the repo is public and the
+file holds hostnames and SSH users of the shared hostings. Full procedure (including the first deploy
+onto a shared hosting): **`docs/deployment.md`**.
+
+```bash
+make deploy s=demo                    # or: vendor/bin/dep deploy demo
+make deploy-tag s=demo t=v13.0.1
+make deploy-rollback s=demo
+vendor/bin/dep deploy stage=prod      # label selector
+vendor/bin/dep deploy demo --plan     # dry run, prints the task list
+```
+
+Key points:
+
+- One codebase, several sites (`demo`, `abm`, `abm-preview`, `abm-staging`, `pbm`, `pbm-preview`),
+  each with its own database, `.env` and `config/site-config.php`.
+- `.env`, `config/site-config.php` and `storage/` live in `{{deploy_path}}/shared/` and survive
+  releases — a deploy never touches them. Editing `config/site-config.php` in the repo does **not**
+  change what a deployed site uses.
+- Code is transferred with `local_archive` (`git archive` from the local repo, uploaded as a tar),
+  so only **committed** code is deployed. `--strategy=archive` switches to a server-side git mirror.
+- Vite assets are built locally in Sail (no Node on the hosting) and uploaded — `make up` must be
+  running before a deploy.
+- Per-site secrets for `dep config:upload` go into `.deploy/<alias>/` (gitignored). Never commit them.
+- The document root of each site must point at `{{deploy_path}}/current/public`.
+
+The old `deploy.sh` (rsync of the working tree) is superseded; sites still marked TODO in `deploy.php`
+have not been migrated yet.
+
 ## Code Style Guidelines
 
 ### PHP General
