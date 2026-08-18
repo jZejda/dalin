@@ -28,7 +28,8 @@ Nahrazuje starý `deploy.sh` (rsync celého pracovního adresáře). Rozdíly:
 │   ├── config/
 │   │   └── site-config.php per-site nastavení klubu
 │   └── storage/            uploady, logy, cache
-└── current -> releases/3   symlink na živou release
+├── current -> releases/3   symlink na živou release
+└── public -> current/public volitelný můstek, když docroot míří na <deploy_path>/public
 ```
 
 > **Document root domény/subdomény musí v administraci hostingu ukazovat na
@@ -217,16 +218,19 @@ a cron klíče.
 
 Až máš zálohu, smaž starý obsah `_sub/demo`. **Od téhle chvíle demo neběží.**
 
+Nemaž ho — **přesuň ho stranou**. Návrat je pak otázka jednoho `mv`, a to je
+při prvním deployi k nezaplacení:
+
 ```bash
 ssh -p 20001 ssh-731459@dw303.webglobe.com
-cd /home/html/multi_731459/dalin.cz/_sub/demo
-ls -la                       # ověř, že jsi ve správném adresáři!
-rm -rf ./* ./.[!.]*          # smaže i .env a .htaccess
-ls -la                       # musí být prázdný
+cd /home/html/multi_731459/dalin.cz/_sub
+ls -la demo                              # ověř, že jsi u správného adresáře!
+mv demo "demo_rsync_backup_$(date +%Y%m%d)"
+mkdir demo
 ```
 
 > Deployer si poradí i s adresářem, ve kterém zbyde balast — jen `current`
-> nesmí být adresář. Vyčištění je ale přehlednější.
+> nesmí být adresář. Přesun stranou je ale čistší a dává rollback zadarmo.
 
 ### 4.6 Nahrání per-site konfigurace
 
@@ -256,13 +260,33 @@ vendor/bin/dep deploy demo -v
 Když deploy spadne uprostřed, zámek se uvolní sám; kdyby přesto zůstal:
 `vendor/bin/dep deploy:unlock demo`.
 
-### 4.8 Přepnutí document rootu
+### 4.8 Přepnutí provozu na novou release
 
-V administraci Webglobe nastav docroot subdomény `demo.dalin.cz` na:
+Docroot subdomény míří na `_sub/demo/**public**` (ověřeno: `/robots.txt` vrací
+200, `/composer.json` a `/artisan` 404). Po přestavbě ten adresář neexistuje,
+takže web je do přepnutí dole. Dvě cesty, obě vedou ke stejnému výsledku:
+
+**a) Symlink v deploy path** — funguje okamžitě, bez zásahu v administraci:
+
+```bash
+ssh -p 20001 ssh-731459@dw303.webglobe.com
+cd /home/html/multi_731459/dalin.cz/_sub/demo
+ln -sfn current/public public
+```
+
+Docroot pak přes `public` → `current/public` sleduje `current`, takže každý další
+deploy se propíše sám a atomicky. Webserver na tomhle hostingu symlinky následuje
+(ověřeno). Rollback = `rm public`.
+
+**b) Docroot v administraci Webglobe** — čistší koncový stav; nastav docroot
+subdomény `demo.dalin.cz` na:
 
 ```
 /home/html/multi_731459/dalin.cz/_sub/demo/current/public
 ```
+
+Po přepnutí v adminu je symlink z varianty a) zbytečný — dá se smazat
+(`rm /home/html/multi_731459/dalin.cz/_sub/demo/public`).
 
 Ověř:
 
@@ -305,7 +329,7 @@ https://demo.dalin.cz/demo-reset/<DEMO_RESET_URL_KEY>
 - [ ] `https://demo.dalin.cz` odpovídá 200
 - [ ] přihlášení do `/admin` funguje
 - [ ] obrázky ze `storage` se načítají (symlink `public/storage`)
-- [ ] `/docs` (Scribe) se vykreslí
+- [ ] `/api-docs` (Scribe) se vykreslí; `/mcp/dalin` vrací 405 na GET (je POST-only)
 - [ ] `storage/logs/laravel.log` bez chyb — `vendor/bin/dep logs:app demo`
 - [ ] cron endpointy vrací 200
 - [ ] `vendor/bin/dep app:version demo` ukazuje očekávanou revizi
@@ -347,6 +371,23 @@ Neběží Sail — `make up`. Kdo má lokálně Node 20+, může v `deploy.php` 
 `deploy.php` posílá `COMPOSER_MEMORY_LIMIT=-1`. Když to nestačí, je limit
 vynucený hostingem — použij `composer install` s předem vygenerovaným
 `vendor/` a nahraj ho (poslední možnost).
+
+**`Class "Laravel\Mcp\Facades\Mcp" not found` (nebo jiná chybějící třída) při
+`deploy:vendors`**
+Produkční kód závisí na balíčku, který je v `require-dev` — nebo se tam dostává
+jen tranzitivně přes dev nástroj. Rsync deploy to maskoval (nahrával lokální
+`vendor/` včetně dev balíčků), `composer install --no-dev` to odhalí. Přesuň
+balíček do `require` (`composer require <balicek>`) a commitni; `local_archive`
+nasazuje commitnutý stav. Přesně tohle potkalo `laravel/mcp`, které si tahal
+`laravel/boost`, zatímco na něm stojí `AppServiceProvider` a `routes/ai.php`.
+Stejnou past čekej i u `abm`/`pbm` při jejich převodu.
+
+Rychlá diagnostika — Deployer detail composer chyby spolkne, zopakuj ji ručně:
+
+```bash
+vendor/bin/dep ssh demo
+cd /home/html/.../releases/<N> && php8.4 artisan package:discover
+```
 
 **`scribe:generate` spadne**
 Nezablokuje web (běží před přepnutím symlinku, takže spadne celý deploy a
