@@ -66,7 +66,7 @@ vendor/bin/dep deploy demo --branch=v13.x
 vendor/bin/dep deploy demo --strategy=archive   # kód si vytáhne server z GitHubu
 
 vendor/bin/dep rollback demo            # zpět na předchozí release
-vendor/bin/dep releases demo            # historie releasů
+vendor/bin/dep releases demo            # historie releasů (datum, číslo, autor, commit)
 vendor/bin/dep app:version demo         # nasazená revize
 vendor/bin/dep ssh demo                 # shell v current release
 vendor/bin/dep logs:app demo            # tail storage/logs
@@ -74,7 +74,8 @@ vendor/bin/dep deploy demo --plan       # jen vypíše, co by se stalo
 ```
 
 Zkratky v `Makefile`: `make deploy s=demo`, `make deploy-tag s=demo t=v13.0.1`,
-`make deploy-rollback s=demo`.
+`make deploy-rollback s=demo`, `make deploy-releases s=demo`, `make deploy-status s=demo`,
+`make deploy-logs s=demo`.
 
 ### Přenos kódu
 

@@ -117,6 +117,10 @@ deploy-status: ## Show deployed revision, example: make deploy-status s=demo
 	@$(eval s ?=)
 	@$(DEP) app:version $(s)
 
+deploy-releases: ## List releases kept on a site, example: make deploy-releases s=demo
+	@$(eval s ?=)
+	@$(DEP) releases $(s)
+
 deploy-logs: ## Tail application log on a site, example: make deploy-logs s=demo
 	@$(eval s ?=)
 	@$(DEP) logs:app $(s)
