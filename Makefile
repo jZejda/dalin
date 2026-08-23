@@ -61,8 +61,8 @@ lint-fix: ## Run the PHP linter and repair the errors
 phpstan: ## Run the PHPStan static analyzer
 	@$(PHPSTAN)	analyse --memory-limit=2G
 
-phpstan-baseline: ## Run the PHPStan static analyzer
-	@$(PHPSTAN)	analyse --generate-baseline
+phpstan-baseline: ## Regenerate the PHPStan baseline (commit it with the fix)
+	@$(PHPSTAN)	analyse --generate-baseline --memory-limit=2G
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
@@ -96,3 +96,31 @@ demo-reset: ## Full demo reset: migrate:fresh + DemoSeeder (requires DEMO_MODE=t
 
 demo-seed: ## Run DemoSeeder only, without migrate:fresh (requires clean DB + DEMO_MODE=true in .env)
 	@$(SAIL) $(ARTISAN) db:seed --class=DemoSeeder --force
+
+## —— Deploy 🚀 —————————————————————————————————————————————————————————————————————————————————————————————————————————
+DEP = ./vendor/bin/dep
+
+deploy: ## Deploy site, example: make deploy s=demo (viz docs/deployment.md)
+	@$(eval s ?=)
+	@$(DEP) deploy $(s)
+
+deploy-tag: ## Deploy a tag, example: make deploy-tag s=demo t=v13.0.1
+	@$(eval s ?=)
+	@$(eval t ?=)
+	@$(DEP) deploy $(s) --tag=$(t)
+
+deploy-rollback: ## Rollback to previous release, example: make deploy-rollback s=demo
+	@$(eval s ?=)
+	@$(DEP) rollback $(s)
+
+deploy-status: ## Show deployed revision, example: make deploy-status s=demo
+	@$(eval s ?=)
+	@$(DEP) app:version $(s)
+
+deploy-releases: ## List releases kept on a site, example: make deploy-releases s=demo
+	@$(eval s ?=)
+	@$(DEP) releases $(s)
+
+deploy-logs: ## Tail application log on a site, example: make deploy-logs s=demo
+	@$(eval s ?=)
+	@$(DEP) logs:app $(s)

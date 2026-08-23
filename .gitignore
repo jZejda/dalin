@@ -15,6 +15,11 @@ package-lock.json
 # Environment files
 .env
 .env.backup
+# Repo je veřejné — žádné další .env varianty s reálnými hodnotami
+.env.*
+!.env.example
+!.env.demo.example
+!.env.testing
 exclude_file*
 .scribe
 .phpunit.result.cache
@@ -46,8 +51,12 @@ Thumbs.db
 vendor/
 
 # Deploy
+# deploy.php obsahuje hostnames a SSH uživatele produkčních hostingů,
+# repo je veřejné → zůstává mimo git (sdílet ručně / přes password manager).
 deploy.php
 deploy.sh
+# Per-site tajnosti pro `dep config:upload` (.deploy/<alias>/.env, site-config.php)
+.deploy/
 
 # MCP local config (contains API keys)
 .mcp.json

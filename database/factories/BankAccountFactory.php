@@ -6,10 +6,9 @@ namespace Database\Factories;
 
 use App\Models\BankAccount;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\Attributes\UseModel;
 
-/**
- * @extends Factory<BankAccount>
- */
+#[UseModel(BankAccount::class)]
 class BankAccountFactory extends Factory
 {
     public function definition(): array

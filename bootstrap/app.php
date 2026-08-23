@@ -41,10 +41,14 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withSchedule(function (Schedule $schedule) {
+        // Everything here runs in-process via ->call() or ->job(), never ->command().
+        // schedule:run is triggered over HTTP (routes/web.php, /cron-scheduler/{key}),
+        // so ->command() would spawn a subprocess with the PHP binary FPM reports —
+        // /usr/bin/php, which is PHP 7.3 on the shared hosting — and fail with exit 126.
         $schedule->call(fn () => \Illuminate\Support\Facades\Artisan::call('queue:work', ['--stop-when-empty' => true]))->everyFiveMinutes()->name('queue:work');
         $schedule->job(new SendNewPostsEmailJob())->everyThirtyMinutes();
         $schedule->job(new SendSportEventEntryEndingEmailJob())->hourly();
-        $schedule->command('marketplace:close-expired')->everyFifteenMinutes();
+        $schedule->call(fn () => \Illuminate\Support\Facades\Artisan::call('marketplace:close-expired'))->everyFifteenMinutes()->name('marketplace:close-expired');
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->reportable(function (Throwable $e) {

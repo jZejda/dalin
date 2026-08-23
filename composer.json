@@ -28,6 +28,7 @@
         "guzzlehttp/guzzle": "^7.10",
         "knuckleswtf/scribe": "^5.9",
         "laravel/framework": "^13.0",
+        "laravel/mcp": "^0.8",
         "laravel/sanctum": "^v4.3",
         "laravel/tinker": "^3.0",
         "livewire/livewire": "^4.2",
@@ -45,6 +46,7 @@
         "symfony/serializer": "^7.4"
     },
     "require-dev": {
+        "deployer/deployer": "^8.0",
         "fakerphp/faker": "^1.24",
         "larastan/larastan": "^3.9",
         "laravel-lang/common": "^6.8",

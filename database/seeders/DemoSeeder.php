@@ -97,8 +97,10 @@ class DemoSeeder extends Seeder
             DemoMarketplaceSeeder::class,
             DemoTransportSeeder::class,
             DemoSportServiceSeeder::class,
-            DemoSportEventExtrasSeeder::class,
+            // Relays first: their events must exist before the extras seeder
+            // hangs map markers on them
             DemoRelaySeeder::class,
+            DemoSportEventExtrasSeeder::class,
             DemoMailLogSeeder::class,
         ]);
     }

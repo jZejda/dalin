@@ -41,12 +41,15 @@ class DemoRelaySeeder extends Seeder
 
         foreach ($events as $eventData) {
             $date = $eventData['date'];
+            [$lat, $lon] = DemoSportEventSeeder::coordsFor($eventData['place'], $faker);
 
             $event = SportEvent::create([
                 'name'                 => $eventData['name'] . ' ' . $date->format('Y'),
                 'oris_id'              => null,
                 'date'                 => $date->toDateString(),
                 'place'                => $eventData['place'],
+                'gps_lat'              => $lat,
+                'gps_lon'              => $lon,
                 'sport_id'             => 1,
                 'discipline_id'        => self::RELAY_DISCIPLINE_ID,
                 'level_id'             => 3,

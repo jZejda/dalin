@@ -15,7 +15,7 @@ parameters:
 
     # The level 9 is the highest level
     level: 8
-    reportUnmatchedIgnoredErrors: false
+    reportUnmatchedIgnoredErrors: true
 
     ignoreErrors:
     		- identifier: missingType.iterableValue

@@ -49,8 +49,9 @@ class SportEventFactory extends Factory
             'increase_entry_fee_3' => fake()->optional()->numberBetween(500, 1000),
             'last_calculate_cost' => fake()->optional()->dateTimeBetween('-1 month', 'now'),
             'start_time' => fake()->time('H:i:s'),
-            'gps_lat' => fake()->optional()->latitude(),
-            'gps_lon' => fake()->optional()->longitude(),
+            // Central Europe, so factory-made events land on the map near Czechia
+            'gps_lat' => (string) fake()->randomFloat(6, 48.55, 51.05),
+            'gps_lon' => (string) fake()->randomFloat(6, 12.09, 18.86),
             'weather' => fake()->optional()->boolean() ? [
                 'temperature' => fake()->numberBetween(10, 30),
                 'conditions' => fake()->randomElement(['Sunny', 'Cloudy', 'Rainy']),

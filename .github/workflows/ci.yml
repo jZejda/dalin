@@ -27,4 +27,4 @@ jobs:
         run: ./vendor/bin/pint --test
 
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan analyse --configuration phpstan.neon
+        run: ./vendor/bin/phpstan analyse --configuration phpstan.neon --memory-limit=2G
