@@ -22,8 +22,8 @@ class SportEventMarkerFactory extends Factory
             'letter'         => $this->faker->randomLetter(),
             'label'          => $this->faker->streetName(),
             'desc'           => $this->faker->optional()->sentence(),
-            'lat'            => $this->faker->randomFloat(6, 48.6, 50.9),
-            'lon'            => $this->faker->randomFloat(6, 12.2, 18.8),
+            'lat'            => $this->faker->randomFloat(6, 48.55, 51.05),
+            'lon'            => $this->faker->randomFloat(6, 12.09, 18.86),
             'type'           => SportEventMarkerType::DefaultMarker,
         ];
     }

@@ -61,8 +61,8 @@ lint-fix: ## Run the PHP linter and repair the errors
 phpstan: ## Run the PHPStan static analyzer
 	@$(PHPSTAN)	analyse --memory-limit=2G
 
-phpstan-baseline: ## Run the PHPStan static analyzer
-	@$(PHPSTAN)	analyse --generate-baseline
+phpstan-baseline: ## Regenerate the PHPStan baseline (commit it with the fix)
+	@$(PHPSTAN)	analyse --generate-baseline --memory-limit=2G
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
