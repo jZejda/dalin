@@ -23,4 +23,12 @@ return [
         'events_description' => 'V kalendáři je na tento rok zaneseno závodů',
     ],
 
+    'version' => [
+        'heading' => 'Verze aplikace',
+        'build' => 'sestavení :build',
+        'deployed_at' => 'nasazeno :date',
+        'runtime' => 'PHP :php · Laravel :laravel',
+        'unknown_build' => 'vývojové sestavení',
+    ],
+
 ];

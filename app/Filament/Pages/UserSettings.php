@@ -9,6 +9,7 @@ use App\Enums\AppRoles;
 use App\Enums\UserParamType;
 use App\Filament\Pages\Actions\UserChangePassword;
 use App\Filament\Pages\Actions\UserSendMail;
+use App\Filament\Widgets\AppVersion;
 use App\Filament\Widgets\PostsOverview;
 use App\Filament\Widgets\StatsOverview;
 use App\Models\User;
@@ -50,6 +51,7 @@ class UserSettings extends Page
     {
         return [
             StatsOverview::class,
+            AppVersion::class,
         ];
     }
 

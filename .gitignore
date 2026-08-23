@@ -60,3 +60,6 @@ deploy.sh
 
 # MCP local config (contains API keys)
 .mcp.json
+
+# Deployer zapisuje do release adresáře git SHA nasazeného kódu
+/REVISION

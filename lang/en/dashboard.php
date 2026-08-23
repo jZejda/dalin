@@ -23,4 +23,12 @@ return [
         'events_description' => 'This many races are listed in the calendar for this year',
     ],
 
+    'version' => [
+        'heading' => 'Application version',
+        'build' => 'build :build',
+        'deployed_at' => 'deployed :date',
+        'runtime' => 'PHP :php · Laravel :laravel',
+        'unknown_build' => 'development build',
+    ],
+
 ];

@@ -77,6 +77,35 @@ Zkratky v `Makefile`: `make deploy s=demo`, `make deploy-tag s=demo t=v13.0.1`,
 `make deploy-rollback s=demo`, `make deploy-releases s=demo`, `make deploy-status s=demo`,
 `make deploy-logs s=demo`.
 
+### Vydání nové verze (release)
+
+Číslo verze je v repu na jediném místě — `config/version.php` (semver
+`MAJOR.MINOR.PATCH`). Git tag je vždy `v<verze>`, tedy `v13.1.0`.
+
+```bash
+# 1. bump verze v config/version.php  →  'version' => '13.1.0'
+# 2. commit + tag
+git commit -am "chore(release): v13.1.0"
+git tag -a v13.1.0 -m "v13.1.0"
+git push origin v13.x --follow-tags
+
+# 3. deploy tagu
+make deploy-tag s=demo t=v13.1.0
+```
+
+Číslo sestavení se nikam nepíše ručně — Deployer zapíše do každé release soubor
+`REVISION` s plným git SHA nasazeného kódu a `App\Services\AppVersionService`
+ho čte za běhu (lokálně, kde `REVISION` není, sáhne do `.git`). Verze a
+sestavení jsou pak vidět na třech místech:
+
+- widget **Verze aplikace** dole na úvodní stránce administrace
+  (`/admin/user-overview`) — verze, sestavení, datum nasazení, PHP a Laravel
+- `php artisan about` — sekce `DaLin`
+- `vendor/bin/dep app:version <alias>` — revize nasazená na serveru
+
+Protože `local_archive` deployuje jen to, co je v gitu, musí být bump verze
+commitnutý dřív, než se tag nasazuje.
+
 ### Přenos kódu
 
 Výchozí strategie je **`local_archive`**: `git archive` z lokálního repa → upload

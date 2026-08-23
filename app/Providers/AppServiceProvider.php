@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Mcp\Servers\DalinServer;
+use App\Services\AppVersionService;
 use App\Models\AppSetting;
 use App\Models\UserCredit;
 use App\Observers\UserCreditObserver;
@@ -13,6 +14,7 @@ use Filament\Facades\Filament;
 use Laravel\Mcp\Facades\Mcp;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\AliasLoader;
+use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Foundation\Vite;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Markdown;
@@ -39,6 +41,11 @@ class AppServiceProvider extends ServiceProvider
         // Club settings from the admin panel override config/site-config.php;
         // rescue() covers fresh installs where app_settings does not exist yet.
         rescue(static fn () => AppSetting::applyClubConfigOverrides(), report: false);
+
+        // Verze a sestavení v `php artisan about` (a tedy i v deploy tasku app:version)
+        AboutCommand::add('DaLin', fn (): array => [
+            'Version' => app(AppVersionService::class)->summary(),
+        ]);
 
         // MCP server registration
         Mcp::local('dalin', DalinServer::class);
