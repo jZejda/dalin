@@ -33,9 +33,7 @@ class EditSportEvent extends EditRecord
 
     protected function getHeaderWidgets(): array
     {
-        return [
-            // EventEditMap::class,
-        ];
+        return [];
     }
 
     protected function showUpdateEventFromOris(): ?Action

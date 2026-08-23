@@ -6,11 +6,13 @@ namespace Database\Seeders\Demo;
 
 use App\Enums\SportEventLinkType;
 use App\Enums\SportEventMarkerType;
+use App\Enums\SportEventType;
 use App\Models\SportEvent;
 use App\Models\SportEventExport;
 use App\Models\SportEventLink;
 use App\Models\SportEventMarker;
 use App\Models\SportEventNews;
+use Faker\Generator;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -49,28 +51,14 @@ class DemoSportEventExtrasSeeder extends Seeder
             ]);
         }
 
-        // Map markers (parking + event centre) for upcoming events
-        foreach ($futureEvents as $event) {
-            $lat = $faker->randomFloat(6, 48.8, 50.8);
-            $lon = $faker->randomFloat(6, 12.5, 18.5);
+        // Map markers laid out around the real coordinates of each event —
+        // all upcoming races plus the recent past, so the map is never empty
+        $mappedEvents = SportEvent::where('date', '>=', Carbon::today()->subMonths(3))
+            ->orderBy('date')
+            ->get();
 
-            SportEventMarker::factory()->ofType(SportEventMarkerType::Parking)->create([
-                'sport_event_id' => $event->id,
-                'letter'         => 'P',
-                'label'          => 'Parkoviště',
-                'desc'           => 'Parkujte podle pokynů pořadatele.',
-                'lat'            => $lat,
-                'lon'            => $lon,
-            ]);
-
-            SportEventMarker::factory()->create([
-                'sport_event_id' => $event->id,
-                'letter'         => 'C',
-                'label'          => 'Centrum závodu',
-                'desc'           => 'Shromaždiště, prezentace a cíl.',
-                'lat'            => $lat + 0.01,
-                'lon'            => $lon + 0.01,
-            ]);
+        foreach ($mappedEvents as $event) {
+            $this->seedMarkers($event, $faker);
         }
 
         // News feed items
@@ -99,5 +87,74 @@ class DemoSportEventExtrasSeeder extends Seeder
                 'start_time'     => Carbon::parse($event->date)->setTime(10, 0),
             ]);
         }
+    }
+
+    /**
+     * Parkoviště, centrum a start rozmístěné kolem souřadnic závodu tak,
+     * jak bývají ve skutečnosti — pár set metrů od sebe.
+     */
+    private function seedMarkers(SportEvent $event, Generator $faker): void
+    {
+        $lat = (float) $event->gps_lat;
+        $lon = (float) $event->gps_lon;
+
+        if ($lat === 0.0 || $lon === 0.0) {
+            return;
+        }
+
+        [$parkLat, $parkLon] = $this->offset($lat, $lon, $faker->numberBetween(200, 700), $faker->numberBetween(0, 359));
+
+        SportEventMarker::factory()->ofType(SportEventMarkerType::Parking)->create([
+            'sport_event_id' => $event->id,
+            'letter'         => 'P',
+            'label'          => 'Parkoviště',
+            'desc'           => 'Parkujte podle pokynů pořadatele.',
+            'lat'            => $parkLat,
+            'lon'            => $parkLon,
+        ]);
+
+        SportEventMarker::factory()->ofType(
+            $event->event_type === SportEventType::Training
+                ? SportEventMarkerType::Training
+                : SportEventMarkerType::ObRaceSimple
+        )->create([
+            'sport_event_id' => $event->id,
+            'letter'         => 'C',
+            'label'          => 'Centrum závodu',
+            'desc'           => 'Shromaždiště, prezentace a cíl.',
+            'lat'            => number_format($lat, 6, '.', ''),
+            'lon'            => number_format($lon, 6, '.', ''),
+        ]);
+
+        if ($faker->boolean(70)) {
+            [$startLat, $startLon] = $this->offset($lat, $lon, $faker->numberBetween(400, 1500), $faker->numberBetween(0, 359));
+
+            SportEventMarker::factory()->ofType(SportEventMarkerType::StageStart)->create([
+                'sport_event_id' => $event->id,
+                'letter'         => 'S',
+                'label'          => 'Start',
+                'desc'           => 'Vzdálenost od centra po modrobílých fáborcích.',
+                'lat'            => $startLat,
+                'lon'            => $startLon,
+            ]);
+        }
+    }
+
+    /**
+     * Posune souřadnice o zadanou vzdálenost v metrech daným azimutem.
+     *
+     * @return array{0: string, 1: string}
+     */
+    private function offset(float $lat, float $lon, int $metres, int $bearing): array
+    {
+        $rad = deg2rad((float) $bearing);
+
+        $dLat = ($metres * cos($rad)) / 111_320;
+        $dLon = ($metres * sin($rad)) / (111_320 * cos(deg2rad($lat)));
+
+        return [
+            number_format($lat + $dLat, 6, '.', ''),
+            number_format($lon + $dLon, 6, '.', ''),
+        ];
     }
 }
