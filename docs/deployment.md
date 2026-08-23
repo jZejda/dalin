@@ -89,9 +89,16 @@ git commit -am "chore(release): v13.1.0"
 git tag -a v13.1.0 -m "v13.1.0"
 git push origin v13.x --follow-tags
 
-# 3. deploy tagu
+# 3. GitHub release nad tím tagem (changelog pro lidi, aplikace ho nečte)
+gh release create v13.1.0 --title "🚀 Release Dalin v13.1.0" --generate-notes
+
+# 4. deploy tagu
 make deploy-tag s=demo t=v13.1.0
 ```
+
+GitHub release se do aplikace nijak nepropisuje — verzi má aplikace v sobě už
+z kroku 1. Release je jen obálka nad tagem: `--generate-notes` sestaví „What's
+Changed" z PR mergnutých od předchozího tagu.
 
 Číslo sestavení se nikam nepíše ručně — Deployer zapíše do každé release soubor
 `REVISION` s plným git SHA nasazeného kódu a `App\Services\AppVersionService`
@@ -104,7 +111,10 @@ sestavení jsou pak vidět na třech místech:
 - `vendor/bin/dep app:version <alias>` — revize nasazená na serveru
 
 Protože `local_archive` deployuje jen to, co je v gitu, musí být bump verze
-commitnutý dřív, než se tag nasazuje.
+commitnutý dřív, než se tag nasazuje. Hlídá to task `deploy:check_version`:
+u `--tag=vX.Y.Z` porovná číslo tagu s `config/version.php` **z taggnutého
+commitu** a při rozdílu deploy zastaví ještě před `deploy:release`. Větve,
+revize a historické dvojčlenné tagy (`v13.0`) se přeskakují.
 
 ### Přenos kódu
 
