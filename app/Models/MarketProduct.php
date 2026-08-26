@@ -58,7 +58,9 @@ class MarketProduct extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection(self::MEDIA_COLLECTION_IMAGE)->singleFile();
+        $this->addMediaCollection(self::MEDIA_COLLECTION_IMAGE)
+            ->useDisk('public')
+            ->singleFile();
     }
 
     public function marketOffer(): BelongsTo

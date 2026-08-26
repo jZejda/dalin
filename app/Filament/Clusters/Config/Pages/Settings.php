@@ -12,7 +12,9 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 
 class Settings extends Page implements HasForms
 {
@@ -59,42 +61,30 @@ class Settings extends Page implements HasForms
     protected function getFormSchema(): array
     {
         return [
-            Section::make(__('settings.form.transport.section'))
-                ->description(__('settings.form.transport.description'))
+            Grid::make(2)
                 ->schema([
-                    Toggle::make('transport_enabled')
-                        ->label(__('settings.form.transport.toggle_label'))
-                        ->helperText(__('settings.form.transport.toggle_helper')),
-                ]),
-            Section::make(__('settings.form.event_payments.section'))
-                ->description(__('settings.form.event_payments.description'))
-                ->schema([
-                    Toggle::make('event_payments_enabled')
-                        ->label(__('settings.form.event_payments.toggle_label'))
-                        ->helperText(__('settings.form.event_payments.toggle_helper')),
-                ]),
-            Section::make(__('settings.form.service_orders.section'))
-                ->description(__('settings.form.service_orders.description'))
-                ->schema([
-                    Toggle::make('service_orders_enabled')
-                        ->label(__('settings.form.service_orders.toggle_label'))
-                        ->helperText(__('settings.form.service_orders.toggle_helper')),
-                ]),
-            Section::make(__('settings.form.marketplace.section'))
-                ->description(__('settings.form.marketplace.description'))
-                ->schema([
-                    Toggle::make('marketplace_enabled')
-                        ->label(__('settings.form.marketplace.toggle_label'))
-                        ->helperText(__('settings.form.marketplace.toggle_helper')),
-                ]),
-            Section::make(__('settings.form.bank.section'))
-                ->description(__('settings.form.bank.description'))
-                ->schema([
-                    Toggle::make('bank_enabled')
-                        ->label(__('settings.form.bank.toggle_label'))
-                        ->helperText(__('settings.form.bank.toggle_helper')),
+                    $this->moduleSection('transport', 'transport_enabled', 'heroicon-o-truck'),
+                    $this->moduleSection('event_payments', 'event_payments_enabled', 'heroicon-o-banknotes'),
+                    $this->moduleSection('service_orders', 'service_orders_enabled', 'heroicon-o-shopping-cart'),
+                    $this->moduleSection('marketplace', 'marketplace_enabled', 'heroicon-o-shopping-bag'),
+                    $this->moduleSection('bank', 'bank_enabled', 'heroicon-o-building-library'),
                 ]),
         ];
+    }
+
+    private function moduleSection(string $langKey, string $fieldName, string $icon): Section
+    {
+        return Section::make(__("settings.form.{$langKey}.section"))
+            ->icon($icon)
+            ->description(__("settings.form.{$langKey}.description"))
+            ->schema([
+                Toggle::make($fieldName)
+                    ->live()
+                    ->label(fn (Get $get): string => $get($fieldName)
+                        ? __("settings.form.{$langKey}.toggle_label_enabled")
+                        : __("settings.form.{$langKey}.toggle_label_disabled"))
+                    ->helperText(__("settings.form.{$langKey}.toggle_helper")),
+            ]);
     }
 
     public function submit(): void
