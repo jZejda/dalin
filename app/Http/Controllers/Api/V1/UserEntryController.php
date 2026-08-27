@@ -23,11 +23,9 @@ use Knuckles\Scribe\Attributes\BodyParam;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\Response;
 use Knuckles\Scribe\Attributes\ResponseFromFile;
-use Knuckles\Scribe\Attributes\Subgroup;
 use Knuckles\Scribe\Attributes\UrlParam;
 
-#[Group('V1', 'APIs V1')]
-#[Subgroup('USER', 'Authenticated user overview endpoints')]
+#[Group('User', 'Přihlášený uživatel — profil, závodní profily, přihlášky a zůstatek kreditu.')]
 final class UserEntryController extends Controller
 {
     /**
