@@ -21,11 +21,9 @@ use Illuminate\Validation\Rule;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\QueryParam;
 use Knuckles\Scribe\Attributes\ResponseFromFile;
-use Knuckles\Scribe\Attributes\Subgroup;
 use Knuckles\Scribe\Attributes\UrlParam;
 
-#[Group('V1', 'APIs V1')]
-#[Subgroup('SPORT EVENT', 'Sport events and event category options')]
+#[Group('SportEvent', 'Závody a akce klubu — výpis, detail a kategorie tříd.')]
 final class SportEventController extends Controller
 {
     /**

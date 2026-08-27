@@ -13,11 +13,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\QueryParam;
 use Knuckles\Scribe\Attributes\ResponseFromFile;
-use Knuckles\Scribe\Attributes\Subgroup;
 use Knuckles\Scribe\Attributes\UrlParam;
 
-#[Group("V1", "APIs V1")]
-#[Subgroup("PAGE", "Page")]
+#[Group('Page', 'Obsahové stránky klubu (statický obsah).')]
 class PageController extends Controller
 {
     /**

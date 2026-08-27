@@ -28,8 +28,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property string|null $editorial
  * @property string|null $img_url
  * @property string $content
- * @property int $content_mode
- * @property bool|null $private
+ * @property ContentFormat $content_mode
+ * @property PostStatus|null $private
  * @property Carbon|null $deleted_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at

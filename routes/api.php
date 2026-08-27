@@ -66,6 +66,8 @@ Route::prefix('v1')->middleware([
 ])->group(function () {
     Route::get('/post', [PostController::class, 'list']);
     Route::get('/post/{post}', [PostController::class, 'detail']);
+    Route::post('/post', [PostController::class, 'store']);
+    Route::put('/post/{post}', [PostController::class, 'update']);
 
     Route::get('/page', [PageController::class, 'list']);
     Route::get('/page/{page}', [PageController::class, 'detail']);

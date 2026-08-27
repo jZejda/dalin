@@ -583,18 +583,6 @@ parameters:
 			path: app/Http/Resources/PageResource.php
 
 		-
-			message: '#^Cannot access property \$value on bool\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Resources/PostResource.php
-
-		-
-			message: '#^Cannot access property \$value on int\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: app/Http/Resources/PostResource.php
-
-		-
 			message: '#^PHPDoc tag @var with type App\\Models\\Post is not subtype of native type \$this\(App\\Http\\Resources\\PostResource\)\.$#'
 			identifier: varTag.nativeType
 			count: 1

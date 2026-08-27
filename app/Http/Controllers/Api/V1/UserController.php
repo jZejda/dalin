@@ -17,10 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Knuckles\Scribe\Attributes\Group;
 use Knuckles\Scribe\Attributes\QueryParam;
 use Knuckles\Scribe\Attributes\ResponseFromFile;
-use Knuckles\Scribe\Attributes\Subgroup;
 
-#[Group('V1', 'APIs V1')]
-#[Subgroup('USER', 'Authenticated user overview endpoints')]
+#[Group('User', 'Přihlášený uživatel — profil, závodní profily, přihlášky a zůstatek kreditu.')]
 final class UserController extends Controller
 {
     public function show(Request $request): JsonResponse
