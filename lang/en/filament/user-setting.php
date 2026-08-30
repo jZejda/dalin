@@ -15,6 +15,7 @@ return [
     */
 
     'heading' => 'My overview',
+    'changelog_note' => 'The dalin app changelog is available in the documentation.',
 
     'actions' => [
         'send_mail' => [

@@ -15,6 +15,7 @@ return [
     */
 
     'heading' => 'Můj přehled',
+    'changelog_note' => 'Přehled změn aplikace dalin najdeš v dokumentaci.',
 
     'actions' => [
         'send_mail' => [

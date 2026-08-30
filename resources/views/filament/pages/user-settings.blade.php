@@ -144,13 +144,26 @@
                style="background-image: url('{{ asset('images/topography2.svg') }}')"
                href="https://docs.dalin.cz/changelog/" target="_blank">
 
-                {{-- Content --}}
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="relative flex-shrink-0 w-8 h-8 text-gray-900 mt-0.5 me-6 lucide lucide-pocket-knife-icon lucide-pocket-knife"><path d="M3 2v1c0 1 2 1 2 2S3 6 3 7s2 1 2 2-2 1-2 2 2 1 2 2"/><path d="M18 6h.01"/><path d="M6 18h.01"/><path d="M20.83 8.83a4 4 0 0 0-5.66-5.66l-12 12a4 4 0 1 0 5.66 5.66Z"/><path d="M18 11.66V22a4 4 0 0 0 4-4V6"/></svg>
+                {{-- Content: DaLin brand mark (same "d" glyph as the Zudoku docs logo, cropped to its square-ish bounding box) --}}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 32" class="relative flex-shrink-0 w-8 h-8 text-gray-900 mt-0.5 me-6" aria-hidden="true">
+                    <path fill="currentColor" d="m 11.769913,31.74447 c -0.04118,-0.0034 -0.183416,-0.01425 -0.31609,-0.02396 C 8.9994099,31.540777 6.542661,30.502285 4.5277817,28.792809 2.7964055,27.323864 1.3789051,25.1405 0.7314829,22.945405 0.22117563,21.215193 0.14231633,19.251087 0.5090569,17.405507 0.6279655,16.807108 0.86034003,16.022406 1.0857883,15.457942 1.5513684,14.292255 2.3354847,13.012121 3.1995711,12.007019 4.2405946,10.796103 5.5513885,9.7846825 7.0535151,9.0332781 8.7252879,8.197013 10.160476,7.8108104 11.895605,7.7302933 c 1.181381,-0.05482 2.624285,0.1106685 3.704823,0.4249112 0,0 0.09976,0.055379 0.10048,0.1772978 -0.0049,2.2178857 -0.0049,4.4357697 -0.0049,6.6536587 l -0.09617,-0.0653 c -0.497802,-0.338051 -1.232178,-0.672872 -1.844002,-0.840729 -0.957668,-0.262739 -2.0393,-0.248155 -3.027537,0.04082 -0.579414,0.16943 -1.0477114,0.389741 -1.5703661,0.738777 -0.9368697,0.625657 -1.6604001,1.451396 -2.1140508,2.412693 -0.425869,0.902428 -0.586041,1.580396 -0.5856266,2.478814 4.403e-4,0.924524 0.1857466,1.731973 0.5788836,2.522212 0.3897447,0.783422 0.9071504,1.434792 1.5401711,1.938946 0.8285114,0.659848 1.6889738,1.072747 2.6268898,1.260537 0.642349,0.12861 1.388436,0.143702 2.021315,0.04088 1.135898,-0.184533 2.274997,-0.782969 3.145438,-1.652486 1.029643,-1.028549 1.643637,-2.299428 1.752608,-3.627643 0.01224,-0.149111 0.01825,-2.858843 0.01938,-8.725754 9.93e-4,-5.198235 0.0078,-8.5806922 0.01737,-8.6924818 0.04425,-0.5142361 0.179462,-0.8979563 0.471894,-1.3392243 0.350539,-0.52894991 0.82419,-0.94805379 1.339186,-1.1849633 0.834628,-0.38394811 1.786568,-0.38852248 2.575874,-0.0123813 0.345789,0.16478687 0.641082,0.38842712 1.001698,0.7586398 0.475748,0.4884073 0.728881,1.0365155 0.798052,1.7280173 0.01314,0.1313894 0.01668,2.6556287 0.01256,8.9503456 -0.0062,9.49224 -1.26e-4,8.8298 -0.08753,9.499343 -0.121563,0.931143 -0.378068,1.897231 -0.72882,2.744994 -0.371119,0.896988 -0.763317,1.644314 -1.218525,2.321877 -0.896901,1.335008 -2.163489,2.583616 -3.55097,3.500559 -1.720899,1.137291 -3.403359,1.738236 -5.406806,1.931216 -0.257212,0.02477 -1.404779,0.04676 -1.597087,0.0306 z"/>
+                    <circle fill="#f57900" cx="12.312178" cy="19.763334" r="3.3639441"/>
+                </svg>
 
-                <div class="relative">
-                    <h3 class="block font-bold text-gray-900">Aplikace</h3>
-                    <p class="text-gray-800">Aktuální verze aplikace</p>
-                    <p class="mt-4 font-black text-4xl text-gray-900">12.0</p>
+                <div class="relative min-w-0">
+                    <h3 class="block font-bold text-gray-900">{{ __('dashboard.version.heading') }}</h3>
+                    <p class="mt-4 font-black text-2xl text-gray-900 tracking-tight">
+                        {{ config('app.name') }} {{ $appVersionTag }}
+                    </p>
+                    <p class="mt-1 text-xs font-mono text-gray-800">
+                        {{ $appVersionBuildLabel }}
+                        @if($appVersionDeployedAt)
+                            <span aria-hidden="true">&middot;</span>
+                            {{ $appVersionDeployedAt }}
+                        @endif
+                    </p>
+                    <p class="text-xs text-gray-800">{{ $appVersionRuntime }}</p>
+                    <p class="mt-4 text-gray-800">{{ __('filament/user-setting.changelog_note') }}</p>
                     <p class="mt-3 inline-flex items-center gap-x-1 text-sm font-semibold text-gray-900">
                         Zjistit více
                         <svg class="flex-shrink-0 w-4 h-4 transition ease-in-out group-hover:translate-x-1"

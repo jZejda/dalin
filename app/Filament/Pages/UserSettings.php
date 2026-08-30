@@ -9,10 +9,11 @@ use App\Enums\AppRoles;
 use App\Enums\UserParamType;
 use App\Filament\Pages\Actions\UserChangePassword;
 use App\Filament\Pages\Actions\UserSendMail;
-use App\Filament\Widgets\AppVersion;
 use App\Filament\Widgets\PostsOverview;
 use App\Filament\Widgets\StatsOverview;
 use App\Models\User;
+use App\Services\AppVersionService;
+use App\Shared\Helpers\AppHelper;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Pages\Page;
 use Illuminate\Contracts\View\View;
@@ -51,7 +52,6 @@ class UserSettings extends Page
     {
         return [
             StatsOverview::class,
-            AppVersion::class,
         ];
     }
 
@@ -72,13 +72,47 @@ class UserSettings extends Page
         }
 
         return view($this->getView(), [
-                'usersAmountCount' => $usersAmountCount
+                'usersAmountCount' => $usersAmountCount,
+                ...$this->getAppVersionData(),
             ])
             ->layout($this->getLayout(), [
                 'livewire' => $this,
                 'maxContentWidth' => $this->getMaxContentWidth(),
                 ...$this->getLayoutData(),
             ]);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function getAppVersionData(): array
+    {
+        $version = app(AppVersionService::class);
+
+        $build = $version->build();
+
+        if ($build === null) {
+            $buildLabel = __('dashboard.version.unknown_build');
+        } else {
+            $buildLabel = __('dashboard.version.build', ['build' => $build]);
+        }
+
+        $builtAt = $version->builtAt();
+        $deployedAt = null;
+
+        if ($builtAt !== null) {
+            $deployedAt = __('dashboard.version.deployed_at', ['date' => $builtAt->format(AppHelper::DATE_FORMAT)]);
+        }
+
+        return [
+            'appVersionTag' => $version->tag(),
+            'appVersionBuildLabel' => $buildLabel,
+            'appVersionDeployedAt' => $deployedAt,
+            'appVersionRuntime' => __('dashboard.version.runtime', [
+                'php' => PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION,
+                'laravel' => app()->version(),
+            ]),
+        ];
     }
 
     public static function getNavigationLabel(): string
