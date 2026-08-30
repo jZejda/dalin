@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Filament\Pages\UserMailNotification;
+use App\Filament\Clusters\Other\Pages\UserMailNotification;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -12,7 +12,7 @@ beforeEach(function () {
 test('unauthenticated user is redirected from user settings', function () {
     Auth::logout();
 
-    $this->get('/admin/user-settings')
+    $this->get('/admin/other/user-settings')
         ->assertRedirect();
 });
 

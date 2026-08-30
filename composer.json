@@ -20,6 +20,7 @@
         "bezhansalleh/filament-shield": "^4.2",
         "cknow/laravel-money": "^v8.5",
         "codeat3/blade-weather-icons": "^1.8",
+        "codewithdennis/filament-lucide-icons": "*",
         "filament/filament": "^5.5",
         "filament/forms": "^5.5",
         "filament/notifications": "^5.5",

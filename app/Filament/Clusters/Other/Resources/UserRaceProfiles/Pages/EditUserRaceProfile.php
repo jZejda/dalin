@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Filament\Resources\UserRaceProfiles\Pages;
+declare(strict_types=1);
+
+namespace App\Filament\Clusters\Other\Resources\UserRaceProfiles\Pages;
 
 use Filament\Actions\DeleteAction;
-use App\Filament\Resources\UserRaceProfiles\UserRaceProfileResource;
+use App\Filament\Clusters\Other\Resources\UserRaceProfiles\UserRaceProfileResource;
 use Filament\Resources\Pages\EditRecord;
 
 class EditUserRaceProfile extends EditRecord

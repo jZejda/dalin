@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Pages;
+namespace App\Filament\Clusters\Other\Pages;
 
+use App\Filament\Clusters\Other\OtherCluster;
 use App\Enums\AppRoles;
 use App\Enums\MarketOfferStatus;
 use App\Enums\MarketPaymentMethod;
@@ -43,9 +44,11 @@ class MyMarketOfferList extends Page implements HasForms, HasTable
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-storefront';
 
-    protected static ?int $navigationSort = 20;
+    protected static ?string $cluster = OtherCluster::class;
 
-    protected string $view = 'filament.pages.my-market-offer-list';
+    protected static ?int $navigationSort = 39;
+
+    protected string $view = 'filament.clusters.other.pages.my-market-offer-list';
 
     public static function canAccess(): bool
     {
@@ -55,11 +58,6 @@ class MyMarketOfferList extends Page implements HasForms, HasTable
     public static function getNavigationLabel(): string
     {
         return __('marketplace.my_offers_title');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('marketplace.navigation_group');
     }
 
     public function getTitle(): string

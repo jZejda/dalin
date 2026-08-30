@@ -25,6 +25,11 @@ class UserCreditList extends Page
         return __('user-credit.list.page_title');
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return __('user-credit.list.navigation_label');
+    }
+
     public static function getNavigationGroup(): string | \UnitEnum | null
     {
         return __('app.navigation_groups.users');

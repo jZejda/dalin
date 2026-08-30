@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\VehicleType;
-use App\Filament\Pages\MyVehicleList;
+use App\Filament\Clusters\Other\Pages\MyVehicleList;
 use App\Models\AppSetting;
 use App\Models\User;
 use App\Models\Vehicle;

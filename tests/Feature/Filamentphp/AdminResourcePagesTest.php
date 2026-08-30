@@ -13,7 +13,7 @@ use App\Filament\Resources\SportEventExports\SportEventExportResource;
 use App\Filament\Resources\SportEvents\SportEventResource;
 use App\Filament\Resources\UserCredits\UserCreditResource;
 use App\Filament\Resources\UserEntries\UserEntryResource;
-use App\Filament\Resources\UserRaceProfiles\UserRaceProfileResource;
+use App\Filament\Clusters\Other\Resources\UserRaceProfiles\UserRaceProfileResource;
 use App\Filament\Resources\Users\UserResource;
 
 it('can render BankTransactionResource index', function () {

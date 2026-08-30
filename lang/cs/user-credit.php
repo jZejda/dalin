@@ -130,6 +130,7 @@ return [
     ],
 
     'list' => [
+        'navigation_label' => 'Můj kredit',
         'page_title' => 'Finance',
         'new_billing_label' => 'Nové vyúčtování',
         'new_record_label' => 'Nový záznam',

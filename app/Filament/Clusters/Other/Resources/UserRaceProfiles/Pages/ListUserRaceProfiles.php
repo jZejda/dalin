@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\UserRaceProfiles\Pages;
+namespace App\Filament\Clusters\Other\Resources\UserRaceProfiles\Pages;
 
 use Filament\Actions\CreateAction;
 use Filament\Actions\Action;
 use App\Enums\AppRoles;
-use App\Filament\Resources\UserRaceProfiles\UserRaceProfileResource;
+use App\Filament\Clusters\Other\Resources\UserRaceProfiles\UserRaceProfileResource;
 use App\Services\OrisApiService;
 use Filament\Resources\Pages\ListRecords;
 use Filament\Notifications\Notification;

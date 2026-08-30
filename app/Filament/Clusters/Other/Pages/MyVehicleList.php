@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Pages;
+namespace App\Filament\Clusters\Other\Pages;
 
 use App\Filament\Clusters\Config\Resources\Vehicles\VehicleResource;
+use App\Filament\Clusters\Other\OtherCluster;
 use App\Models\AppSetting;
 use App\Models\Vehicle;
 use Filament\Actions\CreateAction;
@@ -25,15 +26,21 @@ class MyVehicleList extends Page implements HasForms, HasTable
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-truck';
 
-    protected static ?string $navigationLabel = 'Moje vozidla';
-
-    protected static ?string $title = 'Moje vozidla';
-
-    protected static string | \UnitEnum | null $navigationGroup = 'Uživatel';
+    protected static ?string $cluster = OtherCluster::class;
 
     protected static ?int $navigationSort = 38;
 
-    protected string $view = 'filament.pages.my-vehicle-list';
+    protected string $view = 'filament.clusters.other.pages.my-vehicle-list';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('vehicle.my_vehicles');
+    }
+
+    public function getTitle(): string
+    {
+        return __('vehicle.my_vehicles');
+    }
 
     public static function canAccess(): bool
     {

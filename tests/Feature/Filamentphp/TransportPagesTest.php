@@ -46,7 +46,7 @@ it('renders my vehicles page for member when module is enabled', function (): vo
     $member = User::factory()->create(['active' => true]);
     $this->actingAs($member);
 
-    $this->get('/admin/my-vehicle-list')->assertOk();
+    $this->get('/admin/other/my-vehicle-list')->assertOk();
 });
 
 it('shows transport type select on sport event form when module is enabled', function (): void {
@@ -146,7 +146,7 @@ it('denies my vehicles page when module is disabled', function (): void {
     $member = User::factory()->create(['active' => true]);
     $this->actingAs($member);
 
-    $this->get('/admin/my-vehicle-list')->assertForbidden();
+    $this->get('/admin/other/my-vehicle-list')->assertForbidden();
 });
 
 it('shows existing offer in transport tab table', function (): void {

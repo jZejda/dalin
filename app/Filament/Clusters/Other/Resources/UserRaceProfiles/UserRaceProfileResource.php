@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\UserRaceProfiles;
+namespace App\Filament\Clusters\Other\Resources\UserRaceProfiles;
 
+use App\Filament\Clusters\Other\OtherCluster;
 use App\Shared\Helpers\AppHelper;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Group;
@@ -13,9 +14,9 @@ use Filament\Actions\Action;
 use Filament\Support\Enums\TextSize;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
-use App\Filament\Resources\UserRaceProfiles\Pages\ListUserRaceProfiles;
-use App\Filament\Resources\UserRaceProfiles\Pages\CreateUserRaceProfile;
-use App\Filament\Resources\UserRaceProfiles\Pages\EditUserRaceProfile;
+use App\Filament\Clusters\Other\Resources\UserRaceProfiles\Pages\ListUserRaceProfiles;
+use App\Filament\Clusters\Other\Resources\UserRaceProfiles\Pages\CreateUserRaceProfile;
+use App\Filament\Clusters\Other\Resources\UserRaceProfiles\Pages\EditUserRaceProfile;
 use App\Enums\AppRoles;
 use App\Models\User;
 use App\Models\UserRaceProfile;
@@ -37,14 +38,11 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = UserRaceProfile::class;
 
+    protected static ?string $cluster = OtherCluster::class;
+
     protected static ?int $navigationSort = 35;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-circle';
-
-    public static function getNavigationGroup(): string | \UnitEnum | null
-    {
-        return __('app.navigation_groups.users');
-    }
 
     public static function getNavigationLabel(): string
     {

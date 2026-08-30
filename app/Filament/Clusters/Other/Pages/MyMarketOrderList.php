@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Pages;
+namespace App\Filament\Clusters\Other\Pages;
 
 use App\Enums\MarketOrderStatus;
+use App\Filament\Clusters\Other\OtherCluster;
+use App\Filament\Pages\MarketplaceList;
 use App\Models\AppSetting;
 use App\Models\MarketOrder;
 use App\Services\MarketplaceService;
@@ -28,9 +30,11 @@ class MyMarketOrderList extends Page implements HasForms, HasTable
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-shopping-cart';
 
-    protected static ?int $navigationSort = 30;
+    protected static ?string $cluster = OtherCluster::class;
 
-    protected string $view = 'filament.pages.my-market-order-list';
+    protected static ?int $navigationSort = 40;
+
+    protected string $view = 'filament.clusters.other.pages.my-market-order-list';
 
     public static function canAccess(): bool
     {
@@ -40,11 +44,6 @@ class MyMarketOrderList extends Page implements HasForms, HasTable
     public static function getNavigationLabel(): string
     {
         return __('marketplace.my_orders_title');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('marketplace.navigation_group');
     }
 
     public function getTitle(): string

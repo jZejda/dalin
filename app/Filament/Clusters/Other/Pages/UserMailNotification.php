@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Pages;
+namespace App\Filament\Clusters\Other\Pages;
 
+use App\Filament\Clusters\Other\OtherCluster;
 use App\Enums\AppHeroIcons;
 use App\Models\SportList;
 use App\Models\User;
@@ -34,15 +35,12 @@ class UserMailNotification extends Page implements HasForms
     use InteractsWithForms;
     use HasPageShield;
 
+    protected static ?string $cluster = OtherCluster::class;
+
     protected static ?int $navigationSort = 37;
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
-    protected string $view = 'filament.pages.user-mail-notification';
+    protected string $view = 'filament.clusters.other.pages.user-mail-notification';
     protected static ?string $slug = 'user-settings';
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('app.navigation_groups.users');
-    }
 
     public static function getNavigationLabel(): string
     {

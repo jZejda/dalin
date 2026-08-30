@@ -130,6 +130,7 @@ return [
     ],
 
     'list' => [
+        'navigation_label' => 'My credit',
         'page_title' => 'Finance',
         'new_billing_label' => 'New billing',
         'new_record_label' => 'New record',
