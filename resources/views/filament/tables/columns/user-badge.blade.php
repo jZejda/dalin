@@ -15,6 +15,7 @@ $user = data_get($getRecord(), $relation);
         :initials="$user->initials"
         :color="$user->badge_color"
         :avatar-url="$user->avatar_url"
+        :dot-color="$user->isActive() ? null : \App\Enums\BadgeColor::Red"
         size="sm"
     />
 @else

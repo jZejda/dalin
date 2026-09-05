@@ -15,6 +15,7 @@ use App\Models\UserRaceProfile;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
@@ -99,17 +100,9 @@ class UserRaceProfileTable extends Component implements HasForms, HasTable, HasA
                     ->dateTime(AppHelper::DATE_FORMAT)
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('user.name')
-                    ->badge()
-                    ->icon('heroicon-o-user')
+                ViewColumn::make('user.name')
                     ->label(__('user-race-profile.table.user-name'))
-                    ->colors(function (UserRaceProfile $record): array {
-                        if ($record->user?->isActive()) {
-                            return ['success'];
-                        }
-                        return ['danger'];
-                    })
-                    ->searchable()
+                    ->view('filament.tables.columns.user-identity')
                     ->searchable(),
             ])
             ->defaultSort('last_name', 'asc')

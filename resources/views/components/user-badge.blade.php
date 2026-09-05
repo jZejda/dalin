@@ -3,7 +3,7 @@
     'color' => null,
     'avatarUrl' => null,
     'size' => 'md',
-    'inactive' => false,
+    'dotColor' => null,
 ])
 
 @php
@@ -19,6 +19,10 @@
     $shade = $color instanceof \App\Enums\BadgeColor ? $color->shade() : $color;
     // Neutral gray-500, used when there is no color and no avatar (e.g. an "N/A" placeholder).
     $shade ??= 'oklch(0.551 0.027 264.364)';
+
+    // Small indicator dot in the top-right corner (e.g. red for a deactivated account).
+    // Any fill color can be passed in; null means no dot is shown at all.
+    $dotShade = $dotColor instanceof \App\Enums\BadgeColor ? $dotColor->shade() : $dotColor;
 @endphp
 
 <span
@@ -38,10 +42,10 @@
         >{{ $initials }}</span>
     @endif
 
-    @if ($inactive)
+    @if ($dotShade)
         <span
-            class="absolute -bottom-0.5 -right-0.5 rounded-full bg-red-500 ring-2 ring-white dark:ring-gray-900"
-            style="width:{{ $dotPx }}px;height:{{ $dotPx }}px;"
+            class="absolute -top-0.5 -right-0.5 rounded-full ring-2 ring-white dark:ring-gray-900"
+            style="width:{{ $dotPx }}px;height:{{ $dotPx }}px;background-color:{{ $dotShade }};"
         ></span>
     @endif
 </span>

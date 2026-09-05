@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use App\Enums\AppRoles;
+use App\Enums\BadgeColor;
 use App\Filament\Clusters\Other\Pages\MyMarketOfferList;
 use App\Filament\Clusters\Other\Resources\UserRaceProfiles\UserRaceProfileResource;
+use App\Filament\Pages\UserRaceProfileList;
 use App\Models\AppSetting;
 use App\Models\MailLog;
 use App\Models\MarketOffer;
@@ -16,14 +18,14 @@ beforeEach(function (): void {
     Cache::flush();
 });
 
-it('renders a red dot on the badge for an inactive user', function (): void {
-    expect(view('components.user-badge', ['initials' => 'AB', 'inactive' => true])->render())
-        ->toContain('bg-red-500');
+it('renders a colored dot on the badge when a dot color is given', function (): void {
+    expect(view('components.user-badge', ['initials' => 'AB', 'dotColor' => BadgeColor::Red])->render())
+        ->toContain(BadgeColor::Red->shade());
 });
 
-it('does not render a dot on the badge for an active user', function (): void {
-    expect(view('components.user-badge', ['initials' => 'AB', 'inactive' => false])->render())
-        ->not->toContain('bg-red-500');
+it('does not render a dot on the badge when no dot color is given', function (): void {
+    expect(view('components.user-badge', ['initials' => 'AB'])->render())
+        ->not->toContain('-top-0.5 -right-0.5');
 });
 
 it('falls back to a neutral gray badge when there is no color', function (): void {
@@ -32,11 +34,18 @@ it('falls back to a neutral gray badge when there is no color', function (): voi
         ->toContain('oklch(0.551 0.027 264.364)');
 });
 
-it('shows the inactive dot on the full identity component for a deactivated user', function (): void {
+it('shows a red dot on the full identity component for a deactivated user', function (): void {
     $user = User::factory()->create(['active' => false]);
 
     expect(view('components.user-identity', ['user' => $user])->render())
-        ->toContain('bg-red-500');
+        ->toContain(BadgeColor::Red->shade());
+});
+
+it('does not show a dot on the full identity component for an active user', function (): void {
+    $user = User::factory()->create(['active' => true]);
+
+    expect(view('components.user-identity', ['user' => $user])->render())
+        ->not->toContain('-top-0.5 -right-0.5');
 });
 
 it('renders the user race profile list with an active and an inactive account', function (): void {
@@ -52,6 +61,24 @@ it('renders the user race profile list with an active and an inactive account', 
         ->assertOk()
         ->assertSee('Aktivní Uživatel')
         ->assertSee('Neaktivní Uživatel');
+});
+
+it('renders the admin user race profile list with the full identity column', function (): void {
+    actingAsSuperAdmin();
+
+    $activeUser = User::factory()->create(['active' => true, 'name' => 'Aktivní Uživatel']);
+    $inactiveUser = User::factory()->create(['active' => false, 'name' => 'Neaktivní Uživatel']);
+
+    UserRaceProfile::factory()->create(['user_id' => $activeUser->id]);
+    UserRaceProfile::factory()->create(['user_id' => $inactiveUser->id]);
+
+    $this->get(UserRaceProfileList::getUrl())
+        ->assertOk()
+        ->assertSee('Aktivní Uživatel')
+        ->assertSee($activeUser->email)
+        ->assertSee('Neaktivní Uživatel')
+        ->assertSee($inactiveUser->email)
+        ->assertSee(BadgeColor::Red->shade());
 });
 
 it('shows a neutral N/A badge for a system mail log with no source user', function (): void {
