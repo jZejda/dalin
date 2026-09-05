@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\BadgeColor;
 use App\Models\User;
 use Database\Seeders\Demo\DemoAppSettingsSeeder;
 use Database\Seeders\Demo\DemoBankAccountSeeder;
@@ -48,6 +49,7 @@ class DemoSeeder extends Seeder
             'email'      => 'admin@demo.cz',
             'password'   => bcrypt((string) config('demo.admin_password', 'Demo2026!')),
             'active'     => true,
+            'badge_color' => BadgeColor::random()->value,
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString(),
         ]);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders\Demo;
 
+use App\Enums\BadgeColor;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
@@ -23,6 +24,7 @@ class DemoUsersSeeder extends Seeder
             'password'              => bcrypt((string) config('demo.admin_password', 'Demo2026!')),
             'active'                => true,
             'payer_variable_symbol' => '99999999',
+            'badge_color'           => BadgeColor::random()->value,
             'email_verified_at'     => Carbon::now()->toDateTimeString(),
             'created_at'            => Carbon::now()->subDays(365)->toDateTimeString(),
             'updated_at'            => Carbon::now()->toDateTimeString(),
@@ -50,6 +52,7 @@ class DemoUsersSeeder extends Seeder
                     'password'              => bcrypt('Demo2026!'),
                     'active'                => true,
                     'payer_variable_symbol' => (string) $faker->unique()->randomNumber(8, true),
+                    'badge_color'           => BadgeColor::random()->value,
                     'email_verified_at'     => Carbon::now()->toDateTimeString(),
                     'created_at'            => Carbon::now()->subDays($faker->numberBetween(30, 730))->toDateTimeString(),
                     'updated_at'            => Carbon::now()->toDateTimeString(),
