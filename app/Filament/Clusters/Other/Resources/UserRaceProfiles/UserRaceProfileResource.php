@@ -6,6 +6,7 @@ namespace App\Filament\Clusters\Other\Resources\UserRaceProfiles;
 
 use App\Filament\Clusters\Other\OtherCluster;
 use App\Shared\Helpers\AppHelper;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
@@ -41,9 +42,9 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
 
     protected static ?string $cluster = OtherCluster::class;
 
-    protected static ?int $navigationSort = 35;
+    protected static ?int $navigationSort = 3;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-circle';
+    protected static string | \BackedEnum | null $navigationIcon = LucideIcon::BookUser;
 
     public static function getNavigationLabel(): string
     {

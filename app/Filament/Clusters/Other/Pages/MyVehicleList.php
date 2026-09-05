@@ -8,6 +8,7 @@ use App\Filament\Clusters\Config\Resources\Vehicles\VehicleResource;
 use App\Filament\Clusters\Other\OtherCluster;
 use App\Models\AppSetting;
 use App\Models\Vehicle;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -24,11 +25,11 @@ class MyVehicleList extends Page implements HasForms, HasTable
     use InteractsWithForms;
     use InteractsWithTable;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-truck';
+    protected static string | \BackedEnum | null $navigationIcon = LucideIcon::Car;
 
     protected static ?string $cluster = OtherCluster::class;
 
-    protected static ?int $navigationSort = 38;
+    protected static ?int $navigationSort = 4;
 
     protected string $view = 'filament.clusters.other.pages.my-vehicle-list';
 

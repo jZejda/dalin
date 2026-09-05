@@ -13,6 +13,7 @@ use App\Models\MarketOffer;
 use App\Models\MarketProduct;
 use App\Models\User;
 use App\Services\MarketplaceService;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
@@ -43,11 +44,11 @@ class MyMarketOfferList extends Page implements HasForms, HasTable
     use InteractsWithForms;
     use InteractsWithTable;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-storefront';
+    protected static string | \BackedEnum | null $navigationIcon = LucideIcon::Shirt;
 
     protected static ?string $cluster = OtherCluster::class;
 
-    protected static ?int $navigationSort = 39;
+    protected static ?int $navigationSort = 6;
 
     protected string $view = 'filament.clusters.other.pages.my-market-offer-list';
 

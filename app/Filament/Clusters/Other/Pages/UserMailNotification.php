@@ -6,6 +6,7 @@ namespace App\Filament\Clusters\Other\Pages;
 
 use App\Filament\Clusters\Other\OtherCluster;
 use App\Enums\AppHeroIcons;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use App\Models\SportList;
 use App\Models\User;
 use App\Models\UserSetting;
@@ -37,8 +38,8 @@ class UserMailNotification extends Page implements HasForms
 
     protected static ?string $cluster = OtherCluster::class;
 
-    protected static ?int $navigationSort = 37;
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
+    protected static ?int $navigationSort = 2;
+    protected static string | \BackedEnum | null $navigationIcon = LucideIcon::UserRoundCog;
     protected string $view = 'filament.clusters.other.pages.user-mail-notification';
     protected static ?string $slug = 'user-settings';
 

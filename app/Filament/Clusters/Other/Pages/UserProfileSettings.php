@@ -9,6 +9,7 @@ use App\Filament\Clusters\Other\OtherCluster;
 use App\Filament\Pages\Actions\UserChangePassword;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -29,9 +30,9 @@ class UserProfileSettings extends Page implements HasForms
 
     protected static ?string $cluster = OtherCluster::class;
 
-    protected static ?int $navigationSort = 38;
+    protected static ?int $navigationSort = 1;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-circle';
+    protected static string | \BackedEnum | null $navigationIcon = LucideIcon::User;
 
     protected string $view = 'filament.clusters.other.pages.user-profile-settings';
 
