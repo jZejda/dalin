@@ -3,6 +3,7 @@
 
 @source '../../../../app/Filament';
 @source '../../../../resources/views/filament';
+@source '../../../../resources/views/components';
 @source '../../../../vendor/bezhansalleh/filament-language-switch/**';
 
 /*
@@ -22,4 +23,21 @@
 /* Marketplace: šedé pozadí položek produktů v repeateru (MyMarketOfferList) */
 .market-products-repeater .fi-fo-repeater-item {
     @apply bg-gray-100 dark:bg-gray-800;
+}
+
+/* Můj profil: prázdné kolečko pro nahrání avataru je jinak jen text na průhledném
+   pozadí a splývá s okolím — přidá jemné podbarvení a siluetu uživatele. Mizí samo,
+   jakmile FilePond nahradí popisek náhledem nahraného souboru. */
+.fi-fo-file-upload-avatar .filepond--drop-label {
+    border-radius: 9999px;
+    background-color: #f3f4f6;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 42%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d1d5db' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.964 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'/%3E%3C/svg%3E");
+}
+
+:where(.dark, .dark *) .fi-fo-file-upload-avatar .filepond--drop-label {
+    background-color: #1f2937;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23374151' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.964 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'/%3E%3C/svg%3E");
 }

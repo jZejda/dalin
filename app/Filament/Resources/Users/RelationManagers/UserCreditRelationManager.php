@@ -112,8 +112,9 @@ class UserCreditRelationManager extends RelationManager
                 ViewColumn::make('user_entry')
                     ->label(__('users.user_credit_relation.table.comments'))
                     ->view('filament.tables.columns.user-credit-comments-count'),
-                TextColumn::make('sourceUser.name')
-                    ->label(__('user-credit.table.source_user_title')),
+                ViewColumn::make('sourceUser.name')
+                    ->label(__('user-credit.table.source_user_title'))
+                    ->view('filament.tables.columns.user-badge'),
             ])
             ->defaultPaginationPageOption(25)
             ->defaultSort('created_at', 'desc')

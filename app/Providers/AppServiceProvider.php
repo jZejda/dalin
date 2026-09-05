@@ -11,6 +11,8 @@ use App\Models\UserCredit;
 use App\Observers\UserCreditObserver;
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Filament\Facades\Filament;
+use Filament\Support\Assets\Font;
+use Filament\Support\Facades\FilamentAsset;
 use Laravel\Mcp\Facades\Mcp;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\AliasLoader;
@@ -81,5 +83,12 @@ class AppServiceProvider extends ServiceProvider
                 app(Vite::class)('resources/css/app.css'),
             );
         });
+
+        // Self-hosted Poppins (Latin + Latin Extended, weights 400-700); published to
+        // public/fonts/app/poppins via `php artisan filament:assets`. Panel font family
+        // is set via ->font() in AdminPanelProvider.
+        FilamentAsset::register([
+            Font::make('poppins', resource_path('fonts/poppins')),
+        ]);
     }
 }

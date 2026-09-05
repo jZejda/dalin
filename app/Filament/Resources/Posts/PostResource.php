@@ -32,6 +32,7 @@ use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -143,8 +144,9 @@ class PostResource extends Resource implements HasShieldPermissions
                 TextColumn::make('title')
                     ->size(TextSize::Large)
                     ->weight(FontWeight::Medium),
-                TextColumn::make('user.name')
+                ViewColumn::make('user.name')
                     ->label(__('content.post.table.author'))
+                    ->view('filament.tables.columns.user-identity')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('content_mode')

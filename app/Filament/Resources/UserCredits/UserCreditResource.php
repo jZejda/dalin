@@ -221,17 +221,9 @@ class UserCreditResource extends Resource implements HasShieldPermissions
 
                         return $description;
                     }),
-                TextColumn::make('user.name')
-                    ->badge()
-                    ->icon('heroicon-o-user')
+                ViewColumn::make('user.name')
                     ->label(__('user-race-profile.table.user-name'))
-                    ->colors(function (UserCredit $record): array {
-                        if ($record->user?->isActive()) {
-                            return ['success'];
-                        }
-
-                        return ['danger'];
-                    })
+                    ->view('filament.tables.columns.user-identity')
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label(__('user-credit.table.registration'))
@@ -266,8 +258,9 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                     ->formatStateUsing(fn (UserCreditStatus $state): string => __("sport-event.type_enum_credit_status.{$state->value}"))
                     ->colors(self::getUserCreditStatuses())
                     ->searchable(),
-                TextColumn::make('sourceUser.name')
-                    ->label(__('user-credit.table.source_user_title')),
+                ViewColumn::make('sourceUser.name')
+                    ->label(__('user-credit.table.source_user_title'))
+                    ->view('filament.tables.columns.user-badge'),
             ])
             ->defaultPaginationPageOption(25)
             ->persistSortInSession()

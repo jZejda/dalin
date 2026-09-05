@@ -13,6 +13,7 @@ use App\Models\MarketOffer;
 use App\Models\MarketProduct;
 use App\Models\User;
 use App\Services\MarketplaceService;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
@@ -30,6 +31,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
@@ -42,11 +44,11 @@ class MyMarketOfferList extends Page implements HasForms, HasTable
     use InteractsWithForms;
     use InteractsWithTable;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-building-storefront';
+    protected static string | \BackedEnum | null $navigationIcon = LucideIcon::Shirt;
 
     protected static ?string $cluster = OtherCluster::class;
 
-    protected static ?int $navigationSort = 39;
+    protected static ?int $navigationSort = 6;
 
     protected string $view = 'filament.clusters.other.pages.my-market-offer-list';
 
@@ -97,8 +99,9 @@ class MyMarketOfferList extends Page implements HasForms, HasTable
                         return __('marketplace.club_offer_badge');
                     })
                     ->color('info'),
-                TextColumn::make('user.name')
+                ViewColumn::make('user.name')
                     ->label(__('marketplace.offer_author_column'))
+                    ->view('filament.tables.columns.user-badge')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')
                     ->label(__('marketplace.offer_status'))
@@ -135,7 +138,7 @@ class MyMarketOfferList extends Page implements HasForms, HasTable
             ])
             ->emptyStateHeading(__('marketplace.empty_my_offers'))
             ->emptyStateDescription(__('marketplace.empty_my_offers_description'))
-            ->emptyStateIcon('heroicon-o-building-storefront')
+            ->emptyStateIcon(LucideIcon::Shirt)
             ->emptyStateActions([
                 $this->offerCreateAction(),
             ])

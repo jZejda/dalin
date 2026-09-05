@@ -36,6 +36,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -302,8 +303,9 @@ class PageResource extends Resource implements HasShieldPermissions
                     ->searchable()
                     ->size(TextSize::Large)
                     ->weight(FontWeight::Medium),
-                TextColumn::make('user.name')
+                ViewColumn::make('user.name')
                     ->label(__('content.page.table.author'))
+                    ->view('filament.tables.columns.user-identity')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')

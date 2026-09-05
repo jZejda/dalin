@@ -7,10 +7,14 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enums\AppRoles;
+use App\Enums\BadgeColor;
 use App\Enums\UserParamType;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Attributes\Boot;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -23,6 +27,8 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
 use Spatie\Permission\Models\Permission;
@@ -43,10 +49,14 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string|null $remember_token
  * @property string|null $api_key_hash
  * @property string|null $calendar_token
+ * @property BadgeColor $badge_color
+ * @property string|null $avatar_path
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read string $user_identification
  * @property-read string $user_identification_billing
+ * @property-read string $initials
+ * @property-read string|null $avatar_url
  * @property-read DatabaseNotificationCollection<int, DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read Collection<int, Permission> $permissions
@@ -62,6 +72,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read UserSetting|null $userSetting
  */
 
+#[Fillable(['name', 'email', 'password', 'payer_variable_symbol', 'active', 'locale', 'calendar_token', 'badge_color', 'avatar_path'])]
+#[Hidden(['password', 'remember_token', 'api_key_hash', 'calendar_token'])]
 class User extends Authenticatable implements FilamentUser, HasLocalePreference
 {
     use HasApiTokens;
@@ -75,34 +87,48 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
     public const string ROLE_MEMBER = 'member';
     public const string ROLE_REDACTOR = 'redactor';
 
-    /** @var list<string> */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'payer_variable_symbol',
-        'active',
-        'locale',
-        'calendar_token',
-    ];
+    /** @return array<string, string> */
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'active' => 'boolean',
+            'badge_color' => BadgeColor::class,
+        ];
+    }
 
-    /** @var list<string> */
-    protected $hidden = [
-        'password',
-        'remember_token',
-        'api_key_hash',
-        'calendar_token',
-    ];
-
-    /** @var array<string, string> */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'active' => 'boolean',
-    ];
+    #[Boot]
+    protected static function assignRandomBadgeColor(): void
+    {
+        static::creating(function (User $user): void {
+            $user->badge_color ??= BadgeColor::random();
+        });
+    }
 
     public function preferredLocale(): string
     {
         return $this->locale;
+    }
+
+    public function getInitialsAttribute(): string
+    {
+        $initials = Str::of($this->name)
+            ->squish()
+            ->explode(' ')
+            ->filter()
+            ->take(2)
+            ->map(fn (string $part): string => mb_strtoupper(mb_substr($part, 0, 1)));
+
+        return $initials->implode('');
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if ($this->avatar_path === null) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->avatar_path);
     }
 
     public function setApiKey(string $plainApiKey): void

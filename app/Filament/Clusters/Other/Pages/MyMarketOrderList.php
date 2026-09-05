@@ -10,6 +10,7 @@ use App\Filament\Pages\MarketplaceList;
 use App\Models\AppSetting;
 use App\Models\MarketOrder;
 use App\Services\MarketplaceService;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Actions\Action;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -28,11 +29,11 @@ class MyMarketOrderList extends Page implements HasForms, HasTable
     use InteractsWithForms;
     use InteractsWithTable;
 
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static string | \BackedEnum | null $navigationIcon = LucideIcon::ShoppingCart;
 
     protected static ?string $cluster = OtherCluster::class;
 
-    protected static ?int $navigationSort = 40;
+    protected static ?int $navigationSort = 5;
 
     protected string $view = 'filament.clusters.other.pages.my-market-order-list';
 
@@ -101,7 +102,7 @@ class MyMarketOrderList extends Page implements HasForms, HasTable
             ])
             ->emptyStateHeading(__('marketplace.empty_my_orders'))
             ->emptyStateDescription(__('marketplace.empty_my_orders_description'))
-            ->emptyStateIcon('heroicon-o-shopping-cart')
+            ->emptyStateIcon(LucideIcon::ShoppingCart)
             ->emptyStateActions([
                 Action::make('browseMarketplace')
                     ->label(__('marketplace.browse_marketplace'))

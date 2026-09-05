@@ -15,6 +15,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -86,9 +87,9 @@ class MailLogResource extends Resource implements HasShieldPermissions
                     ->formatStateUsing(fn (MailSource $state): string => $state->label())
                     ->color(fn (MailSource $state): string => $state->color())
                     ->icon(fn (MailSource $state): string => $state->icon()),
-                TextColumn::make('sourceUser.name')
+                ViewColumn::make('sourceUser.name')
                     ->label(__('mail-log.source_user'))
-                    ->placeholder(__('mail-log.source_user_placeholder'))
+                    ->view('filament.tables.columns.user-badge')
                     ->searchable(),
             ])
             ->filters([

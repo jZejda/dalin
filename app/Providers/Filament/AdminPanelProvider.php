@@ -6,6 +6,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Widgets\PostsOverview;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
+use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -35,6 +36,10 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->maxContentWidth(Width::Full)
+            // Self-hosted Poppins registered as a Filament asset in AppServiceProvider;
+            // LocalFontProvider with no URL means we rely on that asset's @font-face
+            // rules instead of fetching from an external CDN.
+            ->font('Poppins', provider: LocalFontProvider::class)
 //            ->brandName(config('site-config.club.abbr'))
             ->brandLogo(function (): ?View {
                 $logoPath = 'filament.logo.' . strtolower(config('site-config.club.abbr')) . '-logo';

@@ -4,6 +4,7 @@ namespace App\Filament\Resources\ContentCategories\RelationManagers;
 
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\DissociateAction;
 use App\Models\ContentCategory;
@@ -47,7 +48,9 @@ class PageRelationManager extends RelationManager
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('user.name')->label(__('content.page.table.author'))
+                ViewColumn::make('user.name')
+                    ->label(__('content.page.table.author'))
+                    ->view('filament.tables.columns.user-identity')
                     ->searchable()
                     ->sortable(),
             ])
