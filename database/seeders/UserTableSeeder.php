@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Enums\BadgeColor;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,7 @@ class UserTableSeeder extends Seeder
             'email' => env('ADMIN_USER_EMAIL', 'admin@example.com'),
             'password' => bcrypt(is_string($envPassword) ? $envPassword : 'secret'),
             'active' => true,
+            'badge_color' => BadgeColor::random()->value,
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString(),
         ]);
