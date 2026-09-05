@@ -74,6 +74,6 @@ class MyVehicleList extends Page implements HasForms, HasTable
             ])
             ->emptyStateHeading(__('vehicle.empty_my_vehicles'))
             ->emptyStateDescription(__('vehicle.empty_my_vehicles_description'))
-            ->emptyStateIcon('heroicon-o-truck');
+            ->emptyStateIcon(LucideIcon::Car);
     }
 }

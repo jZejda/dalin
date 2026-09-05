@@ -102,7 +102,7 @@ class MyMarketOrderList extends Page implements HasForms, HasTable
             ])
             ->emptyStateHeading(__('marketplace.empty_my_orders'))
             ->emptyStateDescription(__('marketplace.empty_my_orders_description'))
-            ->emptyStateIcon('heroicon-o-shopping-cart')
+            ->emptyStateIcon(LucideIcon::ShoppingCart)
             ->emptyStateActions([
                 Action::make('browseMarketplace')
                     ->label(__('marketplace.browse_marketplace'))

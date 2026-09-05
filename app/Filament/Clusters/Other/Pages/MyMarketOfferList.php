@@ -138,7 +138,7 @@ class MyMarketOfferList extends Page implements HasForms, HasTable
             ])
             ->emptyStateHeading(__('marketplace.empty_my_offers'))
             ->emptyStateDescription(__('marketplace.empty_my_offers_description'))
-            ->emptyStateIcon('heroicon-o-building-storefront')
+            ->emptyStateIcon(LucideIcon::Shirt)
             ->emptyStateActions([
                 $this->offerCreateAction(),
             ])
