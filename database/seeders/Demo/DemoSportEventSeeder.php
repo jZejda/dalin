@@ -44,11 +44,14 @@ class DemoSportEventSeeder extends Seeder
             $place   = $faker->boolean(self::FOREIGN_EVENT_CHANCE)
                 ? $faker->randomElement($foreignPlaces)
                 : $faker->randomElement($czechPlaces);
-            $name    = $faker->randomElement($eventNames) . ' ' . $place . ' ' . $date->format('Y');
+            $eventName = $faker->randomElement($eventNames);
+            $name      = $eventName . ' ' . $place . ' ' . $date->format('Y');
             [$lat, $lon] = self::coordsFor($place, $faker);
+            [$entryDate1, $entryDate2, $entryDate3] = self::entryDates($date, $faker);
 
             SportEvent::create([
                 'name'                => $name,
+                'alt_name'            => self::altName($eventNames, $eventName, $place, $date, $faker),
                 'oris_id'             => null,
                 'date'                => $date->toDateString(),
                 'place'               => $place,
@@ -61,9 +64,9 @@ class DemoSportEventSeeder extends Seeder
                 'use_oris_for_entries' => false,
                 'ranking'             => $faker->boolean(60),
                 'ranking_coefficient' => $faker->randomFloat(1, 0.5, 1.5),
-                'entry_date_1'        => $date->copy()->subDays(21)->setTime(23, 59),
-                'entry_date_2'        => $date->copy()->subDays(14)->setTime(23, 59),
-                'entry_date_3'        => $date->copy()->subDays(7)->setTime(23, 59),
+                'entry_date_1'        => $entryDate1,
+                'entry_date_2'        => $entryDate2,
+                'entry_date_3'        => $entryDate3,
                 'cancelled'           => $faker->boolean(5),
                 'organization'        => $faker->randomElements($clubAbbrs, $faker->numberBetween(1, 2)),
                 // Every past event has, at some point, spent time inside the real cron's
@@ -81,11 +84,14 @@ class DemoSportEventSeeder extends Seeder
             $place     = $faker->boolean(self::FOREIGN_EVENT_CHANCE)
                 ? $faker->randomElement($foreignPlaces)
                 : $faker->randomElement($czechPlaces);
-            $name      = $faker->randomElement($eventNames) . ' ' . $place . ' ' . $date->format('Y');
+            $eventName = $faker->randomElement($eventNames);
+            $name      = $eventName . ' ' . $place . ' ' . $date->format('Y');
             [$lat, $lon] = self::coordsFor($place, $faker);
+            [$entryDate1, $entryDate2, $entryDate3] = self::entryDates($date, $faker);
 
             SportEvent::create([
                 'name'                => $name,
+                'alt_name'            => self::altName($eventNames, $eventName, $place, $date, $faker),
                 'oris_id'             => null,
                 'date'                => $date->toDateString(),
                 'place'               => $place,
@@ -98,9 +104,9 @@ class DemoSportEventSeeder extends Seeder
                 'use_oris_for_entries' => false,
                 'ranking'             => $faker->boolean(70),
                 'ranking_coefficient' => $faker->randomFloat(1, 0.5, 1.5),
-                'entry_date_1'        => $date->copy()->subDays(21)->setTime(23, 59),
-                'entry_date_2'        => $date->copy()->subDays(14)->setTime(23, 59),
-                'entry_date_3'        => $date->copy()->subDays(7)->setTime(23, 59),
+                'entry_date_1'        => $entryDate1,
+                'entry_date_2'        => $entryDate2,
+                'entry_date_3'        => $entryDate3,
                 'cancelled'           => false,
                 'organization'        => $faker->randomElements($clubAbbrs, $faker->numberBetween(1, 2)),
                 'weather'             => $daysAhead <= 5 ? SportEventFactory::fakeWeather($date, $faker) : null,
@@ -178,5 +184,49 @@ class DemoSportEventSeeder extends Seeder
             number_format($venue['lat'] + $faker->randomFloat(6, -0.045, 0.045), 6, '.', ''),
             number_format($venue['lon'] + $faker->randomFloat(6, -0.065, 0.065), 6, '.', ''),
         ];
+    }
+
+    /**
+     * Počet přihlašovacích termínů: v praxi je většinou jeden, občas dva,
+     * tři jen u velkých závodů — proto vážený náhodný výběr místo pevných 3.
+     * Termíny jsou seřazené sestupně podle blízkosti k závodu (1 nejdřív).
+     *
+     * @return array{0: Carbon, 1: Carbon|null, 2: Carbon|null}
+     */
+    private static function entryDates(Carbon $date, Generator $faker): array
+    {
+        $termCount = $faker->randomElement([1, 1, 1, 1, 1, 2, 2, 2, 3]);
+
+        // Each further term sits closer to the race than the previous one, with
+        // at least a couple of days between tiers — mirrors how fee-increase
+        // deadlines are staggered in practice.
+        $offset1 = $faker->numberBetween(10, 21);
+        $offset2 = $termCount >= 2 ? $faker->numberBetween(4, max(4, $offset1 - 3)) : null;
+        $offset3 = $termCount >= 3 ? $faker->numberBetween(1, max(1, $offset2 - 2)) : null;
+
+        return [
+            $date->copy()->subDays($offset1)->setTime(23, 59),
+            $offset2 !== null ? $date->copy()->subDays($offset2)->setTime(23, 59) : null,
+            $offset3 !== null ? $date->copy()->subDays($offset3)->setTime(23, 59) : null,
+        ];
+    }
+
+    /**
+     * Alternativní název — stejný závod bývá zároveň kolem jiné soutěže
+     * (např. krajský přebor i žebříčkový závod zároveň), takže se hodí jiné
+     * slovo z $eventNames se stejným místem a rokem. Většina závodů žádný
+     * alternativní název nemá.
+     *
+     * @param list<string> $eventNames
+     */
+    private static function altName(array $eventNames, string $primaryEventName, string $place, Carbon $date, Generator $faker): ?string
+    {
+        if (! $faker->boolean(25)) {
+            return null;
+        }
+
+        $altEventName = $faker->randomElement(array_values(array_diff($eventNames, [$primaryEventName])));
+
+        return $altEventName . ' ' . $place . ' ' . $date->format('Y');
     }
 }
