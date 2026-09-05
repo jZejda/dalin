@@ -21,6 +21,7 @@ return [
         'name' => 'Name',
         'email' => 'Email',
         'badge_color' => 'Badge color',
+        'badge_color_helper' => 'This is the color of the round badge that marks you across the system.',
         'avatar' => 'Profile picture',
         'avatar_helper' => 'Upload a square image and crop it right here. Without a picture, a colored initials badge is shown instead.',
         'submit' => 'Save changes',

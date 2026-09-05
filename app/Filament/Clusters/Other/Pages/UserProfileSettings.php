@@ -79,13 +79,9 @@ class UserProfileSettings extends Page implements HasForms
                 ->viewData(fn (Get $get): array => [
                     'initials' => $this->initialsFromName((string) $get('name')),
                     'color' => BadgeColor::tryFrom((string) $get('badge_color')),
+                    'name' => $get('name'),
+                    'email' => $get('email'),
                 ]),
-            Select::make('badge_color')
-                ->label(__('user-profile-settings.form.badge_color'))
-                ->options(BadgeColor::enumArray())
-                ->native(false)
-                ->live()
-                ->required(),
             TextInput::make('name')
                 ->label(__('user-profile-settings.form.name'))
                 ->required()
@@ -95,6 +91,13 @@ class UserProfileSettings extends Page implements HasForms
                 ->label(__('user-profile-settings.form.email'))
                 ->disabled()
                 ->dehydrated(false),
+            Select::make('badge_color')
+                ->label(__('user-profile-settings.form.badge_color'))
+                ->helperText(__('user-profile-settings.form.badge_color_helper'))
+                ->options(BadgeColor::enumArray())
+                ->native(false)
+                ->live()
+                ->required(),
             FileUpload::make('avatar')
                 ->label(__('user-profile-settings.form.avatar'))
                 ->helperText(__('user-profile-settings.form.avatar_helper'))
