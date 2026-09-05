@@ -609,35 +609,11 @@
 
             {{-- Počasí --}}
             @if($hasWeather)
-            @php $iconString = $event->weather['weather'][0]['icon'] ?? ''; @endphp
+            @php $weatherId = isset($event->weather['weather'][0]['id']) ? (int) $event->weather['weather'][0]['id'] : null; @endphp
             <section class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm md:p-6 dark:border-gray-800 dark:bg-gray-900">
                 <h2 class="text-lg font-semibold leading-none tracking-tight text-gray-900 dark:text-gray-50">{{ __('sport-event.public.weather_title') }}</h2>
                 <div class="mt-4 flex items-center gap-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 shrink-0 text-orange-500">
-                        @if($iconString === '01d' || $iconString === '01n')
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M14.828 14.828a4 4 0 1 0 -5.656 -5.656a4 4 0 0 0 5.656 5.656z"></path>
-                            <path d="M6.343 17.657l-1.414 1.414m0-16.97l1.414 1.414M17.657 6.343l1.414 -1.414M17.657 17.657l1.414 1.414M4 12h-2m18 0h-2M12 4v-2m0 18v-2"></path>
-                        @elseif(in_array($iconString, ['02d','03d','04d']))
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M6.657 18c-2.572 0 -4.657 -2.007 -4.657 -4.483c0 -2.475 2.085 -4.482 4.657 -4.482c.393 -1.762 1.794 -3.2 3.675 -3.773c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.913 0 3.464 1.56 3.464 3.486c0 1.927 -1.551 3.487 -3.465 3.487h-11.878"></path>
-                        @elseif(in_array($iconString, ['09d','10d','10n']))
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7"></path>
-                            <path d="M11 13v2m0 3v2m4 -5v2m0 3v2"></path>
-                        @elseif($iconString === '11d')
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"></path>
-                            <path d="M13 14l-2 4l3 0l-2 4"></path>
-                        @elseif($iconString === '13d')
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7"></path>
-                            <path d="M11 15v.01m0 3v.01m0 3v.01m4 -4v.01m0 3v.01"></path>
-                        @else
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                            <path d="M6.657 18c-2.572 0 -4.657 -2.007 -4.657 -4.483c0 -2.475 2.085 -4.482 4.657 -4.482c.393 -1.762 1.794 -3.2 3.675 -3.773c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.913 0 3.464 1.56 3.464 3.486c0 1.927 -1.551 3.487 -3.465 3.487h-11.878"></path>
-                        @endif
-                    </svg>
+                    <x-weather-icon :weather-id="$weatherId" class="h-12 w-12 shrink-0 text-orange-500" />
                     <div>
                         <div class="text-3xl font-bold tabular-nums text-gray-900 dark:text-gray-50">
                             {{ isset($event->weather['main']['temp']) ? round($event->weather['main']['temp'], 1) : '' }}&deg;C
