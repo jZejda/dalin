@@ -30,6 +30,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
@@ -97,8 +98,9 @@ class MyMarketOfferList extends Page implements HasForms, HasTable
                         return __('marketplace.club_offer_badge');
                     })
                     ->color('info'),
-                TextColumn::make('user.name')
+                ViewColumn::make('user.name')
                     ->label(__('marketplace.offer_author_column'))
+                    ->view('filament.tables.columns.user-badge')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')
                     ->label(__('marketplace.offer_status'))

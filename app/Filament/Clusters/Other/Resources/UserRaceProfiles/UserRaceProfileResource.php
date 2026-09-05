@@ -28,6 +28,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Client\RequestException;
@@ -295,17 +296,9 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                     ->sortable()
                     ->copyable(),
 
-                TextColumn::make('user.name')
-                    ->badge()
-                    ->icon('heroicon-o-user')
+                ViewColumn::make('user.name')
                     ->label(__('user-race-profile.table.user-name'))
-                    ->colors(function (UserRaceProfile $record): array {
-                        if ($record->user?->isActive()) {
-                            return ['success'];
-                        }
-
-                        return ['danger'];
-                    })
+                    ->view('filament.tables.columns.user-identity')
                     ->searchable(),
             ])
             ->filters([

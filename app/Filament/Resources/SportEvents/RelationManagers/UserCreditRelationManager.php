@@ -10,6 +10,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Illuminate\Database\Eloquent\Model;
 
 class UserCreditRelationManager extends RelationManager
@@ -39,8 +40,9 @@ class UserCreditRelationManager extends RelationManager
                 TextColumn::make('userRaceProfile.UserRaceFullName')
                     ->label(__('sport-event.relation_credits.table.user_race_profile'))
                     ->searchable(),
-                TextColumn::make('user.userIdentification')
-                    ->label(__('sport-event.relation_credits.table.user')),
+                ViewColumn::make('user.userIdentification')
+                    ->label(__('sport-event.relation_credits.table.user'))
+                    ->view('filament.tables.columns.user-identity'),
                 TextColumn::make('amount')
                     ->icon(fn (UserCredit $record): string => $record->amount >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                     ->color(fn (UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')

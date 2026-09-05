@@ -8,6 +8,7 @@
         :initials="$user->initials"
         :color="$user->badge_color"
         :avatar-url="$user->avatar_url"
+        :inactive="! $user->isActive()"
         :size="$size"
     />
     <div class="min-w-0 leading-tight">
