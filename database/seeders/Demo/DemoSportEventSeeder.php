@@ -6,6 +6,7 @@ namespace Database\Seeders\Demo;
 
 use App\Enums\SportEventType;
 use App\Models\SportEvent;
+use Database\Factories\SportEventFactory;
 use Faker\Generator;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
@@ -65,12 +66,17 @@ class DemoSportEventSeeder extends Seeder
                 'entry_date_3'        => $date->copy()->subDays(7)->setTime(23, 59),
                 'cancelled'           => $faker->boolean(5),
                 'organization'        => $faker->randomElements($clubAbbrs, $faker->numberBetween(1, 2)),
+                // Every past event has, at some point, spent time inside the real cron's
+                // 5-day forecast window, so (almost) all of them ended up with a stored forecast.
+                'weather'             => $faker->boolean(90) ? SportEventFactory::fakeWeather($date, $faker) : null,
             ]);
         }
 
-        // 15 future events
+        // 15 future events — the first 2 land within the next 5 days, so they pick up a
+        // forecast just like UpdateEventWeather would once it runs; the rest are further
+        // out and stay without one until they enter that window.
         for ($i = 0; $i < 15; $i++) {
-            $daysAhead = $faker->numberBetween(7, 180);
+            $daysAhead = $i < 2 ? $faker->numberBetween(1, 5) : $faker->numberBetween(7, 180);
             $date      = Carbon::now()->addDays($daysAhead)->startOfDay();
             $place     = $faker->boolean(self::FOREIGN_EVENT_CHANCE)
                 ? $faker->randomElement($foreignPlaces)
@@ -97,6 +103,7 @@ class DemoSportEventSeeder extends Seeder
                 'entry_date_3'        => $date->copy()->subDays(7)->setTime(23, 59),
                 'cancelled'           => false,
                 'organization'        => $faker->randomElements($clubAbbrs, $faker->numberBetween(1, 2)),
+                'weather'             => $daysAhead <= 5 ? SportEventFactory::fakeWeather($date, $faker) : null,
             ]);
         }
     }
