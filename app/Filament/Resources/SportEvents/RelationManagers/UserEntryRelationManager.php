@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEvents\RelationManagers;
 
+use App\Models\UserEntry;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Columns\Column;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
@@ -47,7 +49,14 @@ class UserEntryRelationManager extends RelationManager
                     ->label(__('sport-event.relation_entries.table.class'))
                     ->searchable(),
                 TextColumn::make('userRaceProfile.UserRaceFullName')
-                    ->label(__('sport-event.relation_entries.table.race_profile')),
+                    ->label(__('sport-event.relation_entries.table.race_profile'))
+                    ->html()
+                    ->formatStateUsing(fn ($state, UserEntry $record): HtmlString => new HtmlString(
+                        (string) view('components.race-profile-identity', [
+                            'profile' => $record->userRaceProfile,
+                            'size' => 'sm',
+                        ])
+                    )),
                 TextColumn::make('note')
                     ->label(__('sport-event.relation_entries.table.note')),
                 TextColumn::make('club_note')

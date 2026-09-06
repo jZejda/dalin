@@ -25,6 +25,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\HtmlString;
 
 class UserEntryResource extends Resource implements HasShieldPermissions
 {
@@ -100,7 +101,14 @@ class UserEntryResource extends Resource implements HasShieldPermissions
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('userRaceProfile.UserRaceFullName')
-                    ->label(__('user-entry.table.race_profile')),
+                    ->label(__('user-entry.table.race_profile'))
+                    ->html()
+                    ->formatStateUsing(fn ($state, UserEntry $record): HtmlString => new HtmlString(
+                        (string) view('components.race-profile-identity', [
+                            'profile' => $record->userRaceProfile,
+                            'size' => 'sm',
+                        ])
+                    )),
                 TextColumn::make('sportEvent.date')
                     ->label(__('user-entry.table.date'))
                     ->dateTime(AppHelper::DATE_FORMAT)

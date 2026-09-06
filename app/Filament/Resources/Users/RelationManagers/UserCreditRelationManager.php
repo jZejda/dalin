@@ -23,6 +23,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\HtmlString;
 use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
 use pxlrbt\FilamentExcel\Columns\Column;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
@@ -101,7 +102,13 @@ class UserCreditRelationManager extends RelationManager
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label(__('users.user_credit_relation.table.registration'))
-                    ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? '')
+                    ->html()
+                    ->formatStateUsing(fn ($state, UserCredit $record): HtmlString => new HtmlString(
+                        (string) view('components.race-profile-identity', [
+                            'profile' => $record->userRaceProfile,
+                            'size' => 'sm',
+                        ])
+                    ))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('amount')

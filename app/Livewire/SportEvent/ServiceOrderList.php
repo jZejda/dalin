@@ -26,6 +26,7 @@ use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\HtmlString;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -61,7 +62,13 @@ class ServiceOrderList extends Component implements HasActions, HasForms, HasTab
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label('Závodní profil')
-                    ->description(fn (SportServiceOrder $record): string => $record->userRaceProfile->user_race_full_name ?? '')
+                    ->html()
+                    ->formatStateUsing(fn ($state, SportServiceOrder $record): HtmlString => new HtmlString(
+                        (string) view('components.race-profile-identity', [
+                            'profile' => $record->userRaceProfile,
+                            'size' => 'sm',
+                        ])
+                    ))
                     ->searchable(),
                 TextColumn::make('qty')
                     ->label('Ks')

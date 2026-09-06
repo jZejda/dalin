@@ -12,6 +12,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
 
 class UserCreditRelationManager extends RelationManager
 {
@@ -39,6 +40,13 @@ class UserCreditRelationManager extends RelationManager
                     ->dateTime(AppHelper::DATE_FORMAT),
                 TextColumn::make('userRaceProfile.UserRaceFullName')
                     ->label(__('sport-event.relation_credits.table.user_race_profile'))
+                    ->html()
+                    ->formatStateUsing(fn ($state, UserCredit $record): HtmlString => new HtmlString(
+                        (string) view('components.race-profile-identity', [
+                            'profile' => $record->userRaceProfile,
+                            'size' => 'sm',
+                        ])
+                    ))
                     ->searchable(),
                 ViewColumn::make('user.userIdentification')
                     ->label(__('sport-event.relation_credits.table.user'))
