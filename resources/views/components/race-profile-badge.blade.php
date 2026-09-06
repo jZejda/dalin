@@ -1,7 +1,6 @@
 @props([
     'initials' => '',
-    'color' => null,
-    'avatarUrl' => null,
+    'gender' => null,
     'size' => 'md',
     'dotColor' => null,
     'tooltip' => null,
@@ -18,12 +17,14 @@
 
     $dotPx = max(8, (int) round($boxPx * 0.3));
 
-    $shade = $color instanceof \App\Enums\BadgeColor ? $color->shade() : $color;
-    // Neutral gray-500, used when there is no color and no avatar (e.g. an "N/A" placeholder).
-    $shade ??= 'oklch(0.551 0.027 264.364)';
+    // Outline style (light fill, dark border + text) distinguishes a race profile badge
+    // from the solid x-user-badge used for actual user accounts.
+    $colorClasses = match ($gender) {
+        'H' => 'bg-blue-100 border-blue-500 text-blue-700 dark:bg-blue-900/40 dark:border-blue-400 dark:text-blue-300',
+        'D' => 'bg-purple-100 border-purple-500 text-purple-700 dark:bg-purple-900/40 dark:border-purple-400 dark:text-purple-300',
+        default => 'bg-gray-100 border-gray-400 text-gray-700 dark:bg-gray-800 dark:border-gray-500 dark:text-gray-300',
+    };
 
-    // Small indicator dot in the top-right corner (e.g. red for a deactivated account).
-    // Any fill color can be passed in; null means no dot is shown at all.
     $dotShade = $dotColor instanceof \App\Enums\BadgeColor ? $dotColor->shade() : $dotColor;
 @endphp
 
@@ -34,18 +35,10 @@
         x-tooltip="{ content: {{ \Illuminate\Support\Js::from($tooltip) }}, theme: $store.theme }"
     @endif
 >
-    @if ($avatarUrl)
-        <img
-            src="{{ $avatarUrl }}"
-            alt="{{ $initials }}"
-            class="block h-full w-full rounded-full object-cover"
-        />
-    @else
-        <span
-            style="background-color: {{ $shade }}; font-size: {{ $textPx }}px; line-height: 1;"
-            class="flex h-full w-full items-center justify-center overflow-hidden rounded-full font-semibold text-white"
-        >{{ $initials }}</span>
-    @endif
+    <span
+        style="font-size: {{ $textPx }}px; line-height: 1;"
+        class="{{ $colorClasses }} flex h-full w-full items-center justify-center overflow-hidden rounded-full border font-semibold"
+    >{{ $initials }}</span>
 
     @if ($dotShade)
         <span

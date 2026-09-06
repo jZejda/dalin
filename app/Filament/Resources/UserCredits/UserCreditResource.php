@@ -227,7 +227,13 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label(__('user-credit.table.registration'))
-                    ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? ''),
+                    ->html()
+                    ->formatStateUsing(fn ($state, UserCredit $record): HtmlString => new HtmlString(
+                        (string) view('components.race-profile-identity', [
+                            'profile' => $record->userRaceProfile,
+                            'size' => 'sm',
+                        ])
+                    )),
                 TextColumn::make('amount')
                     ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
                     ->color(fn (UserCredit $record): ?string => $record->credit_type->getColor())

@@ -48,7 +48,13 @@ class RaceProfilePaymentList extends Component implements HasActions, HasForms, 
             ->columns([
                 TextColumn::make('reg_number')
                     ->label('Registrace')
-                    ->description(fn (UserRaceProfile $record): string => trim($record->first_name.' '.$record->last_name))
+                    ->html()
+                    ->formatStateUsing(fn ($state, UserRaceProfile $record): HtmlString => new HtmlString(
+                        (string) view('components.race-profile-identity', [
+                            'profile' => $record,
+                            'size' => 'sm',
+                        ])
+                    ))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('active_categories')

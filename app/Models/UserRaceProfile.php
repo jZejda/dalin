@@ -37,6 +37,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read string $user_race_full_name
+ * @property-read string $initials
  * @property-read User|null $user
  * @property-read Collection<int, UserEntry> $userEntries
  * @property-read Collection<int, UserCredit> $userCredits
@@ -81,6 +82,11 @@ class UserRaceProfile extends Model
     public function getUserRaceFullNameAttribute(): string
     {
         return "{$this->reg_number} - {$this->first_name} {$this->last_name}";
+    }
+
+    public function getInitialsAttribute(): string
+    {
+        return mb_strtoupper(mb_substr($this->first_name, 0, 1).mb_substr($this->last_name, 0, 1));
     }
 
     public function userEntries(): HasMany

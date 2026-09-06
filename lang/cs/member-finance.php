@@ -36,8 +36,9 @@ return [
     ],
 
     'table' => [
-        'name'             => 'Jméno',
+        'user'             => 'Uživatel',
         'email'            => 'E-mail',
+        'registrations'    => 'Registrace',
         'variable_symbol'  => 'Variabilní symbol',
         'active'           => 'Stav',
         'balance'          => 'Zůstatek',
