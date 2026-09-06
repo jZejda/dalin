@@ -36,8 +36,9 @@ return [
     ],
 
     'table' => [
-        'name'             => 'Name',
+        'user'             => 'User',
         'email'            => 'E-mail',
+        'registrations'    => 'Registrations',
         'variable_symbol'  => 'Variable symbol',
         'active'           => 'Status',
         'balance'          => 'Balance',

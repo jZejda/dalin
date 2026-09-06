@@ -30,6 +30,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Number;
 
 class MemberFinanceResource extends Resource
 {
@@ -179,34 +180,68 @@ class MemberFinanceResource extends Resource
             })
             ->columns([
                 TextColumn::make('name')
-                    ->label(__('member-finance.table.name'))
-                    ->size(TextSize::Large)
-                    ->description(fn (User $record): HtmlString => new HtmlString(
-                        (string) view('components.user-race-profile-badges', [
-                            'profiles' => $record->userRaceProfiles->where('active', true),
-                            'size' => 'text-xs'
+                    ->label(__('member-finance.table.user'))
+                    ->html()
+                    ->formatStateUsing(fn ($state, User $record): HtmlString => new HtmlString(
+                        (string) view('components.user-identity', [
+                            'user' => $record,
+                            'size' => 'sm',
                         ])
                     ))
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('race_profiles_display')
+                    ->label(__('member-finance.table.registrations'))
+                    ->html()
+                    ->state(fn (User $record): string => $record->userRaceProfiles->where('active', true)->pluck('reg_number')->implode(','))
+                    ->formatStateUsing(function (User $record): HtmlString {
+                        $rows = $record->userRaceProfiles->where('active', true)
+                            ->map(fn ($profile): string => (string) view('components.race-profile-compact', [
+                                'profile' => $profile,
+                                'size' => 'xs',
+                            ]))
+                            ->implode('');
+
+                        return new HtmlString('<div class="flex flex-col gap-1">'.$rows.'</div>');
+                    }),
                 TextColumn::make('email')
                     ->label(__('member-finance.table.email'))
+                    ->size(TextSize::Medium)
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('payer_variable_symbol')
                     ->label(__('member-finance.table.variable_symbol'))
+                    ->html()
+                    ->size(TextSize::Medium)
+                    ->formatStateUsing(fn (string $state): HtmlString => new HtmlString(
+                        '<span class="font-mono">'
+                        .'<span class="text-gray-400 dark:text-gray-500">'.e(config('site-config.club.extra_membership_fees_prefix')).'</span>'
+                        .'<span class="text-gray-950 dark:text-white">'.e($state).'</span>'
+                        .'</span>'
+                    ))
                     ->searchable()
                     ->toggleable(),
                 TextColumn::make('computed_balance')
                     ->label(__('member-finance.table.balance'))
                     ->size(TextSize::Large)
-                    ->money('CZK')
-                    ->color(fn (User $record): string => floatval($record->computed_balance ?? 0) >= 0 ? 'success' : 'danger')
+                    ->html()
+                    ->formatStateUsing(function ($state): HtmlString {
+                        $amount = floatval($state ?? 0);
+                        $color = $amount >= 0 ? 'text-success-600' : 'text-danger-600';
+
+                        $formatted = Number::format($amount, precision: 2, locale: 'cs') ?: number_format($amount, 2, ',', ' ');
+
+                        return new HtmlString(
+                            '<span class="'.$color.'">'.e($formatted).'</span>'
+                            .'<span class="text-gray-400 dark:text-gray-500 text-sm ml-1">Kč</span>'
+                        );
+                    })
                     ->sortable()
                     ->alignEnd(),
                 TextColumn::make('active')
                     ->label(__('member-finance.table.active'))
                     ->badge()
+                    ->size(TextSize::Medium)
                     ->formatStateUsing(fn (bool $state): string => $state
                         ? __('member-finance.table.status_active')
                         : __('member-finance.table.status_inactive'))
