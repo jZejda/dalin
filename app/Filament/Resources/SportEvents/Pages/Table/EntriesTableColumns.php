@@ -8,7 +8,6 @@ use App\Models\SportClass;
 use App\Models\SportEvent;
 use App\Models\UserEntry;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 
 class EntriesTableColumns
@@ -55,23 +54,11 @@ class EntriesTableColumns
                 ->label(__('sport-event.entries_table.registration'))
                 ->html()
                 ->formatStateUsing(fn ($state, UserEntry $record): HtmlString => new HtmlString(
-                    (string) view('components.user-race-profile-badges', [
-                        'profiles' => collect([$record->userRaceProfile])->filter(),
-                        'size' => 'text-xs',
+                    (string) view('components.race-profile-identity', [
+                        'profile' => $record->userRaceProfile,
+                        'size' => 'sm',
                     ])
                 ))
-                ->description(function (UserEntry $record): HtmlString {
-                    $name = $record->userRaceProfile?->user?->name;
-                    if ($name === null) {
-                        return new HtmlString('');
-                    }
-                    $isCurrentUser = $name === Auth::user()?->name;
-                    $classes = $isCurrentUser
-                        ? 'inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
-                        : 'inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
-
-                    return new HtmlString('<span class="'.$classes.'">'.e($name).'</span>');
-                })
                 ->searchable(),
             TextColumn::make('note')
                 ->label(__('sport-event.entries_table.note'))

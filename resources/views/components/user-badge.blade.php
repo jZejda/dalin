@@ -4,6 +4,7 @@
     'avatarUrl' => null,
     'size' => 'md',
     'dotColor' => null,
+    'tooltip' => null,
 ])
 
 @php
@@ -29,6 +30,9 @@
 <span
     {{ $attributes->merge(['class' => 'relative inline-block shrink-0']) }}
     style="width:{{ $boxPx }}px;height:{{ $boxPx }}px;"
+    @if (filled($tooltip))
+        x-tooltip="{ content: {{ \Illuminate\Support\Js::from($tooltip) }}, theme: $store.theme }"
+    @endif
 >
     @if ($avatarUrl)
         <img

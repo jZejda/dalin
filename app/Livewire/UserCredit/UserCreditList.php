@@ -23,6 +23,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\HtmlString;
 use Livewire\Component;
 
 class UserCreditList extends Component implements HasForms, HasTable, HasActions
@@ -65,7 +66,13 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label('Registrace závodníka')
-                    ->description(fn (UserCredit $record): string => $record->userRaceProfile->user_race_full_name ?? '')
+                    ->html()
+                    ->formatStateUsing(fn ($state, UserCredit $record): HtmlString => new HtmlString(
+                        (string) view('components.race-profile-identity', [
+                            'profile' => $record->userRaceProfile,
+                            'size' => 'sm',
+                        ])
+                    ))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('amount')
@@ -96,17 +103,9 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
                 ViewColumn::make('user_entry')
                     ->label('Komentářů')
                     ->view('filament.tables.columns.user-credit-comments-count'),
-                TextColumn::make('sourceUser.name')
-                    ->badge()
-                    ->icon('heroicon-o-user')
+                ViewColumn::make('sourceUser.name')
                     ->label(__('user-credit.table.source_user_title'))
-                    ->colors(function (UserCredit $record): array {
-                        if ($record->sourceUser?->isActive()) {
-                            return ['gray'];
-                        }
-
-                        return ['danger'];
-                    }),
+                    ->view('filament.tables.columns.user-badge'),
             ])
             ->defaultPaginationPageOption(25)
             ->defaultSort('created_at', 'desc')

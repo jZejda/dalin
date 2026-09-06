@@ -16,6 +16,7 @@ $user = data_get($getRecord(), $relation);
         :color="$user->badge_color"
         :avatar-url="$user->avatar_url"
         :dot-color="$user->isActive() ? null : \App\Enums\BadgeColor::Red"
+        :tooltip="$user->name"
         size="sm"
     />
 @else
