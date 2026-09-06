@@ -1,6 +1,7 @@
 @php
     use App\Livewire\Shared\Maps\Marker;
     use App\Services\OrisApiService;
+    use Illuminate\Support\Js;
     /** @var array $mapData */
 @endphp
 
@@ -22,26 +23,6 @@
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
-
-        const LeafIcon = L.Icon.extend({
-            options: {
-                shadowUrl: '{{ URL::to('/') }}/images/markers/marker-shadow.png',
-                iconSize: [32, 36],
-                shadowSize: [41, 41],
-                iconAnchor: [16, 34],
-                shadowAnchor: [12, 41],
-                popupAnchor: [-3, -38]
-            }
-        });
-
-        const obRaceSimple = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/obRaceSimple.png'});
-        const obRaceDot = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/obRaceDot.png'});
-        const obRaceStages = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/obRaceStages.png'});
-        const trainingDot = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/trainingDot.png'});
-        const trainingCamp = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/trainingCamp.png'});
-
-        const stageStart = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/trainingDot.png'});
-        const defaultMarker = new LeafIcon({iconUrl: '{{ URL::to('/') }}/images/markers/trainingDot.png'});
 
         @foreach($mapData['markers'] as $marker)
         @php
@@ -78,10 +59,19 @@
                 }
             }
 
+            $markerHtml = view('components.map.marker-icon', ['visual' => $marker->visual])->render();
         @endphp
 
         {{--Important to take space--}}
-        L.marker([{{$marker->lat}}, {{$marker->lng}}], {icon: {{$marker->markerType->value}}}).addTo(map).bindPopup('{!! $popupContent !!}');
+        L.marker([{{$marker->lat}}, {{$marker->lng}}], {
+            icon: L.divIcon({
+                html: {{ Js::from($markerHtml) }},
+                className: '',
+                iconSize: [37, 41],
+                iconAnchor: [19, 40],
+                popupAnchor: [0, -39],
+            })
+        }).addTo(map).bindPopup('{!! $popupContent !!}');
 
         @endforeach
 

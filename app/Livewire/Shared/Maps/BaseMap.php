@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Livewire\Shared\Maps;
 
-use App\Enums\SportEventMarkerType;
-use App\Enums\SportEventType;
 use App\Models\SportEvent;
 use App\Models\SportEventMarker;
+use App\Services\Map\MapMarkerResolver;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\HtmlString;
 
@@ -15,9 +14,12 @@ final class BaseMap
 {
     private ?MapBuilder $mapBuilder;
 
-    public function __construct(?MapBuilder $mapBuilder = null)
+    private MapMarkerResolver $resolver;
+
+    public function __construct(?MapBuilder $mapBuilder = null, ?MapMarkerResolver $resolver = null)
     {
         $this->mapBuilder = $mapBuilder ?? new MapBuilder();
+        $this->resolver = $resolver ?? new MapMarkerResolver();
     }
 
     /**
@@ -33,7 +35,7 @@ final class BaseMap
                 $this->mapBuilder->addMarker(
                     (float) $sportEvent->gps_lat,
                     (float) $sportEvent->gps_lon,
-                    $this->getMarkerType($sportEvent),
+                    $this->resolver->resolveForEvent($sportEvent),
                     $sportEvent->name,
                     $sportEvent->alt_name ?? '',
                     $sportEvent->date,
@@ -50,7 +52,7 @@ final class BaseMap
                 $this->mapBuilder->addMarker(
                     $marker->lat,
                     $marker->lon,
-                    $marker->type ?? SportEventMarkerType::DefaultMarker,
+                    $this->resolver->resolveForMarker($marker, $sportEvent),
                     $marker->label,
                     $marker->desc ?? '',
                     $marker->date,
@@ -78,7 +80,7 @@ final class BaseMap
                     $this->mapBuilder->addMarker(
                         lat: (float) $sportEvent->gps_lat,
                         lng: (float) $sportEvent->gps_lon,
-                        markerType: $this->getMarkerType($sportEvent),
+                        visual: $this->resolver->resolveForEvent($sportEvent),
                         label: $sportEvent->name,
                         //                        popupContent: new HtmlString('<span class="text-sm text-yellow-500 dark:text-yellow-400">' . $sportEvent->alt_name . '</span>') ?? '',
                         secondaryLabel: $sportEvent->alt_name ?? '',
@@ -92,26 +94,6 @@ final class BaseMap
         }
 
         return $this->mapBuilder?->getMarkers() ?? [];
-    }
-
-    private function getMarkerType(SportEvent $sportEvent): SportEventMarkerType
-    {
-
-        if ($sportEvent->event_type === SportEventType::Training) {
-            return SportEventMarkerType::Training;
-        }
-
-        if ($sportEvent->event_type === SportEventType::TrainingCamp) {
-            return SportEventMarkerType::TrainingCamp;
-        }
-
-        if ($sportEvent->stages !== null) {
-            if ($sportEvent->stages > 1) {
-                return SportEventMarkerType::ObRaceStages;
-            }
-        }
-
-        return SportEventMarkerType::ObRaceSimple;
     }
 
     public function calculateCenterMapFromEvent(SportEvent $sportEvent): array

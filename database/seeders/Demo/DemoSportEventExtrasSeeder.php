@@ -137,6 +137,32 @@ class DemoSportEventExtrasSeeder extends Seeder
                 'lat'            => $startLat,
                 'lon'            => $startLon,
             ]);
+
+            if ($event->stages !== null && $event->stages > 1) {
+                [$endLat, $endLon] = $this->offset($lat, $lon, $faker->numberBetween(400, 1500), $faker->numberBetween(0, 359));
+
+                SportEventMarker::factory()->ofType(SportEventMarkerType::StageEnd)->create([
+                    'sport_event_id' => $event->id,
+                    'letter'         => 'F',
+                    'label'          => 'Cíl etapy',
+                    'desc'           => 'Cíl etapy s časomírou.',
+                    'lat'            => $endLat,
+                    'lon'            => $endLon,
+                ]);
+            }
+        }
+
+        if ($event->event_type === SportEventType::TrainingCamp) {
+            [$accommodationLat, $accommodationLon] = $this->offset($lat, $lon, $faker->numberBetween(100, 500), $faker->numberBetween(0, 359));
+
+            SportEventMarker::factory()->ofType(SportEventMarkerType::Accommodation)->create([
+                'sport_event_id' => $event->id,
+                'letter'         => 'U',
+                'label'          => 'Ubytování',
+                'desc'           => 'Chata s kapacitou pro celý oddíl.',
+                'lat'            => $accommodationLat,
+                'lon'            => $accommodationLon,
+            ]);
         }
     }
 

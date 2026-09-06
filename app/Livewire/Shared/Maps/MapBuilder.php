@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Shared\Maps;
 
-use App\Enums\SportEventMarkerType;
+use App\Services\Map\MapMarkerVisual;
 use Illuminate\Support\Carbon;
 
 final class MapBuilder
@@ -15,7 +15,7 @@ final class MapBuilder
     public function addMarker(
         float $lat,
         float $lng,
-        SportEventMarkerType $markerType,
+        MapMarkerVisual $visual,
         string $label,
         ?string $secondaryLabel,
         ?Carbon $date,
@@ -26,7 +26,7 @@ final class MapBuilder
         $this->markers[] = new Marker(
             $lat,
             $lng,
-            $markerType,
+            $visual,
             $label,
             $secondaryLabel,
             $date,

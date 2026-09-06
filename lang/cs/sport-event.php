@@ -454,6 +454,7 @@ return [
         SportEventType::Race->value => 'Závod',
         SportEventType::Training->value => 'Trénink',
         SportEventType::TrainingCamp->value => 'Soustředění',
+        SportEventType::ClubChampionship->value => 'Oddílový přebor',
         SportEventType::Other->value => 'Ostatní',
     ],
 
@@ -470,7 +471,9 @@ return [
         SportEventMarkerType::ObRaceDot->value => 'Jednodenní závod dot',
         SportEventMarkerType::ObRaceStages->value => 'Jednodenní závod etapový',
         SportEventMarkerType::StageStart->value => 'Start etapy',
+        SportEventMarkerType::StageEnd->value => 'Cíl etapy',
         SportEventMarkerType::Parking->value => 'Parkování',
+        SportEventMarkerType::Accommodation->value => 'Ubytování',
         SportEventMarkerType::Other->value => 'Ostatní',
         SportEventMarkerType::Training->value => 'Trénink',
         SportEventMarkerType::TrainingCamp->value => 'Soustředění',

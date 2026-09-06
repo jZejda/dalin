@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Filament\Clusters\Config\Pages\MapIconGallery;
 use App\Filament\Resources\BankTransactions\BankTransactionResource;
 use App\Filament\Resources\Clubs\ClubResource;
 use App\Filament\Resources\ContentCategories\ContentCategoryResource;
@@ -86,6 +87,12 @@ it('can render UserRaceProfileResource index', function () {
     actingAsSuperAdmin();
 
     $this->get(UserRaceProfileResource::getUrl('index'))->assertOk();
+});
+
+it('can render the map icon gallery page', function () {
+    actingAsSuperAdmin();
+
+    $this->get(MapIconGallery::getUrl())->assertOk();
 });
 
 it('can render UserResource index', function () {

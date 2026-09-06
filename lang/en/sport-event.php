@@ -454,6 +454,7 @@ return [
         SportEventType::Race->value => 'Race',
         SportEventType::Training->value => 'Training',
         SportEventType::TrainingCamp->value => 'Training camp',
+        SportEventType::ClubChampionship->value => 'Club championship',
         SportEventType::Other->value => 'Other',
     ],
 
@@ -470,7 +471,9 @@ return [
         SportEventMarkerType::ObRaceDot->value => 'Single-day race dot',
         SportEventMarkerType::ObRaceStages->value => 'Single-day stage race',
         SportEventMarkerType::StageStart->value => 'Stage start',
+        SportEventMarkerType::StageEnd->value => 'Stage finish',
         SportEventMarkerType::Parking->value => 'Parking',
+        SportEventMarkerType::Accommodation->value => 'Accommodation',
         SportEventMarkerType::Other->value => 'Other',
         SportEventMarkerType::Training->value => 'Training',
         SportEventMarkerType::TrainingCamp->value => 'Training camp',

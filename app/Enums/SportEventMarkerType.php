@@ -13,7 +13,9 @@ enum SportEventMarkerType: string
     case ObRaceStages = 'obRaceStages';
 
     case StageStart = 'stageStart';
+    case StageEnd = 'stageEnd';
     case Parking = 'parking';
+    case Accommodation = 'accommodationMarker';
     case Other = 'other';
 
     case Training = 'trainingDot';
@@ -29,7 +31,9 @@ enum SportEventMarkerType: string
             self::ObRaceDot->value => __($trKey . self::ObRaceDot->value),
             self::ObRaceStages->value => __($trKey . self::ObRaceStages->value),
             self::StageStart->value => __($trKey . self::StageStart->value),
+            self::StageEnd->value => __($trKey . self::StageEnd->value),
             self::Parking->value => __($trKey . self::Parking->value),
+            self::Accommodation->value => __($trKey . self::Accommodation->value),
             self::Other->value => __($trKey . self::Other->value),
             self::Training->value => __($trKey . self::Training->value),
             self::TrainingCamp->value => __($trKey . self::TrainingCamp->value),
