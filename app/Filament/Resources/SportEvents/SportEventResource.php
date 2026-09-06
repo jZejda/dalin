@@ -13,7 +13,9 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Actions\Action;
+use App\Filament\Forms\Components\LocationPicker;
 use App\Filament\Resources\SportEvents\Pages\ListSportEvents;
 use App\Filament\Resources\SportEvents\Pages\CreateSportEvent;
 use App\Filament\Resources\SportEvents\Pages\EditSportEvent;
@@ -395,7 +397,24 @@ class SportEventResource extends Resource implements HasShieldPermissions
 
                                     TextInput::make('gps_lat')
                                         ->label(__('sport-event.form.gps_lat'))
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->suffixAction(
+                                            Action::make('pickLocationOnMap')
+                                                ->icon('heroicon-m-map-pin')
+                                                ->label(__('sport-event.actions.pick_location_on_map.label'))
+                                                ->modalHeading(__('sport-event.actions.pick_location_on_map.modal_heading'))
+                                                ->modalSubmitActionLabel(__('sport-event.actions.pick_location_on_map.modal_submit'))
+                                                ->fillForm(fn (Get $get): array => [
+                                                    'picked_location' => [$get('gps_lat'), $get('gps_lon')],
+                                                ])
+                                                ->schema([
+                                                    LocationPicker::make('picked_location')->hiddenLabel(),
+                                                ])
+                                                ->action(function (array $data, Set $set): void {
+                                                    $set('gps_lat', $data['picked_location'][0] ?? null);
+                                                    $set('gps_lon', $data['picked_location'][1] ?? null);
+                                                })
+                                        ),
 
                                     TextInput::make('gps_lon')
                                         ->label(__('sport-event.form.gps_lon'))

@@ -6,11 +6,14 @@ namespace App\Filament\Resources\SportEvents\RelationManagers;
 
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\CreateAction;
 use App\Enums\SportEventMarkerType;
+use App\Filament\Forms\Components\LocationPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -44,6 +47,16 @@ class SportMarkersRelationManager extends RelationManager
                         ->label(__('sport-event.relation_markers.name'))
                         ->required(),
                 ])->columns(1),
+                LocationPicker::make('picked_location')
+                    ->hiddenLabel()
+                    ->columnSpanFull()
+                    ->live()
+                    ->dehydrated(false)
+                    ->default(fn (Get $get): array => [$get('lat'), $get('lon')])
+                    ->afterStateUpdated(function (?array $state, Set $set): void {
+                        $set('lat', $state[0] ?? null);
+                        $set('lon', $state[1] ?? null);
+                    }),
                 TextInput::make('lat')
                     ->label(__('sport-event.relation_markers.lat'))
                     ->required()

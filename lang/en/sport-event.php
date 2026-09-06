@@ -141,6 +141,12 @@ return [
     ],
 
     'actions' => [
+        'pick_location_on_map' => [
+            'label' => 'Pick on map',
+            'modal_heading' => 'Pick location on map',
+            'modal_submit' => 'Use coordinates',
+        ],
+
         'search_by_oris_id' => [
             'notification_title_missing' => 'Form data',
             'notification_body_missing' => 'Please fill in the race ORIS ID.',

@@ -11,11 +11,16 @@ use App\Filament\Resources\Posts\PostResource;
 use App\Filament\Resources\Roles\RoleResource;
 use App\Filament\Resources\SportClassDefinitions\SportClassDefinitionResource;
 use App\Filament\Resources\SportEventExports\SportEventExportResource;
+use App\Filament\Resources\SportEvents\Pages\EditSportEvent;
 use App\Filament\Resources\SportEvents\SportEventResource;
 use App\Filament\Resources\UserCredits\UserCreditResource;
 use App\Filament\Resources\UserEntries\UserEntryResource;
 use App\Filament\Clusters\Other\Resources\UserRaceProfiles\UserRaceProfileResource;
 use App\Filament\Resources\Users\UserResource;
+use App\Models\SportEvent;
+use Filament\Actions\Testing\TestAction;
+
+use function Pest\Livewire\livewire;
 
 it('can render BankTransactionResource index', function () {
     actingAsSuperAdmin();
@@ -69,6 +74,40 @@ it('can render SportEventResource index', function () {
     actingAsSuperAdmin();
 
     $this->get(SportEventResource::getUrl('index'))->assertOk();
+});
+
+it('can render SportEventResource edit page with the location picker action', function () {
+    actingAsSuperAdmin();
+
+    $event = SportEvent::factory()->create();
+
+    $this->get(SportEventResource::getUrl('edit', ['record' => $event]))->assertOk();
+});
+
+it('renders the location picker inside the gps_lat suffix action modal', function () {
+    actingAsSuperAdmin();
+
+    $event = SportEvent::factory()->create();
+
+    livewire(EditSportEvent::class, ['record' => $event->id])
+        ->assertOk()
+        ->callAction(TestAction::make('pickLocationOnMap')->schemaComponent('gps_lat'));
+});
+
+it('writes the picked location into gps_lat/gps_lon on submit', function () {
+    actingAsSuperAdmin();
+
+    $event = SportEvent::factory()->create();
+
+    livewire(EditSportEvent::class, ['record' => $event->id])
+        ->callAction(
+            TestAction::make('pickLocationOnMap')->schemaComponent('gps_lat'),
+            data: ['picked_location' => [50.123456, 14.654321]],
+        )
+        ->assertSchemaStateSet([
+            'gps_lat' => 50.123456,
+            'gps_lon' => 14.654321,
+        ]);
 });
 
 it('can render UserCreditResource index', function () {

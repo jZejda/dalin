@@ -141,6 +141,12 @@ return [
     ],
 
     'actions' => [
+        'pick_location_on_map' => [
+            'label' => 'Vybrat na mapě',
+            'modal_heading' => 'Vyber polohu na mapě',
+            'modal_submit' => 'Použít souřadnice',
+        ],
+
         'search_by_oris_id' => [
             'notification_title_missing' => 'Formulářová data',
             'notification_body_missing' => 'Vyplň prosím ORIS ID závodu.',
