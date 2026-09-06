@@ -23,6 +23,6 @@
         </div>
     @endif
     @if($visual->modifierLetter !== null)
-        <div style="position:absolute;top:-3px;left:-3px;min-width:18px;height:18px;padding:0 3px;border-radius:9999px;background:#111827;color:#ffffff;font-size:12px;font-weight:700;line-height:18px;text-align:center;border:1px solid #ffffff;z-index:2;">{{ $visual->modifierLetter }}</div>
+        <div style="position:absolute;top:-3px;left:-3px;min-width:18px;height:18px;padding:0 3px;border-radius:9999px;background:#6B7280;color:#ffffff;font-size:12px;font-weight:700;line-height:18px;text-align:center;border:1px solid #ffffff;z-index:2;"><span style="display:inline-block;transform:translate(0px,-1px);">{{ $visual->modifierLetter }}</span></div>
     @endif
 </div>
