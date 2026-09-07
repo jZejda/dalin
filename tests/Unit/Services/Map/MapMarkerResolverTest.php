@@ -92,6 +92,22 @@ test('auxiliary markers get a neutral icon and their own letter, not the sport v
         ->and($visual->categoryIconSlug)->toBeNull();
 });
 
+test('bus stop markers get their own icon, not the sport visual', function () {
+    $event = createResolverTestEvent();
+
+    DB::statement('SET FOREIGN_KEY_CHECKS=0');
+    $marker = SportEventMarker::factory()->ofType(SportEventMarkerType::BusStop)->create([
+        'sport_event_id' => $event->id,
+        'letter' => null,
+    ]);
+    DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+    $visual = (new MapMarkerResolver())->resolveForMarker($marker, $event);
+
+    expect($visual->iconSlug)->toBe('bus-stop')
+        ->and($visual->colorHex)->toBe('#616161');
+});
+
 test('markers representing the event centre reuse the event sport visual', function () {
     $event = createResolverTestEvent();
 

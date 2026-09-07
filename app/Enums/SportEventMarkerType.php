@@ -7,6 +7,7 @@ namespace App\Enums;
 enum SportEventMarkerType: string
 {
     case Parking = 'parking';
+    case BusStop = 'busStop';
     case Accommodation = 'accommodationMarker';
     case StageStart = 'stageStart';
     case StageEnd = 'stageEnd';
@@ -35,6 +36,7 @@ enum SportEventMarkerType: string
     {
         return match ($this) {
             self::Parking => 'parking',
+            self::BusStop => 'bus-stop',
             self::StageStart => 'stage-start',
             self::StageEnd => 'stage-end',
             self::Accommodation => 'accommodation',
@@ -72,6 +74,7 @@ enum SportEventMarkerType: string
             self::TrainingCamp => false,
 
             self::Parking,
+            self::BusStop,
             self::Accommodation,
             self::StageStart,
             self::StageEnd,
@@ -86,6 +89,7 @@ enum SportEventMarkerType: string
 
         return [
             self::Parking->value => __($trKey . self::Parking->value),
+            self::BusStop->value => __($trKey . self::BusStop->value),
             self::Accommodation->value => __($trKey . self::Accommodation->value),
             self::StageStart->value => __($trKey . self::StageStart->value),
             self::StageEnd->value => __($trKey . self::StageEnd->value),

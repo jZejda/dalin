@@ -82,6 +82,7 @@ Rendered with a neutral gray circle (`#616161`), no sport color:
 | `SportEventMarkerType` | Icon slug | Icon file |
 |---|---|---|
 | `Parking` | `parking` | `parking.blade.php` |
+| `BusStop` | `bus-stop` | `bus-stop.blade.php` (Lucide `bus-front`) |
 | `StageStart` | `stage-start` | `stage-start.blade.php` |
 | `StageEnd` | `stage-end` | `stage-end.blade.php` |
 | `Accommodation` | `accommodation` | `accommodation.blade.php` |
@@ -123,12 +124,20 @@ duplicating the type → icon mapping, so adding a new auxiliary point type is a
 All four read `MapMarkerResolver` (directly or via `iconSlug()`), so they can never drift from each
 other or from the map.
 
+**Dropdown order is the enum's declaration order, not alphabetical.**
+`SportMarkersRelationManager::markerTypeOptions()` iterates `SportEventMarkerType::cases()` (PHP
+returns backed-enum cases in the order they're declared) and just skips the ones where
+`isSelectableForNewMarker()` is false — same for `MapIconGallery::auxiliaryData()`. To reorder the
+dropdown/gallery, reorder the `case` lines in `app/Enums/SportEventMarkerType.php` — nothing else
+needs to change.
+
 ## How to add a new icon
 
-1. Add the enum case (`SportEventType` or `SportEventMarkerType`). For an auxiliary
-   `SportEventMarkerType`, also add its `iconSlug()` match arm — that's the only place the new case
-   needs to be wired into resolution logic; the Select dropdown, admin table, map and detail page all
-   pick it up automatically.
+1. Add the enum case (`SportEventType` or `SportEventMarkerType`) **where you want it to appear in
+   the dropdown** — see the ordering note above. For an auxiliary `SportEventMarkerType`, also add
+   its `iconSlug()` match arm (and, if it should be pickable when manually creating a marker, an
+   arm in `isSelectableForNewMarker()`) — the Select dropdown, admin table, map and detail page all
+   pick it up automatically from there.
 2. Add the matching lang key in **both** `lang/cs/sport-event.php` and `lang/en/sport-event.php`
    (`type_enum` / `type_enum_markers`) — `tests/Feature/LangParityTest.php` enforces this.
 3. Add the SVG partial under `resources/views/components/map/icons/` (viewBox `0 0 24 24`,

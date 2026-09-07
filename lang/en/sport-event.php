@@ -473,6 +473,7 @@ return [
 
     'type_enum_markers' => [
         SportEventMarkerType::Parking->value => 'Parking',
+        SportEventMarkerType::BusStop->value => 'Bus stop',
         SportEventMarkerType::Accommodation->value => 'Accommodation',
         SportEventMarkerType::StageStart->value => 'Stage start',
         SportEventMarkerType::StageEnd->value => 'Stage finish',

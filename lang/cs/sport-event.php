@@ -473,6 +473,7 @@ return [
 
     'type_enum_markers' => [
         SportEventMarkerType::Parking->value => 'Parkování',
+        SportEventMarkerType::BusStop->value => 'Zastávka',
         SportEventMarkerType::Accommodation->value => 'Ubytování',
         SportEventMarkerType::StageStart->value => 'Start etapy',
         SportEventMarkerType::StageEnd->value => 'Cíl etapy',
