@@ -141,6 +141,12 @@ return [
     ],
 
     'actions' => [
+        'pick_location_on_map' => [
+            'label' => 'Vybrat na mapě',
+            'modal_heading' => 'Vyber polohu na mapě',
+            'modal_submit' => 'Použít souřadnice',
+        ],
+
         'search_by_oris_id' => [
             'notification_title_missing' => 'Formulářová data',
             'notification_body_missing' => 'Vyplň prosím ORIS ID závodu.',
@@ -357,6 +363,7 @@ return [
             'desc' => 'Popis bodu',
             'lat' => 'Latitude',
             'lon' => 'Longitude',
+            'icon' => 'Náhled',
             'type' => 'Typ bodu',
         ],
     ],
@@ -454,6 +461,7 @@ return [
         SportEventType::Race->value => 'Závod',
         SportEventType::Training->value => 'Trénink',
         SportEventType::TrainingCamp->value => 'Soustředění',
+        SportEventType::ClubChampionship->value => 'Oddílový přebor',
         SportEventType::Other->value => 'Ostatní',
     ],
 
@@ -465,13 +473,16 @@ return [
     ],
 
     'type_enum_markers' => [
+        SportEventMarkerType::Parking->value => 'Parkování',
+        SportEventMarkerType::BusStop->value => 'Zastávka',
+        SportEventMarkerType::Accommodation->value => 'Ubytování',
+        SportEventMarkerType::StageStart->value => 'Start etapy',
+        SportEventMarkerType::StageEnd->value => 'Cíl etapy',
+        SportEventMarkerType::Other->value => 'Ostatní',
         SportEventMarkerType::DefaultMarker->value => 'Obecný bod',
         SportEventMarkerType::ObRaceSimple->value => 'Jednodenní závod',
         SportEventMarkerType::ObRaceDot->value => 'Jednodenní závod dot',
         SportEventMarkerType::ObRaceStages->value => 'Jednodenní závod etapový',
-        SportEventMarkerType::StageStart->value => 'Start etapy',
-        SportEventMarkerType::Parking->value => 'Parkování',
-        SportEventMarkerType::Other->value => 'Ostatní',
         SportEventMarkerType::Training->value => 'Trénink',
         SportEventMarkerType::TrainingCamp->value => 'Soustředění',
     ],

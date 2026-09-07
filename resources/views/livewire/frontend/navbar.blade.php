@@ -81,7 +81,7 @@
             <div class="hidden md:block">
                 <h2 class="mb-2 font-semibold text-gray-900 dark:text-white">Dalin</h2>
                 <p class="mb-2 text-gray-500 dark:text-gray-400">Návod na interní oddílový informační systém.</p>
-                <a href="https://jirizejda.cz/dalin/napoveda/" class="inline-flex items-center text-sm font-medium text-blue-600 hover:underline hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-700">
+                <a href="https://docs.dalin.cz/napoveda/" class="inline-flex items-center text-sm font-medium text-blue-600 hover:underline hover:text-blue-600 dark:text-blue-500 dark:hover:text-blue-700">
                     Prozkoumat návod
                     <span class="sr-only">Prozkoumat návod </span>
                     <svg class="w-3 h-3 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">

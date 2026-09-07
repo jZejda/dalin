@@ -11,7 +11,9 @@ use App\Models\UserCredit;
 use App\Observers\UserCreditObserver;
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Filament\Facades\Filament;
+use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Font;
+use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Laravel\Mcp\Facades\Mcp;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -89,6 +91,19 @@ class AppServiceProvider extends ServiceProvider
         // is set via ->font() in AdminPanelProvider.
         FilamentAsset::register([
             Font::make('poppins', resource_path('fonts/poppins')),
+        ]);
+
+        // Used by resources/views/filament/forms/components/location-picker.blade.php. A plain
+        // <script> tag in that view would never execute, since the view is rendered into an
+        // action modal that Livewire injects into the DOM dynamically, and browsers don't run
+        // <script> tags added that way — so the view loads the JS itself via a manually created
+        // <script> element with a real load-completion promise (Filament's own x-load-js only
+        // *starts* the fetch, it doesn't reliably block init() until the script has executed).
+        // getScriptSrc('leaflet') below just resolves the CDN URL/version from one place; the
+        // CSS has no init-order concerns so it's loaded globally as normal.
+        FilamentAsset::register([
+            Css::make('leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'),
+            Js::make('leaflet', 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js')->loadedOnRequest(),
         ]);
     }
 }

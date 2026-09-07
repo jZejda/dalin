@@ -9,6 +9,7 @@ enum SportEventType: string
     case Race = 'race';
     case Training = 'training';
     case TrainingCamp = 'trainingCamp';
+    case ClubChampionship = 'clubChampionship';
     case Other = 'other';
 
     public static function enumArray(): array
@@ -17,6 +18,7 @@ enum SportEventType: string
             'race' => __('sport-event.type_enum.'.self::Race->value),
             'training' => __('sport-event.type_enum.'.self::Training->value),
             'trainingCamp' => __('sport-event.type_enum.'.self::TrainingCamp->value),
+            'clubChampionship' => __('sport-event.type_enum.'.self::ClubChampionship->value),
             'other' => __('sport-event.type_enum.'.self::Other->value),
         ];
     }

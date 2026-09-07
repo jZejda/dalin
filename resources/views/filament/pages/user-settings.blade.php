@@ -30,7 +30,7 @@
 
             <!-- Card: Uživatel a jeho práva -->
             <a class="group flex gap-y-6 w-full h-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 rounded-lg p-5 transition-all dark:hover:bg-white/[.075] dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 ring-1 ring-gray-950/5 dark:ring-gray-400/20 shadow-sm"
-               href="https://jirizejda.cz/dalin/napoveda/role-v-aplikaci.html" target="_blank">
+               href="https://docs.dalin.cz/napoveda/role-v-aplikaci.html" target="_blank">
                 <svg class="flex-shrink-0 w-8 h-8 text-gray-800 mt-0.5 me-6 dark:text-gray-200"
                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

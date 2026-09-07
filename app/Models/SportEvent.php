@@ -164,6 +164,12 @@ class SportEvent extends Model
         return $this->hasOne(SportDiscipline::class, 'id', 'discipline_id');
     }
 
+    /** @return HasOne<SportList, $this> */
+    public function sport(): HasOne
+    {
+        return $this->hasOne(SportList::class, 'id', 'sport_id');
+    }
+
     /** @return HasOne<SportLevel, $this> */
     public function sportLevel(): HasOne
     {

@@ -141,6 +141,12 @@ return [
     ],
 
     'actions' => [
+        'pick_location_on_map' => [
+            'label' => 'Pick on map',
+            'modal_heading' => 'Pick location on map',
+            'modal_submit' => 'Use coordinates',
+        ],
+
         'search_by_oris_id' => [
             'notification_title_missing' => 'Form data',
             'notification_body_missing' => 'Please fill in the race ORIS ID.',
@@ -357,6 +363,7 @@ return [
             'desc' => 'Point description',
             'lat' => 'Latitude',
             'lon' => 'Longitude',
+            'icon' => 'Preview',
             'type' => 'Point type',
         ],
     ],
@@ -454,6 +461,7 @@ return [
         SportEventType::Race->value => 'Race',
         SportEventType::Training->value => 'Training',
         SportEventType::TrainingCamp->value => 'Training camp',
+        SportEventType::ClubChampionship->value => 'Club championship',
         SportEventType::Other->value => 'Other',
     ],
 
@@ -465,13 +473,16 @@ return [
     ],
 
     'type_enum_markers' => [
+        SportEventMarkerType::Parking->value => 'Parking',
+        SportEventMarkerType::BusStop->value => 'Bus stop',
+        SportEventMarkerType::Accommodation->value => 'Accommodation',
+        SportEventMarkerType::StageStart->value => 'Stage start',
+        SportEventMarkerType::StageEnd->value => 'Stage finish',
+        SportEventMarkerType::Other->value => 'Other',
         SportEventMarkerType::DefaultMarker->value => 'General point',
         SportEventMarkerType::ObRaceSimple->value => 'Single-day race',
         SportEventMarkerType::ObRaceDot->value => 'Single-day race dot',
         SportEventMarkerType::ObRaceStages->value => 'Single-day stage race',
-        SportEventMarkerType::StageStart->value => 'Stage start',
-        SportEventMarkerType::Parking->value => 'Parking',
-        SportEventMarkerType::Other->value => 'Other',
         SportEventMarkerType::Training->value => 'Training',
         SportEventMarkerType::TrainingCamp->value => 'Training camp',
     ],
