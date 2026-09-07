@@ -68,6 +68,6 @@ final class AppHelper
 
     public static function getPageHelpUrl(string $finalUriPage): string
     {
-        return 'https://jirizejda.cz/dalin/napoveda/'.$finalUriPage;
+        return 'https://docs.dalin.cz/napoveda/'.$finalUriPage;
     }
 }
