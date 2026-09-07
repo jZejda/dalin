@@ -55,7 +55,14 @@ class SportMarkersRelationManager extends RelationManager
                     ->columnSpanFull()
                     ->live()
                     ->dehydrated(false)
-                    ->default(fn (Get $get): array => [$get('lat'), $get('lon')])
+                    // ->default() is only applied on a blank (create) form — Filament skips
+                    // default-state hydration entirely when the schema is filled from an
+                    // existing record, so editing a marker never picked up its lat/lon here
+                    // and the map always opened without a pin. afterStateHydrated() runs on
+                    // both create and edit fills.
+                    ->afterStateHydrated(function (LocationPicker $component, Get $get): void {
+                        $component->state([$get('lat'), $get('lon')]);
+                    })
                     ->afterStateUpdated(function (?array $state, Set $set): void {
                         $set('lat', $state[0] ?? null);
                         $set('lon', $state[1] ?? null);

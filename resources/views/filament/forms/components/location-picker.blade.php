@@ -76,6 +76,15 @@
         }"
         x-init="init()"
     >
-        <div x-ref="mapEl" class="rounded-lg" style="width: 100%; height: 320px;"></div>
+        {{--
+            Leaflet gives its container `position: relative` but no z-index, so its internal
+            panes/controls (z-index up to 1000 — see leaflet.css) don't get their own stacking
+            context and instead compete directly with sibling form fields, painting over any
+            positioned dropdown (e.g. the "type" Select below this field) that has a lower or
+            unset z-index — regardless of DOM order. Setting z-index here forces a *new* local
+            stacking context that caps everything Leaflet draws internally to this one layer, so
+            later siblings can stack above the whole map again.
+        --}}
+        <div x-ref="mapEl" class="rounded-lg" style="width: 100%; height: 320px; position: relative; z-index: 0;"></div>
     </div>
 </x-dynamic-component>
