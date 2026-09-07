@@ -125,6 +125,9 @@ class SportMarkersRelationManager extends RelationManager
     {
         return $table
             ->columns([
+                ViewColumn::make('icon_preview')
+                    ->label(__('sport-event.relation_markers.table.icon'))
+                    ->view('filament.tables.columns.marker-icon-preview'),
                 TextColumn::make('label')
                     ->label(__('sport-event.relation_markers.table.name'))
                     ->searchable()
@@ -138,9 +141,6 @@ class SportMarkersRelationManager extends RelationManager
                 TextColumn::make('lon')
                     ->label(__('sport-event.relation_markers.table.lon'))
                     ->sortable(),
-                ViewColumn::make('icon_preview')
-                    ->label(__('sport-event.relation_markers.table.icon'))
-                    ->view('filament.tables.columns.marker-icon-preview'),
                 TextColumn::make('type')
                     ->label(__('sport-event.relation_markers.table.type'))
                     ->formatStateUsing(fn (?SportEventMarkerType $state): ?string => $state !== null
