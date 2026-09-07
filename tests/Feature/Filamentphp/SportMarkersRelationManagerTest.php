@@ -40,6 +40,20 @@ it('live-syncs the inline location picker into lat/lon', function () {
         ]);
 });
 
+it('renders the marker icon preview column in the table', function () {
+    actingAsSuperAdmin();
+
+    $event = SportEvent::factory()->create();
+    SportEventMarker::factory()->create(['sport_event_id' => $event->id]);
+
+    livewire(SportMarkersRelationManager::class, [
+        'ownerRecord' => $event,
+        'pageClass' => EditSportEvent::class,
+    ])
+        ->assertSuccessful()
+        ->assertSee('viewBox="0 0 24 24"', escape: false);
+});
+
 it('pre-fills the inline location picker with the marker\'s existing coordinates when editing', function () {
     actingAsSuperAdmin();
 

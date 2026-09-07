@@ -22,6 +22,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
@@ -137,6 +138,9 @@ class SportMarkersRelationManager extends RelationManager
                 TextColumn::make('lon')
                     ->label(__('sport-event.relation_markers.table.lon'))
                     ->sortable(),
+                ViewColumn::make('icon_preview')
+                    ->label(__('sport-event.relation_markers.table.icon'))
+                    ->view('filament.tables.columns.marker-icon-preview'),
                 TextColumn::make('type')
                     ->label(__('sport-event.relation_markers.table.type'))
                     ->formatStateUsing(fn (?SportEventMarkerType $state): ?string => $state !== null

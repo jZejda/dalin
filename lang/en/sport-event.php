@@ -363,6 +363,7 @@ return [
             'desc' => 'Point description',
             'lat' => 'Latitude',
             'lon' => 'Longitude',
+            'icon' => 'Preview',
             'type' => 'Point type',
         ],
     ],

@@ -363,6 +363,7 @@ return [
             'desc' => 'Popis bodu',
             'lat' => 'Latitude',
             'lon' => 'Longitude',
+            'icon' => 'Náhled',
             'type' => 'Typ bodu',
         ],
     ],
