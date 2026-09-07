@@ -14,6 +14,9 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\CreateAction;
 use App\Enums\SportEventMarkerType;
 use App\Filament\Forms\Components\LocationPicker;
+use App\Models\SportEvent;
+use App\Models\SportEventMarker;
+use App\Services\Map\MapMarkerResolver;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -70,8 +73,44 @@ class SportMarkersRelationManager extends RelationManager
                 Select::make('type')
                     ->label(__('sport-event.relation_markers.type'))
                     ->required()
-                    ->options(SportEventMarkerType::enumArray()),
+                    ->allowHtml()
+                    ->options($this->markerTypeOptions()),
             ]);
+    }
+
+    /**
+     * Renders each marker type option as its real map icon + label, so the
+     * dropdown preview matches exactly what will show up on the map and in
+     * the event's public "Body zájmu" list — see MapMarkerResolver.
+     *
+     * Only offers types that are meaningful to pick by hand — see
+     * SportEventMarkerType::isSelectableForNewMarker() for why the legacy
+     * "same icon as the event" variants are excluded here.
+     *
+     * @return array<string, string>
+     */
+    private function markerTypeOptions(): array
+    {
+        /** @var SportEvent $sportEvent */
+        $sportEvent = $this->getOwnerRecord();
+        $resolver = new MapMarkerResolver();
+
+        $options = [];
+
+        foreach (SportEventMarkerType::cases() as $type) {
+            if (! $type->isSelectableForNewMarker()) {
+                continue;
+            }
+
+            $visual = $resolver->resolveForMarker(new SportEventMarker(['type' => $type]), $sportEvent);
+
+            $options[$type->value] = view('filament.forms.components.marker-type-option', [
+                'visual' => $visual,
+                'label' => __('sport-event.type_enum_markers.'.$type->value),
+            ])->render();
+        }
+
+        return $options;
     }
 
     public function table(Table $table): Table
@@ -93,6 +132,9 @@ class SportMarkersRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('type')
                     ->label(__('sport-event.relation_markers.table.type'))
+                    ->formatStateUsing(fn (?SportEventMarkerType $state): ?string => $state !== null
+                        ? SportEventMarkerType::enumArray()[$state->value]
+                        : null)
                     ->sortable(),
             ])
             ->filters([

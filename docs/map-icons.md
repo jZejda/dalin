@@ -91,16 +91,50 @@ Rendered with a neutral gray circle (`#616161`), no sport color:
 as "this point represents the event itself" (e.g. the event centre) and get the **same** sport
 icon/color/badges as the main event pin — see `MapMarkerResolver::resolveForMarker()`.
 
+Of these six, only `DefaultMarker` is offered when manually creating a new marker — see
+`SportEventMarkerType::isSelectableForNewMarker()`. The other five (`ObRaceSimple`, `ObRaceDot`,
+`ObRaceStages`, `Training`, `TrainingCamp`) predate the current icon system, where the marker's own
+type used to pick a differently-styled OB pin; today the pin's look is derived purely from the
+event (sport/stages/discipline), so all six render **identically**. Offering five indistinguishable
+duplicates in the dropdown just made it look like "every point on this MTB event has the same icon,
+no matter what I pick" — they're kept as valid enum cases (existing/imported rows still resolve
+correctly) but are filtered out of the create-marker Select.
+
+`SportEventMarkerType::iconSlug()` is the single source of truth for which of the two behaviors a
+case gets: it returns `null` for the "represents the event itself" cases above, and the icon slug
+(`'parking'`, `'stage-start'`, …) for every auxiliary point type. `MapMarkerResolver::resolveForMarker()`
+and the admin icon gallery (`MapIconGallery::auxiliaryData()`) both read this method instead of
+duplicating the type → icon mapping, so adding a new auxiliary point type is a one-method change
+(see below) — no `match` arm to add anywhere else.
+
+## Where an auxiliary point type's icon shows up
+
+- **Map pin** — `MapMarkerResolver::resolveForMarker()` (via `leaflet-map-widget.blade.php`).
+- **Admin "Vytvořit/upravit Bod zájmu" dialog** (`SportMarkersRelationManager::form()`) — the `type`
+  Select uses `->allowHtml()` with options pre-rendered through
+  `resources/views/filament/forms/components/marker-type-option.blade.php`, so each dropdown row
+  shows the real `<x-map.marker-icon>` next to its label instead of a bare text option.
+- **Admin markers table** — the `type` column formats the enum through
+  `SportEventMarkerType::enumArray()` so it shows the translated label, not the raw enum value.
+- **Public event detail page** (`resources/views/pages/frontend/single-event.blade.php`, "Body
+  zájmu" section) — renders `<x-map.marker-icon :visual="$markerResolver->resolveForMarker($marker, $event)" />`
+  per marker, so the list uses the exact same icon/color as the map instead of a generic letter badge.
+
+All four read `MapMarkerResolver` (directly or via `iconSlug()`), so they can never drift from each
+other or from the map.
+
 ## How to add a new icon
 
-1. Add/extend the enum case (`SportEventType` or `SportEventMarkerType`) if needed.
+1. Add the enum case (`SportEventType` or `SportEventMarkerType`). For an auxiliary
+   `SportEventMarkerType`, also add its `iconSlug()` match arm — that's the only place the new case
+   needs to be wired into resolution logic; the Select dropdown, admin table, map and detail page all
+   pick it up automatically.
 2. Add the matching lang key in **both** `lang/cs/sport-event.php` and `lang/en/sport-event.php`
    (`type_enum` / `type_enum_markers`) — `tests/Feature/LangParityTest.php` enforces this.
 3. Add the SVG partial under `resources/views/components/map/icons/` (viewBox `0 0 24 24`,
    `stroke="currentColor"`/`fill="currentColor"` so it inherits the pin's text color, sized ~21-23px
    for a main icon or ~12px for a corner badge — match whatever the existing partials use).
-4. Wire it into `MapMarkerResolver` (`resolveForEvent`, `resolveForMarker` or
-   `categoryIconSlugFor`).
+4. For a new `SportEventType` category badge, wire it into `MapMarkerResolver::categoryIconSlugFor()`.
 5. Add a Pest test case to `tests/Unit/Services/Map/MapMarkerResolverTest.php`.
 6. If it's demo-worthy, seed an example in `database/seeders/Demo/DemoSportEventExtrasSeeder.php`
    (per the project's demo-data convention in `CLAUDE.md`).

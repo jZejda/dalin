@@ -1,6 +1,7 @@
 @php
     use App\Enums\SportEventTransportType;
     use App\Models\SportEvent;
+    use App\Services\Map\MapMarkerResolver;
     use App\Services\OrisApiService;
     use App\Shared\Helpers\AppHelper;
     use Carbon\Carbon;
@@ -12,6 +13,7 @@
 
     $hasMap        = $event->gps_lat && $event->gps_lon;
     $hasMarkers    = $event->sportEventMarkers->count() > 0;
+    $markerResolver = new MapMarkerResolver();
     $hasCategories = $event->sportClasses->count() > 0;
     $hasNews       = $event->sportEventNews->count() > 0;
     $hasLinks      = $event->sportEventLinks->count() > 0;
@@ -268,9 +270,9 @@
             <ul class="grid grid-cols-1 gap-3 md:grid-cols-2">
                 @foreach($event->sportEventMarkers->sortBy('letter') as $marker)
                     <li class="flex items-start gap-3 rounded-lg border border-gray-100 p-3 dark:border-gray-800">
-                        <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-orange-500/10 text-sm font-bold text-orange-700 dark:text-orange-400">
-                            {{ $marker->letter ?: '•' }}
-                        </span>
+                        <div class="shrink-0">
+                            <x-map.marker-icon :visual="$markerResolver->resolveForMarker($marker, $event)" />
+                        </div>
                         <div class="min-w-0 flex-1">
                             <div class="flex flex-wrap items-center gap-2">
                                 <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $marker->label }}</span>

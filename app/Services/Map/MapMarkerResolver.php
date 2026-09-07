@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services\Map;
 
-use App\Enums\SportEventMarkerType;
 use App\Enums\SportEventType;
 use App\Models\SportEvent;
 use App\Models\SportEventMarker;
@@ -61,21 +60,13 @@ final class MapMarkerResolver
 
     public function resolveForMarker(SportEventMarker $marker, SportEvent $sportEvent): MapMarkerVisual
     {
-        return match ($marker->type) {
-            null,
-            SportEventMarkerType::DefaultMarker,
-            SportEventMarkerType::ObRaceSimple,
-            SportEventMarkerType::ObRaceDot,
-            SportEventMarkerType::ObRaceStages,
-            SportEventMarkerType::Training,
-            SportEventMarkerType::TrainingCamp => $this->resolveForEvent($sportEvent),
+        $iconSlug = $marker->type?->iconSlug();
 
-            SportEventMarkerType::Parking => new MapMarkerVisual('parking', self::AUX_COLOR, $marker->letter, null),
-            SportEventMarkerType::StageStart => new MapMarkerVisual('stage-start', self::AUX_COLOR, $marker->letter, null),
-            SportEventMarkerType::StageEnd => new MapMarkerVisual('stage-end', self::AUX_COLOR, $marker->letter, null),
-            SportEventMarkerType::Accommodation => new MapMarkerVisual('accommodation', self::AUX_COLOR, $marker->letter, null),
-            SportEventMarkerType::Other => new MapMarkerVisual('other', self::AUX_COLOR, $marker->letter, null),
-        };
+        if ($iconSlug === null) {
+            return $this->resolveForEvent($sportEvent);
+        }
+
+        return new MapMarkerVisual($iconSlug, self::AUX_COLOR, $marker->letter, null);
     }
 
     /**

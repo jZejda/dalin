@@ -26,20 +26,6 @@ class MapIconGallery extends Page
 
     protected string $view = 'filament.clusters.config.pages.map-icon-gallery';
 
-    /**
-     * Auxiliary marker types that don't just stand in for the event pin
-     * itself — see MapMarkerResolver::resolveForMarker() for the full mapping.
-     *
-     * @var list<SportEventMarkerType>
-     */
-    private const array AUXILIARY_MARKER_TYPES = [
-        SportEventMarkerType::Parking,
-        SportEventMarkerType::StageStart,
-        SportEventMarkerType::StageEnd,
-        SportEventMarkerType::Accommodation,
-        SportEventMarkerType::Other,
-    ];
-
     public static function getNavigationLabel(): string
     {
         return __('map-icon-gallery.navigation_label');
@@ -103,20 +89,21 @@ class MapIconGallery extends Page
      */
     private function auxiliaryData(MapMarkerResolver $resolver): array
     {
-        $iconSlugs = [
-            SportEventMarkerType::Parking->value => 'parking',
-            SportEventMarkerType::StageStart->value => 'stage-start',
-            SportEventMarkerType::StageEnd->value => 'stage-end',
-            SportEventMarkerType::Accommodation->value => 'accommodation',
-            SportEventMarkerType::Other->value => 'other',
-        ];
+        $auxiliary = [];
 
-        return array_map(
-            static fn (SportEventMarkerType $type): array => [
+        foreach (SportEventMarkerType::cases() as $type) {
+            $iconSlug = $type->iconSlug();
+
+            if ($iconSlug === null) {
+                continue;
+            }
+
+            $auxiliary[] = [
                 'label' => __('sport-event.type_enum_markers.'.$type->value),
-                'visual' => new MapMarkerVisual($iconSlugs[$type->value], $resolver->auxColor(), null, null),
-            ],
-            self::AUXILIARY_MARKER_TYPES,
-        );
+                'visual' => new MapMarkerVisual($iconSlug, $resolver->auxColor(), null, null),
+            ];
+        }
+
+        return $auxiliary;
     }
 }
