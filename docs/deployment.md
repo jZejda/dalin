@@ -44,7 +44,6 @@ V každé release jsou `.env`, `config/site-config.php` a `storage/` symlinky do
 |---|---|---|---|---|
 | `demo` | `site=dalin stage=demo` | dw303:20001 | `…/dalin.cz/_sub/demo` | `v13.x` |
 | `abm` | `site=abm stage=prod` | dw149:20007 | `…/abmbrno.cz/public_html` | `v12.x` |
-| `abm-preview` | `site=abm stage=preview` | dw149:20007 | `…/abmbrno.cz/public_html_new` | `v12.x` |
 | `abm-staging` | `site=abm stage=staging` | dw149:20007 | `…/abmbrno.cz/_sub/staging` | `v12.x` |
 | `pbm` | `site=pbm stage=prod` | dw303:20001 | `…/eob.cz/_sub/pbm-dalin` | `v12.x` |
 | `pbm-preview` | `site=pbm stage=preview` | dw303:20001 | `…/eob.cz/_sub/pbm-dalin-preview` | `v12.x` |

@@ -142,7 +142,7 @@
                       ring-1 ring-gray-950/5 shadow-sm
                       focus:outline-none focus:ring-2 focus:ring-yellow-500"
                style="background-image: url('{{ asset('images/topography2.svg') }}')"
-               href="https://docs.dalin.cz/changelog/" target="_blank">
+               href="https://docs.dalin.cz/changelog/index/" target="_blank">
 
                 {{-- Content: DaLin brand mark (same "d" glyph as the Zudoku docs logo, cropped to its square-ish bounding box) --}}
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 32" class="relative flex-shrink-0 w-8 h-8 text-gray-900 mt-0.5 me-6" aria-hidden="true">

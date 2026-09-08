@@ -27,6 +27,11 @@ class UserRaceProfileList extends Page
         return __('user-race-profile.list.page_title');
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return __('user-race-profile.list.page_title');
+    }
+
     public static function getNavigationGroup(): string | \UnitEnum | null
     {
         return __('app.navigation_groups.admin');

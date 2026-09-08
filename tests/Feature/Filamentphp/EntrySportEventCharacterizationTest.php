@@ -20,6 +20,8 @@ use App\Services\SportEvents\Entries\DeleteResult;
 use App\Services\SportEvents\Entries\EntryDeleter;
 use App\Services\SportEvents\Entries\EntryPersister;
 use App\Services\SportEvents\Entries\RelaySlotManager;
+use App\Livewire\SportEvent\EntryList;
+use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -516,6 +518,33 @@ describe('page render', function (): void {
         ]);
 
         $this->get($url)->assertOk();
+    });
+});
+
+// =====================================================================
+// 1.9  EntryList live refresh (entries tab did not update without F5 after
+//      creating an entry via the page-level "Přihlásit na závod" action,
+//      since EntryList is a sibling Livewire component of the page).
+// =====================================================================
+describe('EntryList live refresh', function (): void {
+    test('table shows a newly created entry once it receives entry-created', function (): void {
+        actingAsSuperAdmin();
+
+        $component = Livewire::test(EntryList::class, ['sportEvent' => $this->event]);
+        $component->assertDontSee($this->raceProfile->reg_number);
+
+        UserEntry::query()->create([
+            'sport_event_id' => $this->event->id,
+            'class_definition_id' => $this->classDefinition->id,
+            'user_race_profile_id' => $this->raceProfile->id,
+            'class_name' => 'H21',
+            'entry_status' => EntryStatus::Create->value,
+            'rent_si' => false,
+            'entry_created' => now(),
+        ]);
+
+        $component->dispatch('entry-created')
+            ->assertSee($this->raceProfile->reg_number);
     });
 });
 

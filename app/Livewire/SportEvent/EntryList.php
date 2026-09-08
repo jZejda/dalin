@@ -20,6 +20,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class EntryList extends Component implements HasActions, HasForms, HasTable
@@ -30,6 +31,12 @@ class EntryList extends Component implements HasActions, HasForms, HasTable
 
     #[Locked]
     public SportEvent $sportEvent;
+
+    #[On('entry-created')]
+    public function refreshList(): void
+    {
+        // Re-render only, the table query picks up the new entry.
+    }
 
     public function table(Table $table): Table
     {

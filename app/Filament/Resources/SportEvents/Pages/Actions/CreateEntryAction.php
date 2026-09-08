@@ -20,6 +20,7 @@ use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Livewire\Component;
 
 class CreateEntryAction
 {
@@ -33,9 +34,13 @@ class CreateEntryAction
         $sportEvent = $this->sportEvent;
 
         return ActionAction::make($registerAll ? 'createEventEntryFull' : 'createEventEntry')
-            ->action(function (array $data) use ($sportEvent): void {
+            ->action(function (array $data, ?Component $livewire) use ($sportEvent): void {
                 $result = EntryCreator::make()->create($sportEvent, $data);
                 $this->sendNotification($result, $sportEvent);
+
+                if ($result->success) {
+                    $livewire?->dispatch('entry-created');
+                }
             })
             ->disabled(function () use ($registerAll, $sportEvent): bool {
                 if ($registerAll) {
