@@ -21,6 +21,12 @@
     @apply gap-y-1; /* mezera mezi skupinami (Obsah, …) */
 }
 
+/* Šedá dělicí čára nad každou skupinou kromě první — opticky odděluje
+   jednotlivé celky menu (první blok bez vlastního labelu čáru nemá). */
+.fi-sidebar-nav-groups > .fi-sidebar-group:not(:first-child) {
+    @apply mt-2 border-t border-gray-200 pt-2 dark:border-white/10;
+}
+
 /* Marketplace: šedé pozadí položek produktů v repeateru (MyMarketOfferList) */
 .market-products-repeater .fi-fo-repeater-item {
     @apply bg-gray-100 dark:bg-gray-800;

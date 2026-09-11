@@ -50,6 +50,9 @@ class AdminPanelProvider extends PanelProvider
                 return null;
             })
             ->sidebarCollapsibleOnDesktop()
+            // Vypnutá horní lišta: logo, globální vyhledávání i uživatelské menu
+            // se automaticky přesouvají do levého menu (nativní chování Filamentu).
+            ->topbar(false)
             ->colors([
                 'primary' => Color::Amber,
             ])
