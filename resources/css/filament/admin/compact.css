@@ -1,0 +1,2199 @@
+/*
+ * Compact theme overrides for the admin panel.
+ *
+ * Reduces padding/margin/gap to ~70% of Filament's defaults (rounded to the nearest
+ * 0.125rem) and steps card/table/modal/widget/dropdown-panel border-radius down one
+ * notch (xl->lg, lg->md). Icon/avatar/button *sizes* (width/height) are intentionally
+ * untouched, as are font sizes.
+ *
+ * Plain CSS (not @apply) targeting Filament's own structural classes, so it wins over
+ * Filament/Tailwind's @layer'd rules regardless of import order. Imported early in
+ * theme.css so any hand-written customization further down (e.g. the sidebar gap
+ * overrides) still wins on equal-specificity ties.
+ */
+
+/* ==========================================================================
+   support: button.css
+   ========================================================================== */
+.fi-btn {
+    gap: 0.25rem; /* gap-1.5 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+
+.fi-btn.fi-size-xs {
+    gap: 0.125rem; /* gap-1 -> */
+    padding-inline: 0.375rem; /* px-2 -> */
+    padding-block: 0.25rem; /* py-1.5 -> */
+}
+
+.fi-btn.fi-size-sm {
+    gap: 0.125rem; /* gap-1 -> */
+    padding-inline: 0.5rem; /* px-2.5 -> */
+    padding-block: 0.25rem; /* py-1.5 -> */
+}
+
+.fi-btn.fi-size-lg {
+    gap: 0.25rem; /* gap-1.5 -> */
+    padding-inline: 0.625rem; /* px-3.5 -> */
+    padding-block: 0.5rem; /* py-2.5 -> */
+}
+
+.fi-btn.fi-size-xl {
+    gap: 0.25rem; /* gap-1.5 -> */
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+}
+
+.fi-btn-group {
+    border-radius: 0.375rem;
+}
+.fi-btn-group > .fi-btn:first-child {
+    border-start-start-radius: 0.375rem;
+    border-end-start-radius: 0.375rem;
+}
+.fi-btn-group > .fi-btn:last-child {
+    border-start-end-radius: 0.375rem;
+    border-end-end-radius: 0.375rem;
+}
+
+/* ==========================================================================
+   support: badge.css
+   ========================================================================== */
+.fi-badge {
+    gap: 0.125rem; /* gap-x-1 -> */
+    padding-inline: 0.375rem; /* px-2 -> */
+    padding-block: 0.125rem; /* py-1 -> */
+}
+.fi-badge.fi-size-xs {
+    /* AUDIT: px-0.5 (0.125rem) rounds to itself under the formula — no override needed.
+       Previously this wrongly set 0.0625rem (half the original, not the ~70% target). */
+    padding-block: 0;
+}
+.fi-badge.fi-size-sm {
+    padding-inline: 0.25rem; /* px-1.5 -> */
+    /* AUDIT: py-0.5 (0.125rem) rounds to itself — no override needed, was wrongly 0.0625rem */
+}
+.fi-badge .fi-badge-delete-btn {
+    padding: 0.125rem; /* p-1 -> */
+}
+
+/* ==========================================================================
+   support: breadcrumbs.css
+   ========================================================================== */
+.fi-breadcrumbs ol {
+    column-gap: 0.375rem; /* gap-x-2 -> */
+}
+.fi-breadcrumbs ol li {
+    column-gap: 0.375rem;
+}
+
+/* ==========================================================================
+   support: callout.css
+   ========================================================================== */
+.fi-callout {
+    gap: 0.5rem; /* gap-3 -> */
+    padding: 0.75rem; /* p-4 -> */
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-callout .fi-callout-main {
+    gap: 0.5rem;
+}
+.fi-callout .fi-callout-text {
+    gap: 0.125rem; /* gap-1 -> */
+}
+.fi-callout .fi-callout-footer {
+    gap: 0.5rem;
+}
+.fi-callout .fi-callout-description > p:not(:first-of-type) {
+    margin-top: 0.125rem; /* mt-1 -> AUDIT: was missing entirely */
+}
+
+/* ==========================================================================
+   support: dropdown/*.css
+   ========================================================================== */
+.fi-dropdown-header {
+    gap: 0.375rem; /* gap-2 -> */
+    padding: 0.5rem; /* p-3 -> */
+}
+.fi-dropdown-panel {
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-dropdown-list {
+    padding: 0.125rem; /* p-1 -> */
+}
+.fi-dropdown-list-item {
+    gap: 0.375rem; /* gap-2 -> */
+    padding: 0.375rem; /* p-2 -> */
+}
+.fi-dropdown-list-item .fi-badge {
+    padding-inline: 0.25rem; /* px-1.5 -> AUDIT: was missing entirely (item.css forces sm-like padding on any nested badge) */
+    /* py-0.5 rounds to itself, no override needed */
+}
+
+/* ==========================================================================
+   support: empty-state.css
+   ========================================================================== */
+.fi-empty-state {
+    padding-inline: 1rem; /* px-6 -> */
+    padding-block: 2.125rem; /* py-12 -> */
+}
+.fi-empty-state:not(.fi-empty-state-not-contained) {
+    border-radius: 0.5rem; /* rounded-xl -> lg. AUDIT: was unconditional on .fi-empty-state, now correctly scoped */
+}
+.fi-empty-state .fi-empty-state-icon-bg {
+    margin-bottom: 0.75rem; /* mb-4 -> */
+    padding: 0.5rem; /* p-3 -> */
+}
+.fi-empty-state .fi-empty-state-description {
+    margin-top: 0.125rem; /* mt-1 -> AUDIT: was missing entirely */
+}
+.fi-empty-state .fi-empty-state-footer {
+    margin-top: 1rem; /* mt-6 -> */
+}
+.fi-empty-state.fi-compact {
+    padding-block: 1rem; /* py-6 -> */
+}
+.fi-empty-state.fi-compact .fi-empty-state-content {
+    gap: 0.75rem; /* gap-4 -> */
+}
+.fi-empty-state.fi-compact .fi-empty-state-footer {
+    margin-top: 0.75rem; /* mt-4 -> */
+}
+
+/* ==========================================================================
+   support: fieldset.css
+   ========================================================================== */
+.fi-fieldset > legend {
+    margin-inline-start: -0.375rem; /* -ms-2 -> AUDIT: was missing entirely */
+    padding-inline: 0.375rem; /* px-2 -> AUDIT: was missing entirely */
+}
+.fi-fieldset:not(.fi-fieldset-not-contained) {
+    padding: 1rem; /* p-6 -> */
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-fieldset.fi-fieldset-not-contained {
+    padding-top: 1rem; /* pt-6 -> */
+}
+
+/* ==========================================================================
+   support: input/wrapper.css
+   ========================================================================== */
+.fi-input-wrp {
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-input-wrp .fi-input-wrp-prefix {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+    padding-inline-start: 0.5rem; /* ps-3 -> */
+}
+.fi-input-wrp .fi-input-wrp-prefix.fi-inline {
+    padding-inline-end: 0.375rem; /* pe-2 -> */
+}
+.fi-input-wrp .fi-input-wrp-prefix.fi-inline.fi-input-wrp-prefix-has-label {
+    padding-inline-end: 0.125rem; /* pe-1 -> */
+}
+.fi-input-wrp .fi-input-wrp-prefix:not(.fi-inline) {
+    padding-inline: 0.5rem; /* ps-3 pe-3 -> */
+}
+.fi-input-wrp .fi-input-wrp-content-ctn.fi-input-wrp-content-ctn-ps {
+    padding-inline-start: 0.5rem;
+}
+.fi-input-wrp .fi-input-wrp-suffix {
+    column-gap: 0.5rem;
+    padding-inline-end: 0.5rem; /* pe-3 -> */
+}
+.fi-input-wrp .fi-input-wrp-suffix.fi-inline {
+    padding-inline-start: 0.375rem; /* ps-2 -> */
+}
+.fi-input-wrp .fi-input-wrp-suffix.fi-inline.fi-input-wrp-suffix-has-label {
+    padding-inline-start: 0.125rem; /* ps-1 -> */
+}
+.fi-input-wrp .fi-input-wrp-suffix:not(.fi-inline) {
+    padding-inline-start: 0.5rem;
+}
+.fi-input-wrp .fi-input-wrp-actions {
+    gap: 0.5rem; /* gap-3 -> */
+}
+
+input.fi-input,
+.fi-fo-date-time-picker-display-text-input,
+textarea {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.25rem; /* py-1.5 -> */
+}
+
+/* AUDIT: select.fi-select-input / .fi-select-input-btn were wrongly lumped into the
+   symmetric input rule above. Their source (support/input/select.css) uses asymmetric
+   ps-3 pe-8 (extra end padding reserves room for the dropdown chevron icon), so a
+   uniform 0.5rem end padding would crowd the text against the icon. Split out: */
+select.fi-select-input,
+.fi-select-input .fi-select-input-btn {
+    padding-block: 0.25rem; /* py-1.5 -> */
+    padding-inline-start: 0.5rem; /* ps-3 -> */
+    padding-inline-end: 1.375rem; /* pe-8 -> */
+}
+.fi-select-input .fi-select-input-btn {
+    border-radius: 0.375rem; /* rounded-lg -> md, AUDIT: was missing */
+}
+.fi-select-input .fi-select-input-ctn-clearable .fi-select-input-btn {
+    padding-inline-end: 2.5rem; /* pe-14 -> AUDIT: was missing */
+}
+.fi-select-input .fi-select-input-message {
+    padding-inline: 0.5rem; /* px-3 -> AUDIT: was missing */
+    padding-block: 0.375rem; /* py-2 -> AUDIT: was missing */
+}
+.fi-select-input .fi-select-input-value-badges-ctn {
+    gap: 0.25rem; /* gap-1.5 -> AUDIT: was missing */
+}
+
+/* ==========================================================================
+   support: link.css
+   ========================================================================== */
+.fi-link {
+    gap: 0.25rem; /* gap-1.5 -> */
+}
+.fi-link.fi-size-xs,
+.fi-link.fi-size-sm {
+    gap: 0.125rem; /* gap-1 -> */
+}
+
+/* ==========================================================================
+   support: modal.css
+   ========================================================================== */
+.fi-modal > .fi-modal-window-ctn {
+    padding: 0.75rem; /* p-4 -> (non-slide-over/non-screen) */
+}
+.fi-modal > .fi-modal-window-ctn > .fi-modal-window {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-modal.fi-modal-has-sticky-header
+    > .fi-modal-window-ctn
+    > .fi-modal-window
+    > .fi-modal-header {
+    border-start-start-radius: 0.5rem;
+    border-start-end-radius: 0.5rem;
+}
+.fi-modal.fi-modal-has-sticky-footer
+    > .fi-modal-window-ctn
+    > .fi-modal-window
+    > .fi-modal-footer {
+    border-end-start-radius: 0.5rem;
+    border-end-end-radius: 0.5rem;
+}
+.fi-modal.fi-modal-slide-over > .fi-modal-window-ctn > .fi-modal-window .fi-modal-header {
+    gap: 0.875rem; /* gap-x-5 -> */
+    padding-top: 0.875rem; /* pt-5 -> */
+}
+.fi-modal.fi-modal-slide-over
+    > .fi-modal-window-ctn
+    > .fi-modal-window
+    .fi-modal-icon-bg {
+    padding: 0.375rem; /* p-2 -> */
+    margin-block: -0.375rem; /* -my-2 -> AUDIT: was missing, paired with the p-2 above */
+    margin-inline-start: -0.375rem; /* -ms-2 -> AUDIT: was missing */
+}
+.fi-modal:not(.fi-align-start) > .fi-modal-window-ctn > .fi-modal-window .fi-modal-content,
+.fi-modal:not(.fi-align-start) > .fi-modal-window-ctn > .fi-modal-window .fi-modal-footer,
+.fi-modal.fi-modal-has-sticky-header
+    > .fi-modal-window-ctn
+    > .fi-modal-window
+    .fi-modal-content,
+.fi-modal.fi-modal-has-sticky-header
+    > .fi-modal-window-ctn
+    > .fi-modal-window
+    .fi-modal-footer {
+    padding-inline: 1rem; /* px-6 -> */
+}
+/* AUDIT: fi-align-start icon modals use an asymmetric ps-[5.25rem] pe-6 (the large start
+   padding reserves room for the absolutely-positioned icon, whose own size is out of
+   scope/unscaled — left as-is, same reasoning as the icon-button negative-margin judgment
+   call). Only the end padding is a plain spacing value, so only it gets scaled here. */
+.fi-modal.fi-align-start:not(.fi-modal-has-sticky-header)
+    > .fi-modal-window-ctn
+    > .fi-modal-window-has-icon
+    .fi-modal-content,
+.fi-modal.fi-align-start:not(.fi-modal-has-sticky-header)
+    > .fi-modal-window-ctn
+    > .fi-modal-window-has-icon
+    .fi-modal-footer:not(.fi-align-center) {
+    padding-inline-end: 1rem; /* pe-6 -> */
+}
+.fi-modal > .fi-modal-window-ctn > .fi-modal-window .fi-modal-header {
+    padding-inline: 1rem; /* px-6 -> */
+    padding-top: 1rem; /* pt-6 -> */
+}
+.fi-modal > .fi-modal-window-ctn > .fi-modal-window .fi-modal-description {
+    margin-top: 0.375rem; /* mt-2 -> */
+}
+.fi-modal > .fi-modal-window-ctn > .fi-modal-window .fi-modal-content {
+    gap: 0.75rem; /* gap-y-4 -> */
+    padding-block: 1rem; /* py-6 -> */
+}
+.fi-modal
+    > .fi-modal-window-ctn
+    > .fi-modal-window.fi-align-start
+    .fi-modal-icon-bg {
+    padding: 0.375rem; /* p-2 -> */
+}
+.fi-modal
+    > .fi-modal-window-ctn
+    > .fi-modal-window.fi-align-center
+    .fi-modal-icon-ctn {
+    margin-bottom: 0.875rem; /* mb-5 -> */
+}
+.fi-modal
+    > .fi-modal-window-ctn
+    > .fi-modal-window.fi-align-center
+    .fi-modal-icon-bg {
+    padding: 0.5rem; /* p-3 -> */
+}
+.fi-modal
+    > .fi-modal-window-ctn
+    > .fi-modal-window.fi-modal-window-has-close-btn.fi-align-center:not(.fi-modal-window-has-icon)
+    .fi-modal-heading {
+    margin-inline-start: 1rem; /* ms-6 -> */
+}
+.fi-modal
+    > .fi-modal-window-ctn
+    > .fi-modal-window.fi-modal-window-has-close-btn:not(.fi-modal-window-has-icon)
+    .fi-modal-heading,
+.fi-modal
+    > .fi-modal-window-ctn
+    > .fi-modal-window.fi-modal-window-has-close-btn.fi-align-start
+    .fi-modal-heading,
+.fi-modal
+    > .fi-modal-window-ctn
+    > .fi-modal-window.fi-modal-window-has-close-btn.fi-align-left
+    .fi-modal-heading {
+    margin-inline-end: 1rem; /* me-6 -> AUDIT: .fi-align-left variant was missing */
+}
+.fi-modal > .fi-modal-window-ctn > .fi-modal-window .fi-modal-footer .fi-modal-footer-actions {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-modal > .fi-modal-window-ctn > .fi-modal-window .fi-modal-footer.fi-align-center {
+    padding-inline: 1rem; /* px-6 -> */
+}
+.fi-modal.fi-modal-has-sticky-header
+    > .fi-modal-window-ctn
+    > .fi-modal-window
+    > .fi-modal-header {
+    padding-bottom: 1rem; /* pb-6 -> */
+}
+.fi-modal.fi-modal-slide-over.fi-modal-has-sticky-header
+    > .fi-modal-window-ctn
+    > .fi-modal-window
+    > .fi-modal-header {
+    padding-bottom: 0.875rem; /* pb-5 -> */
+}
+.fi-modal.fi-modal-has-sticky-footer
+    > .fi-modal-window-ctn
+    > .fi-modal-window
+    > .fi-modal-footer {
+    padding-block: 0.875rem; /* py-5 -> */
+}
+.fi-modal:not(.fi-modal-has-sticky-footer)
+    > .fi-modal-window-ctn
+    > .fi-modal-window:not(.fi-modal-window-has-content)
+    .fi-modal-footer {
+    margin-top: 1rem; /* mt-6 -> */
+}
+.fi-modal:not(.fi-modal-has-sticky-footer)
+    > .fi-modal-window-ctn
+    > .fi-modal-window:not(.fi-modal-window-has-content):not(.fi-modal-window-has-footer)
+    .fi-modal-header {
+    padding-bottom: 1rem; /* pb-6 -> */
+}
+.fi-modal:not(.fi-modal-has-sticky-footer) > .fi-modal-window-ctn > .fi-modal-window .fi-modal-footer {
+    padding-bottom: 1rem; /* pb-6 -> */
+}
+.fi-modal:not(.fi-modal-has-sticky-header)
+    > .fi-modal-window-ctn
+    > .fi-modal-window:not(.fi-modal-window-has-icon)
+    .fi-modal-content,
+.fi-modal:not(.fi-modal-has-sticky-header)
+    > .fi-modal-window-ctn
+    > .fi-modal-window:not(.fi-modal-window-has-icon)
+    .fi-modal-footer {
+    padding-inline: 1rem; /* px-6 -> */
+}
+
+/* database-notifications.css modal overrides */
+.fi-no-database .fi-modal-window-ctn > .fi-modal-window .fi-modal-heading .fi-badge {
+    margin-inline-start: 0.125rem; /* ms-1 -> */
+}
+.fi-no-database .fi-modal-window-ctn > .fi-modal-window .fi-modal-header .fi-ac {
+    margin-top: 0.375rem; /* mt-2 -> */
+}
+.fi-no-database .fi-modal-window-ctn > .fi-modal-window .fi-modal-content {
+    margin-inline: -1rem; /* -mx-6 -> */
+    margin-top: -1rem; /* -mt-6 -> */
+}
+.fi-no-database
+    .fi-modal-window-ctn
+    > .fi-modal-window:not(.fi-modal-window-has-footer)
+    .fi-modal-content {
+    margin-bottom: -1rem; /* -mb-6 -> */
+}
+
+/* ==========================================================================
+   support: pagination.css
+   ========================================================================== */
+.fi-pagination {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+.fi-pagination .fi-pagination-items {
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-pagination .fi-pagination-item:first-of-type .fi-pagination-item-btn {
+    border-start-start-radius: 0.375rem;
+    border-end-start-radius: 0.375rem;
+}
+.fi-pagination .fi-pagination-item:last-of-type .fi-pagination-item-btn {
+    border-start-end-radius: 0.375rem;
+    border-end-end-radius: 0.375rem;
+}
+.fi-pagination .fi-pagination-item-btn {
+    padding: 0.375rem; /* p-2 -> */
+}
+.fi-pagination .fi-pagination-item-btn .fi-pagination-item-label {
+    padding-inline: 0.25rem; /* px-1.5 -> */
+}
+
+/* ==========================================================================
+   support: section.css (also used for schemas/components/section.css label gap,
+   which is separate .fi-sc-section, see schemas block below)
+   ========================================================================== */
+.fi-section:not(.fi-section-not-contained):not(.fi-divided)
+    > .fi-section-content-ctn
+    > .fi-section-content {
+    padding: 1rem; /* p-6 -> */
+}
+.fi-section:not(.fi-section-not-contained).fi-divided
+    > .fi-section-content-ctn
+    > .fi-section-content
+    > * {
+    padding: 1rem;
+}
+.fi-section:not(.fi-section-not-contained) > .fi-section-content-ctn > .fi-section-footer {
+    padding-inline: 1rem; /* px-6 -> */
+    padding-block: 0.75rem; /* py-4 -> */
+}
+.fi-section:not(.fi-section-not-contained):not(.fi-aside) {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-section:not(.fi-section-not-contained):not(.fi-aside).fi-compact {
+    border-radius: 0.375rem; /* rounded-lg -> md (compact variant) */
+}
+.fi-section:not(.fi-section-not-contained):not(.fi-aside) > .fi-section-header {
+    padding-inline: 1rem; /* px-6 -> */
+    padding-block: 0.75rem; /* py-4 -> */
+}
+.fi-section:not(.fi-section-not-contained).fi-aside > .fi-section-content-ctn {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-section:not(.fi-section-not-contained).fi-aside.fi-compact > .fi-section-content-ctn {
+    border-radius: 0.375rem;
+}
+.fi-section:not(.fi-section-not-contained).fi-compact:not(.fi-aside) > .fi-section-header {
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-block: 0.5rem; /* py-2.5 -> */
+}
+.fi-section:not(.fi-section-not-contained).fi-compact:not(.fi-divided)
+    > .fi-section-content-ctn
+    > .fi-section-content {
+    padding: 0.75rem; /* p-4 -> */
+}
+.fi-section:not(.fi-section-not-contained).fi-compact.fi-divided
+    > .fi-section-content-ctn
+    > .fi-section-content
+    > * {
+    padding: 0.75rem;
+}
+.fi-section:not(.fi-section-not-contained).fi-compact > .fi-section-footer {
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-block: 0.5rem; /* py-2.5 -> */
+}
+.fi-section.fi-section-not-contained:not(.fi-aside) {
+    gap: 0.75rem; /* gap-y-4 -> */
+}
+.fi-section.fi-section-not-contained:not(.fi-aside) > .fi-section-content-ctn {
+    gap: 0.75rem;
+}
+.fi-section.fi-section-not-contained:not(.fi-aside).fi-divided
+    > .fi-section-content-ctn
+    > .fi-section-content
+    > * {
+    padding-block: 1rem; /* py-6 -> */
+}
+.fi-section.fi-section-not-contained:not(.fi-aside).fi-compact {
+    gap: 0.5rem; /* gap-y-2.5 -> */
+}
+.fi-section.fi-section-not-contained:not(.fi-aside).fi-compact > .fi-section-content-ctn {
+    gap: 0.5rem;
+}
+.fi-section.fi-section-not-contained:not(.fi-aside).fi-compact.fi-divided
+    > .fi-section-content-ctn
+    > .fi-section-content
+    > * {
+    padding-block: 0.75rem; /* py-4 -> */
+}
+.fi-section.fi-aside {
+    column-gap: 1rem; /* gap-x-6 -> */
+    row-gap: 0.75rem; /* gap-y-4 -> */
+}
+.fi-section > .fi-section-header {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-section .fi-section-header-text-ctn {
+    row-gap: 0.125rem; /* gap-y-1 -> */
+}
+/* header-embedded .fi-btn -my-* — scaled proportionally with the button py change above,
+   see judgment call #3 in compact-theme-mapping.md, verify visually */
+.fi-section > .fi-section-header .fi-section-header-after-ctn .fi-btn.fi-size-xs {
+    margin-block: -0.125rem; /* -my-0.5 -> */
+}
+.fi-section > .fi-section-header .fi-section-header-after-ctn .fi-btn.fi-size-sm {
+    margin-block: -0.25rem; /* -my-1 -> */
+}
+.fi-section > .fi-section-header .fi-section-header-after-ctn .fi-btn.fi-size-md {
+    margin-block: -0.375rem; /* -my-1.5 -> */
+}
+.fi-section > .fi-section-header .fi-section-header-after-ctn .fi-btn.fi-size-lg {
+    margin-block: -0.5rem; /* -my-2 -> */
+}
+.fi-section > .fi-section-header .fi-section-header-after-ctn .fi-btn.fi-size-xl {
+    margin-block: -0.625rem; /* -my-2.5 -> */
+}
+/* AUDIT: source also has `.fi-icon.fi-size-sm { mt-1 }` / `.fi-icon.fi-size-md { mt-0.5 }` inside
+   .fi-section-header — deliberately left unscaled, same reasoning as the icon-button margin
+   judgment call: these nudge the icon to optically align with the (unscaled) heading text/icon
+   size, unrelated to the padding we're shrinking. Also `.fi-section-collapse-btn { -my-1.5 }`
+   (N=1.5 -> would be -0.25rem) is left unscaled pending a visual check — unlike the header .fi-btn
+   -my-* pairing above, this offsets a fixed icon-button footprint (judgment call 1 territory), not
+   a padding value that's also being scaled, so scaling it blind risks misaligning the collapse
+   chevron against the (unscaled) header row height. */
+
+/* ==========================================================================
+   support: tabs.css
+   ========================================================================== */
+.fi-tabs {
+    column-gap: 0.125rem; /* gap-x-1 -> */
+}
+.fi-tabs.fi-contained {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.5rem; /* py-2.5 -> (AUDIT fix: was wrongly 0.375rem, N=2.5 maps to 0.5rem not N=2's 0.375rem) */
+}
+.fi-tabs:not(.fi-contained) {
+    padding: 0.375rem; /* p-2 -> */
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-tabs.fi-vertical {
+    row-gap: 0.125rem; /* gap-y-1 -> */
+}
+.fi-tabs-item {
+    column-gap: 0.375rem; /* gap-x-2 -> */
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+
+/* ==========================================================================
+   forms: field.css
+   ========================================================================== */
+.fi-fo-field {
+    row-gap: 0.375rem; /* gap-y-2 -> */
+}
+.fi-fo-field.fi-fo-field-has-inline-label {
+    column-gap: 0.75rem; /* gap-x-4 -> */
+}
+.fi-fo-field .fi-fo-field-label-ctn,
+.fi-fo-field .fi-fo-field-label {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+.fi-fo-field .fi-fo-field-label-col,
+.fi-fo-field .fi-fo-field-content-col {
+    row-gap: 0.375rem; /* gap-y-2 -> */
+}
+.fi-fo-field .fi-fo-field-content-ctn {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+
+/* ==========================================================================
+   forms: file-upload.css
+   ========================================================================== */
+.fi-fo-file-upload {
+    row-gap: 0.375rem; /* gap-y-2 -> */
+}
+.fi-fo-file-upload .filepond--drop-label {
+    padding: 0.5rem !important; /* p-3 -> */
+}
+/* AUDIT: file-upload editor (image cropper modal) overrides were entirely missing */
+.fi-fo-file-upload-editor {
+    padding: 0.375rem; /* p-2 -> */
+}
+.fi-fo-file-upload-editor .fi-fo-file-upload-editor-image-ctn {
+    margin: 0.75rem; /* m-4 -> */
+}
+.fi-fo-file-upload-editor .fi-fo-file-upload-editor-control-panel-main {
+    padding: 0.75rem; /* p-4 -> */
+}
+.fi-fo-file-upload-editor .fi-fo-file-upload-editor-control-panel-main > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1rem; /* space-y-6 -> */
+}
+.fi-fo-file-upload-editor .fi-fo-file-upload-editor-control-panel-group {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-fo-file-upload-editor .fi-fo-file-upload-editor-control-panel-footer {
+    gap: 0.5rem; /* gap-3 -> */
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+}
+@media (min-width: 40rem) {
+    .fi-fo-file-upload-editor {
+        padding: 1.75rem; /* sm:p-10 -> */
+    }
+}
+@media (min-width: 48rem) {
+    .fi-fo-file-upload-editor {
+        padding: 3.5rem; /* md:p-20 -> */
+    }
+}
+
+/* ==========================================================================
+   forms: builder.css / repeater.css (item cards)
+   ========================================================================== */
+.fi-fo-builder {
+    row-gap: 0.75rem; /* gap-y-4 -> */
+}
+.fi-fo-builder .fi-fo-builder-actions {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+.fi-fo-builder .fi-fo-builder-items > * + * {
+    margin-top: 0.75rem; /* mt-4 -> */
+}
+.fi-fo-builder .fi-fo-builder-item {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-fo-builder .fi-fo-builder-item-header {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+}
+.fi-fo-builder .fi-fo-builder-item-header-start-actions,
+.fi-fo-builder .fi-fo-builder-item-header-end-actions {
+    column-gap: 0.5rem;
+}
+.fi-fo-builder .fi-fo-builder-item-content:not(.fi-fo-builder-item-content-has-preview) {
+    padding: 0.75rem; /* p-4 -> */
+}
+.fi-fo-builder .fi-fo-builder-block-picker-ctn,
+.fi-fo-builder .fi-fo-builder-add-between-items {
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-fo-builder .fi-fo-builder-label-between-items {
+    padding-inline: 0.125rem; /* px-1 -> */
+}
+.fi-fo-builder .fi-fo-builder-label-between-items-ctn {
+    margin-top: 0.125rem; /* mt-1 -> AUDIT: was missing entirely */
+    margin-bottom: -0.5rem; /* -mb-3 -> */
+}
+
+.fi-fo-repeater {
+    row-gap: 0.75rem; /* gap-y-4 -> */
+}
+.fi-fo-repeater .fi-fo-repeater-actions {
+    column-gap: 0.5rem;
+}
+.fi-fo-repeater .fi-fo-repeater-items {
+    gap: 0.75rem; /* gap-4 -> */
+}
+.fi-fo-repeater .fi-fo-repeater-item {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-fo-repeater .fi-fo-repeater-item-header {
+    column-gap: 0.5rem;
+    padding-inline: 0.75rem;
+    padding-block: 0.5rem;
+}
+.fi-fo-repeater .fi-fo-repeater-item-header-start-actions,
+.fi-fo-repeater .fi-fo-repeater-item-header-end-actions {
+    column-gap: 0.5rem;
+}
+.fi-fo-repeater .fi-fo-repeater-item-content {
+    padding: 0.75rem; /* p-4 -> */
+}
+.fi-fo-repeater .fi-fo-repeater-add-between-items {
+    border-radius: 0.375rem;
+}
+.fi-fo-repeater .fi-fo-repeater-label-between-items {
+    padding-inline: 0.125rem;
+}
+.fi-fo-repeater .fi-fo-repeater-label-between-items-ctn {
+    margin-block: -0.375rem; /* -my-2 -> AUDIT: was missing entirely */
+}
+
+.fi-fo-simple-repeater {
+    row-gap: 0.75rem;
+}
+.fi-fo-simple-repeater .fi-fo-simple-repeater-items {
+    gap: 0.75rem;
+}
+.fi-fo-simple-repeater .fi-fo-simple-repeater-item {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+.fi-fo-simple-repeater .fi-fo-simple-repeater-item-actions {
+    column-gap: 0.125rem; /* gap-x-1 -> */
+}
+
+.fi-fo-table-repeater {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-fo-table-repeater > table {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-fo-table-repeater > table > thead > tr > th {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-fo-table-repeater > table > thead > tr > th:first-of-type {
+    border-start-start-radius: 0.5rem; /* rounded-ss-xl -> lg, AUDIT: was missing */
+}
+.fi-fo-table-repeater > table > thead > tr > th:last-of-type {
+    border-start-end-radius: 0.5rem; /* rounded-se-xl -> lg, AUDIT: was missing */
+}
+.fi-fo-table-repeater > table > tbody > tr {
+    gap: 1rem; /* gap-6 -> */
+    padding: 1rem; /* p-6 -> */
+}
+/* AUDIT: the base p-6/gap-6 above only applies to the stacked (mobile) layout — the source
+   zeroes it and switches to per-cell px-3/py-2 once the table becomes tabular, via a container
+   query (modern browsers) with an `lg:` media-query fallback for browsers without container
+   query support. Both paths were entirely missing, so the unconditional padding above was
+   incorrectly persisting at desktop width too. */
+@supports (container-type: inline-size) {
+    @container (min-width: 36rem) {
+        .fi-fo-table-repeater > table > tbody > tr {
+            padding: 0; /* @xl:p-0 -> */
+        }
+        .fi-fo-table-repeater > table > tbody > tr > td {
+            padding-inline: 0.5rem; /* @xl:px-3 -> */
+            padding-block: 0.375rem; /* @xl:py-2 -> */
+        }
+        .fi-fo-table-repeater .fi-fo-table-repeater-actions {
+            padding-inline: 0.5rem; /* @xl:px-3 -> */
+            padding-block: 0.375rem; /* @xl:py-2 -> */
+        }
+    }
+}
+@supports not (container-type: inline-size) {
+    @media (min-width: 64rem) {
+        .fi-fo-table-repeater > table > tbody > tr {
+            padding: 0; /* lg:p-0 -> */
+        }
+        .fi-fo-table-repeater > table > tbody > tr > td {
+            padding-inline: 0.5rem; /* lg:px-3 -> */
+            padding-block: 0.375rem; /* lg:py-2 -> */
+        }
+        .fi-fo-table-repeater .fi-fo-table-repeater-actions {
+            padding-inline: 0.5rem; /* lg:px-3 -> */
+            padding-block: 0.375rem; /* lg:py-2 -> */
+        }
+    }
+}
+/* AUDIT: the .fi-compact sub-variant of table-repeater (@xl:px-0 @xl:py-1 on td, an opt-in
+   ->compact() modifier not currently used anywhere in this codebase) was not covered — low
+   priority, add if a table-repeater ever opts into it. */
+
+/* ==========================================================================
+   forms: radio.css / checkbox-list.css / toggle-buttons.css
+   ========================================================================== */
+.fi-fo-radio {
+    gap: 0.75rem; /* gap-4 -> */
+}
+.fi-fo-radio > .fi-fo-radio-label {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+/* AUDIT: masonry "fake gap" pair (see judgment call #4) — was missing, added scaled to stay
+   consistent with the rest of the theme rather than leaving this one area uncompacted. */
+.fi-fo-radio:not(.fi-inline).fi-grid-direction-col {
+    margin-top: -0.75rem; /* -mt-4 -> */
+}
+.fi-fo-radio:not(.fi-inline).fi-grid-direction-col > .fi-fo-radio-label {
+    padding-top: 0.75rem; /* pt-4 -> */
+}
+
+.fi-fo-checkbox-list .fi-fo-checkbox-list-search-input-wrp {
+    margin-bottom: 0.75rem; /* mb-4 -> */
+}
+.fi-fo-checkbox-list .fi-fo-checkbox-list-actions {
+    margin-bottom: 0.375rem; /* mb-2 -> */
+}
+.fi-fo-checkbox-list .fi-fo-checkbox-list-options {
+    gap: 0.75rem; /* gap-4 -> */
+}
+.fi-fo-checkbox-list .fi-fo-checkbox-list-options.fi-grid-direction-col {
+    margin-top: -0.75rem; /* -mt-4 -> AUDIT: was missing */
+}
+.fi-fo-checkbox-list .fi-fo-checkbox-list-options.fi-grid-direction-col .fi-fo-checkbox-list-option-ctn {
+    padding-top: 0.75rem; /* pt-4 -> AUDIT: was missing */
+}
+.fi-fo-checkbox-list .fi-fo-checkbox-list-option {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+
+.fi-fo-toggle-buttons:not(.fi-btn-group) {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-fo-toggle-buttons:not(.fi-btn-group):not(.fi-inline).fi-grid-direction-col {
+    margin-top: -0.5rem; /* -mt-3 -> AUDIT: was missing */
+}
+.fi-fo-toggle-buttons:not(.fi-btn-group) .fi-fo-toggle-buttons-btn-ctn {
+    padding-top: 0.5rem; /* pt-3 -> AUDIT: was missing */
+}
+@media (min-width: 40rem) {
+    .fi-fo-toggle-buttons-wrp.fi-fo-field-has-inline-label .fi-fo-field-label-col {
+        padding-top: 0.25rem; /* sm:pt-1.5 -> AUDIT: was missing */
+    }
+}
+
+/* ==========================================================================
+   forms: rich-editor.css / markdown-editor.css
+   ========================================================================== */
+.fi-fo-rich-editor .fi-fo-rich-editor-toolbar {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+    row-gap: 0.125rem; /* gap-y-1 -> */
+    padding-inline: 0.5rem; /* px-2.5 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-floating-toolbar {
+    margin-top: -0.125rem; /* -mt-1 -> AUDIT: was missing */
+    column-gap: 0.5rem;
+    row-gap: 0.125rem;
+    padding: 0.125rem; /* p-1 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-toolbar-group {
+    column-gap: 0.125rem; /* gap-x-1 -> */
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-dropdown-tool-trigger {
+    padding-inline: 0.125rem; /* px-1 -> */
+    border-radius: 0.375rem;
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-dropdown-tool-menu {
+    gap: 0.125rem; /* gap-1 -> */
+    padding: 0.125rem; /* p-1 -> */
+    border-radius: 0.375rem;
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-dropdown-tool-option {
+    border-radius: 0.375rem;
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-dropdown-tool-textual .fi-fo-rich-editor-dropdown-tool-option {
+    gap: 0.375rem; /* gap-2 -> */
+    padding-inline: 0.375rem; /* px-2 -> */
+    padding-block: 0.125rem; /* py-1 -> */
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-tool {
+    border-radius: 0.375rem;
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-tool.fi-fo-rich-editor-tool-with-label {
+    column-gap: 0.125rem; /* gap-x-1 -> */
+    padding-inline: 0.25rem; /* px-1.5 -> */
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-uploading-file-message,
+.fi-fo-rich-editor .fi-fo-rich-editor-file-validation-message {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+    padding-inline: 0.875rem; /* px-5 -> */
+    padding-block: 0.25rem; /* py-1.5 -> */
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-content {
+    padding-inline: 0.875rem; /* px-5 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-panel-header {
+    gap: 0.5rem; /* gap-3 -> */
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-merge-tags-list,
+.fi-fo-rich-editor .fi-fo-rich-editor-custom-blocks-list {
+    gap: 0.375rem; /* gap-2 -> */
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-merge-tag-btn {
+    padding: 0.125rem; /* p-1 -> */
+    border-radius: 0.375rem;
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-custom-blocks-group-header {
+    padding-inline: 0.75rem;
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-custom-block-btn {
+    gap: 0.25rem; /* gap-1.5 -> */
+    padding-inline: 0.375rem; /* px-2 -> */
+    padding-block: 0.125rem; /* py-1 -> */
+    border-radius: 0.375rem;
+}
+.fi-fo-rich-editor div[data-type='customBlock'] {
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-custom-block-header {
+    gap: 0.5rem; /* gap-3 -> */
+    padding-inline: 0.75rem;
+    padding-block: 0.5rem;
+}
+.fi-fo-rich-editor .fi-fo-rich-editor-custom-block-preview {
+    padding-inline: 0.75rem;
+    padding-block: 0.5rem;
+}
+/* AUDIT: user-content blocks insertable into the tiptap editor body — were entirely missing */
+.fi-fo-rich-editor .tiptap [data-type='details'] {
+    margin-block: 1rem; /* my-6 -> */
+    gap: 0.125rem; /* gap-1 -> */
+    padding: 0.75rem; /* p-4 -> */
+}
+.fi-fo-rich-editor .tiptap [data-type='details'] > button {
+    margin-inline-end: 0.375rem; /* mr-2 -> */
+    padding: 0.125rem; /* p-1 -> */
+}
+.fi-fo-rich-editor .tiptap [data-type='details'] > div {
+    gap: 0.75rem; /* gap-4 -> */
+}
+.fi-fo-rich-editor .tiptap [data-type='details'] > div > [data-type='detailsContent'] > :last-child {
+    margin-bottom: 0.75rem; /* mb-4 -> */
+}
+.fi-fo-rich-editor .tiptap table td,
+.fi-fo-rich-editor .tiptap table th {
+    padding: 0.375rem !important; /* !p-2 -> */
+}
+.fi-fo-rich-editor .tiptap .grid-layout > .grid-layout-col {
+    padding: 0.75rem; /* p-4 -> */
+}
+
+.fi-fo-markdown-editor.fi-disabled {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+/* AUDIT: source uses `px-4! py-3!` here — Tailwind's `!important` on a layer(components)
+   rule beats a non-important unlayered override regardless of layer order, so this needs
+   !important too or the real editor textarea padding silently stays at the original size.
+   Was missing entirely in the draft. */
+.fi-fo-markdown-editor .EasyMDEContainer .CodeMirror {
+    padding-inline: 0.75rem !important; /* px-4! -> */
+    padding-block: 0.5rem !important; /* py-3! -> */
+}
+.fi-fo-markdown-editor .EasyMDEContainer .editor-toolbar {
+    gap: 0.125rem; /* gap-1 -> */
+    padding-inline: 0.5rem; /* px-2.5 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-fo-markdown-editor .EasyMDEContainer .editor-toolbar button {
+    border-radius: 0.375rem;
+}
+
+/* ==========================================================================
+   forms: slider.css — flagged, verify visually (see judgment call #6)
+   ========================================================================== */
+.fi-fo-slider {
+    gap: 0.75rem; /* gap-4 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-fo-slider .noUi-connects {
+    border-radius: 0.375rem;
+}
+.fi-fo-slider .noUi-handle {
+    border-radius: 0.375rem;
+}
+.fi-fo-slider .noUi-tooltip {
+    border-radius: 0.25rem; /* rounded-md -> sm */
+}
+.fi-fo-slider.fi-fo-slider-vertical {
+    margin-top: 0.75rem; /* mt-4 -> */
+}
+.fi-fo-slider.fi-fo-slider-vertical.fi-fo-slider-has-tooltips {
+    margin-inline-start: 1.75rem; /* ms-10 -> */
+}
+.fi-fo-slider:not(.fi-fo-slider-vertical).fi-fo-slider-has-pips {
+    margin-bottom: 1.375rem; /* mb-8 -> */
+}
+.fi-fo-slider:not(.fi-fo-slider-vertical).fi-fo-slider-has-tooltips {
+    margin-top: 1.75rem; /* mt-10 -> */
+}
+.fi-fo-slider:not(.fi-fo-slider-vertical) .noUi-pips .noUi-value {
+    margin-top: 0.125rem; /* mt-1 -> AUDIT: was missing */
+}
+/* AUDIT: .noUi-tooltip stepped rounded-md->sm here, but judgment call #8 in this doc says
+   rounded-md is left untouched on small non-container elements (color chips) — the tooltip
+   bubble is arguably the same category. Minor 2px inconsistency, not fixed, flagging only. */
+
+/* ==========================================================================
+   forms: key-value.css / date-time-picker.css
+   ========================================================================== */
+.fi-fo-key-value .fi-fo-key-value-table > thead > tr > th {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-fo-key-value .fi-fo-key-value-add-action-ctn {
+    padding-inline: 0.5rem;
+    padding-block: 0.375rem;
+}
+@media (min-width: 40rem) {
+    .fi-fo-key-value-wrp.fi-fo-field-has-inline-label .fi-fo-field-label-col {
+        padding-top: 0.25rem; /* sm:pt-1.5 -> AUDIT: was missing */
+    }
+}
+
+/* AUDIT: source's .fi-fo-date-time-picker-panel is `absolute ... space-y-3 rounded-lg p-4`
+   with no flex/grid display class, so `space-y-3` renders via child margin-top, not `gap` —
+   `gap` on a non-flex/grid box does nothing. The draft's `gap: 0.5rem` was a no-op bug. */
+.fi-fo-date-time-picker .fi-fo-date-time-picker-panel {
+    padding: 0.75rem; /* p-4 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-fo-date-time-picker .fi-fo-date-time-picker-panel > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.5rem; /* space-y-3 -> */
+}
+.fi-fo-date-time-picker .fi-fo-date-time-picker-calendar-header,
+.fi-fo-date-time-picker .fi-fo-date-time-picker-calendar {
+    gap: 0.125rem; /* gap-1 -> */
+}
+.fi-fo-date-time-picker .fi-fo-date-time-picker-time-inputs input {
+    margin-inline-end: 0.125rem; /* me-1 -> AUDIT: was missing */
+}
+
+/* ==========================================================================
+   tables: container.css
+   ========================================================================== */
+.fi-ta-ctn {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-ta-ctn .fi-ta-header {
+    gap: 0.5rem; /* gap-3 -> */
+    padding: 0.75rem; /* p-4 -> */
+}
+.fi-ta-ctn .fi-ta-header .fi-ta-header-description {
+    margin-top: 0.125rem; /* mt-1 -> */
+}
+.fi-ta-ctn .fi-ta-header-toolbar {
+    gap: 0.75rem; /* gap-4 -> */
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+}
+.fi-ta-ctn .fi-ta-header-toolbar > * {
+    column-gap: 0.75rem; /* gap-x-4 -> */
+}
+/* AUDIT: container.css bumps several bars to px-6 at sm+ — this whole @media block
+   was missing entirely from the draft. */
+@media (min-width: 640px) {
+    .fi-ta-ctn .fi-ta-header {
+        padding-inline: 1rem; /* sm:px-6 -> */
+    }
+    .fi-ta-ctn .fi-ta-header-toolbar {
+        padding-inline: 1rem; /* sm:px-6 -> */
+    }
+}
+.fi-ta-ctn .fi-ta-grouping-settings-fields {
+    row-gap: 1rem; /* gap-y-6 -> */
+    padding: 1rem; /* p-6 -> */
+}
+.fi-ta-ctn .fi-ta-grouping-settings-fields label {
+    row-gap: 0.375rem; /* gap-y-2 -> */
+}
+.fi-ta-ctn .fi-ta-grouping-settings > .fi-ta-grouping-settings-fields {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+.fi-ta-ctn .fi-ta-filters-dropdown .fi-ta-filters,
+.fi-ta-ctn .fi-ta-col-manager-dropdown .fi-ta-col-manager {
+    padding: 1rem; /* p-6 -> */
+}
+.fi-ta-ctn .fi-ta-filters {
+    row-gap: 0.75rem; /* gap-y-4 -> */
+}
+.fi-ta-ctn .fi-ta-filters.fi-ta-filters-below-content {
+    padding: 0.75rem; /* p-4 -> */
+}
+.fi-ta-ctn .fi-ta-filters .fi-ta-filters-actions-ctn {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-ta-ctn .fi-ta-filters-above-content-ctn {
+    padding: 0.75rem; /* px-4 py-4 -> */
+}
+@media (min-width: 640px) {
+    .fi-ta-ctn .fi-ta-filters.fi-ta-filters-below-content,
+    .fi-ta-ctn .fi-ta-filters-above-content-ctn {
+        padding-inline: 1rem; /* sm:px-6 -> AUDIT: was missing */
+    }
+}
+.fi-ta-ctn .fi-ta-filters-above-content-ctn.fi-open .fi-ta-filters-trigger-action-ctn {
+    margin-top: 0.5rem; /* mt-3 -> */
+}
+/* best-effort, flagged — see judgment call #5 */
+.fi-ta-ctn
+    .fi-ta-filters-above-content-ctn.fi-open:has(.fi-ta-filters-actions-ctn)
+    .fi-ta-filters-trigger-action-ctn {
+    margin-top: -1.25rem; /* -mt-7 -> */
+}
+.fi-ta-ctn .fi-ta-reorder-indicator {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.25rem; /* py-1.5 -> */
+}
+.fi-ta-ctn .fi-ta-selection-indicator {
+    row-gap: 0.125rem; /* gap-y-1 -> */
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-ta-ctn .fi-ta-selection-indicator .fi-ta-selection-indicator-actions-ctn,
+.fi-ta-ctn .fi-ta-selection-indicator > * {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+.fi-ta-ctn .fi-ta-filter-indicators {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.25rem; /* py-1.5 -> */
+}
+.fi-ta-ctn .fi-ta-filter-indicators > :nth-child(1) {
+    column-gap: 0.5rem;
+    row-gap: 0.125rem; /* gap-y-1 -> */
+}
+.fi-ta-ctn .fi-ta-filter-indicators .fi-ta-filter-indicators-badges-ctn {
+    gap: 0.25rem; /* gap-1.5 -> */
+}
+.fi-ta-ctn .fi-ta-filter-indicators > :nth-child(2).fi-icon-btn {
+    margin-top: -0.125rem; /* -mt-1 -> AUDIT: was missing */
+}
+.fi-ta-ctn .fi-pagination {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+}
+@media (min-width: 640px) {
+    .fi-ta-ctn .fi-ta-reorder-indicator,
+    .fi-ta-ctn .fi-ta-filter-indicators,
+    .fi-ta-ctn .fi-pagination {
+        padding-inline: 1rem; /* sm:px-6 -> AUDIT: was missing */
+    }
+    .fi-ta-ctn .fi-ta-selection-indicator {
+        padding-inline: 1rem; /* sm:px-6 -> AUDIT: was missing */
+        padding-block: 0.25rem; /* sm:py-1.5 -> AUDIT: was missing (shrinks further at sm+) */
+    }
+}
+.fi-ta-ctn .fi-ta-filters-before-content-ctn,
+.fi-ta-ctn .fi-ta-filters-after-content-ctn {
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-ta-ctn .fi-ta-filters-before-content-ctn .fi-ta-filters,
+.fi-ta-ctn .fi-ta-filters-after-content-ctn .fi-ta-filters {
+    padding: 1rem; /* p-6 -> */
+}
+@media (min-width: 1024px) {
+    .fi-ta-ctn .fi-ta-filters-before-content-ctn .fi-ta-filters,
+    .fi-ta-ctn .fi-ta-filters-after-content-ctn .fi-ta-filters {
+        padding-block: 0.75rem; /* lg:py-4 -> AUDIT: was missing */
+    }
+    /* AUDIT: lg:rounded-s-xl / lg:rounded-e-xl were previously applied unconditionally
+       (no lg: scoping) and only to one of their two corners. rounded-s-xl sets both
+       start-side corners, rounded-e-xl both end-side corners. */
+    .fi-ta-ctn .fi-ta-filters-before-content-ctn {
+        border-start-start-radius: 0.5rem;
+        border-end-start-radius: 0.5rem;
+    }
+    .fi-ta-ctn .fi-ta-filters-after-content-ctn {
+        border-start-end-radius: 0.5rem;
+        border-end-end-radius: 0.5rem;
+    }
+}
+
+/* ==========================================================================
+   tables: content.css
+   ========================================================================== */
+.fi-ta-content-ctn:not(.fi-ta-ctn-with-footer .fi-ta-content-ctn) {
+    border-end-start-radius: 0.5rem; /* rounded-b-xl -> lg */
+    border-end-end-radius: 0.5rem;
+}
+.fi-ta-content-ctn .fi-ta-content-header {
+    gap: 0.75rem; /* gap-4 -> */
+    column-gap: 1rem; /* gap-x-6 -> */
+    padding-inline: 0.75rem; /* px-4 -> AUDIT: was missing entirely */
+}
+@media (min-width: 640px) {
+    .fi-ta-content-ctn .fi-ta-content-header {
+        padding-inline: 1rem; /* sm:px-6 -> AUDIT: was missing */
+    }
+}
+.fi-ta-content-ctn .fi-ta-content-header .fi-ta-page-checkbox {
+    margin-block: 0.75rem; /* my-4 -> AUDIT: was missing */
+}
+.fi-ta-content-ctn .fi-ta-content-header .fi-ta-sorting-settings {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+}
+.fi-ta-content-ctn .fi-ta-content.fi-ta-content-grid {
+    gap: 0.75rem; /* gap-4 -> */
+    padding: 0.75rem; /* p-4 -> */
+}
+@media (min-width: 640px) {
+    .fi-ta-content-ctn .fi-ta-content.fi-ta-content-grid {
+        padding-inline: 1rem; /* sm:px-6 -> AUDIT: was missing */
+    }
+}
+.fi-ta-content-ctn .fi-ta-content.fi-ta-content-grid .fi-ta-record {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+/* AUDIT: the grid-view group header's -mx-4/sm:-mx-6 + width:calc(100%+Nrem) trick cancels
+   out content-grid's own px-4/sm:px-6 so the group header spans full-bleed — was entirely
+   missing, and now must use the SAME scaled padding values above or the header will no longer
+   reach the card edges. */
+.fi-ta-content-ctn .fi-ta-content.fi-ta-content-grid .fi-ta-group-header {
+    margin-inline: -0.75rem; /* -mx-4 -> */
+    width: calc(100% + 1.5rem);
+}
+@media (min-width: 640px) {
+    .fi-ta-content-ctn .fi-ta-content.fi-ta-content-grid .fi-ta-group-header {
+        margin-inline: -1rem; /* sm:-mx-6 -> */
+        width: calc(100% + 2rem);
+    }
+}
+.fi-ta-content-ctn .fi-ta-content.fi-ta-content-grid .fi-ta-record.fi-ta-record-with-content-prefix .fi-ta-record-content,
+.fi-ta-content-ctn .fi-ta-content.fi-ta-content-grid .fi-ta-record.fi-ta-record-with-content-prefix .fi-ta-actions {
+    padding-inline-start: 0.375rem; /* ps-2 -> AUDIT: was missing (grid-view prefix/suffix variant) */
+}
+.fi-ta-content-ctn .fi-ta-content.fi-ta-content-grid .fi-ta-record.fi-ta-record-with-content-suffix .fi-ta-record-content,
+.fi-ta-content-ctn .fi-ta-content.fi-ta-content-grid .fi-ta-record.fi-ta-record-with-content-suffix .fi-ta-actions {
+    padding-inline-end: 0.375rem; /* pe-2 -> AUDIT: was missing */
+}
+.fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) {
+    row-gap: 0.0625rem; /* gap-y-px, unchanged */
+}
+.fi-ta-content-ctn .fi-ta-content .fi-ta-group-header {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+    padding-inline: 0.125rem; /* px-1 -> AUDIT: was wrongly 0.0625rem (arithmetic bug), correct is 0.125rem */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+@media (min-width: 640px) {
+    .fi-ta-content-ctn .fi-ta-content .fi-ta-group-header {
+        padding-inline: 0.5rem; /* AUDIT: sm:px-3 responsive variant was missing entirely -> */
+    }
+}
+.fi-ta-content-ctn .fi-ta-content .fi-ta-group-header .fi-ta-group-checkbox {
+    margin-inline: 0.5rem; /* mx-3 -> */
+}
+.fi-ta-content-ctn .fi-ta-content .fi-ta-record .fi-ta-reorder-handle,
+.fi-ta-content-ctn .fi-ta-content .fi-ta-record .fi-ta-record-collapse-btn {
+    margin-inline: 0.125rem; /* mx-1 -> */
+    margin-block: 0.375rem; /* my-2 -> */
+}
+.fi-ta-content-ctn .fi-ta-content .fi-ta-record .fi-ta-record-checkbox {
+    margin-inline: 0.5rem; /* mx-3 -> */
+    margin-block: 0.75rem; /* my-4 -> */
+}
+.fi-ta-content-ctn .fi-ta-content .fi-ta-record .fi-ta-record-content-ctn {
+    row-gap: 0.5rem; /* gap-y-3 -> */
+    padding-block: 0.75rem; /* py-4 -> */
+}
+.fi-ta-content-ctn .fi-ta-content .fi-ta-record .fi-ta-record-content.fi-collapsible {
+    margin-top: 0.5rem; /* mt-3 -> */
+}
+.fi-ta-content-ctn .fi-ta-content .fi-ta-record:not(.fi-ta-record-with-content-prefix) .fi-ta-record-content,
+.fi-ta-content-ctn .fi-ta-content .fi-ta-record:not(.fi-ta-record-with-content-prefix) .fi-ta-actions {
+    padding-inline-start: 0.75rem; /* ps-4 -> */
+}
+.fi-ta-content-ctn .fi-ta-content .fi-ta-record:not(.fi-ta-record-with-content-suffix) .fi-ta-record-content,
+.fi-ta-content-ctn .fi-ta-content .fi-ta-record:not(.fi-ta-record-with-content-suffix) .fi-ta-actions {
+    padding-inline-end: 0.75rem; /* pe-4 -> */
+}
+/* AUDIT: same "sm: escalates edge padding" pattern already fixed once in cell.css/header-cell.css/
+   row.css recurs here for the non-grid (list) record layout — was entirely missing. Only applies
+   when NOT in grid mode (source nests these under `&:not(.fi-ta-content-grid)`). */
+@media (min-width: 640px) {
+    .fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record:not(.fi-ta-record-with-content-prefix) .fi-ta-record-content,
+    .fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record:not(.fi-ta-record-with-content-prefix) .fi-ta-actions {
+        padding-inline-start: 1rem; /* sm:ps-6 -> */
+    }
+    .fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record:not(.fi-ta-record-with-content-suffix) .fi-ta-record-content,
+    .fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record:not(.fi-ta-record-with-content-suffix) .fi-ta-actions {
+        padding-inline-end: 1rem; /* sm:pe-6 -> */
+    }
+    .fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record.fi-ta-record-with-content-prefix {
+        padding-inline-start: 0.5rem; /* sm:ps-3 -> */
+    }
+    .fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record.fi-ta-record-with-content-suffix {
+        padding-inline-end: 0.5rem; /* sm:pe-3 -> */
+    }
+}
+.fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record.fi-ta-record-with-content-prefix .fi-ta-record-content,
+.fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record.fi-ta-record-with-content-prefix .fi-ta-actions {
+    padding-inline-start: 0.5rem; /* ps-3 -> AUDIT: was missing */
+}
+.fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record.fi-ta-record-with-content-suffix .fi-ta-record-content,
+.fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record.fi-ta-record-with-content-suffix .fi-ta-actions {
+    padding-inline-end: 0.5rem; /* pe-3 -> AUDIT: was missing */
+}
+@media (min-width: 768px) {
+    .fi-ta-content-ctn .fi-ta-content:not(.fi-ta-content-grid) .fi-ta-record .fi-ta-actions {
+        padding-inline-start: 0.5rem; /* md:ps-3 -> AUDIT: was missing */
+    }
+}
+
+/* ==========================================================================
+   tables: cell.css / header-cell.css / row.css (the core row/column padding —
+   this is what visually makes the table look denser, matches table.png)
+   ========================================================================== */
+/* AUDIT: this whole block was rewritten. The original draft dropped the
+   :first-of-type / :last-of-type edge-column padding and its sm: breakpoint
+   bump everywhere it occurs in cell.css / header-cell.css / row.css — Filament
+   gives the table's outermost columns extra inline padding at sm+ so content
+   doesn't hug the container edge. That's now restored, scaled the same way. */
+.fi-ta-cell {
+    padding: 0;
+}
+.fi-ta-cell:first-of-type {
+    padding-inline-start: 0.125rem; /* first-of-type:ps-1 -> */
+}
+.fi-ta-cell:last-of-type {
+    padding-inline-end: 0.125rem; /* last-of-type:pe-1 -> */
+}
+@media (min-width: 640px) {
+    .fi-ta-cell:first-of-type {
+        padding-inline-start: 0.5rem; /* sm:first-of-type:ps-3 -> */
+    }
+    .fi-ta-cell:last-of-type {
+        padding-inline-end: 0.5rem; /* sm:last-of-type:pe-3 -> */
+    }
+}
+
+.fi-ta-cell:has(.fi-ta-reorder-handle),
+.fi-ta-cell:has(.fi-ta-actions),
+.fi-ta-cell:has(.fi-ta-record-checkbox),
+.fi-ta-cell.fi-ta-selection-cell,
+.fi-ta-cell.fi-ta-group-selection-cell {
+    padding-inline: 0.5rem; /* px-3 -> */
+}
+.fi-ta-cell:has(.fi-ta-actions),
+.fi-ta-cell:has(.fi-ta-record-checkbox),
+.fi-ta-cell.fi-ta-selection-cell {
+    padding-block: 0.75rem; /* py-4 -> */
+}
+.fi-ta-cell:has(.fi-ta-reorder-handle):first-of-type,
+.fi-ta-cell:has(.fi-ta-actions):first-of-type,
+.fi-ta-cell:has(.fi-ta-record-checkbox):first-of-type,
+.fi-ta-cell.fi-ta-selection-cell:first-of-type,
+.fi-ta-cell.fi-ta-group-selection-cell:first-of-type {
+    padding-inline-start: 0.75rem; /* first-of-type:ps-4 -> */
+}
+.fi-ta-cell:has(.fi-ta-reorder-handle):last-of-type,
+.fi-ta-cell:has(.fi-ta-actions):last-of-type,
+.fi-ta-cell:has(.fi-ta-record-checkbox):last-of-type,
+.fi-ta-cell.fi-ta-selection-cell:last-of-type,
+.fi-ta-cell.fi-ta-group-selection-cell:last-of-type {
+    padding-inline-end: 0.75rem; /* last-of-type:pe-4 -> */
+}
+@media (min-width: 640px) {
+    .fi-ta-cell:has(.fi-ta-reorder-handle):first-of-type,
+    .fi-ta-cell:has(.fi-ta-actions):first-of-type,
+    .fi-ta-cell:has(.fi-ta-record-checkbox):first-of-type,
+    .fi-ta-cell.fi-ta-selection-cell:first-of-type,
+    .fi-ta-cell.fi-ta-group-selection-cell:first-of-type,
+    .fi-ta-cell.fi-ta-summary-row-heading-cell:first-of-type,
+    .fi-ta-cell.fi-ta-summary-header-cell:first-of-type {
+        padding-inline-start: 1rem; /* sm:first-of-type:ps-6 -> */
+    }
+    .fi-ta-cell:has(.fi-ta-reorder-handle):last-of-type,
+    .fi-ta-cell:has(.fi-ta-actions):last-of-type,
+    .fi-ta-cell:has(.fi-ta-record-checkbox):last-of-type,
+    .fi-ta-cell.fi-ta-selection-cell:last-of-type,
+    .fi-ta-cell.fi-ta-group-selection-cell:last-of-type,
+    .fi-ta-cell.fi-ta-summary-row-heading-cell:last-of-type {
+        padding-inline-end: 1rem; /* sm:last-of-type:pe-6 -> (fi-ta-summary-header-cell has no pe-6 in source, intentionally excluded) */
+    }
+}
+
+.fi-ta-cell.fi-ta-summary-row-heading-cell {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.75rem; /* py-4 -> */
+}
+.fi-ta-cell.fi-ta-summary-header-cell {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-ta-cell.fi-ta-individual-search-cell {
+    padding-inline: 0.5rem;
+    padding-block: 0.375rem;
+}
+
+.fi-ta-header-cell,
+.fi-ta-header-group-cell {
+    padding-inline: 0.5rem; /* px-3 -> */
+}
+.fi-ta-header-cell {
+    padding-block: 0.625rem; /* py-3.5 -> */
+}
+.fi-ta-header-group-cell {
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-ta-header-cell .fi-ta-header-cell-sort-btn {
+    column-gap: 0.125rem; /* gap-x-1 -> */
+}
+@media (min-width: 640px) {
+    .fi-ta-header-cell:first-of-type,
+    .fi-ta-header-group-cell:first-of-type {
+        padding-inline-start: 1rem; /* sm:first-of-type:ps-6 -> AUDIT: was missing */
+    }
+    .fi-ta-header-cell:last-of-type,
+    .fi-ta-header-group-cell:last-of-type {
+        padding-inline-end: 1rem; /* sm:last-of-type:pe-6 -> AUDIT: was missing */
+    }
+}
+
+.fi-ta-row .fi-ta-group-header-cell {
+    padding-inline: 0.5rem; /* px-3 -> */
+}
+@media (min-width: 640px) {
+    .fi-ta-row .fi-ta-group-header-cell:first-of-type {
+        padding-inline-start: 1rem; /* sm:first-of-type:ps-6 -> AUDIT: was missing */
+    }
+    .fi-ta-row .fi-ta-group-header-cell:last-of-type {
+        padding-inline-end: 1rem; /* sm:last-of-type:pe-6 -> AUDIT: was missing */
+    }
+}
+.fi-ta-row .fi-ta-group-header {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+
+.fi-ta-table-stacked-header-row .fi-ta-table-stacked-header-cell {
+    gap: 0.75rem; /* gap-4 -> */
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+}
+.fi-ta-table-stacked-header-row .fi-ta-table-stacked-header-cell .fi-ta-table-stacked-sorting {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+
+/* ==========================================================================
+   tables: column type wrappers — px-3 py-4 is repeated across nearly every
+   column type when not inline (color/checkbox/icon/image/select/text/text-input/
+   toggle/summaries). Consolidated into one rule set.
+   ========================================================================== */
+/* AUDIT: the wrapper-level `gap-1.5` on color/icon/image columns (spacing between multiple
+   swatches/icons/images within one cell, separate from the outer px-3 py-4 padding) and
+   image.css's overlap `-space-x-N` stacking utilities were both missing entirely. */
+.fi-ta-color,
+.fi-ta-icon,
+.fi-ta-image {
+    gap: 0.25rem; /* gap-1.5 -> */
+}
+/* AUDIT: text.css's description/badge-list gaps were missing entirely. */
+.fi-ta-text.fi-ta-text-has-badges.fi-ta-text-has-descriptions,
+.fi-ta-text.fi-ta-text-has-badges.fi-ta-text-list-limited {
+    row-gap: 0.375rem; /* gap-y-2 -> */
+}
+.fi-ta-text:not(.fi-ta-text-has-badges).fi-ta-text-has-descriptions,
+.fi-ta-text:not(.fi-ta-text-has-badges).fi-ta-text-list-limited {
+    row-gap: 0.125rem; /* gap-y-1 -> */
+}
+.fi-ta-text.fi-ta-text-has-badges {
+    column-gap: 0.25rem; /* gap-x-1.5 -> */
+}
+.fi-ta-text.fi-ta-text-has-badges.fi-wrapped {
+    row-gap: 0.125rem; /* gap-y-1 -> */
+}
+.fi-ta-image.fi-ta-image-overlap-1 > * + * {
+    margin-inline-start: -0.125rem; /* -space-x-1 -> */
+}
+.fi-ta-image.fi-ta-image-overlap-2 > * + * {
+    margin-inline-start: -0.375rem; /* -space-x-2 -> */
+}
+.fi-ta-image.fi-ta-image-overlap-3 > * + * {
+    margin-inline-start: -0.5rem; /* -space-x-3 -> */
+}
+.fi-ta-image.fi-ta-image-overlap-4 > * + * {
+    margin-inline-start: -0.75rem; /* -space-x-4 -> */
+}
+.fi-ta-image.fi-ta-image-overlap-5 > * + * {
+    margin-inline-start: -0.875rem; /* -space-x-5 -> */
+}
+.fi-ta-image.fi-ta-image-overlap-6 > * + * {
+    margin-inline-start: -1rem; /* -space-x-6 -> */
+}
+.fi-ta-image.fi-ta-image-overlap-7 > * + * {
+    margin-inline-start: -1.25rem; /* -space-x-7 -> */
+}
+.fi-ta-image.fi-ta-image-overlap-8 > * + * {
+    margin-inline-start: -1.375rem; /* -space-x-8 -> */
+}
+.fi-ta-color:not(.fi-inline),
+.fi-ta-checkbox:not(.fi-inline),
+.fi-ta-icon:not(.fi-inline),
+.fi-ta-image:not(.fi-inline),
+.fi-ta-select:not(.fi-inline),
+.fi-ta-text:not(.fi-inline),
+.fi-ta-text-input:not(.fi-inline),
+.fi-ta-toggle:not(.fi-inline) {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.75rem; /* py-4 -> */
+}
+/* AUDIT: the stacked-on-mobile variant is `p-0` (BOTH axes zeroed below sm, source uses the
+   shorthand) with `sm:px-3 sm:py-4` restoring the same values as the base rule above — the
+   draft only zeroed padding-inline (leaving padding-block untouched at 0.75rem on mobile) and
+   had no sm: tier at all, so padding-inline stayed 0 at every width including desktop. Since
+   "stacked on mobile" is Filament's default responsive table behavior (not an opt-in most
+   tables would avoid), this bug would have affected column padding on every table at narrow
+   viewports. Rewritten to zero both axes below sm and restore the scaled px-3/py-4 at sm+. */
+.fi-ta-table-stacked-on-mobile .fi-ta-color,
+.fi-ta-table-stacked-on-mobile .fi-ta-checkbox,
+.fi-ta-table-stacked-on-mobile .fi-ta-icon,
+.fi-ta-table-stacked-on-mobile .fi-ta-image,
+.fi-ta-table-stacked-on-mobile .fi-ta-select,
+.fi-ta-table-stacked-on-mobile .fi-ta-text,
+.fi-ta-table-stacked-on-mobile .fi-ta-text-input,
+.fi-ta-table-stacked-on-mobile .fi-ta-toggle {
+    padding: 0; /* p-0 -> */
+}
+@media (min-width: 640px) {
+    .fi-ta-table-stacked-on-mobile .fi-ta-color,
+    .fi-ta-table-stacked-on-mobile .fi-ta-checkbox,
+    .fi-ta-table-stacked-on-mobile .fi-ta-icon,
+    .fi-ta-table-stacked-on-mobile .fi-ta-image,
+    .fi-ta-table-stacked-on-mobile .fi-ta-select,
+    .fi-ta-table-stacked-on-mobile .fi-ta-text,
+    .fi-ta-table-stacked-on-mobile .fi-ta-text-input,
+    .fi-ta-table-stacked-on-mobile .fi-ta-toggle {
+        padding-inline: 0.5rem; /* sm:px-3 -> */
+        padding-block: 0.75rem; /* sm:py-4 -> */
+    }
+}
+/* AUDIT: the draft applied icon-count-summary's gap-y-1.5 value to all four summary selectors,
+   but range/text/values-summary actually use gap-y-1 (a different value) — split them. Also
+   added the stacked-on-mobile variant (px-0 py-2 sm:px-3 sm:py-4 — note this one is NOT the
+   `p-0` shorthand, py stays 0.375rem/py-2 below sm, unlike the column-type variant above), which
+   was missing entirely. */
+.fi-ta-icon-count-summary,
+.fi-ta-range-summary,
+.fi-ta-text-summary,
+.fi-ta-values-summary {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.75rem; /* py-4 -> */
+}
+.fi-ta-icon-count-summary {
+    row-gap: 0.25rem; /* gap-y-1.5 -> */
+}
+.fi-ta-range-summary,
+.fi-ta-text-summary,
+.fi-ta-values-summary {
+    row-gap: 0.125rem; /* gap-y-1 -> AUDIT fix: was wrongly using gap-y-1.5's value */
+}
+.fi-ta-table-stacked-on-mobile .fi-ta-icon-count-summary,
+.fi-ta-table-stacked-on-mobile .fi-ta-range-summary,
+.fi-ta-table-stacked-on-mobile .fi-ta-text-summary,
+.fi-ta-table-stacked-on-mobile .fi-ta-values-summary {
+    padding-inline: 0; /* px-0 -> AUDIT: was missing */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+@media (min-width: 640px) {
+    .fi-ta-table-stacked-on-mobile .fi-ta-icon-count-summary,
+    .fi-ta-table-stacked-on-mobile .fi-ta-range-summary,
+    .fi-ta-table-stacked-on-mobile .fi-ta-text-summary,
+    .fi-ta-table-stacked-on-mobile .fi-ta-values-summary {
+        padding-inline: 0.5rem; /* sm:px-3 -> */
+        padding-block: 0.75rem; /* sm:py-4 -> */
+    }
+}
+.fi-ta-icon-count-summary > ul {
+    row-gap: 0.25rem;
+}
+.fi-ta-icon-count-summary > ul > li {
+    column-gap: 0.25rem; /* gap-x-1.5 -> */
+}
+
+/* ==========================================================================
+   tables: column-manager.css / actions.css / layout/panel.css
+   ========================================================================== */
+.fi-ta-col-manager {
+    gap: 0.75rem; /* gap-4 -> */
+}
+.fi-ta-col-manager .fi-ta-col-manager-items {
+    column-gap: 1rem; /* gap-x-6 -> */
+}
+.fi-ta-col-manager .fi-ta-col-manager-item {
+    gap: 0.5rem; /* gap-3 -> */
+    padding-top: 1rem; /* pt-6 -> (paired w/ -mt-6 on items, self-preserving) */
+}
+.fi-ta-col-manager .fi-ta-col-manager-items {
+    margin-top: -1rem; /* -mt-6 -> */
+}
+.fi-ta-col-manager .fi-ta-col-manager-group .fi-ta-col-manager-group-items {
+    padding-inline-start: 1.375rem; /* ps-8 -> */
+}
+.fi-ta-col-manager .fi-ta-col-manager-label {
+    column-gap: 0.5rem; /* gap-x-3 -> AUDIT: was missing */
+}
+/* AUDIT: tables/columns/layout/{grid,split,stack}.css (Grid/Split/Stack column-layout
+   components: .fi-ta-grid gap-sm/lg, .fi-ta-split gaps, .fi-ta-stack space-y-1/2/3, each with
+   several responsive variants) were not covered at all. Skipped deliberately — grepped the app
+   for Filament\Tables\Columns\Layout\{Grid,Split,Stack} usage and found none, so there's nothing
+   in this codebase for these rules to affect today. Add them (mirroring the gap lookup table) if
+   a table ever adopts one of these layout components. */
+.fi-ta-col-manager .fi-ta-col-manager-actions-ctn {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-ta-actions {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-ta-panel {
+    padding: 0.75rem; /* p-4 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+
+/* ==========================================================================
+   infolists: entry.css / key-value.css / repeatable.css / code.css
+   ========================================================================== */
+.fi-in-entry {
+    row-gap: 0.375rem; /* gap-y-2 -> */
+}
+.fi-in-entry.fi-in-entry-has-inline-label {
+    column-gap: 0.75rem; /* gap-x-4 -> */
+}
+.fi-in-entry .fi-in-entry-label-ctn {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+.fi-in-entry .fi-in-entry-label-col,
+.fi-in-entry .fi-in-entry-content-col {
+    row-gap: 0.375rem; /* gap-y-2 -> */
+}
+.fi-in-entry .fi-in-entry-content-ctn {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+/* AUDIT: color/icon/image infolist entries have the same missing wrapper gap-1.5 and image
+   overlap -space-x-N pattern already fixed for the table-column equivalents above. */
+.fi-in-color,
+.fi-in-icon,
+.fi-in-image {
+    gap: 0.25rem; /* gap-1.5 -> */
+}
+.fi-in-image.fi-in-image-overlap-1 > * + * {
+    margin-inline-start: -0.125rem; /* -space-x-1 -> */
+}
+.fi-in-image.fi-in-image-overlap-2 > * + * {
+    margin-inline-start: -0.375rem; /* -space-x-2 -> */
+}
+.fi-in-image.fi-in-image-overlap-3 > * + * {
+    margin-inline-start: -0.5rem; /* -space-x-3 -> */
+}
+.fi-in-image.fi-in-image-overlap-4 > * + * {
+    margin-inline-start: -0.75rem; /* -space-x-4 -> */
+}
+.fi-in-image.fi-in-image-overlap-5 > * + * {
+    margin-inline-start: -0.875rem; /* -space-x-5 -> */
+}
+.fi-in-image.fi-in-image-overlap-6 > * + * {
+    margin-inline-start: -1rem; /* -space-x-6 -> */
+}
+.fi-in-image.fi-in-image-overlap-7 > * + * {
+    margin-inline-start: -1.25rem; /* -space-x-7 -> */
+}
+.fi-in-image.fi-in-image-overlap-8 > * + * {
+    margin-inline-start: -1.375rem; /* -space-x-8 -> */
+}
+/* AUDIT: text.css badge/description gaps, same pattern as the table-column text.css fix above. */
+.fi-in-text.fi-in-text-has-badges.fi-in-text-list-limited {
+    row-gap: 0.375rem; /* gap-y-2 -> */
+}
+.fi-in-text:not(.fi-in-text-has-badges).fi-in-text-list-limited {
+    row-gap: 0.125rem; /* gap-y-1 -> */
+}
+.fi-in-text.fi-in-text-has-badges {
+    column-gap: 0.25rem; /* gap-x-1.5 -> */
+}
+.fi-in-text.fi-in-text-has-badges.fi-wrapped {
+    row-gap: 0.125rem; /* gap-y-1 -> */
+}
+.fi-in-text.fi-in-text-affixed {
+    gap: 0.5rem; /* gap-3 -> AUDIT: was missing */
+}
+.fi-in-text .fi-in-text-affix {
+    gap: 0.5rem; /* gap-3 -> AUDIT: was missing */
+}
+
+.fi-in-key-value {
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-in-key-value th {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-in-key-value td {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.25rem; /* py-1.5 -> */
+}
+.fi-in-key-value td.fi-in-placeholder {
+    padding-block: 0.375rem; /* py-2 -> */
+}
+
+ul.fi-in-repeatable {
+    gap: 0.75rem; /* gap-4 -> AUDIT: was missing */
+}
+.fi-in-repeatable.fi-contained > .fi-in-repeatable-item {
+    padding: 0.75rem; /* p-4 -> */
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-in-table-repeatable {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-in-table-repeatable > table {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-in-table-repeatable > table > thead > tr > th {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-in-table-repeatable > table > thead > tr > th:first-of-type {
+    border-start-start-radius: 0.5rem; /* rounded-ss-xl -> lg, AUDIT: was missing */
+}
+.fi-in-table-repeatable > table > thead > tr > th:last-of-type {
+    border-start-end-radius: 0.5rem; /* rounded-se-xl -> lg, AUDIT: was missing */
+}
+.fi-in-table-repeatable > table > tbody > tr {
+    gap: 1rem; /* gap-6 -> */
+    padding: 1rem; /* p-6 -> */
+}
+/* AUDIT: same breakpoint-reset bug as forms/table-repeater.css, fixed above — the base
+   gap-6/p-6 only applies to the stacked (mobile) layout; at the tabular breakpoint the source
+   zeroes it and switches to per-cell px-3/py-2. Was entirely missing here too. */
+@supports (container-type: inline-size) {
+    @container (min-width: 36rem) {
+        .fi-in-table-repeatable > table > tbody > tr {
+            padding: 0; /* @xl:p-0 -> */
+        }
+        .fi-in-table-repeatable > table > tbody > tr > td {
+            padding-inline: 0.5rem; /* @xl:px-3 -> */
+            padding-block: 0.375rem; /* @xl:py-2 -> */
+        }
+        .fi-in-table-repeatable .fi-in-table-repeatable-actions {
+            padding-inline: 0.5rem; /* @xl:px-3 -> */
+            padding-block: 0.375rem; /* @xl:py-2 -> */
+        }
+    }
+}
+@supports not (container-type: inline-size) {
+    @media (min-width: 64rem) {
+        .fi-in-table-repeatable > table > tbody > tr {
+            padding: 0; /* lg:p-0 -> */
+        }
+        .fi-in-table-repeatable > table > tbody > tr > td {
+            padding-inline: 0.5rem; /* lg:px-3 -> */
+            padding-block: 0.375rem; /* lg:py-2 -> */
+        }
+    }
+}
+
+.fi-in-code .phiki {
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-block: 0.5rem; /* py-3 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+
+/* ==========================================================================
+   notifications: notification.css / database-notifications.css
+   ========================================================================== */
+.fi-no-notification {
+    gap: 0.5rem; /* gap-3 -> */
+    padding: 0.75rem; /* p-4 -> */
+}
+.fi-no-notification .fi-no-notification-main {
+    margin-top: 0.125rem; /* mt-0.5 -> negligible, left */
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-no-notification .fi-no-notification-text {
+    gap: 0.125rem; /* gap-1 -> */
+}
+.fi-no-notification:not(.fi-inline) {
+    gap: 0.5rem;
+    padding: 0.75rem; /* p-4 -> */
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-no-notification .fi-no-notification-body > p:not(:first-of-type) {
+    margin-top: 0.125rem; /* mt-1 -> AUDIT: was missing */
+}
+.fi-no {
+    gap: 0.5rem; /* gap-3 -> AUDIT: was missing (gap between stacked toast notifications) */
+}
+
+/* ==========================================================================
+   schemas: form.css / flex.css / actions.css / fused-group.css / tabs.css / wizard.css
+   ========================================================================== */
+.fi-sc-form {
+    gap: 1rem; /* gap-6 -> */
+}
+.fi-sc-form.fi-dense {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-sc-flex {
+    gap: 1rem; /* gap-6 -> */
+}
+.fi-sc-flex.fi-dense {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-sc.fi-sc-has-gap {
+    gap: 1rem; /* gap-6 -> */
+}
+.fi-sc.fi-sc-has-gap.fi-sc-dense {
+    gap: 0.5rem; /* gap-3 -> */
+}
+.fi-sc-actions {
+    gap: 0.375rem; /* gap-2 -> */
+}
+.fi-sc-actions .fi-sc-actions-label-ctn {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+.fi-sc-actions.fi-sticky .fi-ac {
+    margin-inline: -0.75rem; /* -mx-4 -> */
+    padding: 0.75rem; /* p-4 -> */
+}
+@media (min-width: 768px) {
+    .fi-sc-actions.fi-sticky .fi-ac {
+        border-radius: 0.5rem; /* md:rounded-xl -> lg, AUDIT fix: was unconditional — source only
+        rounds corners once the bar lifts off the screen edge at md+; applying it below md would
+        show rounded corners on a flush-edge full-width bar. */
+    }
+}
+/* AUDIT: fused-group.css's `.fi-grid-cols` corner-rounding variant (and its sm:/md:/lg:/xl:/2xl:
+   and @3xs..@7xl container-query breakpoints) was not covered — grepped the app for
+   Filament\Schemas\Components\FusedGroup usage and found none, so skipped deliberately, same as
+   the table Grid/Split/Stack layout components above. Add if this project adopts FusedGroup. */
+.fi-sc-fused-group .fi-sc {
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-sc-fused-group .fi-sc .fi-sc-component .fi-sc-actions {
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-sc-fused-group .fi-sc > :first-child .fi-input-wrp {
+    border-start-start-radius: 0.375rem;
+    border-start-end-radius: 0.375rem;
+}
+.fi-sc-fused-group .fi-sc > :last-child .fi-input-wrp {
+    border-end-start-radius: 0.375rem;
+    border-end-end-radius: 0.375rem;
+}
+.fi-sc-section {
+    gap: 0.375rem; /* gap-2 -> */
+}
+.fi-sc-section .fi-sc-section-label-ctn {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+.fi-sc-tabs.fi-contained {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-sc-tabs.fi-contained .fi-sc-tabs-tab.fi-active {
+    padding: 1rem; /* p-6 -> */
+    margin-top: 0; /* mt-0 -> AUDIT: was missing, so the base mt-6 rule below was leaking
+    through at equal specificity, adding an unwanted extra top margin above the p-6 padding. */
+}
+.fi-sc-tabs.fi-vertical .fi-sc-tabs-tab.fi-active {
+    margin-inline-start: 1rem; /* ms-6 -> */
+    margin-top: 0; /* mt-0 -> AUDIT: was missing, same leak as .fi-contained above */
+}
+.fi-sc-tabs .fi-sc-tabs-tab.fi-active {
+    margin-top: 1rem; /* mt-6 -> */
+}
+
+.fi-sc-wizard .fi-sc-wizard-header-step-btn {
+    column-gap: 0.75rem; /* gap-x-4 -> */
+    padding-inline: 1rem; /* px-6 -> */
+    padding-block: 0.75rem; /* py-4 -> */
+}
+.fi-sc-wizard .fi-sc-wizard-footer {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+/* AUDIT fix: source only applies mt-6 inside `:not(.fi-sc-wizard-header-hidden)` — this was
+   previously unscoped here (applying even when the step header is hidden, where no top margin
+   is needed) and duplicated the correctly-scoped rule further below. Scoped it to match, and
+   removed the unconditional version. */
+.fi-sc-wizard:not(.fi-sc-wizard-header-hidden) .fi-sc-wizard-step.fi-active {
+    margin-top: 1rem; /* mt-6 -> */
+}
+.fi-sc-wizard.fi-contained {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-sc-wizard.fi-contained .fi-sc-wizard-step.fi-active {
+    padding: 1rem; /* p-6 -> */
+    margin-top: 0; /* mt-0 -> AUDIT: was missing, same leak-through issue as the tabs fix above */
+}
+.fi-sc-wizard.fi-contained .fi-sc-wizard-footer {
+    padding-inline: 1rem; /* px-6 -> */
+    padding-bottom: 1rem; /* pb-6 -> */
+}
+.fi-sc-wizard:not(.fi-contained) .fi-sc-wizard-header {
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-sc-wizard:not(.fi-contained) .fi-sc-wizard-footer {
+    margin-top: 1rem; /* mt-6 -> */
+}
+
+/* ==========================================================================
+   filament (panel chrome): header.css / page.css / sidebar.css / topbar.css /
+   tenant-menu.css / theme-switcher.css / global-search.css / widgets
+   ========================================================================== */
+.fi-header {
+    gap: 0.75rem; /* gap-4 -> */
+}
+.fi-header .fi-breadcrumbs {
+    margin-bottom: 0.375rem; /* mb-2 -> */
+}
+.fi-header-subheading {
+    margin-top: 0.375rem; /* mt-2 -> */
+}
+.fi-header-actions-ctn {
+    gap: 0.5rem; /* gap-3 -> */
+}
+@media (min-width: 640px) {
+    .fi-header.fi-header-has-breadcrumbs .fi-header-actions-ctn {
+        margin-top: 1.25rem; /* sm:mt-7 -> AUDIT: was missing */
+    }
+}
+.fi-simple-header .fi-logo {
+    margin-bottom: 0.75rem; /* mb-4 -> */
+}
+.fi-simple-header-subheading {
+    margin-top: 0.375rem; /* mt-2 -> */
+}
+
+.fi-page-sub-navigation-sidebar {
+    row-gap: 1.25rem; /* gap-y-7 -> */
+}
+.fi-page.fi-page-has-sub-navigation .fi-page-main {
+    gap: 1.375rem; /* gap-8 -> */
+}
+.fi-page-header-main-ctn {
+    row-gap: 1.375rem; /* gap-y-8 -> */
+    padding-block: 1.375rem; /* py-8 -> */
+}
+.fi-page-content {
+    row-gap: 1.375rem; /* gap-y-8 -> */
+}
+.fi-simple-page-content {
+    row-gap: 1rem; /* gap-y-6 -> */
+}
+
+.fi-sidebar-group {
+    row-gap: 0.125rem; /* gap-y-1 -> */
+}
+/* AUDIT fix: source's `.fi-sidebar-group-btn` has no `rounded-lg` at all (unlike the other
+   three selectors here) — applying border-radius to it below added rounding that isn't in the
+   original (harmless in practice since it has no background of its own to clip, but incorrect). */
+.fi-sidebar-group-btn,
+.fi-sidebar-group-dropdown-trigger-btn,
+.fi-sidebar-item-btn,
+.fi-sidebar-database-notifications-btn {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+    padding: 0.375rem; /* p-2 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-sidebar-group-items,
+.fi-sidebar-item.fi-active,
+.fi-sidebar-item.fi-sidebar-item-has-active-child-items,
+.fi-sidebar-sub-group-items {
+    row-gap: 0.125rem; /* gap-y-1 -> */
+}
+.fi-sidebar-footer {
+    margin-inline: 0.75rem; /* mx-4 -> */
+    margin-block: 0.5rem; /* my-3 -> */
+    row-gap: 0.5rem; /* gap-y-3 -> */
+}
+.fi-sidebar-nav {
+    row-gap: 1.25rem; /* gap-y-7 -> */
+    padding-inline: 1rem; /* px-6 -> */
+    padding-block: 1.375rem; /* py-8 -> */
+}
+.fi-sidebar-nav-groups {
+    margin-inline: -0.375rem; /* -mx-2 -> */
+    row-gap: 1.25rem; /* gap-y-7 -> */
+}
+.fi-body-has-topbar .fi-sidebar-header {
+    padding-inline: 1rem; /* px-6 -> */
+}
+:not(.fi-body-has-topbar) .fi-sidebar-header {
+    padding-inline: 0.75rem; /* px-4 -> */
+}
+:not(.fi-body-has-topbar) .fi-sidebar-header .fi-logo {
+    margin-inline-start: 0.5rem; /* ms-3 -> */
+}
+.fi-sidebar .fi-tenant-menu {
+    margin-inline: 0.75rem; /* mx-4 -> */
+    margin-top: 0.5rem; /* mt-3 -> */
+}
+.fi-simple-user-menu-ctn {
+    column-gap: 0.75rem; /* gap-x-4 -> AUDIT: was missing (user-menu.css) */
+}
+.fi-tenant-menu-trigger,
+.fi-sidebar .fi-user-menu-trigger {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+    padding: 0.375rem; /* p-2 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-sidebar .fi-global-search-ctn {
+    margin-inline: 0.5rem; /* mx-3 -> */
+    margin-top: 0.5rem; /* mt-3 -> */
+}
+
+.fi-theme-switcher {
+    column-gap: 0.125rem; /* gap-x-1 -> */
+}
+.fi-theme-switcher-btn {
+    padding: 0.375rem; /* p-2 -> */
+}
+
+.fi-topbar {
+    padding-inline: 0.75rem; /* px-4 -> */
+}
+.fi-topbar-start {
+    margin-inline-end: 1rem; /* me-6 -> */
+}
+.fi-topbar-start .fi-logo {
+    margin-inline-start: 0.5rem; /* ms-3 -> */
+}
+.fi-topbar-nav-groups {
+    margin-inline: 0.75rem; /* ms-4 me-4 -> */
+    column-gap: 0.75rem; /* gap-x-4 -> */
+    row-gap: 0.125rem; /* gap-y-1 -> (harmless that this isn't lg:-scoped like source, since
+    the element itself is `hidden lg:flex` — invisible below lg regardless) */
+}
+@media (min-width: 1024px) {
+    .fi-topbar-nav-groups {
+        margin-block: 0.375rem; /* lg:my-2 -> AUDIT: was missing entirely */
+    }
+}
+.fi-topbar-end {
+    column-gap: 0.75rem; /* gap-x-4 -> */
+}
+.fi-topbar-item-btn {
+    column-gap: 0.375rem; /* gap-x-2 -> */
+    padding-inline: 0.5rem; /* px-3 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+
+.fi-global-search-results-ctn {
+    margin-top: 0.375rem; /* mt-2 -> */
+    border-radius: 0.375rem; /* rounded-lg -> md */
+}
+.fi-sidebar .fi-global-search-ctn {
+    margin-inline: 0.5rem;
+    margin-top: 0.5rem;
+}
+.fi-global-search-no-results-message {
+    padding: 0.75rem; /* px-4 py-4 -> */
+}
+.fi-global-search-result-group-header {
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-block: 0.375rem; /* py-2 -> */
+}
+.fi-global-search-result-link {
+    padding: 0.75rem; /* p-4 -> */
+}
+.fi-global-search-result-details {
+    margin-top: 0.125rem; /* mt-1 -> negligible, left */
+}
+.fi-global-search-result-actions {
+    margin-top: 0.5rem; /* mt-3 -> */
+    column-gap: 0.5rem; /* gap-x-3 -> AUDIT: was missing */
+    padding-inline: 0.75rem; /* px-4 -> */
+    padding-bottom: 0.75rem; /* pb-4 -> */
+}
+
+.fi-account-widget .fi-section-content,
+.fi-filament-info-widget .fi-section-content {
+    column-gap: 0.5rem; /* gap-x-3 -> */
+}
+.fi-filament-info-widget-version {
+    margin-top: 0.375rem; /* mt-2 -> */
+}
+.fi-filament-info-widget-links {
+    row-gap: 0.125rem; /* gap-y-1 -> */
+}
+
+/* AUDIT: layout.css was almost entirely unaddressed — most importantly `.fi-main`'s own
+   responsive px-4/md:px-6/lg:px-8, which is the primary horizontal page-content margin used on
+   every single admin page (list/edit/view — this is the padding the whole compact-theme request
+   is fundamentally about at the page-chrome level, not just individual components). */
+.fi-main {
+    padding-inline: 0.75rem; /* px-4 -> */
+}
+@media (min-width: 768px) {
+    .fi-main {
+        padding-inline: 1rem; /* md:px-6 -> */
+    }
+}
+@media (min-width: 1024px) {
+    .fi-main {
+        padding-inline: 1.375rem; /* lg:px-8 -> */
+    }
+}
+.fi-body > .fi-layout-sidebar-toggle-btn-ctn {
+    padding-inline-start: 0.875rem; /* ps-5 -> AUDIT: was missing (mobile sidebar-open button) */
+    padding-top: 0.875rem; /* pt-5 -> */
+}
+.fi-simple-layout-header {
+    column-gap: 0.75rem; /* gap-x-4 -> AUDIT: was missing (auth page top-right header) */
+    padding-inline-end: 0.75rem; /* pe-4 -> */
+}
+@media (min-width: 768px) {
+    .fi-simple-layout-header {
+        padding-inline-end: 1rem; /* md:pe-6 -> */
+    }
+}
+@media (min-width: 1024px) {
+    .fi-simple-layout-header {
+        padding-inline-end: 1.375rem; /* lg:pe-8 -> */
+    }
+}
+/* login/auth page frame — included per the flat rule but flagged, see judgment call #7 */
+.fi-simple-main {
+    margin-block: 2.75rem; /* my-16 -> */
+    padding-inline: 1rem; /* px-6 -> AUDIT: px-6/py-12/sm:px-12 (the login/register card's own
+    padding) was entirely missing */
+    padding-block: 2.125rem; /* py-12 -> */
+}
+@media (min-width: 640px) {
+    .fi-simple-main {
+        padding-inline: 2.125rem; /* sm:px-12 -> */
+    }
+}
+
+/* ==========================================================================
+   widgets: widget.css / stats-overview-widget.css
+   ========================================================================== */
+.fi-wi {
+    gap: 1rem; /* gap-6 -> */
+}
+.fi-wi-stats-overview-stat {
+    padding: 1rem; /* p-6 -> */
+    border-radius: 0.5rem; /* rounded-xl -> lg */
+}
+.fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-content {
+    row-gap: 0.375rem; /* gap-y-2 -> */
+}
+.fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-label-ctn {
+    column-gap: 0.375rem; /* gap-x-2 -> */
+}
+.fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-description {
+    column-gap: 0.125rem; /* gap-x-1 -> */
+}
+.fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-chart {
+    border-end-start-radius: 0.5rem; /* rounded-b-xl -> lg */
+    border-end-end-radius: 0.5rem;
+}
+.fi-wi-chart-filter.fi-dropdown .fi-wi-chart-filter-content {
+    row-gap: 0.75rem; /* gap-y-4 -> */
+    padding: 1rem; /* p-6 -> */
+}
+.fi-wi-chart-filter.fi-dropdown .fi-wi-chart-filter-content-actions-ctn {
+    gap: 0.5rem; /* gap-3 -> */
+}
+@media (min-width: 640px) {
+    .fi-wi-chart-filter.fi-input-wrp {
+        margin-block: -0.375rem; /* sm:-my-2 -> AUDIT: was missing */
+    }
+}
