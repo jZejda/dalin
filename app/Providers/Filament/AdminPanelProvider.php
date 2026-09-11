@@ -53,6 +53,8 @@ class AdminPanelProvider extends PanelProvider
             // Vypnutá horní lišta: logo, globální vyhledávání i uživatelské menu
             // se automaticky přesouvají do levého menu (nativní chování Filamentu).
             ->topbar(false)
+            // Užší sidebar blíž referenčnímu kompaktnímu designu (výchozí 20rem).
+            ->sidebarWidth('16rem')
             ->colors([
                 'primary' => Color::Amber,
             ])
