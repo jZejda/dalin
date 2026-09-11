@@ -27,6 +27,16 @@
     @apply mt-2 border-t border-gray-200 pt-2 dark:border-white/10;
 }
 
+/* Sidebar: světle šedé pozadí s dělicí linkou vpravo, obsahová plocha zůstává
+   bílá — opticky odděluje menu od obsahu (viz LeveMenu.png). */
+.fi-sidebar {
+    @apply border-e border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-gray-900;
+}
+
+.fi-main-ctn {
+    @apply bg-white dark:bg-gray-950;
+}
+
 /* Marketplace: šedé pozadí položek produktů v repeateru (MyMarketOfferList) */
 .market-products-repeater .fi-fo-repeater-item {
     @apply bg-gray-100 dark:bg-gray-800;
