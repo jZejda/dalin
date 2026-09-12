@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\Clusters\Config\ConfigCluster;
 use App\Filament\Widgets\PostsOverview;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\FontProviders\LocalFontProvider;
@@ -105,6 +106,10 @@ class AdminPanelProvider extends PanelProvider
                 ->label('Můj přehled')
                 ->url(fn (): string => 'user-overview')
                 ->icon('heroicon-o-home'),
+            MenuItem::make()
+                ->label(fn (): string => __('settings.cluster.navigation_label'))
+                ->url(fn (): string => ConfigCluster::getUrl())
+                ->icon('heroicon-o-cog-6-tooth'),
             ])
             ->plugins([
             FilamentShieldPlugin::make(),
