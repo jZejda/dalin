@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\SportClassDefinitions\Pages;
+namespace App\Filament\Clusters\Config\Resources\SportClassDefinitions\Pages;
 
 use Filament\Schemas\Components\Grid;
 use Filament\Forms\Components\Select;
-use App\Filament\Resources\SportClassDefinitions\SportClassDefinitionResource;
+use App\Filament\Clusters\Config\Resources\SportClassDefinitions\SportClassDefinitionResource;
 use App\Models\SportList;
 use App\Services\OrisApiService;
 use Filament\Actions\Action;

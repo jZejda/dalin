@@ -139,6 +139,18 @@ parameters:
 			path: app/Enums/UserCreditStatus.php
 
 		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/Config/Resources/SportEventExports/SportEventExportResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Clusters/Config/Resources/SportEventExports/SportEventExportResource.php
+
+		-
 			message: '#^Access to an undefined property App\\Filament\\Clusters\\Other\\Pages\\UserMailNotification\:\:\$form\.$#'
 			identifier: property.notFound
 			count: 1
@@ -287,18 +299,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: app/Filament/Resources/Roles/RoleResource.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Filament/Resources/SportEventExports/SportEventExportResource.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$updated_at\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Filament/Resources/SportEventExports/SportEventExportResource.php
 
 		-
 			message: '#^Anonymous function has an unused use \$state\.$#'

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Clubs;
+namespace App\Filament\Clusters\Config\Resources\Clubs;
 
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
@@ -9,9 +9,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteBulkAction;
 use App\Filament\Clusters\Config\ConfigCluster;
-use App\Filament\Resources\Clubs\Pages\ListClubs;
-use App\Filament\Resources\Clubs\Pages\CreateClub;
-use App\Filament\Resources\Clubs\Pages\EditClub;
+use App\Filament\Clusters\Config\Resources\Clubs\Pages\ListClubs;
+use App\Filament\Clusters\Config\Resources\Clubs\Pages\CreateClub;
+use App\Filament\Clusters\Config\Resources\Clubs\Pages\EditClub;
 use App\Models\Club;
 use App\Models\SportRegion;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;

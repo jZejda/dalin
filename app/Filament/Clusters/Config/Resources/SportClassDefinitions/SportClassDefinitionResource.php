@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\SportClassDefinitions;
+namespace App\Filament\Clusters\Config\Resources\SportClassDefinitions;
 
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
@@ -8,9 +8,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteBulkAction;
 use App\Filament\Clusters\Config\ConfigCluster;
-use App\Filament\Resources\SportClassDefinitions\Pages\ListSportClassDefinitions;
-use App\Filament\Resources\SportClassDefinitions\Pages\CreateSportClassDefinition;
-use App\Filament\Resources\SportClassDefinitions\Pages\EditSportClassDefinition;
+use App\Filament\Clusters\Config\Resources\SportClassDefinitions\Pages\ListSportClassDefinitions;
+use App\Filament\Clusters\Config\Resources\SportClassDefinitions\Pages\CreateSportClassDefinition;
+use App\Filament\Clusters\Config\Resources\SportClassDefinitions\Pages\EditSportClassDefinition;
 use App\Models\SportClassDefinition;
 use App\Models\SportList;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;

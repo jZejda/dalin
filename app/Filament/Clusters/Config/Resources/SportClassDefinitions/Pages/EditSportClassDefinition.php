@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\SportClassDefinitions\Pages;
+namespace App\Filament\Clusters\Config\Resources\SportClassDefinitions\Pages;
 
 use Filament\Actions\DeleteAction;
-use App\Filament\Resources\SportClassDefinitions\SportClassDefinitionResource;
+use App\Filament\Clusters\Config\Resources\SportClassDefinitions\SportClassDefinitionResource;
 use Filament\Resources\Pages\EditRecord;
 
 class EditSportClassDefinition extends EditRecord

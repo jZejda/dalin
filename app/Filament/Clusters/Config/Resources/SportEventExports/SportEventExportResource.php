@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\SportEventExports;
+namespace App\Filament\Clusters\Config\Resources\SportEventExports;
 
 use App\Shared\Helpers\AppHelper;
 use Filament\Schemas\Schema;
@@ -10,9 +10,9 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use App\Filament\Clusters\Config\ConfigCluster;
-use App\Filament\Resources\SportEventExports\Pages\ListSportEventExports;
-use App\Filament\Resources\SportEventExports\Pages\CreateSportEventExport;
-use App\Filament\Resources\SportEventExports\Pages\EditSportEventExport;
+use App\Filament\Clusters\Config\Resources\SportEventExports\Pages\ListSportEventExports;
+use App\Filament\Clusters\Config\Resources\SportEventExports\Pages\CreateSportEventExport;
+use App\Filament\Clusters\Config\Resources\SportEventExports\Pages\EditSportEventExport;
 use App\Enums\SportEventExportsType;
 use App\Enums\SportEventType;
 use App\Models\SportEvent;
