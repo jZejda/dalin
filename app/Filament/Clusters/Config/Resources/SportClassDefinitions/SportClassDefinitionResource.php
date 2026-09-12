@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Filament\Resources\SportClassDefinitions;
+namespace App\Filament\Clusters\Config\Resources\SportClassDefinitions;
 
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\SportClassDefinitions\Pages\ListSportClassDefinitions;
-use App\Filament\Resources\SportClassDefinitions\Pages\CreateSportClassDefinition;
-use App\Filament\Resources\SportClassDefinitions\Pages\EditSportClassDefinition;
+use App\Filament\Clusters\Config\ConfigCluster;
+use App\Filament\Clusters\Config\Resources\SportClassDefinitions\Pages\ListSportClassDefinitions;
+use App\Filament\Clusters\Config\Resources\SportClassDefinitions\Pages\CreateSportClassDefinition;
+use App\Filament\Clusters\Config\Resources\SportClassDefinitions\Pages\EditSportClassDefinition;
 use App\Models\SportClassDefinition;
 use App\Models\SportList;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -22,12 +23,14 @@ class SportClassDefinitionResource extends Resource implements HasShieldPermissi
 {
     protected static ?string $model = SportClassDefinition::class;
 
+    protected static ?string $cluster = ConfigCluster::class;
+
     protected static ?int $navigationSort = 100;
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function getNavigationGroup(): ?string
     {
-        return __('app.navigation_groups.admin');
+        return __('app.navigation_groups.race_settings');
     }
 
     public static function getNavigationLabel(): string

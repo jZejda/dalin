@@ -2,20 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\Users;
+namespace App\Filament\Clusters\Config\Resources\Users;
 
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use App\Filament\Resources\Users\Pages\CreateUser;
-use App\Filament\Resources\Users\Pages\EditUser;
+use App\Filament\Clusters\Config\ConfigCluster;
+use App\Filament\Clusters\Config\Resources\Users\Pages\CreateUser;
+use App\Filament\Clusters\Config\Resources\Users\Pages\EditUser;
 use Filament\Support\Enums\TextSize;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\EditAction;
-use App\Filament\Resources\Users\RelationManagers\UserCreditRelationManager;
+use App\Filament\Clusters\Config\Resources\Users\RelationManagers\UserCreditRelationManager;
 use App\Enums\AppRoles;
-use App\Filament\Resources\Users\RelationManagers\UserRaceProfilesRelationManager;
-use App\Filament\Resources\Users\Pages\ListUsers;
+use App\Filament\Clusters\Config\Resources\Users\RelationManagers\UserRaceProfilesRelationManager;
+use App\Filament\Clusters\Config\Resources\Users\Pages\ListUsers;
 use Filament\Actions\Action;
 use App\Http\Controllers\Cron\Jobs\UserSendPassword;
 use App\Mail\UserPasswordSend;
@@ -40,6 +41,8 @@ use Illuminate\Support\Str;
 class UserResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = User::class;
+
+    protected static ?string $cluster = ConfigCluster::class;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
 
