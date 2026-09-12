@@ -57,8 +57,10 @@ class AdminPanelProvider extends PanelProvider
             ->topbar(false)
             // Užší sidebar blíž referenčnímu kompaktnímu designu (výchozí 20rem).
             ->sidebarWidth('16rem')
-            // Pevné pořadí zbývajících skupin menu (Uživatel, Správa Financí, Obsah) —
-            // bez tohoto by se řadily podle navigationSort jednotlivých položek.
+            // Pevné pořadí skupin menu (Uživatel, Správa Financí, Obsah, Nastavení) —
+            // bez tohoto by se řadily podle navigationSort jednotlivých položek. Ungroupované
+            // položky (Můj přehled, Uživatelé, Závody, Registrace, Tržiště) se řadí vždy před
+            // pojmenované skupiny, to touto konfigurací ovlivnit nejde.
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label(fn (): string => __('app.navigation_groups.users')),
@@ -66,6 +68,8 @@ class AdminPanelProvider extends PanelProvider
                     ->label(fn (): string => __('app.navigation_groups.finance')),
                 NavigationGroup::make()
                     ->label(fn (): string => __('app.navigation_groups.content')),
+                NavigationGroup::make()
+                    ->label(fn (): string => __('settings.cluster.navigation_label')),
             ])
             ->colors([
                 'primary' => Color::Amber,
