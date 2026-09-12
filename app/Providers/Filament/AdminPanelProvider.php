@@ -52,9 +52,12 @@ class AdminPanelProvider extends PanelProvider
                 return null;
             })
             ->sidebarCollapsibleOnDesktop()
-            // Vypnutá horní lišta: logo, globální vyhledávání i uživatelské menu
-            // se automaticky přesouvají do levého menu (nativní chování Filamentu).
+            // Vypnutá horní lišta: logo a uživatelské menu se automaticky
+            // přesouvají do levého menu (nativní chování Filamentu).
             ->topbar(false)
+            // Globální vyhledávání vypnuté — není definované konzistentně napříč
+            // resources a v menu jen zabírá místo. Lze kdykoliv znovu zapnout.
+            ->globalSearch(false)
             // Užší sidebar blíž referenčnímu kompaktnímu designu (výchozí 20rem).
             ->sidebarWidth('16rem')
             // Pevné pořadí skupin menu (Uživatel, Správa Financí, Obsah, Nastavení) —
