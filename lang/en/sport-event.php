@@ -21,7 +21,7 @@ return [
     |
     */
 
-    'navigation_label' => 'Race',
+    'navigation_label' => 'Races / events',
     'label' => 'Race / event',
     'plural_label' => 'Races / events',
 

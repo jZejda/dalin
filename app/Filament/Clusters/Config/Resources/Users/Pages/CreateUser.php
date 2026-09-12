@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\Users\Pages;
+namespace App\Filament\Clusters\Config\Resources\Users\Pages;
 
-use App\Filament\Resources\Users\UserResource;
+use App\Filament\Clusters\Config\Resources\Users\UserResource;
 use App\Http\Controllers\Cron\Jobs\UserSendPassword;
 use App\Models\User;
 use Filament\Resources\Pages\CreateRecord;

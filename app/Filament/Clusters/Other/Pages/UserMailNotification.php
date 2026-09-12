@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Clusters\Other\Pages;
 
+use App\Filament\Clusters\Config\Resources\Users\UserResource;
 use App\Filament\Clusters\Other\OtherCluster;
 use App\Enums\AppHeroIcons;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
@@ -327,7 +328,7 @@ class UserMailNotification extends Page implements HasForms
     public function getBreadcrumbs(): array
     {
         return [
-            url('/admin/users') => __('user-mail-notification.breadcrumbs.users'),
+            UserResource::getUrl() => __('user-mail-notification.breadcrumbs.users'),
             url()->current() => __('user-mail-notification.breadcrumbs.settings'),
         ];
     }

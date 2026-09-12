@@ -12,7 +12,7 @@ use Filament\Support\Enums\TextSize;
 use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\MemberFinances\Pages\ListMemberFinances;
 use App\Filament\Resources\MemberFinances\Pages\ViewMemberFinance;
-use App\Filament\Resources\Users\RelationManagers\UserCreditRelationManager;
+use App\Filament\Clusters\Config\Resources\Users\RelationManagers\UserCreditRelationManager;
 use App\Models\User;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;

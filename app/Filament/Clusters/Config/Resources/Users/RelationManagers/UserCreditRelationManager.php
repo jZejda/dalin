@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Users\RelationManagers;
+namespace App\Filament\Clusters\Config\Resources\Users\RelationManagers;
 
 use App\Filament\Resources\UserCredits\UserCreditResource;
 use App\Shared\Helpers\AppHelper;

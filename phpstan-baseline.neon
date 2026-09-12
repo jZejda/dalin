@@ -151,6 +151,12 @@ parameters:
 			path: app/Filament/Clusters/Config/Resources/SportEventExports/SportEventExportResource.php
 
 		-
+			message: '#^Offset ''password'' might not exist on array\<string, mixed\>\|null\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Filament/Clusters/Config/Resources/Users/Pages/CreateUser.php
+
+		-
 			message: '#^Access to an undefined property App\\Filament\\Clusters\\Other\\Pages\\UserMailNotification\:\:\$form\.$#'
 			identifier: property.notFound
 			count: 1
@@ -485,12 +491,6 @@ parameters:
 			identifier: return.type
 			count: 2
 			path: app/Filament/Resources/UserEntries/UserEntryResource.php
-
-		-
-			message: '#^Offset ''password'' might not exist on array\<string, mixed\>\|null\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: app/Filament/Resources/Users/Pages/CreateUser.php
 
 		-
 			message: '#^Method App\\Filament\\Widgets\\StatsOverview\:\:getLastPost\(\) is unused\.$#'

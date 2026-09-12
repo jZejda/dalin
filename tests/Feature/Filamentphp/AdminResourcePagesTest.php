@@ -16,7 +16,7 @@ use App\Filament\Resources\SportEvents\SportEventResource;
 use App\Filament\Resources\UserCredits\UserCreditResource;
 use App\Filament\Resources\UserEntries\UserEntryResource;
 use App\Filament\Clusters\Other\Resources\UserRaceProfiles\UserRaceProfileResource;
-use App\Filament\Resources\Users\UserResource;
+use App\Filament\Clusters\Config\Resources\Users\UserResource;
 use App\Models\SportEvent;
 use Filament\Actions\Testing\TestAction;
 
