@@ -25,8 +25,6 @@ return [
         'users'         => 'User',
         'finance'       => 'Finance',
         'content'       => 'Content',
-        'events'        => 'Events/Races',
-        'admin'         => 'Administration',
         'race_settings' => 'Race Settings',
     ],
 

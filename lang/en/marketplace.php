@@ -33,7 +33,6 @@ return [
         MarketPaymentMethod::CreditCharge->value => 'Account deduction',
     ],
 
-    'navigation_group' => 'Marketplace',
     'marketplace_title' => 'Marketplace',
     'my_offers_title' => 'My offers',
     'my_orders_title' => 'My orders',

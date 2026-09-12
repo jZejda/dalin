@@ -33,7 +33,6 @@ return [
         MarketPaymentMethod::CreditCharge->value => 'Stržení z konta',
     ],
 
-    'navigation_group' => 'Tržiště',
     'marketplace_title' => 'Tržiště',
     'my_offers_title' => 'Moje nabídky',
     'my_orders_title' => 'Moje objednávky',

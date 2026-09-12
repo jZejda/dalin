@@ -11,6 +11,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -55,6 +56,16 @@ class AdminPanelProvider extends PanelProvider
             ->topbar(false)
             // Užší sidebar blíž referenčnímu kompaktnímu designu (výchozí 20rem).
             ->sidebarWidth('16rem')
+            // Pevné pořadí zbývajících skupin menu (Uživatel, Správa Financí, Obsah) —
+            // bez tohoto by se řadily podle navigationSort jednotlivých položek.
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label(fn (): string => __('app.navigation_groups.users')),
+                NavigationGroup::make()
+                    ->label(fn (): string => __('app.navigation_groups.finance')),
+                NavigationGroup::make()
+                    ->label(fn (): string => __('app.navigation_groups.content')),
+            ])
             ->colors([
                 'primary' => Color::Amber,
             ])

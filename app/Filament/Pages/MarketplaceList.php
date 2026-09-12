@@ -35,7 +35,7 @@ class MarketplaceList extends Page implements HasForms, HasTable
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-shopping-bag';
 
-    protected static ?int $navigationSort = 10;
+    protected static ?int $navigationSort = 103;
 
     protected string $view = 'filament.pages.marketplace-list';
 
@@ -49,11 +49,6 @@ class MarketplaceList extends Page implements HasForms, HasTable
     public static function getNavigationLabel(): string
     {
         return __('marketplace.marketplace_title');
-    }
-
-    public static function getNavigationGroup(): ?string
-    {
-        return __('marketplace.navigation_group');
     }
 
     public function getTitle(): string

@@ -14,8 +14,8 @@ return [
     */
 
     'cluster' => [
-        'navigation_label' => 'Configuration',
-        'breadcrumb' => 'Configuration',
+        'navigation_label' => 'Settings',
+        'breadcrumb' => 'Settings',
     ],
 
     'navigation_label' => 'Settings',

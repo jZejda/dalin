@@ -25,8 +25,6 @@ return [
         'users'         => 'Uživatel',
         'finance'       => 'Správa Financí',
         'content'       => 'Obsah',
-        'events'        => 'Akce/Závody',
-        'admin'         => 'Správa',
         'race_settings' => 'Nastavení závodů',
     ],
 
