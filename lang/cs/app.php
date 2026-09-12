@@ -22,11 +22,12 @@ return [
 
     // Shared navigation groups (Filament sidebar)
     'navigation_groups' => [
-        'users'   => 'Uživatel',
-        'finance' => 'Správa Financí',
-        'content' => 'Obsah',
-        'events'  => 'Akce/Závody',
-        'admin'   => 'Správa',
+        'users'         => 'Uživatel',
+        'finance'       => 'Správa Financí',
+        'content'       => 'Obsah',
+        'events'        => 'Akce/Závody',
+        'admin'         => 'Správa',
+        'race_settings' => 'Nastavení závodů',
     ],
 
     // Roles

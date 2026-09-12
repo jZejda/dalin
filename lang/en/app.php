@@ -22,11 +22,12 @@ return [
 
     // Shared navigation groups (Filament sidebar)
     'navigation_groups' => [
-        'users'   => 'User',
-        'finance' => 'Finance',
-        'content' => 'Content',
-        'events'  => 'Events/Races',
-        'admin'   => 'Administration',
+        'users'         => 'User',
+        'finance'       => 'Finance',
+        'content'       => 'Content',
+        'events'        => 'Events/Races',
+        'admin'         => 'Administration',
+        'race_settings' => 'Race Settings',
     ],
 
     // Roles
