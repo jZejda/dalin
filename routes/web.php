@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Cron\CommonCron;
 use App\Http\Controllers\Demo\DemoResetController;
+use App\Http\Controllers\Demo\DemoScreenshotModeController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\PostController;
 use App\Http\Controllers\Frontend\ResultListController;
@@ -38,6 +39,9 @@ Route::get('/cron-scheduler/'.config('site-config.cron_url_key'), function () {
 });
 
 Route::get('/demo-reset/'.config('demo.reset_url_key'), [DemoResetController::class, 'reset']);
+
+Route::get('/demo-screenshot-mode/'.config('demo.screenshot_mode_key'), [DemoScreenshotModeController::class, 'enable']);
+Route::get('/demo-screenshot-mode-off/'.config('demo.screenshot_mode_key'), [DemoScreenshotModeController::class, 'disable']);
 
 Route::get('/cron-hourly/'.config('site-config.cron_hourly.url_key'), [CommonCron::class, 'runHourly']);
 

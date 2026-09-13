@@ -73,8 +73,34 @@ vendor/bin/dep deploy demo --plan       # jen vypíše, co by se stalo
 ```
 
 Zkratky v `Makefile`: `make deploy s=demo`, `make deploy-tag s=demo t=v13.0.1`,
-`make deploy-rollback s=demo`, `make deploy-releases s=demo`, `make deploy-status s=demo`,
-`make deploy-logs s=demo`.
+`make deploy-branch s=demo b=feature/UI-compact-redesign`, `make deploy-rollback s=demo`,
+`make deploy-releases s=demo`, `make deploy-status s=demo`, `make deploy-logs s=demo`.
+
+### Nasazení konkrétní (např. feature) větve
+
+Každý host má v `deploy.php` svou výchozí `branch` (viz tabulka výše — `demo` jede na
+`v13.x`). Pro jednorázové nasazení jiné větve (třeba rozpracovaného feature branche na
+`demo` k ukázce) přebij `--branch=`:
+
+```bash
+make deploy-branch s=demo b=feature/UI-compact-redesign
+# nebo přímo:
+vendor/bin/dep deploy demo --branch=feature/UI-compact-redesign
+```
+
+Postup:
+
+1. `git checkout feature/UI-compact-redesign` a `git status` musí být čistý — strategie
+   `local_archive` (výchozí) nasazuje přesně to, co je commitnuté v lokálním gitu, a assety
+   (Vite) se buildí z pracovní kopie. Necommitnuté změny se do release nedostanou (jen
+   warning, deploy neselže).
+2. `make up` musí běžet (Sail) — build assetů běží v kontejneru.
+3. Ověř předem: `vendor/bin/dep deploy demo --branch=feature/UI-compact-redesign --plan`.
+4. Nasaď. `deploy:check_local_target` sám ohlásí warning, pokud se nasazovaný branch liší
+   od aktuálního lokálního HEAD.
+
+Až bude potřeba vrátit `demo` zpět na `v13.x`, stačí `make deploy s=demo` (bez `--branch`)
+nebo `make deploy-branch s=demo b=v13.x`.
 
 ### Vydání nové verze (release)
 

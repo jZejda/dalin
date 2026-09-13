@@ -37,6 +37,20 @@
     @apply bg-white dark:bg-gray-950;
 }
 
+/* DEMO lišta (resources/views/demo/banner.blade.php) je vykreslená přes
+   BODY_START hook před `.fi-sidebar` a zabírá místo v normálním flow. Na
+   desktopu (lg+) je `.fi-sidebar` z Filamentu `sticky`, ne `fixed` — bez téhle
+   úpravy tak zůstane vysoký přesně 100dvh, jen posunutý dolů o výšku lišty, a
+   spodní položky menu (Nastavení/přihlášení) se schovají pod spodní okraj
+   obrazovky. Výška 2.25rem musí odpovídat výšce v banner.blade.php. */
+:root {
+    --demo-banner-height: 2.25rem;
+}
+
+body:has(.fi-demo-banner) .fi-sidebar {
+    @apply lg:top-(--demo-banner-height) lg:h-[calc(100dvh-var(--demo-banner-height))];
+}
+
 /* Marketplace: šedé pozadí položek produktů v repeateru (MyMarketOfferList) */
 .market-products-repeater .fi-fo-repeater-item {
     @apply bg-gray-100 dark:bg-gray-800;

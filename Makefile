@@ -109,6 +109,11 @@ deploy-tag: ## Deploy a tag, example: make deploy-tag s=demo t=v13.0.1
 	@$(eval t ?=)
 	@$(DEP) deploy $(s) --tag=$(t)
 
+deploy-branch: ## Deploy a specific branch, example: make deploy-branch s=demo b=feature/UI-compact-redesign
+	@$(eval s ?=)
+	@$(eval b ?=)
+	@$(DEP) deploy $(s) --branch=$(b)
+
 deploy-rollback: ## Rollback to previous release, example: make deploy-rollback s=demo
 	@$(eval s ?=)
 	@$(DEP) rollback $(s)
