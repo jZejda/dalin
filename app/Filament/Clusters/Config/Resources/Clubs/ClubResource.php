@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Clubs;
+namespace App\Filament\Clusters\Config\Resources\Clubs;
 
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
@@ -8,9 +8,10 @@ use Filament\Schemas\Components\Grid;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteBulkAction;
-use App\Filament\Resources\Clubs\Pages\ListClubs;
-use App\Filament\Resources\Clubs\Pages\CreateClub;
-use App\Filament\Resources\Clubs\Pages\EditClub;
+use App\Filament\Clusters\Config\ConfigCluster;
+use App\Filament\Clusters\Config\Resources\Clubs\Pages\ListClubs;
+use App\Filament\Clusters\Config\Resources\Clubs\Pages\CreateClub;
+use App\Filament\Clusters\Config\Resources\Clubs\Pages\EditClub;
 use App\Models\Club;
 use App\Models\SportRegion;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
@@ -23,12 +24,14 @@ class ClubResource extends Resource implements HasShieldPermissions
 {
     protected static ?string $model = Club::class;
 
+    protected static ?string $cluster = ConfigCluster::class;
+
     public static ?int $navigationSort = 11;
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-identification';
 
     public static function getNavigationGroup(): ?string
     {
-        return __('app.navigation_groups.events');
+        return __('app.navigation_groups.race_settings');
     }
 
     public static function getNavigationLabel(): string

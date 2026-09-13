@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 use App\Filament\Clusters\Config\Pages\MapIconGallery;
 use App\Filament\Resources\BankTransactions\BankTransactionResource;
-use App\Filament\Resources\Clubs\ClubResource;
+use App\Filament\Clusters\Config\Resources\Clubs\ClubResource;
 use App\Filament\Resources\ContentCategories\ContentCategoryResource;
 use App\Filament\Resources\Pages\PageResource;
 use App\Filament\Resources\Posts\PostResource;
 use App\Filament\Resources\Roles\RoleResource;
-use App\Filament\Resources\SportClassDefinitions\SportClassDefinitionResource;
-use App\Filament\Resources\SportEventExports\SportEventExportResource;
+use App\Filament\Clusters\Config\Resources\SportClassDefinitions\SportClassDefinitionResource;
+use App\Filament\Clusters\Config\Resources\SportEventExports\SportEventExportResource;
 use App\Filament\Resources\SportEvents\Pages\EditSportEvent;
 use App\Filament\Resources\SportEvents\SportEventResource;
 use App\Filament\Resources\UserCredits\UserCreditResource;
 use App\Filament\Resources\UserEntries\UserEntryResource;
 use App\Filament\Clusters\Other\Resources\UserRaceProfiles\UserRaceProfileResource;
-use App\Filament\Resources\Users\UserResource;
+use App\Filament\Clusters\Config\Resources\Users\UserResource;
 use App\Models\SportEvent;
 use Filament\Actions\Testing\TestAction;
 

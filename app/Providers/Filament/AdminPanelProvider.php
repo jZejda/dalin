@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\Clusters\Config\ConfigCluster;
 use App\Filament\Widgets\PostsOverview;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\FontProviders\LocalFontProvider;
@@ -11,6 +12,7 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\MenuItem;
+use Filament\Navigation\NavigationGroup;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -50,6 +52,28 @@ class AdminPanelProvider extends PanelProvider
                 return null;
             })
             ->sidebarCollapsibleOnDesktop()
+            // Vypnutá horní lišta: logo a uživatelské menu se automaticky
+            // přesouvají do levého menu (nativní chování Filamentu).
+            ->topbar(false)
+            // Globální vyhledávání vypnuté — není definované konzistentně napříč
+            // resources a v menu jen zabírá místo. Lze kdykoliv znovu zapnout.
+            ->globalSearch(false)
+            // Užší sidebar blíž referenčnímu kompaktnímu designu (výchozí 20rem).
+            ->sidebarWidth('16rem')
+            // Pevné pořadí skupin menu (Uživatel, Správa Financí, Obsah, Nastavení) —
+            // bez tohoto by se řadily podle navigationSort jednotlivých položek. Ungroupované
+            // položky (Můj přehled, Uživatelé, Závody, Registrace, Tržiště) se řadí vždy před
+            // pojmenované skupiny, to touto konfigurací ovlivnit nejde.
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label(fn (): string => __('app.navigation_groups.users')),
+                NavigationGroup::make()
+                    ->label(fn (): string => __('app.navigation_groups.finance')),
+                NavigationGroup::make()
+                    ->label(fn (): string => __('app.navigation_groups.content')),
+                NavigationGroup::make()
+                    ->label(fn (): string => __('settings.cluster.navigation_label')),
+            ])
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -89,6 +113,10 @@ class AdminPanelProvider extends PanelProvider
                 ->label('Můj přehled')
                 ->url(fn (): string => 'user-overview')
                 ->icon('heroicon-o-home'),
+            MenuItem::make()
+                ->label(fn (): string => __('settings.cluster.navigation_label'))
+                ->url(fn (): string => ConfigCluster::getUrl())
+                ->icon('heroicon-o-cog-6-tooth'),
             ])
             ->plugins([
             FilamentShieldPlugin::make(),

@@ -18,7 +18,7 @@ class UserRaceProfileList extends Page
     use HasPageShield;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-user-group';
-    protected static ?int $navigationSort = 34;
+    protected static ?int $navigationSort = 102;
 
     protected string $view = 'filament.pages.user-race-profile-list';
 
@@ -30,11 +30,6 @@ class UserRaceProfileList extends Page
     public static function getNavigationLabel(): string
     {
         return __('user-race-profile.list.page_title');
-    }
-
-    public static function getNavigationGroup(): string | \UnitEnum | null
-    {
-        return __('app.navigation_groups.admin');
     }
 
     protected function getHeaderActions(): array

@@ -1,5 +1,6 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 @import '../../app.css';
+@import './compact.css';
 
 @source '../../../../app/Filament';
 @source '../../../../resources/views/filament';
@@ -18,6 +19,22 @@
 
 .fi-sidebar-nav-groups {
     @apply gap-y-1; /* mezera mezi skupinami (Obsah, …) */
+}
+
+/* Šedá dělicí čára nad každou skupinou kromě první — opticky odděluje
+   jednotlivé celky menu (první blok bez vlastního labelu čáru nemá). */
+.fi-sidebar-nav-groups > .fi-sidebar-group:not(:first-child) {
+    @apply mt-2 border-t border-gray-200 pt-2 dark:border-white/10;
+}
+
+/* Sidebar: světle šedé pozadí s dělicí linkou vpravo, obsahová plocha zůstává
+   bílá — opticky odděluje menu od obsahu (viz LeveMenu.png). */
+.fi-sidebar {
+    @apply border-e border-gray-200 bg-gray-50 dark:border-white/10 dark:bg-gray-900;
+}
+
+.fi-main-ctn {
+    @apply bg-white dark:bg-gray-950;
 }
 
 /* Marketplace: šedé pozadí položek produktů v repeateru (MyMarketOfferList) */

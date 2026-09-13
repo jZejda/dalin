@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\Clubs\Pages;
+namespace App\Filament\Clusters\Config\Resources\Clubs\Pages;
 
 use Filament\Actions\CreateAction;
 use Filament\Actions\Action;
-use App\Filament\Resources\Clubs\ClubResource;
+use App\Filament\Clusters\Config\Resources\Clubs\ClubResource;
 use App\Services\OrisApiService;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;

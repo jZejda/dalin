@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Clubs\Pages;
+namespace App\Filament\Clusters\Config\Resources\Clubs\Pages;
 
 use Filament\Actions\DeleteAction;
-use App\Filament\Resources\Clubs\ClubResource;
+use App\Filament\Clusters\Config\Resources\Clubs\ClubResource;
 use Filament\Resources\Pages\EditRecord;
 
 class EditClub extends EditRecord

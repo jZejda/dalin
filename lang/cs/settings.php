@@ -14,8 +14,8 @@ return [
     */
 
     'cluster' => [
-        'navigation_label' => 'Konfigurace',
-        'breadcrumb' => 'Konfigurace',
+        'navigation_label' => 'Nastavení',
+        'breadcrumb' => 'Nastavení',
     ],
 
     'navigation_label' => 'Nastavení',

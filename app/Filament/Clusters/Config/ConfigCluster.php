@@ -17,6 +17,11 @@ class ConfigCluster extends Cluster
         return __('settings.cluster.navigation_label');
     }
 
+    public static function getNavigationGroup(): string | \UnitEnum | null
+    {
+        return __('settings.cluster.navigation_label');
+    }
+
     public static function getClusterBreadcrumb(): ?string
     {
         return __('settings.cluster.breadcrumb');

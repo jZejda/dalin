@@ -21,7 +21,7 @@ return [
     |
     */
 
-    'navigation_label' => 'Závod',
+    'navigation_label' => 'Závody / události',
     'label' => 'Závod / událost',
     'plural_label' => 'Závody / události',
 

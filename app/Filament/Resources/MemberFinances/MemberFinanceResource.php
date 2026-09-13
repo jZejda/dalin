@@ -12,7 +12,7 @@ use Filament\Support\Enums\TextSize;
 use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\MemberFinances\Pages\ListMemberFinances;
 use App\Filament\Resources\MemberFinances\Pages\ViewMemberFinance;
-use App\Filament\Resources\Users\RelationManagers\UserCreditRelationManager;
+use App\Filament\Clusters\Config\Resources\Users\RelationManagers\UserCreditRelationManager;
 use App\Models\User;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
@@ -38,11 +38,14 @@ class MemberFinanceResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Správa Financí';
-
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-scale';
 
     protected static ?string $slug = 'member-finances';
+
+    public static function getNavigationGroup(): string|\UnitEnum|null
+    {
+        return __('app.navigation_groups.finance');
+    }
 
     public static function getNavigationLabel(): string
     {
