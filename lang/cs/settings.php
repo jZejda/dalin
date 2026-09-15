@@ -57,6 +57,16 @@ return [
             'toggle_label_disabled' => 'Modul napojení na banku je vypnutý',
             'toggle_helper' => 'Vypnutí modulu skryje bankovní výpis a zastaví stahování transakcí, uložená data zůstanou zachována.',
         ],
+        'mapy' => [
+            'section' => 'Mapové podklady Mapy.cz',
+            'description' => 'Po zapnutí a vyplnění API klíče nabídnou mapy (přehled závodů i výběr GPS pozice v adminu) jako výchozí podklad Mapy.cz s možností přepnout na OpenStreetMap.',
+            'toggle_label_enabled' => 'Podklady Mapy.cz jsou zapnuté',
+            'toggle_label_disabled' => 'Podklady Mapy.cz jsou vypnuté',
+            'toggle_helper' => 'Vypnutí ponechá uložený API klíč, mapy budou nadále používat jen OpenStreetMap.',
+            'api_key_label' => 'API klíč Mapy.cz',
+            'api_key_helper' => 'Klíč získáte v portálu developer.mapy.com. Klíč je viditelný ve zdrojovém kódu veřejných stránek s mapou, proto v portálu nastavte omezení podle domény.',
+            'api_key_helper_keep' => 'Klíč je uložený. Nechte pole prázdné pro zachování stávajícího klíče, nebo vyplňte nový pro jeho nahrazení.',
+        ],
     ],
 
     'notification' => [

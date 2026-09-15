@@ -34,3 +34,46 @@ it('loads saved module toggles on mount', function (): void {
     Livewire::test(Settings::class)
         ->assertSet('marketplace_enabled', true);
 });
+
+it('saves the mapy.cz toggle and api key', function (): void {
+    actingAsSuperAdmin();
+
+    expect(AppSetting::isMapyLayerActive())->toBeFalse();
+
+    Livewire::test(Settings::class)
+        ->set('mapy_enabled', true)
+        ->set('mapy_api_key', 'secret-api-key')
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    Cache::flush();
+
+    expect(AppSetting::isMapyModuleEnabled())->toBeTrue()
+        ->and(AppSetting::getMapyApiKey())->toBe('secret-api-key');
+});
+
+it('requires an api key when enabling mapy.cz for the first time', function (): void {
+    actingAsSuperAdmin();
+
+    Livewire::test(Settings::class)
+        ->set('mapy_enabled', true)
+        ->set('mapy_api_key', '')
+        ->call('submit')
+        ->assertHasErrors(['mapy_api_key' => 'required']);
+});
+
+it('keeps the saved mapy.cz api key when the field is left blank', function (): void {
+    actingAsSuperAdmin();
+
+    AppSetting::set(AppSetting::MAPY_MODULE_ENABLED, true);
+    AppSetting::setMapyApiKey('existing-api-key');
+
+    Livewire::test(Settings::class)
+        ->set('mapy_api_key', '')
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    Cache::flush();
+
+    expect(AppSetting::getMapyApiKey())->toBe('existing-api-key');
+});

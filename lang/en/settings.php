@@ -57,6 +57,16 @@ return [
             'toggle_label_disabled' => 'The bank connection module is disabled',
             'toggle_helper' => 'Disabling the module hides the bank statement and stops downloading transactions; stored data is kept.',
         ],
+        'mapy' => [
+            'section' => 'Mapy.cz map tiles',
+            'description' => 'Once enabled and an API key is filled in, the maps (race overview and the GPS position picker in the admin) will offer Mapy.cz as the default tile layer, with the option to switch to OpenStreetMap.',
+            'toggle_label_enabled' => 'Mapy.cz tiles are enabled',
+            'toggle_label_disabled' => 'Mapy.cz tiles are disabled',
+            'toggle_helper' => 'Disabling keeps the saved API key; maps will keep using OpenStreetMap only.',
+            'api_key_label' => 'Mapy.cz API key',
+            'api_key_helper' => 'Get a key from the developer.mapy.com portal. The key is visible in the page source of public map pages, so restrict it to your domain in the portal.',
+            'api_key_helper_keep' => 'A key is already saved. Leave blank to keep it, or fill in a new one to replace it.',
+        ],
     ],
 
     'notification' => [

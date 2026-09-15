@@ -66,3 +66,35 @@ it('reports transport module state', function (): void {
     AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, false);
     expect(AppSetting::isTransportModuleEnabled())->toBeFalse();
 });
+
+it('stores the mapy.cz api key encrypted and returns it decrypted', function (): void {
+    expect(AppSetting::getMapyApiKey())->toBeNull();
+
+    AppSetting::setMapyApiKey('secret-api-key');
+
+    expect(AppSetting::getMapyApiKey())->toBe('secret-api-key')
+        ->and(AppSetting::query()->firstWhere('key', AppSetting::MAPY_API_KEY)->getRawOriginal('value'))
+        ->not->toContain('secret-api-key');
+
+    AppSetting::setMapyApiKey(null);
+    expect(AppSetting::getMapyApiKey())->toBeNull();
+});
+
+it('treats an undecryptable mapy.cz api key as unset instead of failing', function (): void {
+    AppSetting::set(AppSetting::MAPY_API_KEY, 'not-a-valid-ciphertext');
+
+    expect(AppSetting::getMapyApiKey())->toBeNull();
+});
+
+it('reports the mapy.cz layer as active only when enabled and a key is saved', function (): void {
+    expect(AppSetting::isMapyLayerActive())->toBeFalse();
+
+    AppSetting::set(AppSetting::MAPY_MODULE_ENABLED, true);
+    expect(AppSetting::isMapyLayerActive())->toBeFalse();
+
+    AppSetting::setMapyApiKey('secret-api-key');
+    expect(AppSetting::isMapyLayerActive())->toBeTrue();
+
+    AppSetting::set(AppSetting::MAPY_MODULE_ENABLED, false);
+    expect(AppSetting::isMapyLayerActive())->toBeFalse();
+});

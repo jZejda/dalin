@@ -1,6 +1,9 @@
 @php
+    use App\Models\AppSetting;
+
     $statePath = $getStatePath();
     $leafletJsSrc = \Filament\Support\Facades\FilamentAsset::getScriptSrc('leaflet');
+    $mapyApiKey = AppSetting::isMapyLayerActive() ? AppSetting::getMapyApiKey() : null;
 @endphp
 
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
@@ -10,6 +13,8 @@
             state: $wire.{{ $applyStateBindingModifiers("\$entangle('{$statePath}')") }},
             map: null,
             marker: null,
+            mapyApiKey: @js($mapyApiKey),
+            mapyLogoControl: null,
             init() {
                 if (this.map) {
                     return;
@@ -45,10 +50,51 @@
                     hasValue ? 13 : 7
                 );
 
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     maxZoom: 19,
                     attribution: '&copy; <a href=&quot;http://www.openstreetmap.org/copyright&quot;>OpenStreetMap</a>'
-                }).addTo(this.map);
+                });
+
+                if (this.mapyApiKey) {
+                    const mapyLayer = L.tileLayer(`https://api.mapy.com/v1/maptiles/outdoor/256/{z}/{x}/{y}?apikey=${this.mapyApiKey}`, {
+                        minZoom: 0,
+                        maxZoom: 19,
+                        attribution: '<a href=&quot;https://api.mapy.com/copyright&quot; target=&quot;_blank&quot;>&copy; Seznam.cz a.s. a další</a>'
+                    });
+
+                    mapyLayer.addTo(this.map);
+
+                    // Mapy.com require their logo to be shown over the map whenever their tiles are the active layer.
+                    const MapyLogoControl = L.Control.extend({
+                        options: {position: 'bottomleft'},
+                        onAdd: () => {
+                            const container = L.DomUtil.create('div');
+                            const link = L.DomUtil.create('a', '', container);
+                            link.setAttribute('href', 'https://mapy.com/');
+                            link.setAttribute('target', '_blank');
+                            link.innerHTML = '<img src=&quot;https://api.mapy.com/img/api/logo.svg&quot; alt=&quot;Mapy.com&quot; />';
+                            L.DomEvent.disableClickPropagation(link);
+
+                            return container;
+                        },
+                    });
+                    this.mapyLogoControl = new MapyLogoControl().addTo(this.map);
+
+                    L.control.layers({
+                        'Mapy.cz': mapyLayer,
+                        'OpenStreetMap': osmLayer,
+                    }).addTo(this.map);
+
+                    this.map.on('baselayerchange', (e) => {
+                        if (e.name === 'Mapy.cz') {
+                            this.mapyLogoControl.addTo(this.map);
+                        } else {
+                            this.map.removeControl(this.mapyLogoControl);
+                        }
+                    });
+                } else {
+                    osmLayer.addTo(this.map);
+                }
 
                 if (hasValue) {
                     this.marker = L.marker([this.state[0], this.state[1]]).addTo(this.map);

@@ -3,6 +3,7 @@
     use App\Services\OrisApiService;
     use Illuminate\Support\Js;
     /** @var array $mapData */
+    $mapyApiKey = $mapData['mapyApiKey'] ?? null;
 @endphp
 
 <div class="z-0">
@@ -19,10 +20,53 @@
 
         const map = L.map('map').setView([{{$mapData['centerMap']['lat']}}, {{$mapData['centerMap']['lon']}}], {{$mapData['zoomLevel']}});
 
-        const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        });
+
+        @if($mapyApiKey)
+        const mapyApiKey = {{ Js::from($mapyApiKey) }};
+
+        const mapyLayer = L.tileLayer(`https://api.mapy.com/v1/maptiles/outdoor/256/{z}/{x}/{y}?apikey=${mapyApiKey}`, {
+            minZoom: 0,
+            maxZoom: 19,
+            attribution: '<a href="https://api.mapy.com/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>'
+        });
+
+        mapyLayer.addTo(map);
+
+        // Mapy.com require their logo to be shown over the map whenever their tiles are the active layer.
+        const MapyLogoControl = L.Control.extend({
+            options: {position: 'bottomleft'},
+            onAdd: function () {
+                const container = L.DomUtil.create('div');
+                const link = L.DomUtil.create('a', '', container);
+                link.setAttribute('href', 'https://mapy.com/');
+                link.setAttribute('target', '_blank');
+                link.innerHTML = '<img src="https://api.mapy.com/img/api/logo.svg" alt="Mapy.com" />';
+                L.DomEvent.disableClickPropagation(link);
+
+                return container;
+            },
+        });
+        const mapyLogoControl = new MapyLogoControl().addTo(map);
+
+        L.control.layers({
+            'Mapy.cz': mapyLayer,
+            'OpenStreetMap': osmLayer,
         }).addTo(map);
+
+        map.on('baselayerchange', function (e) {
+            if (e.name === 'Mapy.cz') {
+                mapyLogoControl.addTo(map);
+            } else {
+                map.removeControl(mapyLogoControl);
+            }
+        });
+        @else
+        osmLayer.addTo(map);
+        @endif
 
         @foreach($mapData['markers'] as $marker)
         @php

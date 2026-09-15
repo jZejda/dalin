@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 
 /**
  * App\Models\AppSetting
@@ -31,6 +34,10 @@ class AppSetting extends Model
     public const string MARKETPLACE_MODULE_ENABLED = 'marketplace.enabled';
 
     public const string BANK_MODULE_ENABLED = 'bank.enabled';
+
+    public const string MAPY_MODULE_ENABLED = 'mapy.enabled';
+
+    public const string MAPY_API_KEY = 'mapy.api_key';
 
     public const string CLUB_FULL_NAME = 'club.full_name';
 
@@ -132,6 +139,48 @@ class AppSetting extends Model
     public static function isBankModuleEnabled(): bool
     {
         return self::boolean(self::BANK_MODULE_ENABLED);
+    }
+
+    public static function isMapyModuleEnabled(): bool
+    {
+        return self::boolean(self::MAPY_MODULE_ENABLED);
+    }
+
+    /**
+     * Whether the Mapy.cz tile layer should be offered on the leaflet maps:
+     * the module must be turned on AND an API key must actually be saved.
+     */
+    public static function isMapyLayerActive(): bool
+    {
+        return self::isMapyModuleEnabled() && self::getMapyApiKey() !== null;
+    }
+
+    /**
+     * Decrypts the stored key. Treated as "not saved" (rather than a fatal error) if it can't
+     * be decrypted with the current APP_KEY — e.g. after a key rotation or a restored backup.
+     */
+    public static function getMapyApiKey(): ?string
+    {
+        $encrypted = self::get(self::MAPY_API_KEY);
+
+        if ($encrypted === null) {
+            return null;
+        }
+
+        try {
+            return Crypt::decryptString($encrypted);
+        } catch (DecryptException $exception) {
+            Log::warning('Stored Mapy.cz API key could not be decrypted, treating it as unset.', [
+                'exception' => $exception->getMessage(),
+            ]);
+
+            return null;
+        }
+    }
+
+    public static function setMapyApiKey(?string $apiKey): void
+    {
+        self::set(self::MAPY_API_KEY, $apiKey !== null ? Crypt::encryptString($apiKey) : null);
     }
 
     /**

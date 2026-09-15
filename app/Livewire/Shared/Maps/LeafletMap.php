@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Shared\Maps;
 
 use App\Enums\SportEventType;
+use App\Models\AppSetting;
 use App\Models\SportEvent;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
@@ -28,6 +29,8 @@ final class LeafletMap extends Component
 
     public function render(): View
     {
+        $mapyApiKey = AppSetting::isMapyLayerActive() ? AppSetting::getMapyApiKey() : null;
+
         if ($this->sportEvent !== null) {
             return view('filament.shared.leaflet-map-widget', [
                 'mapData' => [
@@ -37,6 +40,7 @@ final class LeafletMap extends Component
                     'zoomLevel' => 13,
                     'mapHeight' => '400px',
                     'publicMap' => $this->publicMap,
+                    'mapyApiKey' => $mapyApiKey,
                 ],
             ]);
         } else {
@@ -48,6 +52,7 @@ final class LeafletMap extends Component
                     'zoomLevel' => 8,
                     'mapHeight' => '500px',
                     'publicMap' => $this->publicMap,
+                    'mapyApiKey' => $mapyApiKey,
                 ],
             ]);
         }
