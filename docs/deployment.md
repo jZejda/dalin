@@ -43,16 +43,17 @@ V každé release jsou `.env`, `config/site-config.php` a `storage/` symlinky do
 | Alias | Labely | Server | Deploy path | Větev |
 |---|---|---|---|---|
 | `demo` | `site=dalin stage=demo` | dw303:20001 | `…/dalin.cz/_sub/demo` | `v13.x` |
-| `abm` | `site=abm stage=prod` | dw149:20007 | `…/abmbrno.cz/public_html` | `v12.x` |
+| `abm` | `site=abm stage=prod` | dw149:20007 | `…/abmbrno.cz/public_html` | `v13.x` |
 | `abm-staging` | `site=abm stage=staging` | dw149:20007 | `…/abmbrno.cz/_sub/staging` | `v12.x` |
 | `pbm` | `site=pbm stage=prod` | dw303:20001 | `…/eob.cz/_sub/pbm-dalin` | `v12.x` |
 | `pbm-preview` | `site=pbm stage=preview` | dw303:20001 | `…/eob.cz/_sub/pbm-dalin-preview` | `v12.x` |
 
-Výchozí větev je `v12.x` (na té zatím běží abm i pbm), `demo` má per-host override na
-`v13.x`. Jednorázově se přebije přes `--branch=` / `--tag=` / `--revision=`.
+Výchozí větev je `v12.x` (na té zatím běží `abm-staging`, `pbm` a `pbm-preview`);
+`demo` a `abm` mají per-host override na `v13.x`. Jednorázově se přebije přes
+`--branch=` / `--tag=` / `--revision=`.
 
-Kromě `demo` běží zatím všechny po staru přes `deploy.sh`; převod je stejný postup
-jako níže.
+Kromě `demo` a `abm` běží zatím všechny po staru přes `deploy.sh`; převod je
+stejný postup jako níže.
 
 ## 3. Běžné použití
 
@@ -412,8 +413,10 @@ Stejný postup, jen bez demo kroků (4.9):
 5. `dep deploy <alias>`
 6. přepnutí docrootu na `…/current/public`
 
-U `abm` je deploy path přímo `public_html`, tedy současný docroot — po převodu
-musí docroot ukazovat na `public_html/current/public`.
+Pozor na sites, kde je deploy path přímo `public_html` (tedy současný docroot,
+jako tomu bylo u `abm`) — po převodu musí docroot ukazovat na
+`public_html/current/public`, jinak deploy proběhne, ale web dál servíruje
+starou release (viz **6. Řešení potíží** níže).
 
 ---
 
@@ -445,7 +448,32 @@ jen tranzitivně přes dev nástroj. Rsync deploy to maskoval (nahrával lokáln
 balíček do `require` (`composer require <balicek>`) a commitni; `local_archive`
 nasazuje commitnutý stav. Přesně tohle potkalo `laravel/mcp`, které si tahal
 `laravel/boost`, zatímco na něm stojí `AppServiceProvider` a `routes/ai.php`.
-Stejnou past čekej i u `abm`/`pbm` při jejich převodu.
+Stejnou past čekej i u `pbm` při jeho převodu.
+
+**Deploy proběhne bez chyby, ale web dál ukazuje starou release**
+Docroot v administraci hostingu ukazuje natvrdo na konkrétní starou release
+(nebo na jiný adresář mimo `current`/`public`), místo aby šel přes
+`…/public_html/public` → `current/public`. `dep releases <alias>` sice ukáže
+novou release jako current, ale nikdo se na ni nedívá. Over podle hashe
+sestaveného CSS/JS: hash v `releases/<current>/public/build/manifest.json` se
+musí shodovat s tím, co má v HTML živý web (`curl -s <url> | grep -o
+'assets/[^"]*\.css'`). Řešení: v administraci hostingu přesměruj docroot na
+`…/public_html/public`. Přesně tohle se stalo `abm` — deploy tiše nasazoval do
+`releases/N`, ale doména dál servírovala `releases/1`/`2`.
+
+Na **Webglobe** (multihostingový účet) je skutečný docroot v jiné sekci, než
+by člověk čekal: **Služby → Hosting → Multihosting → "Hlavní adresář domény"**
+(tlačítko "Změnit adresář"). Sekce **Web → Nastavení webserveru →
+Konfigurace web serveru pro doménu** ("Document root") vypadá jako to
+správné místo, ale u sdíleného multihostingového účtu s reálným servírováním
+nemusí mít nic společného. Pole na Multihosting stránce má vedle inputu
+pevný, needitovatelný prefix `/home/html/<účet>/` — piš do něj jen zbytek
+(`abmbrno.cz/public_html/public`), nikdy celou absolutní cestu. Vložení už
+kompletní/absolutní cesty vede k tomu, že backend cestu vytvoří jako
+podadresář uvnitř aktuální release (`releases/N/public/…/public_html/public/
+.user.ini`) a docroot přesměruje tam — prázdný adresář bez `index.php`, tedy
+403. Po opravě počítej s 403 → krátce 500 → 200 v řádu jednotek minut
+(propagace nastavení).
 
 Rychlá diagnostika — Deployer detail composer chyby spolkne, zopakuj ji ručně:
 
