@@ -481,12 +481,6 @@ parameters:
 			path: app/Filament/Resources/UserCredits/Widgets/UserCreditStats.php
 
 		-
-			message: '#^Parameter \#2 \$value of static method Filament\\Widgets\\StatsOverviewWidget\\Stat\:\:make\(\) expects bool\|Closure\|float\|Illuminate\\Contracts\\Support\\Htmlable\|int\|string, float\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: app/Filament/Resources/UserCredits/Widgets/UserCreditStats.php
-
-		-
 			message: '#^Method App\\Filament\\Resources\\UserEntries\\UserEntryResource\:\:getEloquentQuery\(\) should return Illuminate\\Database\\Eloquent\\Builder\<Illuminate\\Database\\Eloquent\\Model\> but returns Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\UserEntry\>\.$#'
 			identifier: return.type
 			count: 2
