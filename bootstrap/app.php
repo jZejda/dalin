@@ -39,6 +39,19 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         ]);
+
+        // SubstituteBindings is part of the 'api' middleware group, which otherwise runs before
+        // route-specific middleware — without this, an unauthenticated request to a route with a
+        // model-bound parameter (e.g. /api/v1/sport-event/{sportEvent}) resolves the binding first
+        // and gets a 404 instead of a 401/403 from apikey/role.
+        $middleware->prependToPriorityList(
+            before: \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            prepend: \App\Http\Middleware\ApiKeyAuth::class,
+        );
+        $middleware->prependToPriorityList(
+            before: \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            prepend: \Spatie\Permission\Middleware\RoleMiddleware::class,
+        );
     })
     ->withSchedule(function (Schedule $schedule) {
         // Everything here runs in-process via ->call() or ->job(), never ->command().
