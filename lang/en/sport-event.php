@@ -138,6 +138,8 @@ return [
         'stages' => 'Stages',
         'status' => 'Entry status',
         'created_at' => 'Created',
+        'after_deadline_badge' => 'After deadline',
+        'term_badge' => 'Term :term',
     ],
 
     'actions' => [

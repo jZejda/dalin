@@ -138,6 +138,8 @@ return [
         'stages' => 'Etapy',
         'status' => 'Stav přihlášky',
         'created_at' => 'Vytvořeno',
+        'after_deadline_badge' => 'Po termínu',
+        'term_badge' => ':term. termín',
     ],
 
     'actions' => [

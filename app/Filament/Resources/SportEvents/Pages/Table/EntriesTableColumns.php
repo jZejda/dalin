@@ -7,7 +7,10 @@ namespace App\Filament\Resources\SportEvents\Pages\Table;
 use App\Models\SportClass;
 use App\Models\SportEvent;
 use App\Models\UserEntry;
+use App\Shared\Helpers\AppHelper;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\HtmlString;
 
 class EntriesTableColumns
@@ -16,6 +19,7 @@ class EntriesTableColumns
     public static function make(SportEvent $sportEvent): array
     {
         $isRelay = $sportEvent->isRelayDiscipline();
+        $lastEntryDate = $sportEvent->lastEntryDate();
 
         return [
             TextColumn::make('class_name')
@@ -86,10 +90,42 @@ class EntriesTableColumns
                 ->searchable(),
             TextColumn::make('created_at')
                 ->label(__('sport-event.entries_table.created_at'))
-                ->date('d.m.Y')
-                ->description(fn (UserEntry $record): string => $record->created_at?->format('H:i') ?? '')
+                ->formatStateUsing(fn (UserEntry $record): string => $record->created_at?->format(AppHelper::DATE_TIME_FORMAT) ?? '')
+                ->description(fn (UserEntry $record): ?HtmlString => self::entryDeadlineBadge($record, $sportEvent, $lastEntryDate))
                 ->searchable()
                 ->sortable(),
         ];
+    }
+
+    private static function entryDeadlineBadge(UserEntry $record, SportEvent $sportEvent, ?Carbon $lastEntryDate): ?HtmlString
+    {
+        $createdAt = $record->created_at;
+
+        if ($createdAt === null) {
+            return null;
+        }
+
+        if ($lastEntryDate !== null && $createdAt->gt($lastEntryDate)) {
+            return new HtmlString(Blade::render(
+                '<x-filament::badge color="warning" icon="heroicon-m-exclamation-circle">'
+                .e(__('sport-event.entries_table.after_deadline_badge')).'</x-filament::badge>'
+            ));
+        }
+
+        $term = match (true) {
+            $sportEvent->entry_date_1 !== null && $createdAt->lte($sportEvent->entry_date_1) => 1,
+            $sportEvent->entry_date_2 !== null && $createdAt->lte($sportEvent->entry_date_2) => 2,
+            $sportEvent->entry_date_3 !== null && $createdAt->lte($sportEvent->entry_date_3) => 3,
+            default => null,
+        };
+
+        if ($term === null) {
+            return null;
+        }
+
+        return new HtmlString(Blade::render(
+            '<x-filament::badge color="success" icon="heroicon-m-check-circle">'
+            .e(__('sport-event.entries_table.term_badge', ['term' => $term])).'</x-filament::badge>'
+        ));
     }
 }

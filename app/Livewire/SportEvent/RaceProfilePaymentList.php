@@ -85,14 +85,18 @@ class RaceProfilePaymentList extends Component implements HasActions, HasForms, 
                     ->color(fn (UserRaceProfile $record): string => ($record->event_payment_sum ?? 0.0) != 0.0 ? 'success' : 'warning'),
                 TextColumn::make('finance_link')
                     ->label('Vyúčtování')
-                    ->state('Otevřít')
+                    ->visible(fn (): bool => MemberFinanceResource::canViewAny())
+                    ->state(fn (UserRaceProfile $record): ?string => ($record->event_payment_count ?? 0) > 0 ? 'Otevřít' : null)
+                    ->placeholder('—')
                     ->badge()
                     ->color('gray')
                     ->icon('heroicon-o-arrow-top-right-on-square')
-                    ->url(fn (UserRaceProfile $record): string => MemberFinanceResource::getUrl('view', [
-                        'record' => $record->user_id,
-                        'sport_event_id' => $this->sportEvent->id,
-                    ]))
+                    ->url(fn (UserRaceProfile $record): ?string => ($record->event_payment_count ?? 0) > 0
+                        ? MemberFinanceResource::getUrl('view', [
+                            'record' => $record->user_id,
+                            'sport_event_id' => $this->sportEvent->id,
+                        ])
+                        : null)
                     ->openUrlInNewTab(),
             ])
             ->filters([
