@@ -3,6 +3,11 @@
 @import './terrain/tokens.css';
 @source '../views/components/ui';
 @source '../views/design-system';
+@source '../views/layouts/terrain.blade.php';
+@source '../views/welcome.blade.php';
+@source '../views/livewire/frontend/terrain';
+@source '../views/pages/frontend/single-event.blade.php';
+@source '../views/pages/frontend/terrain';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -19,4 +24,24 @@
     .terrain-button-secondary { @apply border-terrain-line bg-terrain-surface text-terrain-ink hover:bg-terrain-muted; }
     .terrain-button-quiet { @apply border-transparent text-terrain-ink hover:bg-terrain-muted; }
     .terrain-button:disabled { @apply cursor-not-allowed border-terrain-line bg-terrain-muted text-terrain-secondary; }
+}
+
+@layer components {
+    .terrain .terrain-prose { overflow-wrap: anywhere; }
+    .terrain .terrain-prose :where(p, ul, ol) { @apply mb-3 leading-relaxed; }
+    .terrain .terrain-prose :where(h2, h3, h4) { @apply my-4 font-bold text-terrain-ink; }
+    .terrain .terrain-prose a { @apply font-semibold text-terrain-ink underline decoration-terrain-accent underline-offset-4; }
+    .terrain .terrain-prose ul { @apply list-disc pl-5; }
+    .terrain .terrain-prose ol { @apply list-decimal pl-5; }
+    .terrain .terrain-prose img { @apply h-auto max-w-full rounded-terrain-control; }
+    .terrain .terrain-prose :last-child { margin-bottom: 0; }
+    .terrain .terrain-partners svg { max-width: 100%; height: auto; }
+    .terrain .terrain-partners { @apply rounded-terrain-panel bg-white p-4; }
+}
+
+@layer components {
+    .terrain .terrain-prose :where(table) { @apply block max-w-full overflow-x-auto text-sm; }
+    .terrain .terrain-prose :where(th, td) { @apply border-b border-terrain-line px-3 py-2 text-left; }
+    .terrain .terrain-prose :where(pre) { @apply max-w-full overflow-x-auto rounded-terrain-control bg-terrain-muted p-4; }
+    .terrain .terrain-prose :where(iframe, video) { max-width: 100%; }
 }

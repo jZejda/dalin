@@ -33,3 +33,23 @@
 `npm run build`, Pint pro změněné PHP soubory a `sail artisan test tests/Frontend/DesignSystemTest.php tests/Frontend/NewsPageTest.php`. Před převodem existujících šablon ověřit jejich výchozí testy v Sailu. Design system testy kontrolují samostatnou stránku, sémantiku odkazu/tlačítka, zakázaný stav a asociaci labelu/chyby.
 
 Pro chování motivu v prohlížeči spusťte `node tests/Frontend/terrain-theme.cjs` při běžícím Sail webserveru. Test ověřuje obě palety na mobilu i desktopu, prioritu uložené volby, změny systémového motivu, synchronizaci mezi záložkami a nedostupné localStorage. `TERRAIN_TEST_URL` umožňuje změnit adresu showcase.
+
+## Homepage (implementováno)
+
+Homepage používá `layouts/terrain.blade.php` a společné `ui.brand`, `ui.navbar`, `ui.footer` a `ui.theme-select`. Identita a zvýraznění pořadatelského klubu vycházejí z konfigurace. Hero zatím tvoří typografie a vrstevnice; klubová fotografie se doplní po výběru vhodného skutečného assetu.
+
+`PostCards` a `EventList` mají pouze prezentační přepínač `terrain` (výchozí false). Databázové dotazy i filtry zůstaly beze změn, ostatní stránky používají původní šablony. Novinky zobrazují stručný textový perex (nejvýše 240 znaků) a odkaz na celý článek, případně existující `img_url`. Akce odkazují na skutečný detail, zachovávají metadata i ORIS. Prázdné seznamy mají vysvětlující text.
+
+Mapa používá stávající veřejnou Livewire komponentu bez úpravy sdílené Filament šablony. Zůstává s původními kartografickými podklady i v dark mode; tmavé jsou okolní UI povrchy. Partner loga jsou na bílém podkladu kvůli čitelnosti původních barev. Pevná květnová upoutávka na závod už na homepage není.
+
+Ověření: `sail artisan test tests/Frontend`, Pint pro změněné PHP, PHPStan pro obě prezentační Livewire komponenty a `node tests/Frontend/terrain-homepage.cjs`. Browser test pokrývá mobilní menu, Escape, obě palety na šířkách 390/1440 px a inicializaci/zoom mapy. Další etapa: detail `/akce/322`.
+
+## Detail akce (implementováno)
+
+Veřejný detail `/akce/{id}`, včetně `/akce/322`, používá společný Terrain layout a sémantické tokeny v obou motivech. Hero obsahuje skutečný název a podtitul, metadata, štítky a odkazy na existující funkce. Souhrn tvoří jeden pás; dokumenty jsou hned pod ním. Informace, mapa, termíny, služby a novinky jsou v hlavním sloupci, kategorie, doprava, základní údaje a počasí v sidebaru. Běžné sekce mají linky místo karet.
+
+Controller, databázové dotazy, počítání aktivních přihlášek a dopravy, pořadí termínů, příplatky a podmíněná zobrazení zůstaly beze změn. Mapa i marker resolver používají stávající implementaci. Podrobné údaje byly odděleny do prezentačních partialů `pages/frontend/terrain/event-map` a `event-facts`.
+
+Veřejný detail neprovádí registraci ani rezervaci dopravy: odkazuje na stávající Filament entry route generovanou přes `SportEventResource::getUrl`. Autorizaci a pravidla uzávěrek stále řeší původní členská sekce. CTA výslovně označuje správu přihlášek, je použitelné i po uzávěrce a u zrušené akce není zobrazené. Šablony a styly administrace nebyly změněny. Nové texty mají CZ/EN překlady.
+
+Ověření: charakterizační testy detailu prošly ještě před úpravou. `sail artisan test tests/Frontend` pokrývá oba stavy uživatele, zrušení, uzávěrky, chybějící volitelné sekce a zachování dokumentů, kategorií, služeb, novinek, varování, počasí i markerů. `node tests/Frontend/terrain-event.cjs` kontroluje skutečnou akci 322 na 390/1440 px v obou motivech, odkazy, dokumenty a mapový zoom. `TERRAIN_EVENT_URL` umožňuje jinou adresu. Mapové podklady si zachovávají původní kartografické barvy.
