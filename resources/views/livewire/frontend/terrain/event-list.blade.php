@@ -15,9 +15,8 @@
             <div class="flex min-w-0 flex-1 flex-col">
                 <h3 class="text-lg font-bold leading-snug"><a href="{{ route('sport-event.show', $event->id) }}" class="decoration-terrain-accent underline-offset-4 after:absolute after:inset-0 hover:underline">{{ $event->name }}</a></h3>
                 @if ($event->alt_name)<p class="mt-1 text-base leading-snug text-terrain-secondary">{{ $event->alt_name }}</p>@endif
-                <p class="mt-3 text-sm text-terrain-secondary">{{ __('sport-event.type_enum.' . $event->event_type->value) }}</p>
                 @if ($event->place)
-                    <p class="mt-1 flex min-w-0 items-center gap-2 text-sm text-terrain-secondary">
+                    <p class="mt-3 flex min-w-0 items-center gap-2 text-sm text-terrain-secondary">
                         @svg('lucide-map-pin', 'lucide-map-pin size-4 shrink-0', ['aria-hidden' => 'true'])
                         <span class="min-w-0 truncate" title="{{ $event->place }}">{{ mb_strlen($event->place) > 30 ? mb_substr($event->place, 0, 29) . '…' : $event->place }}</span>
                     </p>
