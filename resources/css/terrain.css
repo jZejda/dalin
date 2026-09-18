@@ -1,0 +1,22 @@
+/* Independent frontend entry: never imported by the Filament theme. */
+@import 'tailwindcss' source(none);
+@import './terrain/tokens.css';
+@source '../views/components/ui';
+@source '../views/design-system';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+    .terrain { color: var(--color-terrain-ink); background: var(--color-terrain-paper); font-family: var(--font-terrain); }
+    .terrain :where(a, button, input, select):focus-visible { outline: 2px solid var(--color-terrain-ink); outline-offset: 4px; }
+    .terrain ::selection { background: var(--color-terrain-accent); color: var(--color-terrain-on-accent); }
+}
+
+@layer components {
+    .terrain-contours { background-image: linear-gradient(90deg, var(--color-terrain-paper), transparent), url('../../public/images/terrain-contours.svg'); background-position: center, right center; background-repeat: no-repeat; background-size: cover, auto 100%; }
+    .terrain-button { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-terrain-control border px-5 py-2.5 text-sm font-semibold transition-colors motion-reduce:transition-none; }
+    .terrain-button-primary { @apply border-transparent bg-terrain-accent text-terrain-on-accent hover:bg-terrain-accent-hover; }
+    .terrain-button-secondary { @apply border-terrain-line bg-terrain-surface text-terrain-ink hover:bg-terrain-muted; }
+    .terrain-button-quiet { @apply border-transparent text-terrain-ink hover:bg-terrain-muted; }
+    .terrain-button:disabled { @apply cursor-not-allowed border-terrain-line bg-terrain-muted text-terrain-secondary; }
+}

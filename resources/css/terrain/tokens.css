@@ -1,0 +1,47 @@
+@theme static {
+    --color-terrain-on-accent: #202426;
+    --color-terrain-nav: #202426;
+    --color-terrain-on-nav: #ffffff;
+    --color-terrain-ink: #202426;
+    --color-terrain-secondary: #62686c;
+    --color-terrain-paper: #fafaf8;
+    --color-terrain-surface: #ffffff;
+    --color-terrain-muted: #f0f1ee;
+    --color-terrain-line: #dcded9;
+    --color-terrain-accent: #ffd329;
+    --color-terrain-accent-hover: #efc015;
+    --color-terrain-success: #226344;
+    --color-terrain-success-soft: #eaf4ed;
+    --color-terrain-danger: #b32c32;
+    --color-terrain-danger-soft: #fceeee;
+    --color-terrain-warning: #785500;
+    --color-terrain-warning-soft: #fff5d1;
+    --font-terrain: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --radius-terrain-control: 0.5rem;
+    --radius-terrain-panel: 0.75rem;
+    --container-terrain: 72rem;
+    --text-terrain-display: clamp(2.75rem, 7vw, 5.5rem);
+    --text-terrain-display--line-height: 1;
+    --text-terrain-display--letter-spacing: -0.05em;
+    --spacing-terrain-section: clamp(3rem, 6vw, 5rem);
+}
+
+/* Semantic colors switch together; accent/nav foregrounds stay stable. */
+@layer base {
+    :root { color-scheme: light; }
+    :root.dark {
+        color-scheme: dark;
+        --color-terrain-ink: #f3f4ef;
+        --color-terrain-secondary: #b0b6b8;
+        --color-terrain-paper: #171b1d;
+        --color-terrain-surface: #202628;
+        --color-terrain-muted: #2a3134;
+        --color-terrain-line: #454e52;
+        --color-terrain-success: #95dbb1;
+        --color-terrain-success-soft: #193b2c;
+        --color-terrain-danger: #ffadb1;
+        --color-terrain-danger-soft: #46262b;
+        --color-terrain-warning: #f5d47e;
+        --color-terrain-warning-soft: #3f341c;
+    }
+}

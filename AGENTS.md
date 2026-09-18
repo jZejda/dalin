@@ -251,3 +251,11 @@ test('validates input', function (string $input, bool $expected) {
 4. New code has test coverage
 5. Models have `@property` PHPDoc
 6. Services are `final class` with typed signatures
+
+## Frontend design preference (Terrain)
+
+- Always support both light and dark mode for every new or changed frontend page and Blade UI component. Verify both themes on mobile and desktop.
+- Use the semantic Terrain tokens in `resources/css/terrain/tokens.css`; preserve dark text on yellow actions with `terrain-on-accent`.
+- Respect the frontend `color-theme` preference and system appearance. See `docs/design-system/implementation.md`.
+- This redesign covers frontend only. Do not change Filament admin styling.
+- Shared second-brain notes: `/home/bobik/Dokumenty/Obsidian/Dalin/DalinApp/` (Claude's `/second-brain` vault).

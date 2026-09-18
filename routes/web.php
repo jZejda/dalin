@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\Cron\CommonCron;
 use App\Http\Controllers\Demo\DemoResetController;
 use App\Http\Controllers\Demo\DemoScreenshotModeController;
@@ -29,6 +31,8 @@ Route::post('/register', function () {
 Route::get('/', function () {
     return view('welcome', ['sponsorSectionId' => 0]);
 });
+
+Route::view('/design-system', 'design-system.showcase')->name('design-system');
 
 //Route::get('/', function () {
 //    return redirect()->route('filament.admin.auth.login');

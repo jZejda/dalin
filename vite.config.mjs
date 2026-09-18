@@ -8,6 +8,7 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/css/app.css',
+                'resources/css/terrain.css',
                 'resources/js/app.js',
                 'resources/css/filament/admin/theme.css'
             ],
