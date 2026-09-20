@@ -23,7 +23,7 @@ class PostCards extends Component
     private function getLastPosts(): Collection
     {
         return Post::where('private', '=', false)
-            ->limit(6)
+            ->limit($this->terrain ? 3 : 6)
             ->orderBy('created_at', 'desc')
             ->get();
     }

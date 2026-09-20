@@ -20,10 +20,10 @@
     --radius-terrain-control: 0.5rem;
     --radius-terrain-panel: 0.75rem;
     --container-terrain: 72rem;
-    --text-terrain-display: clamp(2.75rem, 7vw, 5.5rem);
-    --text-terrain-display--line-height: 1;
-    --text-terrain-display--letter-spacing: -0.05em;
-    --spacing-terrain-section: clamp(3rem, 6vw, 5rem);
+    --text-terrain-display: clamp(2.5rem, 4.5vw, 4rem);
+    --text-terrain-display--line-height: 1.05;
+    --text-terrain-display--letter-spacing: -0.04em;
+    --spacing-terrain-section: clamp(2.5rem, 4.5vw, 4rem);
 }
 
 /* Semantic colors switch together; accent/nav foregrounds stay stable. */

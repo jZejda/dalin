@@ -1,7 +1,7 @@
 @php
     use App\Services\OrisApiService;
 @endphp
-<div class="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
     @forelse ($events as $event)
         @php
             $clubEvent = in_array(config('site-config.club.abbr'), $event->organization ?? [], true);
@@ -11,7 +11,7 @@
             ]);
         @endphp
         <article wire:key="terrain-event-{{ $event->id }}" @class(['group relative flex min-w-0 gap-4 rounded-terrain-panel border bg-terrain-surface p-4 transition-colors hover:bg-terrain-muted motion-reduce:transition-none', 'border-terrain-accent' => $clubEvent, 'border-terrain-line' => !$clubEvent])>
-            <x-ui.event-date :date="$event->date" />
+            <x-ui.event-date :date="$event->date" :accent="$clubEvent" />
             <div class="flex min-w-0 flex-1 flex-col">
                 <h3 class="text-lg font-bold leading-snug"><a href="{{ route('sport-event.show', $event->id) }}" class="decoration-terrain-accent underline-offset-4 after:absolute after:inset-0 hover:underline">{{ $event->name }}</a></h3>
                 @if ($event->alt_name)<p class="mt-1 text-base leading-snug text-terrain-secondary">{{ $event->alt_name }}</p>@endif

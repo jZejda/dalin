@@ -28,7 +28,7 @@ const assert = require('node:assert/strict');
                     const tile = await date.evaluate(el => ({ width: el.getBoundingClientRect().width, height: el.getBoundingClientRect().height, bg: getComputedStyle(el).backgroundColor }));
                     assert.equal(tile.width, 72);
                     assert.equal(tile.height, tile.width);
-                    assert.equal(tile.bg, 'rgb(255, 211, 41)');
+                    assert.ok(['rgb(255, 211, 41)', theme === 'dark' ? 'rgb(42, 49, 52)' : 'rgb(240, 241, 238)'].includes(tile.bg));
                     assert.match(await date.locator('[aria-hidden]').first().textContent(), /^\d{2}\.$/);
                 }
                 await page.screenshot({ path: `/tmp/dalin-homepage-${theme}-${width}.png`, fullPage: true });

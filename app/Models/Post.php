@@ -62,6 +62,21 @@ class Post extends Model implements HasMedia
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    /**
+     * Cover image URL: absolute URLs and root-relative paths are used as is,
+     * legacy relative paths (e.g. "media/2022/06/thubnails/a.png") resolve against the public root.
+     */
+    public function coverUrl(): ?string
+    {
+        $path = trim((string) $this->img_url);
+
+        if ($path === '') {
+            return null;
+        }
+
+        return Str::startsWith($path, ['http://', 'https://', '/']) ? $path : asset($path);
+    }
+
     //    public function setUpRichContent(): void
     //    {
     //        $this->registerRichContent('content')

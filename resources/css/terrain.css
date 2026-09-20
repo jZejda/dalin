@@ -19,6 +19,15 @@
 
 @layer components {
     .terrain-contours { background-image: linear-gradient(90deg, var(--color-terrain-paper), transparent), url('../../public/images/terrain-contours.svg'); background-position: center, right center; background-repeat: no-repeat; background-size: cover, auto 100%; }
+    .terrain-hero { position: relative; isolation: isolate; overflow: hidden; }
+    .terrain-hero::before, .terrain-hero::after { content: ''; position: absolute; inset: 0; }
+    .terrain-hero::before { z-index: -2; background: url('../../public/images/terrain-hero.jpg') center / cover no-repeat; }
+    .terrain-hero::after { z-index: -1; background: color-mix(in srgb, var(--color-terrain-paper) 88%, transparent); }
+    @media (min-width: 64rem) {
+        .terrain-hero::before { left: 30%; }
+        .terrain-hero::after { background: linear-gradient(90deg, var(--color-terrain-paper) 0, var(--color-terrain-paper) 30%, transparent 60%); }
+    }
+    .terrain-cover-placeholder { background: var(--color-terrain-muted) url('../../public/images/terrain-contours.svg') right center / cover no-repeat; }
     .terrain-button { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-terrain-control border px-5 py-2.5 text-sm font-semibold transition-colors motion-reduce:transition-none; }
     .terrain-button-primary { @apply border-transparent bg-terrain-accent text-terrain-on-accent hover:bg-terrain-accent-hover; }
     .terrain-button-secondary { @apply border-terrain-line bg-terrain-surface text-terrain-ink hover:bg-terrain-muted; }

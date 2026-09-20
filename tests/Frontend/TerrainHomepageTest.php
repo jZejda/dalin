@@ -32,7 +32,7 @@ it('shows the terrain homepage with the public map, theme controls and configure
         ->assertDontSee('7-jihomoravska-liga-2026-novinky');
 });
 
-it('keeps public news filtering and shows a plain editorial preview with a detail link', function () {
+it('keeps public news filtering and shows a cover image or a placeholder with a detail link', function () {
     $user = User::factory()->create();
     $public = Post::create([
         'user_id' => $user->id,
@@ -41,6 +41,14 @@ it('keeps public news filtering and shows a plain editorial preview with a detai
         'editorial' => '<p>Text s <a href="/stranka/o-klubu">odkazem</a>.</p>',
         'content_mode' => ContentFormat::Html,
         'private' => PostStatus::Public,
+    ]);
+    $withCover = Post::create([
+        'user_id' => $user->id,
+        'title' => 'Novinka s obrázkem',
+        'content' => 'Obsah',
+        'content_mode' => ContentFormat::Html,
+        'private' => PostStatus::Public,
+        'img_url' => 'media/2022/06/thubnails/masinka.png',
     ]);
     Post::create([
         'user_id' => $user->id,
@@ -53,7 +61,10 @@ it('keeps public news filtering and shows a plain editorial preview with a detai
     Livewire::test(PostCards::class, ['terrain' => true])
         ->assertSee('Veřejná Terrain novinka')
         ->assertSee(url('/novinka', $public->id))
-        ->assertSee('Text s odkazem.')
+        ->assertSee('terrain-cover-placeholder', false)
+        ->assertSee(asset('media/2022/06/thubnails/masinka.png'), false)
+        ->assertSee(url('/novinka', $withCover->id))
+        ->assertDontSee('Text s odkazem.')
         ->assertDontSee('Interní Terrain novinka');
 
     Livewire::test(PostCards::class)->assertViewIs('livewire.frontend.post-cards');
@@ -74,7 +85,7 @@ it('renders real event details and highlights the configured organizing club', f
     $event->id = 322;
     $html = view('livewire.frontend.terrain.event-list', ['events' => collect([$event])])->render();
 
-    expect($html)->toContain(route('sport-event.show', 322), 'Podzimní testovací závod', 'Oblastní žebříček', 'Brno', 'ORIS 12345', 'border-terrain-accent');
+    expect($html)->toContain(route('sport-event.show', 322), 'Podzimní testovací závod', 'Oblastní žebříček', 'Brno', 'ORIS 12345', 'border-terrain-accent', 'bg-terrain-accent text-terrain-on-accent');
 });
 
 it('provides useful empty states for news and upcoming events', function () {
@@ -92,7 +103,7 @@ it('renders two-digit days with a dot and uppercase month labels', function (str
     app()->setLocale('cs');
     $html = Blade::render('<x-ui.event-date :date="$date" />', ['date' => Carbon::parse($date)]);
 
-    expect($html)->toContain('size-[4.5rem]', 'bg-terrain-accent text-center text-terrain-on-accent', '>' . $day . '</span>', '>' . $month . '</span>');
+    expect($html)->toContain('size-[4.5rem]', 'bg-terrain-accent text-terrain-on-accent', '>' . $day . '</span>', '>' . $month . '</span>');
 })->with([
     ['2026-02-01', '01.', 'UNO'],
     ['2026-05-09', '09.', 'KVÉ'],
@@ -107,7 +118,8 @@ it('replaces coordinates with a single place row and a lucide map pin', function
     $event->id = 322;
     $html = view('livewire.frontend.terrain.event-list', ['events' => collect([$event])])->render();
 
-    expect($html)->toContain('lucide-map-pin', 'bg-terrain-accent text-center text-terrain-on-accent')
+    expect($html)->toContain('lucide-map-pin', 'bg-terrain-muted text-terrain-ink')
+        ->not->toContain('bg-terrain-accent')
         ->not->toContain('49.06956', '16.85633');
     expect(substr_count(strip_tags($html), 'Lovčičky'))->toBe(1);
 

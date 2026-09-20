@@ -3,16 +3,15 @@
 @section('title', 'Orientace spojuje')
 
 @section('content')
-    <section class="terrain-contours border-b border-terrain-line">
-        <div class="mx-auto max-w-terrain px-4 py-terrain-section sm:px-6">
-            <p class="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-terrain-secondary">{{ config('site-config.club.full_name') }} / Orientační sporty</p>
-            <h1 class="max-w-2xl text-terrain-display font-extrabold">Orientace<br>spojuje<span class="ml-4 inline-block h-1 w-12 bg-terrain-accent align-middle" aria-hidden="true"></span></h1>
-            <p class="mt-6 max-w-lg text-lg leading-relaxed text-terrain-secondary">Společný směr, nové zážitky a pohyb v přírodě. Novinky z klubu i akce, na kterých se potkáme.</p>
-            <div class="mt-8 flex flex-wrap gap-3"><x-ui.button href="{{ url('/stranka/o-klubu') }}">Zjistit více o klubu <span aria-hidden="true">→</span></x-ui.button><x-ui.button variant="secondary" href="#kalendar">Nadcházející akce</x-ui.button></div>
+    <section class="terrain-hero">
+        <div class="mx-auto flex min-h-[25rem] max-w-terrain flex-col justify-center px-4 py-12 sm:px-6 lg:py-16">
+            <h1 class="max-w-lg text-terrain-display font-extrabold">Orientace<br>spojuje</h1>
+            <p class="mt-5 max-w-md text-lg leading-relaxed">Společný směr, nové zážitky a pohyb v přírodě. Novinky z klubu i akce, na kterých se potkáme.</p>
+            <div class="mt-6"><x-ui.button href="{{ url('/stranka/o-klubu') }}">Zjistit více o klubu <span aria-hidden="true">→</span></x-ui.button></div>
         </div>
     </section>
     <div class="mx-auto max-w-terrain px-4 sm:px-6">
-        <section id="novinky" class="border-b border-terrain-line py-terrain-section">
+        <section id="novinky" class="py-terrain-section">
             <x-ui.section-heading>Novinky</x-ui.section-heading>
             <livewire:frontend.post-cards :terrain="true" />
         </section>
