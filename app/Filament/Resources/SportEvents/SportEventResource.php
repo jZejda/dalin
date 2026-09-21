@@ -94,6 +94,9 @@ class SportEventResource extends Resource implements HasShieldPermissions
     {
         return $table
             ->recordUrl(fn (Model $record): string => route('filament.admin.resources.sport-events.entry', ['record' => $record]), )
+            ->modifyQueryUsing(fn (Builder $query): Builder => AppSetting::isTransportModuleEnabled()
+                ? $query->with(['transportOffers' => fn ($offers) => $offers->active()->with('requests')])
+                : $query)
             ->columns([
                 ViewColumn::make('entry_type')
                     ->label(__('sport-event.table.entry_type'))
@@ -135,6 +138,13 @@ class SportEventResource extends Resource implements HasShieldPermissions
                 ViewColumn::make('user_entry')
                     ->label(__('sport-event.table.entries_count_short'))
                     ->view('filament.tables.columns.entry-user-counts'),
+
+                ViewColumn::make('transport')
+                    ->label(__('sport-event.table.transport_short'))
+                    ->headerTooltip(__('sport-event.table.transport'))
+                    ->view('filament.tables.columns.entry-transport-seats')
+                    ->toggleable()
+                    ->visible(fn (): bool => AppSetting::isTransportModuleEnabled()),
 
 //                TextColumn::make('place')
 //                    ->searchable()
@@ -354,13 +364,6 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                         ->options(SportEventType::enumArray())
                                         ->default(SportEventType::Race->value),
 
-                                    Select::make('transport_type')
-                                        ->label(__('sport-event.transport_type'))
-                                        ->options(SportEventTransportType::enumArray())
-                                        ->default(SportEventTransportType::SelfOnly->value)
-                                        ->required()
-                                        ->visible(fn (): bool => AppSetting::isTransportModuleEnabled()),
-
                                     TextInput::make('name')
                                         ->label(__('sport-event.form.name'))
                                         ->required(),
@@ -484,6 +487,12 @@ class SportEventResource extends Resource implements HasShieldPermissions
                                     ->multiple()
                                     ->options(SportRegion::all()->pluck('long_name', 'short_name'))
                                     ->searchable(),
+                                Select::make('transport_type')
+                                    ->label(__('sport-event.transport_type'))
+                                    ->options(SportEventTransportType::enumArray())
+                                    ->default(SportEventTransportType::SelfOnly->value)
+                                    ->required()
+                                    ->visible(fn (): bool => AppSetting::isTransportModuleEnabled()),
                                 Grid::make()->schema([
                                     Toggle::make('use_oris_for_entries')
                                         ->label(__('sport-event.form.use_oris_for_entries'))

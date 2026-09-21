@@ -37,6 +37,11 @@ return [
 
     'request_seat' => 'Reserve a seat',
     'seats' => 'Number of seats',
+    'user' => 'User',
+    'trip_params' => 'Trip details',
+    'request_status' => 'Request status',
+    'note' => 'Note',
+    'note_placeholder' => 'E.g. how much luggage I have, where I can be picked up…',
     'request_sent' => 'Request sent',
     'request_sent_body' => 'The driver received an e-mail and can approve or reject the request.',
     'requests_for_my_offers' => 'Requests for seats in my offers',
@@ -47,6 +52,10 @@ return [
     'request_approved' => 'Request approved, the requester received an e-mail.',
     'request_rejected_capacity' => 'Not enough free seats — the request was rejected.',
     'request_rejected_done' => 'Request rejected, the requester received an e-mail.',
+    'cancel_request_modal_heading' => 'Cancel the carpool request?',
+    'cancel_request_modal_description' => 'The driver will be informed and the seats will be freed for others.',
+    'cancel_request_modal_submit' => 'Yes, cancel the request',
+    'tab_free_seats' => 'Free seats in all active offers',
     'request_cancelled_done' => 'The request was cancelled.',
 
     'mail' => [
@@ -67,6 +76,7 @@ return [
 
         'request_created_heading' => 'New carpool request',
         'request_created_intro' => '**:passenger** is interested in a seat in your transport offer for the race **:event**.',
+        'request_created_note_label' => 'Passenger note',
         'request_created_cta' => 'You can handle the request directly from this e-mail:',
         'request_created_approve_button' => 'Approve request',
         'request_created_reject_button' => 'Reject request',

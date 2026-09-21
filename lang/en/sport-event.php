@@ -46,6 +46,8 @@ return [
         'last_update_tooltip' => 'Last bulk update: :date',
         'date' => 'Date',
         'forecast' => 'Forecast',
+        'transport_short' => 'Ride',
+        'transport' => 'Transport (free seats in offers)',
         'entries_count_short' => 'Ent.',
         'dates' => 'Dates',
         'clubs' => 'Club(s)',

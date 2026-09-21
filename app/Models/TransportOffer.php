@@ -139,6 +139,26 @@ class TransportOffer extends Model
     }
 
     /**
+     * Celkový počet volných míst ve všech aktivních nabídkách závodu.
+     */
+    public static function totalFreeSeatsForEvent(int $sportEventId): int
+    {
+        return self::sumFreeSeats(
+            self::query()->forEvent($sportEventId)->active()->with('requests')->get()
+        );
+    }
+
+    /**
+     * Součet volných míst v předaných nabídkách (relace `requests` má být načtená).
+     *
+     * @param  \Illuminate\Support\Collection<int, TransportOffer>  $offers
+     */
+    public static function sumFreeSeats(\Illuminate\Support\Collection $offers): int
+    {
+        return (int) $offers->sum(fn (TransportOffer $offer): int => $offer->freeSeats());
+    }
+
+    /**
      * Scope a query to only include active offers.
      *
      * @param  Builder<TransportOffer>  $query

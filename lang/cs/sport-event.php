@@ -46,6 +46,8 @@ return [
         'last_update_tooltip' => 'Poslední hromadná aktualizace: :date',
         'date' => 'Datum',
         'forecast' => 'Předpověď',
+        'transport_short' => 'Dopr.',
+        'transport' => 'Doprava (volná místa v nabídkách)',
         'entries_count_short' => 'Př.',
         'dates' => 'Termíny',
         'clubs' => 'Klub(y)',

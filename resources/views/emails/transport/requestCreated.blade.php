@@ -11,6 +11,14 @@
 - {{ __('transport.vehicle') }}: **{{ $transportRequest->transportOffer?->vehicle?->name }}**
 @endcomponent
 
+@if(filled($transportRequest->note))
+{{ __('transport.mail.request_created_note_label') }}:
+
+<x-mail::panel>
+{{ $transportRequest->note }}
+</x-mail::panel>
+@endif
+
 {{ __('transport.mail.request_created_cta') }}
 
 <x-mail::button :url="$approveUrl" color="success">

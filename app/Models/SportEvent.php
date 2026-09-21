@@ -213,6 +213,21 @@ class SportEvent extends Model
         )->count();
     }
 
+    /** @return HasMany<TransportOffer, $this> */
+    public function transportOffers(): HasMany
+    {
+        return $this->hasMany(TransportOffer::class);
+    }
+
+    /**
+     * Celkový počet volných míst v aktivních nabídkách dopravy.
+     * Pro seznam závodů předem načti `transportOffers` (jen aktivní, s `requests`).
+     */
+    public function transportFreeSeats(): int
+    {
+        return TransportOffer::sumFreeSeats($this->transportOffers->where('active', true));
+    }
+
     /** @return HasMany<SportEventLink, $this> */
     public function sportEventLinks(): HasMany
     {
