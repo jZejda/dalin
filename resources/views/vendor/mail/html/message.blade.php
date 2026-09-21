@@ -20,7 +20,7 @@
 
 <x-slot:after>
 <x-mail::after>
-{{ __('mail/common.footer.unsubscribe_note', ['url' => 'http://jirizejda.cz/dalin/napoveda/']) }}
+{{ __('mail/common.footer.unsubscribe_note', ['url' => 'http://docs.dalin.cz/']) }}
 </x-mail::after>
 </x-slot:after>
 

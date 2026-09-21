@@ -74,7 +74,7 @@ klubu, …) zajišťují, že každý vidí přesně to, co potřebuje — nic v
 
 ⚡ Tento projekt v ostrém provozu používá klub [ABM Brno](https://abmbrno.cz/) — Klub orientačního běhu ALFA Brno z.s.
 
-📘 Uživatelskou dokumentaci k projektu naleznete na [stránce nápovědy](https://jirizejda.cz/dalin/).
+📘 Uživatelskou dokumentaci k projektu naleznete na [stránce nápovědy](https://docs.dalin.cz/).
 
 ![Dalin - Závody](https://jirizejda.cz/images/dalin.png)
 

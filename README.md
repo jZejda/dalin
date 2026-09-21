@@ -79,7 +79,7 @@ nothing less.
 
 ⚡ This project is used in production by the [ABM Brno](https://abmbrno.cz/) orienteering club.
 
-📘 Documentation on this project may show on [project page](https://jirizejda.cz/dalin/).
+📘 Documentation on this project may show on [project page](https://docs.dalin.cz/).
 
 ![Dalin - Races](https://jirizejda.cz/images/dalin.png)
 
