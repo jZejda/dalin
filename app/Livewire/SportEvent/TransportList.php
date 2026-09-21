@@ -316,7 +316,7 @@ class TransportList extends Component implements HasActions, HasForms, HasTable
 
     private function canManageClubTransport(): bool
     {
-        return Auth::user()?->hasRole([AppRoles::SuperAdmin, AppRoles::ClubAdmin, AppRoles::EventMaster]) ?? false;
+        return Auth::user()?->hasRole([AppRoles::SuperAdmin, AppRoles::ClubAdmin, AppRoles::EventMaster, AppRoles::EventOrganizer]) ?? false;
     }
 
     public function render(): View

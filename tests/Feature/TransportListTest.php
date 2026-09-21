@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\AppRoles;
 use App\Enums\SportEventTransportType;
 use App\Enums\TransportDirection;
 use App\Enums\TransportRequestStatus;
@@ -16,6 +17,7 @@ use App\Models\TransportRequest;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Support\Facades\Mail;
+use Filament\Actions\Testing\TestAction;
 use Livewire\Livewire;
 
 function makeTransportListEvent(): SportEvent
@@ -207,3 +209,56 @@ it('shows request notes and user identity in both request tables', function (): 
         ->assertSee('Čekám u nádraží.')
         ->assertSee((string) $offer->user?->email);
 });
+
+it('offers club vehicles only to club admin, event master, event organizer and super admin', function (AppRoles|null $role, bool $allowed): void {
+    $event = makeTransportListEvent();
+    $event->update(['transport_type' => SportEventTransportType::Combined]);
+    $clubVehicle = Vehicle::factory()->create(['seats' => 8]);
+
+    $user = User::factory()->create(['active' => true]);
+    if ($role !== null) {
+        $user->assignRole($role->value);
+    }
+    $this->actingAs($user);
+
+    $component = Livewire::test(TransportList::class, ['sportEvent' => $event])
+        ->callAction(TestAction::make('create')->table(), [
+            'vehicle_id' => $clubVehicle->id,
+            'departure_place' => 'Brno',
+            'direction' => TransportDirection::Both->value,
+            'seats_offered' => 4,
+        ]);
+
+    if ($allowed) {
+        $component->assertHasNoFormErrors();
+        expect(TransportOffer::query()->where('vehicle_id', $clubVehicle->id)->exists())->toBeTrue();
+    } else {
+        $component->assertHasFormErrors(['vehicle_id']);
+        expect(TransportOffer::query()->where('vehicle_id', $clubVehicle->id)->exists())->toBeFalse();
+    }
+})->with([
+    'super admin' => [AppRoles::SuperAdmin, true],
+    'club admin' => [AppRoles::ClubAdmin, true],
+    'event master' => [AppRoles::EventMaster, true],
+    'event organizer' => [AppRoles::EventOrganizer, true],
+    'member' => [AppRoles::Member, false],
+    'no role' => [null, false],
+]);
+
+it('hides offering transport from non-privileged users when transport is club only', function (AppRoles $role, bool $visible): void {
+    $event = makeTransportListEvent();
+    $event->update(['transport_type' => SportEventTransportType::ClubOnly]);
+
+    $user = User::factory()->create(['active' => true]);
+    $user->assignRole($role->value);
+    $this->actingAs($user);
+
+    $component = Livewire::test(TransportList::class, ['sportEvent' => $event]);
+
+    $visible
+        ? $component->assertActionVisible(TestAction::make('create')->table())
+        : $component->assertActionHidden(TestAction::make('create')->table());
+})->with([
+    'event organizer' => [AppRoles::EventOrganizer, true],
+    'member' => [AppRoles::Member, false],
+]);
