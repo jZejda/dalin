@@ -37,6 +37,11 @@ return [
 
     'request_seat' => 'Obsadit místo',
     'seats' => 'Počet míst',
+    'user' => 'Uživatel',
+    'trip_params' => 'Parametry cesty',
+    'request_status' => 'Stav žádosti',
+    'note' => 'Poznámka',
+    'note_placeholder' => 'Např. kolik mám zavazadel, kde mě může vyzvednout…',
     'request_sent' => 'Žádost odeslána',
     'request_sent_body' => 'Řidič dostal e-mail a žádost může schválit nebo zamítnout.',
     'requests_for_my_offers' => 'Žádosti o místa v mých nabídkách',
@@ -47,6 +52,10 @@ return [
     'request_approved' => 'Žádost schválena, žadatel dostal e-mail.',
     'request_rejected_capacity' => 'Nedostatek volných míst — žádost byla zamítnuta.',
     'request_rejected_done' => 'Žádost zamítnuta, žadatel dostal e-mail.',
+    'cancel_request_modal_heading' => 'Zrušit žádost o spolujízdu?',
+    'cancel_request_modal_description' => 'Řidič bude informován, místo se uvolní pro ostatní.',
+    'cancel_request_modal_submit' => 'Ano, zrušit žádost',
+    'tab_free_seats' => 'Volná místa ve všech aktivních nabídkách',
     'request_cancelled_done' => 'Žádost byla zrušena.',
 
     'mail' => [
@@ -67,6 +76,7 @@ return [
 
         'request_created_heading' => 'Nová žádost o spolujízdu',
         'request_created_intro' => '**:passenger** má zájem o místo ve tvé nabídce dopravy na závod **:event**.',
+        'request_created_note_label' => 'Poznámka žadatele',
         'request_created_cta' => 'Žádost můžeš vyřídit rovnou z tohoto e-mailu:',
         'request_created_approve_button' => 'Schválit žádost',
         'request_created_reject_button' => 'Zamítnout žádost',

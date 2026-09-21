@@ -22,15 +22,16 @@ class TransportRequestService
 {
     /**
      * Vytvoří žádost o místo (pending) a pošle řidiči e-mail
-     * se schvalovacími linky.
+     * se schvalovacími linky a poznámkou žadatele.
      */
-    public function create(TransportOffer $offer, User $requester, TransportDirection $direction, int $seats): TransportRequest
+    public function create(TransportOffer $offer, User $requester, TransportDirection $direction, int $seats, ?string $note = null): TransportRequest
     {
         $transportRequest = TransportRequest::query()->create([
             'transport_offer_id' => $offer->id,
             'user_id' => $requester->id,
             'direction' => $direction,
             'seats' => $seats,
+            'note' => filled($note) ? trim($note) : null,
             'status' => TransportRequestStatus::Pending,
         ]);
 

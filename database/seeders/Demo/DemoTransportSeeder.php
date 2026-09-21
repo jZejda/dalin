@@ -86,6 +86,7 @@ class DemoTransportSeeder extends Seeder
                     'user_id'            => $passenger->id,
                     'direction'          => $faker->randomElement([TransportDirection::Both, TransportDirection::There]),
                     'seats'              => $faker->numberBetween(1, 2),
+                    'note'               => $faker->randomElement([null, 'Mám s sebou kolo na střeše.', 'Nastoupím až u nádraží.', 'Díky, jedu s dítětem.']),
                 ]);
             }
         }

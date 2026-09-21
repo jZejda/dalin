@@ -9,10 +9,10 @@ use App\Enums\SportEventTransportType;
 use App\Enums\TransportDirection;
 use App\Models\SportEvent;
 use App\Models\TransportOffer;
-use App\Models\TransportRequest;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Services\TransportRequestService;
+use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -20,6 +20,7 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -27,14 +28,15 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class TransportList extends Component implements HasActions, HasForms, HasTable
@@ -59,11 +61,13 @@ class TransportList extends Component implements HasActions, HasForms, HasTable
                     })
             )
             ->columns([
-                TextColumn::make('user.name')
+                ViewColumn::make('user.name')
                     ->label(__('transport.driver'))
+                    ->view('filament.tables.columns.user-identity')
                     ->searchable(),
                 TextColumn::make('vehicle.name')
                     ->label(__('transport.vehicle'))
+                    ->icon(LucideIcon::Car)
                     ->formatStateUsing(fn (string $state, TransportOffer $record): string => $record->vehicle?->isClubVehicle() === true
                         ? __('transport.club_vehicle_prefix').' '.$state
                         : $state),
@@ -120,6 +124,11 @@ class TransportList extends Component implements HasActions, HasForms, HasTable
                             ->maxValue($record->maxRequestableSeats())
                             ->default(1)
                             ->required(),
+                        Textarea::make('note')
+                            ->label(__('transport.note'))
+                            ->placeholder(__('transport.note_placeholder'))
+                            ->rows(3)
+                            ->maxLength(1000),
                     ])
                     ->modalHeading(__('transport.request_seat'))
                     ->action(function (TransportOffer $record, array $data): void {
@@ -131,6 +140,7 @@ class TransportList extends Component implements HasActions, HasForms, HasTable
                             $user,
                             TransportDirection::from((string) $data['direction']),
                             (int) $data['seats'],
+                            isset($data['note']) ? (string) $data['note'] : null,
                         );
 
                         Notification::make()
@@ -138,16 +148,23 @@ class TransportList extends Component implements HasActions, HasForms, HasTable
                             ->body(__('transport.request_sent_body'))
                             ->success()
                             ->send();
+
+                        $this->dispatch('transport-requests-changed');
                     }),
                 EditAction::make()
                     ->modalHeading(__('transport.edit_offer'))
-                    ->schema($this->offerFormComponents()),
+                    ->schema($this->offerFormComponents())
+                    ->after(fn () => $this->dispatch('transport-requests-changed')),
                 DeleteAction::make()
-                    ->after(fn (TransportOffer $record) => app(TransportRequestService::class)->cancelOffer($record)),
+                    ->after(function (TransportOffer $record): void {
+                        app(TransportRequestService::class)->cancelOffer($record);
+
+                        $this->dispatch('transport-requests-changed');
+                    }),
             ])
             ->emptyStateHeading(__('transport.empty_offers'))
             ->emptyStateDescription(__('transport.empty_offers_description'))
-            ->emptyStateIcon('heroicon-o-truck')
+            ->emptyStateIcon(LucideIcon::Truck)
             ->emptyStateActions([
                 $this->offerCreateAction(),
             ])
@@ -280,71 +297,12 @@ class TransportList extends Component implements HasActions, HasForms, HasTable
     }
 
     /**
-     * Žádosti o místa v nabídkách přihlášeného uživatele (pohled řidiče).
-     *
-     * @return Collection<int, TransportRequest>
+     * Re-renders the offers table (free seats) and the tab badge when
+     * requests change elsewhere on the page.
      */
-    public function getRequestsForMyOffersProperty(): Collection
+    #[On('transport-requests-changed')]
+    public function refreshOffers(): void
     {
-        return TransportRequest::query()
-            ->whereHas('transportOffer', function (Builder $query): void {
-                $query->where('sport_event_id', '=', $this->sportEvent->id)
-                    ->where('user_id', '=', Auth::id());
-            })
-            ->with(['user', 'transportOffer.vehicle'])
-            ->orderByDesc('created_at')
-            ->get();
-    }
-
-    /**
-     * Žádosti přihlášeného uživatele (pohled spolujezdce).
-     *
-     * @return Collection<int, TransportRequest>
-     */
-    public function getMyRequestsProperty(): Collection
-    {
-        return TransportRequest::query()
-            ->where('user_id', '=', Auth::id())
-            ->whereHas('transportOffer', function (Builder $query): void {
-                $query->where('sport_event_id', '=', $this->sportEvent->id);
-            })
-            ->with(['transportOffer.user', 'transportOffer.vehicle'])
-            ->orderByDesc('created_at')
-            ->get();
-    }
-
-    public function approveRequest(int $requestId): void
-    {
-        $transportRequest = TransportRequest::query()->findOrFail($requestId);
-        abort_unless($transportRequest->transportOffer?->user_id === Auth::id(), 403);
-
-        $approved = app(TransportRequestService::class)->approve($transportRequest);
-
-        if ($approved) {
-            Notification::make()->title(__('transport.request_approved'))->success()->send();
-        } else {
-            Notification::make()->title(__('transport.request_rejected_capacity'))->danger()->send();
-        }
-    }
-
-    public function rejectRequest(int $requestId): void
-    {
-        $transportRequest = TransportRequest::query()->findOrFail($requestId);
-        abort_unless($transportRequest->transportOffer?->user_id === Auth::id(), 403);
-
-        app(TransportRequestService::class)->reject($transportRequest);
-
-        Notification::make()->title(__('transport.request_rejected_done'))->success()->send();
-    }
-
-    public function cancelRequest(int $requestId): void
-    {
-        $transportRequest = TransportRequest::query()->findOrFail($requestId);
-        abort_unless($transportRequest->user_id === Auth::id(), 403);
-
-        app(TransportRequestService::class)->cancel($transportRequest);
-
-        Notification::make()->title(__('transport.request_cancelled_done'))->success()->send();
     }
 
     private function canOfferTransport(): bool
@@ -363,6 +321,9 @@ class TransportList extends Component implements HasActions, HasForms, HasTable
 
     public function render(): View
     {
+        // Keeps the badge on the "Transport" tab (outside this component) in sync.
+        $this->dispatch('transport-free-seats-changed', count: TransportOffer::totalFreeSeatsForEvent($this->sportEvent->id));
+
         /** @var view-string $template */
         $template = 'livewire.sport-event.transport-list';
 

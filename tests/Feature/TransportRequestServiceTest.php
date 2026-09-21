@@ -23,6 +23,7 @@ function makeServiceTestOffer(int $seats = 4): TransportOffer
     $sportEvent = SportEvent::factory()->create([
         'sport_id' => $sportList->id,
         'discipline_id' => null,
+        'level_id' => null,
         'use_oris_for_entries' => false,
         'date' => now()->addMonth(),
     ]);
@@ -225,4 +226,27 @@ it('denies decision link without valid signature', function (): void {
     $this->get('/doprava/zadost/'.$request->id.'/approve')->assertForbidden();
 
     expect($request->refresh()->isPending())->toBeTrue();
+});
+
+it('persists trimmed passenger note and renders it in the driver mail', function (): void {
+    $offer = makeServiceTestOffer();
+    $requester = User::factory()->create();
+
+    $request = $this->service->create($offer, $requester, TransportDirection::Both, 1, '  Mám jedno kolo na střechu.  ');
+
+    expect($request->fresh()?->note)->toBe('Mám jedno kolo na střechu.');
+
+    Mail::assertQueued(
+        TransportRequestCreated::class,
+        fn (TransportRequestCreated $mail): bool => str_contains($mail->render(), 'Mám jedno kolo na střechu.'),
+    );
+});
+
+it('stores null note when the passenger leaves it blank', function (): void {
+    $offer = makeServiceTestOffer();
+    $requester = User::factory()->create();
+
+    $request = $this->service->create($offer, $requester, TransportDirection::Both, 1, '   ');
+
+    expect($request->fresh()?->note)->toBeNull();
 });

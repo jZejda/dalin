@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\TransportDirection;
 use App\Enums\TransportRequestStatus;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,7 @@ use Illuminate\Support\Carbon;
  * @property int $user_id
  * @property TransportDirection $direction
  * @property int $seats
+ * @property string|null $note
  * @property TransportRequestStatus $status
  * @property Carbon|null $approved_at
  * @property Carbon|null $created_at
@@ -27,19 +29,10 @@ use Illuminate\Support\Carbon;
  * @property-read TransportOffer|null $transportOffer
  * @property-read User|null $user
  */
+#[Fillable(['transport_offer_id', 'user_id', 'direction', 'seats', 'note', 'status', 'approved_at'])]
 class TransportRequest extends Model
 {
     use HasFactory;
-
-    /** @var list<string> */
-    protected $fillable = [
-        'transport_offer_id',
-        'user_id',
-        'direction',
-        'seats',
-        'status',
-        'approved_at',
-    ];
 
     /** @var array<string, string> */
     protected $casts = [
