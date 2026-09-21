@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Enums\SportEventTransportType;
+use App\Enums\SportEventType;
+use App\Filament\Resources\SportEvents\Pages\ListSportEvents;
 use App\Models\AppSetting;
 use App\Models\SportEvent;
 use App\Models\SportList;
@@ -10,6 +12,7 @@ use App\Models\TransportOffer;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Livewire;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -166,4 +169,38 @@ it('shows existing offer in transport tab table', function (): void {
         ->assertOk()
         ->assertSee('Testovací nástupiště')
         ->assertSee($vehicle->name);
+});
+
+it('shows free seats badge in sport events list only for events with active offers', function (): void {
+    AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, true);
+    actingAsSuperAdmin();
+
+    $withOffer = createTransportTestSportEvent();
+    $withOffer->update(['date' => now()->addMonth(), 'event_type' => SportEventType::Race]);
+    $withoutOffer = createTransportTestSportEvent();
+    $withoutOffer->update(['date' => now()->addMonth(), 'event_type' => SportEventType::Race]);
+
+    $driver = User::factory()->create();
+    TransportOffer::factory()->create([
+        'sport_event_id' => $withOffer->id,
+        'user_id' => $driver->id,
+        'vehicle_id' => Vehicle::factory()->ownedBy($driver)->create()->id,
+        'seats_offered' => 3,
+        'active' => true,
+    ]);
+
+    expect($withOffer->fresh()?->load(['transportOffers.requests'])->transportFreeSeats())->toBe(3);
+
+    Livewire::test(ListSportEvents::class)
+        ->assertCanSeeTableRecords([$withOffer, $withoutOffer])
+        ->assertTableColumnExists('transport')
+        ->assertSeeHtml('bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-300')
+        ->assertSeeText('3');
+
+    AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, false);
+
+    Livewire::test(ListSportEvents::class)
+        ->loadTable()
+        ->assertCanSeeTableRecords([$withOffer, $withoutOffer])
+        ->assertDontSeeHtml('bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-300');
 });
