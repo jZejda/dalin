@@ -35,6 +35,7 @@ class DemoUsersSeeder extends Seeder
         $roles = [
             'club_admin'          => 2,
             'event_master'        => 3,
+            'event_organizer'     => 2,
             'billing_specialist'  => 2,
             'redactor'            => 3,
             'member'              => 15,
