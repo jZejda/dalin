@@ -51,6 +51,8 @@ class Post extends Model implements HasMedia
     use InteractsWithMedia;
     use InteractsWithRichContent;
 
+    public const string MEDIA_COLLECTION_COVER = 'post_cover';
+
     /**
      * @return array<string, string>
      */
@@ -68,18 +70,46 @@ class Post extends Model implements HasMedia
     }
 
     /**
-     * Cover image URL: absolute URLs and root-relative paths are used as is,
-     * legacy relative paths (e.g. "media/2022/06/thubnails/a.png") resolve against the public root.
+     * Cover image URL for the given media conversion ('card' for news cards, 'hero' for the detail page).
+     * An uploaded cover wins; otherwise an absolute img_url (e.g. set via API) is used as is.
+     * Legacy relative img_url paths ("media/2022/06/thubnails/a.png") point to files lost in the
+     * old-site migration, so they are ignored and the caller renders its placeholder instead.
      */
-    public function coverUrl(): ?string
+    public function coverUrl(string $conversion = 'card'): ?string
     {
-        $path = trim((string) $this->img_url);
+        $media = $this->getFirstMedia(self::MEDIA_COLLECTION_COVER);
 
-        if ($path === '') {
-            return null;
+        if ($media !== null) {
+            return $media->getAvailableUrl([$conversion]);
         }
 
-        return Str::startsWith($path, ['http://', 'https://', '/']) ? $path : asset($path);
+        $path = trim((string) $this->img_url);
+
+        return Str::startsWith($path, ['http://', 'https://', '/']) ? $path : null;
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection(self::MEDIA_COLLECTION_COVER)
+            ->useDisk('public')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
+            ->singleFile();
+    }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        // Non-queued: shared hosting sites don't run a queue worker
+        $this->addMediaConversion('card')
+            ->performOnCollections(self::MEDIA_COLLECTION_COVER)
+            ->nonQueued()
+            ->fit(Fit::Crop, 840, 240)
+            ->format('jpg');
+
+        $this->addMediaConversion('hero')
+            ->performOnCollections(self::MEDIA_COLLECTION_COVER)
+            ->nonQueued()
+            ->fit(Fit::Crop, 1680, 480)
+            ->format('jpg');
     }
 
     //    public function setUpRichContent(): void
@@ -88,13 +118,5 @@ class Post extends Model implements HasMedia
     //            ->fileAttachmentProvider(SpatieMediaLibraryFileAttachmentProvider::make())
     //            ->mediaName(fn (TemporaryUploadedFile $file): string => Str::random() . '_' . $file->getClientOriginalName())
     //            ->collection('content-file-attachments');
-    //    }
-
-    //    public function registerMediaConversions(?Media $media = null): void
-    //    {
-    //        $this
-    //            ->addMediaConversion('preview')
-    //            ->fit(Fit::Contain, 300, 300)
-    //            ->nonQueued();
     //    }
 }

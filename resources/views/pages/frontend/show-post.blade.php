@@ -24,6 +24,10 @@
 
     <div class="p-4 bg-white dark:bg-gray-900">
         <div class="container mx-auto app-front-content mb-10">
+            @if($cover = $post->coverUrl('hero'))
+                <img src="{{ $cover }}" alt="" class="mb-8 aspect-[7/2] w-full rounded-lg object-cover">
+            @endif
+
             @if($post->content_mode === ContentFormat::Html)
                 <p>{!! $post->content !!}</p>
             @elseif($post->content_mode === ContentFormat::Markdown)

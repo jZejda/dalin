@@ -82,6 +82,8 @@ return [
             'private'                  => 'Interní novinka',
             'author'                   => 'Autor',
             'format'                   => 'Formát',
+            'cover'                    => 'Titulní obrázek',
+            'cover_helper'             => 'Zobrazí se na kartě novinky na titulní stránce a v záhlaví detailu. Obrázek se ořízne na široký formát 7 : 2 (střed zůstává) – důležitý motiv proto dejte doprostřed, případně si výřez upravte v editoru. JPG, PNG nebo WebP, max. 8 MB.',
         ],
 
         'table' => [

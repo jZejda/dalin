@@ -11,7 +11,9 @@ use App\Models\Post;
 use App\Models\SportEvent;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Livewire\Livewire;
 
@@ -33,6 +35,7 @@ it('shows the terrain homepage with the public map, theme controls and configure
 });
 
 it('keeps public news filtering and shows a cover image or a placeholder with a detail link', function () {
+    Storage::fake('public');
     $user = User::factory()->create();
     $public = Post::create([
         'user_id' => $user->id,
@@ -48,8 +51,9 @@ it('keeps public news filtering and shows a cover image or a placeholder with a 
         'content' => 'Obsah',
         'content_mode' => ContentFormat::Html,
         'private' => PostStatus::Public,
-        'img_url' => 'media/2022/06/thubnails/masinka.png',
     ]);
+    $withCover->addMedia(UploadedFile::fake()->image('cover.jpg', 1400, 400))
+        ->toMediaCollection(Post::MEDIA_COLLECTION_COVER);
     Post::create([
         'user_id' => $user->id,
         'title' => 'Interní Terrain novinka',
@@ -62,12 +66,53 @@ it('keeps public news filtering and shows a cover image or a placeholder with a 
         ->assertSee('Veřejná Terrain novinka')
         ->assertSee(url('/novinka', $public->id))
         ->assertSee('terrain-cover-placeholder', false)
-        ->assertSee(asset('media/2022/06/thubnails/masinka.png'), false)
+        ->assertSee('conversions/cover-card.jpg', false)
         ->assertSee(url('/novinka', $withCover->id))
         ->assertDontSee('Text s odkazem.')
         ->assertDontSee('Interní Terrain novinka');
 
     Livewire::test(PostCards::class)->assertViewIs('livewire.frontend.post-cards');
+});
+
+it('prefers the uploaded cover, keeps absolute img_url and ignores lost legacy relative paths', function () {
+    Storage::fake('public');
+    $user = User::factory()->create();
+    $attributes = [
+        'user_id' => $user->id,
+        'title' => 'Novinka',
+        'content' => 'Obsah',
+        'content_mode' => ContentFormat::Html,
+        'private' => PostStatus::Public,
+    ];
+
+    $legacy = Post::create([...$attributes, 'img_url' => 'media/2022/06/thubnails/masinka.png']);
+    $absolute = Post::create([...$attributes, 'img_url' => 'https://example.com/obrazek.jpg']);
+    $uploaded = Post::create([...$attributes, 'img_url' => 'https://example.com/obrazek.jpg']);
+    $uploaded->addMedia(UploadedFile::fake()->image('cover.jpg', 1400, 400))
+        ->toMediaCollection(Post::MEDIA_COLLECTION_COVER);
+
+    expect($legacy->coverUrl())->toBeNull()
+        ->and($absolute->coverUrl())->toBe('https://example.com/obrazek.jpg')
+        ->and($uploaded->coverUrl())->toEndWith('conversions/cover-card.jpg')
+        ->and($uploaded->coverUrl('hero'))->toEndWith('conversions/cover-hero.jpg');
+});
+
+it('shows the uploaded cover on the post detail page', function () {
+    Storage::fake('public');
+    $this->withoutVite();
+    $post = Post::create([
+        'user_id' => User::factory()->create()->id,
+        'title' => 'Novinka s obrázkem v detailu',
+        'content' => 'Obsah',
+        'content_mode' => ContentFormat::Html,
+        'private' => PostStatus::Public,
+    ]);
+    $post->addMedia(UploadedFile::fake()->image('cover.jpg', 1400, 400))
+        ->toMediaCollection(Post::MEDIA_COLLECTION_COVER);
+
+    $this->get(url('/novinka', $post->id))
+        ->assertOk()
+        ->assertSee('conversions/cover-hero.jpg', false);
 });
 
 it('renders real event details and highlights the configured organizing club', function () {
