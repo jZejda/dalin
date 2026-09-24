@@ -186,6 +186,37 @@ deploy:publish                  přepnutí symlinku current + cleanup starých r
 Chybí tu `artisan:reload` z výchozí Laravel recipe — na sdíleném hostingu neběží
 žádní perzistentní workeři (fronta se zpracovává přes `schedule:run`, viz níže).
 
+### Jednorázové kroky po nasazení
+
+Některé verze potřebují po deployi ruční krok, který se nedá bezpečně spustit
+automaticky. Pouští se v shellu nasazené release (`vendor/bin/dep ssh <alias>`)
+a jednou na každé site.
+
+#### v13.3.1 — přečíslované ORIS disciplíny u starých závodů
+
+ORIS přečísloval číselník disciplín; `sport_events.discipline_id` je přímo ORIS
+ID, takže závody importované před změnou mají staré číslo (kritické: `14` dřív
+sprintové štafety → teď hromadný start, `15` dřív knock-out → teď sprintové
+štafety). Štafety se zakládají jen u disciplín s `sport_disciplines.relays = 1`
+(5 RE, 6 TE, 15 SR).
+
+```bash
+vendor/bin/dep ssh abm
+php8.4 artisan db:seed --class=SportDisciplinesSeeder --force   # číselník podle ORIS (idempotentní)
+php8.4 artisan oris:sync-disciplines --dry-run                  # jen vypíše rozdíly
+php8.4 artisan oris:sync-disciplines                            # opraví discipline_id
+```
+
+- Příkaz se ptá ORIS na každý závod s `oris_id` (~0,8 s/závod). Zúžit jde přes
+  `--discipline=N` (opakovatelně), např. `--discipline=5 --discipline=6 --discipline=14 --discipline=15`.
+- Nadcházející závod, ze kterého se stane štafeta, dostane výchozí štafetu;
+  proběhlé závody ne. Štafety u závodů, které štafetou přestaly být, se nemažou —
+  tabulka je označí `no longer relay` ke kontrole v adminu.
+- `ORIS error — skipped` (timeout ORIS) → příkaz stačí pustit znovu, exit kód je pak nenulový.
+- Migrace `2026_09_24_120000_rename_relay_type_codes_on_relay_teams_table` (v rámci
+  `artisan:migrate`) převede `relay_teams.relay_type` `ST→RE`, `SS→SR`, `DR→TE`.
+  API `sport-event/{id}` tak vrací `relay_type` nově jako `RE`/`SR`/`TE`.
+
 ---
 
 ## 4. První deploy demo.dalin.cz — krok za krokem
