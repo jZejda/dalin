@@ -66,6 +66,7 @@ class RequestsForMyOffersList extends Component implements HasActions, HasForms,
             ])
             ->recordActions([
                 Action::make('approve')
+                    ->authorize(fn (TransportRequest $record): bool => $record->transportOffer?->user_id === Auth::id())
                     ->label(__('transport.approve'))
                     ->color('success')
                     ->button()
@@ -82,6 +83,7 @@ class RequestsForMyOffersList extends Component implements HasActions, HasForms,
                         $this->dispatch('transport-requests-changed');
                     }),
                 Action::make('reject')
+                    ->authorize(fn (TransportRequest $record): bool => $record->transportOffer?->user_id === Auth::id())
                     ->label(__('transport.reject'))
                     ->color('danger')
                     ->button()

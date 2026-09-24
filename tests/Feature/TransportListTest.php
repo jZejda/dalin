@@ -19,6 +19,7 @@ use App\Models\Vehicle;
 use Illuminate\Support\Facades\Mail;
 use Filament\Actions\Testing\TestAction;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Permission;
 
 function makeTransportListEvent(): SportEvent
 {
@@ -262,3 +263,85 @@ it('hides offering transport from non-privileged users when transport is club on
     'event organizer' => [AppRoles::EventOrganizer, true],
     'member' => [AppRoles::Member, false],
 ]);
+
+it('lets only the owner edit and delete a transport offer', function (): void {
+    $event = makeTransportListEvent();
+    $offer = makeTransportListOffer($event);
+
+    $stranger = User::factory()->create(['active' => true]);
+    $this->actingAs($stranger);
+
+    Livewire::test(TransportList::class, ['sportEvent' => $event])
+        ->assertTableActionHidden('edit', $offer)
+        ->assertTableActionHidden('delete', $offer)
+        // Forged requests bypassing the hidden buttons must be rejected server-side too.
+        ->call('mountAction', 'edit', [], ['table' => true, 'recordKey' => (string) $offer->getKey()])
+        ->call('callMountedAction')
+        ->call('mountAction', 'delete', [], ['table' => true, 'recordKey' => (string) $offer->getKey()])
+        ->call('callMountedAction');
+
+    expect($offer->fresh())->not->toBeNull()
+        ->and($offer->fresh()?->departure_place)->not->toBe('Hijacked');
+
+    $this->actingAs($offer->user);
+
+    Livewire::test(TransportList::class, ['sportEvent' => $event])
+        ->assertTableActionVisible('edit', $offer)
+        ->assertTableActionVisible('delete', $offer);
+});
+
+it('lets a user with the Update/Delete:TransportOffer permission manage foreign offers', function (): void {
+    $event = makeTransportListEvent();
+    $offer = makeTransportListOffer($event);
+
+    $manager = User::factory()->create(['active' => true]);
+    Permission::findOrCreate('Update:TransportOffer');
+    Permission::findOrCreate('Delete:TransportOffer');
+    $manager->givePermissionTo(['Update:TransportOffer', 'Delete:TransportOffer']);
+    $this->actingAs($manager);
+
+    Livewire::test(TransportList::class, ['sportEvent' => $event])
+        ->assertTableActionVisible('edit', $offer)
+        ->assertTableActionVisible('delete', $offer);
+});
+
+it('does not let a stranger decide or cancel foreign transport requests', function (): void {
+    $event = makeTransportListEvent();
+    $offer = makeTransportListOffer($event);
+    $request = TransportRequest::factory()->create([
+        'transport_offer_id' => $offer->id,
+        'user_id' => User::factory()->create()->id,
+    ]);
+    $context = ['table' => true, 'recordKey' => (string) $request->getKey()];
+
+    $this->actingAs(User::factory()->create(['active' => true]));
+
+    Livewire::test(RequestsForMyOffersList::class, ['sportEvent' => $event])
+        ->assertCanNotSeeTableRecords([$request])
+        ->call('mountAction', 'approve', [], $context)
+        ->call('callMountedAction')
+        ->call('mountAction', 'reject', [], $context)
+        ->call('callMountedAction');
+
+    Livewire::test(MyTransportRequestsList::class, ['sportEvent' => $event])
+        ->assertCanNotSeeTableRecords([$request])
+        ->call('mountAction', 'cancelRequest', [], $context)
+        ->call('callMountedAction');
+
+    expect($request->fresh()?->status)->toBe(TransportRequestStatus::Pending);
+});
+
+it('shows approve and reject only to the driver of the offer', function (): void {
+    $event = makeTransportListEvent();
+    $offer = makeTransportListOffer($event);
+    $request = TransportRequest::factory()->create([
+        'transport_offer_id' => $offer->id,
+        'user_id' => User::factory()->create()->id,
+    ]);
+
+    $this->actingAs($offer->user);
+
+    Livewire::test(RequestsForMyOffersList::class, ['sportEvent' => $event])
+        ->assertTableActionVisible('approve', $request)
+        ->assertTableActionVisible('reject', $request);
+});
