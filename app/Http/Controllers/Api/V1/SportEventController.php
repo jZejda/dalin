@@ -196,7 +196,7 @@ final class SportEventController extends Controller
             ->map(static fn (RelayTeam $team): array => [
                 'id' => $team->id,
                 'name' => $team->name,
-                'relay_type' => $team->relay_type,
+                'relay_type' => $team->relay_type->value,
                 'slots_count' => $team->slots_count,
                 'members' => $team->members
                     ->map(static fn (RelayTeamMember $member): array => [

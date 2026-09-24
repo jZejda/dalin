@@ -91,6 +91,25 @@ final class OrisApiService
     }
 
     /**
+     * Returns the current ORIS discipline ID of an event, or null when ORIS has no valid answer.
+     */
+    public function getEventDisciplineId(int $orisEventId): ?int
+    {
+        $orisResponse = $this->orisGetResponse([
+            'method' => 'getEvent',
+            'id' => $orisEventId,
+        ]);
+
+        if (! $this->orisMethod->checkOrisResponse($orisResponse)) {
+            return null;
+        }
+
+        $disciplineId = $orisResponse->json('Data.Discipline.ID');
+
+        return is_numeric($disciplineId) ? (int) $disciplineId : null;
+    }
+
+    /**
      * @throws Throwable
      */
     public function updateEvent(int $eventId, bool $updateByCron = false): bool

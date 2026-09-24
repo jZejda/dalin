@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\RelayType;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property int $sport_event_id
  * @property int|null $sport_class_id
  * @property string $name
- * @property string $relay_type
+ * @property RelayType $relay_type
  * @property int $slots_count
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -31,6 +32,14 @@ use Illuminate\Support\Carbon;
 class RelayTeam extends Model
 {
     use HasFactory;
+
+    /** @return array<string, string> */
+    protected function casts(): array
+    {
+        return [
+            'relay_type' => RelayType::class,
+        ];
+    }
 
     protected static function booted(): void
     {

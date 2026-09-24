@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\RelayType;
 use App\Enums\EntryStatus;
 use App\Filament\Resources\SportEvents\Pages\EntrySportEvent;
 use App\Http\Components\Oris\Response\CreateEntry;
@@ -246,7 +247,7 @@ describe('EntryPersister (ORIS)', function (): void {
 // =====================================================================
 describe('storeRelayUserEntry', function (): void {
     beforeEach(function (): void {
-        $this->relayDiscipline = makeRelayDiscipline('ST', 'Štafety');
+        $this->relayDiscipline = makeRelayDiscipline('RE', 'Štafety');
 
         $this->relayEvent = SportEvent::factory()->create([
             'use_oris_for_entries' => false,
@@ -361,7 +362,7 @@ describe('storeRelayUserEntry', function (): void {
 // =====================================================================
 describe('releaseRelaySlot', function (): void {
     test('clears slot binding when entry has relayTeamMember', function (): void {
-        $relayDiscipline = makeRelayDiscipline('SS', 'Sprintové štafety');
+        $relayDiscipline = makeRelayDiscipline('SR', 'Sprintové štafety');
         $relayEvent = SportEvent::factory()->create([
             'use_oris_for_entries' => false,
             'oris_id' => null,
@@ -415,7 +416,7 @@ describe('releaseRelaySlot', function (): void {
 // =====================================================================
 describe('getAvailableRelayMemberSlots', function (): void {
     test('returns only free slots for given event ordered by team name + slot', function (): void {
-        $relayDiscipline = makeRelayDiscipline('DR', 'Družstva');
+        $relayDiscipline = makeRelayDiscipline('TE', 'Družstva');
         $event = SportEvent::factory()->create([
             'use_oris_for_entries' => false,
             'oris_id' => null,
@@ -431,7 +432,7 @@ describe('getAvailableRelayMemberSlots', function (): void {
         $teamB = RelayTeam::query()->create([
             'sport_event_id' => $event->id,
             'name' => 'Beta',
-            'relay_type' => 'DR',
+            'relay_type' => RelayType::Team,
             'slots_count' => 2,
         ]);
 
@@ -463,7 +464,7 @@ describe('getAvailableRelayMemberSlots', function (): void {
     });
 
     test('does not return slots from other events', function (): void {
-        $relayDiscipline = makeRelayDiscipline('ST', 'Štafety A');
+        $relayDiscipline = makeRelayDiscipline('RE', 'Štafety A');
         $eventA = SportEvent::factory()->create([
             'use_oris_for_entries' => false,
             'oris_id' => null,
@@ -509,7 +510,7 @@ describe('page render', function (): void {
             'use_oris_for_entries' => false,
             'oris_id' => null,
             'cancelled' => false,
-            'discipline_id' => makeRelayDiscipline('ST', 'Štafety SA')->id,
+            'discipline_id' => makeRelayDiscipline('RE', 'Štafety SA')->id,
             'sport_id' => 1,
         ]);
 
@@ -647,7 +648,7 @@ describe('EntryDeleter', function (): void {
     });
 
     test('releases relay slot when deleting relay entry', function (): void {
-        $relayDiscipline = makeRelayDiscipline('ST', 'Štafety del');
+        $relayDiscipline = makeRelayDiscipline('RE', 'Štafety del');
         $relayEvent = SportEvent::factory()->create([
             'use_oris_for_entries' => false,
             'oris_id' => null,

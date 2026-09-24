@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders\Demo;
 
+use App\Enums\RelayType;
 use App\Enums\SportEventType;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
@@ -76,7 +77,7 @@ class DemoRelaySeeder extends Seeder
                         'sport_event_id' => $event->id,
                         'sport_class_id' => $sportClass->id,
                         'name'           => 'Demo ' . $definition->name . ' ' . $suffix,
-                        'relay_type'     => 'ST',
+                        'relay_type'     => RelayType::Relay,
                         'slots_count'    => 3,
                     ]);
 

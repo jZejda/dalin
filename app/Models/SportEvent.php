@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\EntryStatus;
+use App\Enums\RelayType;
 use App\Enums\SportEventTransportType;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\AppHelper;
@@ -109,20 +110,7 @@ class SportEvent extends Model
     protected static function booted(): void
     {
         static::created(function (self $sportEvent): void {
-            if (! $sportEvent->isRelayDiscipline()) {
-                return;
-            }
-
-            RelayTeam::query()->firstOrCreate(
-                [
-                    'sport_event_id' => $sportEvent->id,
-                    'name' => 'Štafeta 1',
-                ],
-                [
-                    'relay_type' => $sportEvent->sportDiscipline->short_name ?? 'ST',
-                    'slots_count' => 3,
-                ]
-            );
+            $sportEvent->ensureDefaultRelayTeam();
         });
     }
 
@@ -286,6 +274,25 @@ class SportEvent extends Model
             ($this->last_calculate_cost !== null ? ' | (Náklady naposled : '.$this->last_calculate_cost->format(
                 AppHelper::DATE_TIME_FORMAT
             ).')' : '');
+    }
+
+    /**
+     * Creates the default relay team for a relay-discipline event that has none yet.
+     * Returns true when a team was created.
+     */
+    public function ensureDefaultRelayTeam(): bool
+    {
+        if (! $this->isRelayDiscipline() || $this->relayTeams()->exists()) {
+            return false;
+        }
+
+        $this->relayTeams()->create([
+            'name' => 'Štafeta 1',
+            'relay_type' => RelayType::fromDiscipline(SportDiscipline::query()->find($this->discipline_id)),
+            'slots_count' => 3,
+        ]);
+
+        return true;
     }
 
     public function isRelayDiscipline(): bool

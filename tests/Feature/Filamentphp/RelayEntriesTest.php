@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\EntryStatus;
+use App\Enums\RelayType;
 use App\Filament\Resources\SportEvents\Pages\Actions\Helpers\UserRaceProfiles;
 use App\Models\RelayTeam;
 use App\Models\SportClass;
@@ -42,6 +43,7 @@ test('relay event creates default team with three slots', function (): void {
 
     expect($team)->not()->toBeNull()
         ->and($team?->slots_count)->toBe(3)
+        ->and($team?->relay_type)->toBe(RelayType::Relay)
         ->and($team?->members()->count())->toBe(3);
 });
 
@@ -72,6 +74,8 @@ test('relay team extends member slots when slots count increases', function (): 
     ]);
 
     $team = RelayTeam::query()->where('sport_event_id', $event->id)->firstOrFail();
+    expect($team->relay_type)->toBe(RelayType::Team);
+
     $team->slots_count = 4;
     $team->saveOrFail();
 

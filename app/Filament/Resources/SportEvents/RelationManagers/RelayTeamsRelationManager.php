@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\SportEvents\RelationManagers;
 
+use App\Enums\RelayType;
 use App\Models\RelayTeam;
+use App\Models\SportDiscipline;
+use App\Models\SportEvent;
 use App\Models\SportClass;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
@@ -70,11 +73,8 @@ class RelayTeamsRelationManager extends RelationManager
                     }),
                 Select::make('relay_type')
                     ->label(__('sport-event.relation_relay_teams.relay_type'))
-                    ->options([
-                        'ST' => __('sport-event.relation_relay_teams.relay_type_relay'),
-                        'SS' => __('sport-event.relation_relay_teams.relay_type_sprint_relay'),
-                        'DR' => __('sport-event.relation_relay_teams.relay_type_team'),
-                    ])
+                    ->options(RelayType::class)
+                    ->default(fn (): RelayType => $this->defaultRelayType())
                     ->required(),
                 TextInput::make('slots_count')
                     ->label(__('sport-event.relation_relay_teams.slots_count'))
@@ -99,7 +99,8 @@ class RelayTeamsRelationManager extends RelationManager
                     ->label(__('sport-event.relation_relay_teams.table.class'))
                     ->placeholder(__('sport-event.relation_relay_teams.table.class_placeholder')),
                 TextColumn::make('relay_type')
-                    ->label(__('sport-event.relation_relay_teams.table.relay_type')),
+                    ->label(__('sport-event.relation_relay_teams.table.relay_type'))
+                    ->badge(),
                 TextColumn::make('slots_count')
                     ->label(__('sport-event.relation_relay_teams.table.slots_count')),
                 TextColumn::make('occupied_slots')
@@ -115,5 +116,16 @@ class RelayTeamsRelationManager extends RelationManager
                     DeleteAction::make(),
                 ]),
             ]);
+    }
+
+    private function defaultRelayType(): RelayType
+    {
+        $ownerRecord = $this->getOwnerRecord();
+
+        if (! $ownerRecord instanceof SportEvent) {
+            return RelayType::Relay;
+        }
+
+        return RelayType::fromDiscipline(SportDiscipline::query()->find($ownerRecord->discipline_id));
     }
 }

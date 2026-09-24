@@ -50,7 +50,7 @@ test('marks multi-stage races with the E modifier', function () {
 
 test('marks relay disciplines with the R modifier, taking precedence over stages', function () {
     DB::statement('SET FOREIGN_KEY_CHECKS=0');
-    $discipline = SportDiscipline::create(['short_name' => 'ST', 'long_name' => 'Štafety', 'relays' => true]);
+    $discipline = SportDiscipline::create(['short_name' => 'RE', 'long_name' => 'Štafety', 'relays' => true]);
     DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
     $event = createResolverTestEvent(['discipline_id' => $discipline->id, 'stages' => 3]);
