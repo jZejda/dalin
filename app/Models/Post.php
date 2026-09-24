@@ -8,6 +8,7 @@ use App\Enums\ContentFormat;
 use App\Enums\PostStatus;
 use Filament\Forms\Components\RichEditor\FileAttachmentProviders\SpatieMediaLibraryFileAttachmentProvider;
 use Filament\Forms\Components\RichEditor\Models\Concerns\InteractsWithRichContent;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -35,27 +36,31 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property Carbon|null $updated_at
  * @property-read User|null $user
  */
+#[Fillable([
+    'title',
+    'content',
+    'private',
+    'user_id',
+    'content_mode',
+    'img_url',
+    'editorial',
+])]
 class Post extends Model implements HasMedia
 {
     use SoftDeletes;
     use InteractsWithMedia;
     use InteractsWithRichContent;
 
-    protected $casts = [
-        'private' => PostStatus::class,
-        'content_mode' => ContentFormat::class,
-    ];
-
-    /** @var list<string> */
-    protected $fillable = [
-        'title',
-        'content',
-        'private',
-        'user_id',
-        'content_mode',
-        'img_url',
-        'editorial',
-    ];
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'private' => PostStatus::class,
+            'content_mode' => ContentFormat::class,
+        ];
+    }
 
     public function user(): HasOne
     {
