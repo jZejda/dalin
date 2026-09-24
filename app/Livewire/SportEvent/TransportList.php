@@ -152,10 +152,12 @@ class TransportList extends Component implements HasActions, HasForms, HasTable
                         $this->dispatch('transport-requests-changed');
                     }),
                 EditAction::make()
+                    ->authorize(fn (TransportOffer $record): bool => Auth::user()?->can('update', $record) ?? false)
                     ->modalHeading(__('transport.edit_offer'))
                     ->schema($this->offerFormComponents())
                     ->after(fn () => $this->dispatch('transport-requests-changed')),
                 DeleteAction::make()
+                    ->authorize(fn (TransportOffer $record): bool => Auth::user()?->can('delete', $record) ?? false)
                     ->after(function (TransportOffer $record): void {
                         app(TransportRequestService::class)->cancelOffer($record);
 

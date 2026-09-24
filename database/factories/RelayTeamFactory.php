@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\RelayType;
 use App\Models\RelayTeam;
 use App\Models\SportEvent;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,7 +20,7 @@ class RelayTeamFactory extends Factory
             'sport_event_id' => SportEvent::factory(),
             'sport_class_id' => null,
             'name'           => $this->faker->unique()->city() . ' ' . $this->faker->numberBetween(1, 9),
-            'relay_type'     => 'ST',
+            'relay_type'     => RelayType::Relay,
             'slots_count'    => 3,
         ];
     }

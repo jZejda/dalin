@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\EntryStatus;
+use App\Enums\RelayType;
 use App\Enums\SportEventTransportType;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\AppHelper;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -63,6 +65,44 @@ use Illuminate\Support\Carbon;
  * @property-read string $sport_event_oris_title
  * @property-read string $sport_event_last_cost_calculate
  */
+#[Fillable([
+    'name',
+    'alt_name',
+    'oris_id',
+    'date',
+    'date_end',
+    'place',
+    'region',
+    'organization',
+    'entry_desc',
+    'event_info',
+    'event_warning',
+    'sport_id',
+    'discipline_id',
+    'level_id',
+    'use_oris_for_entries',
+    'ranking',
+    'ranking_coefficient',
+    'event_type',
+    'transport_type',
+    'entry_date_1',
+    'entry_date_2',
+    'entry_date_3',
+    'increase_entry_fee_2',
+    'increase_entry_fee_3',
+    'start_time',
+    'gps_lat',
+    'gps_lon',
+    'weather',
+    'parent_id',
+    'last_update',
+    'last_calculate_cost',
+    'cancelled',
+    'cancelled_reason',
+    'stages',
+    'multi_events',
+    'dont_update_excluded',
+])]
 class SportEvent extends Model
 {
     use HasFactory;
@@ -70,62 +110,9 @@ class SportEvent extends Model
     protected static function booted(): void
     {
         static::created(function (self $sportEvent): void {
-            if (! $sportEvent->isRelayDiscipline()) {
-                return;
-            }
-
-            RelayTeam::query()->firstOrCreate(
-                [
-                    'sport_event_id' => $sportEvent->id,
-                    'name' => 'Štafeta 1',
-                ],
-                [
-                    'relay_type' => $sportEvent->sportDiscipline->short_name ?? 'ST',
-                    'slots_count' => 3,
-                ]
-            );
+            $sportEvent->ensureDefaultRelayTeam();
         });
     }
-
-    /** @var list<string> */
-    protected $fillable = [
-        'name',
-        'alt_name',
-        'oris_id',
-        'date',
-        'date_end',
-        'place',
-        'region',
-        'organization',
-        'entry_desc',
-        'event_info',
-        'event_warning',
-        'sport_id',
-        'discipline_id',
-        'level_id',
-        'use_oris_for_entries',
-        'ranking',
-        'ranking_coefficient',
-        'event_type',
-        'transport_type',
-        'entry_date_1',
-        'entry_date_2',
-        'entry_date_3',
-        'increase_entry_fee_2',
-        'increase_entry_fee_3',
-        'start_time',
-        'gps_lat',
-        'gps_lon',
-        'weather',
-        'parent_id',
-        'last_update',
-        'last_calculate_cost',
-        'cancelled',
-        'cancelled_reason',
-        'stages',
-        'multi_events',
-        'dont_update_excluded',
-    ];
 
     protected $casts = [
         'date' => 'date',
@@ -287,6 +274,25 @@ class SportEvent extends Model
             ($this->last_calculate_cost !== null ? ' | (Náklady naposled : '.$this->last_calculate_cost->format(
                 AppHelper::DATE_TIME_FORMAT
             ).')' : '');
+    }
+
+    /**
+     * Creates the default relay team for a relay-discipline event that has none yet.
+     * Returns true when a team was created.
+     */
+    public function ensureDefaultRelayTeam(): bool
+    {
+        if (! $this->isRelayDiscipline() || $this->relayTeams()->exists()) {
+            return false;
+        }
+
+        $this->relayTeams()->create([
+            'name' => 'Štafeta 1',
+            'relay_type' => RelayType::fromDiscipline(SportDiscipline::query()->find($this->discipline_id)),
+            'slots_count' => 3,
+        ]);
+
+        return true;
     }
 
     public function isRelayDiscipline(): bool

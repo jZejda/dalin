@@ -66,6 +66,7 @@ class MyTransportRequestsList extends Component implements HasActions, HasForms,
             ])
             ->recordActions([
                 Action::make('cancelRequest')
+                    ->authorize(fn (TransportRequest $record): bool => $record->user_id === Auth::id())
                     ->label(__('transport.cancel_request'))
                     ->color('gray')
                     ->button()
