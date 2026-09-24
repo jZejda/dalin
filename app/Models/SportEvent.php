@@ -9,6 +9,7 @@ use App\Enums\SportEventTransportType;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\AppHelper;
 use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -63,6 +64,44 @@ use Illuminate\Support\Carbon;
  * @property-read string $sport_event_oris_title
  * @property-read string $sport_event_last_cost_calculate
  */
+#[Fillable([
+    'name',
+    'alt_name',
+    'oris_id',
+    'date',
+    'date_end',
+    'place',
+    'region',
+    'organization',
+    'entry_desc',
+    'event_info',
+    'event_warning',
+    'sport_id',
+    'discipline_id',
+    'level_id',
+    'use_oris_for_entries',
+    'ranking',
+    'ranking_coefficient',
+    'event_type',
+    'transport_type',
+    'entry_date_1',
+    'entry_date_2',
+    'entry_date_3',
+    'increase_entry_fee_2',
+    'increase_entry_fee_3',
+    'start_time',
+    'gps_lat',
+    'gps_lon',
+    'weather',
+    'parent_id',
+    'last_update',
+    'last_calculate_cost',
+    'cancelled',
+    'cancelled_reason',
+    'stages',
+    'multi_events',
+    'dont_update_excluded',
+])]
 class SportEvent extends Model
 {
     use HasFactory;
@@ -86,46 +125,6 @@ class SportEvent extends Model
             );
         });
     }
-
-    /** @var list<string> */
-    protected $fillable = [
-        'name',
-        'alt_name',
-        'oris_id',
-        'date',
-        'date_end',
-        'place',
-        'region',
-        'organization',
-        'entry_desc',
-        'event_info',
-        'event_warning',
-        'sport_id',
-        'discipline_id',
-        'level_id',
-        'use_oris_for_entries',
-        'ranking',
-        'ranking_coefficient',
-        'event_type',
-        'transport_type',
-        'entry_date_1',
-        'entry_date_2',
-        'entry_date_3',
-        'increase_entry_fee_2',
-        'increase_entry_fee_3',
-        'start_time',
-        'gps_lat',
-        'gps_lon',
-        'weather',
-        'parent_id',
-        'last_update',
-        'last_calculate_cost',
-        'cancelled',
-        'cancelled_reason',
-        'stages',
-        'multi_events',
-        'dont_update_excluded',
-    ];
 
     protected $casts = [
         'date' => 'date',

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,6 +21,13 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
+#[Fillable([
+    'sport_event_id',
+    'sport_class_id',
+    'name',
+    'relay_type',
+    'slots_count',
+])]
 class RelayTeam extends Model
 {
     use HasFactory;
@@ -36,15 +44,6 @@ class RelayTeam extends Model
             }
         });
     }
-
-    /** @var list<string> */
-    protected $fillable = [
-        'sport_event_id',
-        'sport_class_id',
-        'name',
-        'relay_type',
-        'slots_count',
-    ];
 
     /** @return BelongsTo<SportEvent, $this> */
     public function sportEvent(): BelongsTo
