@@ -1,47 +1,43 @@
-<?php
-    use App\Models\Post;
+@php
     use App\Enums\ContentFormat;
-    use Illuminate\Support\Carbon;
-    /** @var Post $post */
-?>
+    use App\Models\Post;
 
-@extends('layouts.app')
+    /** @var Post $post */
+    $cover = $post->coverUrl('hero');
+@endphp
+
+@extends('layouts.terrain')
 
 @section('title', $post->title ?? '')
 
 @section('content')
-    <div class="py-4 md:py-8 bg-[url(https://abmbrno.cz/images/topography1.svg)] bg-slate-950 text-gray-700 dark:text-gray-300">
-        <div class="container mx-auto">
-            <div class="ml-3 text-2xl md:text-4xl bg-gradient-to-r from-yellow-400 to-amber-200 inline-block text-transparent bg-clip-text font-extrabold">
-                @if($post->content_mode === ContentFormat::Html)
-                    {!! $post->title !!}
-                @elseif($post->content_mode === ContentFormat::Markdown)
-                    {{ Markdown::parse($post->title) }}
-                @endif
-            </div>
+    <section class="terrain-contours">
+        <div class="mx-auto max-w-terrain px-4 py-8 sm:px-6 md:py-12">
+            <nav aria-label="{{ __('content.post.public.breadcrumb_label') }}" class="mb-6 flex min-w-0 flex-wrap items-center gap-2 text-sm text-terrain-secondary">
+                <a href="{{ url('/') }}" class="inline-flex min-h-11 items-center hover:underline">{{ __('content.post.public.breadcrumb_home') }}</a><span aria-hidden="true">/</span>
+                <a href="{{ url('/#novinky') }}" class="inline-flex min-h-11 items-center hover:underline">{{ __('content.post.public.breadcrumb_news') }}</a><span aria-hidden="true">/</span>
+                <span aria-current="page" class="min-w-0 break-words">{{ $post->title }}</span>
+            </nav>
+            <h1 class="max-w-3xl break-words text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-5xl">{{ $post->title }}</h1>
         </div>
-    </div>
+    </section>
 
-    <div class="p-4 bg-white dark:bg-gray-900">
-        <div class="container mx-auto app-front-content mb-10">
-            @if($cover = $post->coverUrl('hero'))
-                <img src="{{ $cover }}" alt="" class="mb-8 aspect-[7/2] w-full rounded-lg object-cover">
+    <div class="mx-auto max-w-terrain px-4 py-8 sm:px-6 md:py-10">
+        @if ($cover)
+            <img src="{{ $cover }}" alt="" class="mb-8 aspect-[7/2] w-full rounded-terrain-panel border border-terrain-line object-cover md:mb-10">
+        @endif
+
+        <div class="terrain-prose">
+            @if ($post->content_mode === ContentFormat::Html)
+                {!! $post->content !!}
+            @elseif ($post->content_mode === ContentFormat::Markdown)
+                {{ Markdown::parse($post->content) }}
             @endif
-
-            @if($post->content_mode === ContentFormat::Html)
-                <p>{!! $post->content !!}</p>
-            @elseif($post->content_mode === ContentFormat::Markdown)
-                <p>{{ Markdown::parse($post->content) }}</p>
-            @endif
-
-            <div class="mt-10">
-                <figcaption class="flex items-center mt-6 space-x-3">
-                    <div class="flex items-center divide-x-2 divide-gray-300 dark:divide-gray-700">
-                        <cite class="pr-3 font-medium text-gray-900 dark:text-white">{{  $post->user->name }}</cite>
-                        <cite class="pl-3 text-sm font-light text-gray-500 dark:text-gray-400">{{ Carbon::createFromFormat('Y-m-d H:i:s', $post->created_at)->format('H:i - d.h.Y')  }}</cite>
-                    </div>
-                </figcaption>
-            </div>
         </div>
+
+        <dl class="mt-10 flex flex-wrap gap-x-8 gap-y-4 text-sm">
+            @if ($post->user)<div><dt class="text-terrain-secondary">{{ __('content.post.public.author') }}</dt><dd class="mt-1 font-semibold">{{ $post->user->name }}</dd></div>@endif
+            @if ($post->created_at)<div><dt class="text-terrain-secondary">{{ __('content.post.public.published') }}</dt><dd class="mt-1 font-semibold"><time datetime="{{ $post->created_at->toIso8601String() }}">{{ $post->created_at->format('d. m. Y') }}</time></dd></div>@endif
+        </dl>
     </div>
 @endsection

@@ -10,7 +10,10 @@
             <div class="flex flex-1 flex-col p-5">
                 <h3 class="text-base font-bold leading-snug"><a href="{{ url('/novinka', $post->id) }}" class="decoration-terrain-accent underline-offset-4 after:absolute after:inset-0 group-hover:underline">{{ $post->title }}</a></h3>
                 <div class="mt-auto flex items-center justify-between gap-4 pt-5 text-xs text-terrain-secondary">
-                    <time datetime="{{ $post->created_at?->toIso8601String() }}">{{ $post->created_at?->format('d. m. Y') }}</time>
+                    <p class="flex min-w-0 flex-wrap items-center gap-x-2">
+                        @if ($post->user)<span class="truncate font-semibold text-terrain-ink">{{ $post->user->name }}</span><span aria-hidden="true">·</span>@endif
+                        <time datetime="{{ $post->created_at?->toIso8601String() }}">{{ $post->created_at?->format('d. m. Y') }}</time>
+                    </p>
                     @svg('lucide-arrow-right', 'lucide-arrow-right size-4 shrink-0 text-terrain-ink transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none', ['aria-hidden' => 'true'])
                 </div>
             </div>

@@ -113,6 +113,14 @@ return [
                 'selection_all'             => 'Všem aktivním uživatelům systému',
             ],
         ],
+
+        'public' => [
+            'breadcrumb_label' => 'Drobečková navigace',
+            'breadcrumb_home'  => 'Úvod',
+            'breadcrumb_news'  => 'Novinky',
+            'author'           => 'Autor',
+            'published'        => 'Publikováno',
+        ],
     ],
 
     'category' => [

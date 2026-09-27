@@ -113,6 +113,14 @@ return [
                 'selection_all'             => 'All active users of the system',
             ],
         ],
+
+        'public' => [
+            'breadcrumb_label' => 'Breadcrumb',
+            'breadcrumb_home'  => 'Home',
+            'breadcrumb_news'  => 'News',
+            'author'           => 'Author',
+            'published'        => 'Published',
+        ],
     ],
 
     'category' => [

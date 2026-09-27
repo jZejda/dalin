@@ -64,6 +64,7 @@ it('keeps public news filtering and shows a cover image or a placeholder with a 
 
     Livewire::test(PostCards::class, ['terrain' => true])
         ->assertSee('Veřejná Terrain novinka')
+        ->assertSeeInOrder([$user->name, $public->created_at->format('d. m. Y')])
         ->assertSee(url('/novinka', $public->id))
         ->assertSee('terrain-cover-placeholder', false)
         ->assertSee('conversions/cover-card.jpg', false)
@@ -97,11 +98,12 @@ it('prefers the uploaded cover, keeps absolute img_url and ignores lost legacy r
         ->and($uploaded->coverUrl('hero'))->toEndWith('conversions/cover-hero.jpg');
 });
 
-it('shows the uploaded cover on the post detail page', function () {
+it('shows the post detail in the terrain layout with the uploaded cover and author', function () {
     Storage::fake('public');
     $this->withoutVite();
+    $author = User::factory()->create();
     $post = Post::create([
-        'user_id' => User::factory()->create()->id,
+        'user_id' => $author->id,
         'title' => 'Novinka s obrázkem v detailu',
         'content' => 'Obsah',
         'content_mode' => ContentFormat::Html,
@@ -112,7 +114,10 @@ it('shows the uploaded cover on the post detail page', function () {
 
     $this->get(url('/novinka', $post->id))
         ->assertOk()
-        ->assertSee('conversions/cover-hero.jpg', false);
+        ->assertSee('conversions/cover-hero.jpg', false)
+        ->assertSee('max-w-terrain', false)
+        ->assertSee(url('/#novinky'), false)
+        ->assertSeeInOrder(['Obsah', $author->name, $post->created_at->format('d. m. Y')]);
 });
 
 it('renders real event details and highlights the configured organizing club', function () {
