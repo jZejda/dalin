@@ -77,8 +77,9 @@ class DemoPostSeeder extends Seeder
 
         // Rendered at half size and upscaled: pixel-by-pixel PHP is slow, and the upscale
         // also thickens contours so they stay visible on the small card conversion
-        $width = 840;
-        $height = 240;
+        // 16:10 source, so both the 4:3 card and the 7:2 hero crop have enough pixels
+        $width = 640;
+        $height = 400;
         $image = imagecreatetruecolor($width, $height);
 
         $colors = [
@@ -89,8 +90,8 @@ class DemoPostSeeder extends Seeder
             'contour' => (int) imagecolorallocate($image, 190, 105, 40),
         ];
 
-        $elevation = $this->randomHills(6, $width, $height, 190.0);
-        $vegetation = $this->randomHills(5, $width, $height, 130.0);
+        $elevation = $this->randomHills(6, $width, $height, 170.0);
+        $vegetation = $this->randomHills(5, $width, $height, 120.0);
         $contourStep = 0.22;
         $previousRow = [];
 

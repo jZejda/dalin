@@ -83,7 +83,7 @@ return [
             'author'                   => 'Autor',
             'format'                   => 'Formát',
             'cover'                    => 'Titulní obrázek',
-            'cover_helper'             => 'Zobrazí se na kartě novinky na titulní stránce a v záhlaví detailu. Obrázek se ořízne na široký formát 7 : 2 (střed zůstává) – důležitý motiv proto dejte doprostřed, případně si výřez upravte v editoru. JPG, PNG nebo WebP, max. 8 MB.',
+            'cover_helper'             => 'Na titulní stránce se zobrazí na kartě novinky ve formátu 4 : 3, v záhlaví detailu jako široký pruh 7 : 2. Oba výřezy se berou ze středu obrázku – nejlépe nahrajte neořezanou fotku s hlavním motivem uprostřed. JPG, PNG nebo WebP, max. 8 MB.',
         ],
 
         'table' => [

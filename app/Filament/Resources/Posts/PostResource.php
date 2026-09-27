@@ -135,7 +135,7 @@ class PostResource extends Resource implements HasShieldPermissions
                                 ->image()
                                 ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                                 ->imageEditor()
-                                ->imageEditorAspectRatioOptions(['7:2', null])
+                                ->imageEditorAspectRatioOptions([null, '4:3', '7:2'])
                                 ->maxSize(8192),
                         ])->columnSpan([
                             'sm' => 1,

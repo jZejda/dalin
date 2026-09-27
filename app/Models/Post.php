@@ -70,7 +70,7 @@ class Post extends Model implements HasMedia
     }
 
     /**
-     * Cover image URL for the given media conversion ('card' for news cards, 'hero' for the detail page).
+     * Cover image URL for the given media conversion ('card' 4:3 for news cards, 'hero' 7:2 for the detail page).
      * An uploaded cover wins; otherwise an absolute img_url (e.g. set via API) is used as is.
      * Legacy relative img_url paths ("media/2022/06/thubnails/a.png") point to files lost in the
      * old-site migration, so they are ignored and the caller renders its placeholder instead.
@@ -102,7 +102,7 @@ class Post extends Model implements HasMedia
         $this->addMediaConversion('card')
             ->performOnCollections(self::MEDIA_COLLECTION_COVER)
             ->nonQueued()
-            ->fit(Fit::Crop, 840, 240)
+            ->fit(Fit::Crop, 800, 600)
             ->format('jpg');
 
         $this->addMediaConversion('hero')

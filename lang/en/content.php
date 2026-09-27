@@ -83,7 +83,7 @@ return [
             'author'                   => 'Author',
             'format'                   => 'Format',
             'cover'                    => 'Cover image',
-            'cover_helper'             => 'Shown on the news card on the homepage and in the header of the news detail. The image is cropped to a wide 7 : 2 format (centered) – keep the key subject in the middle or adjust the crop in the editor. JPG, PNG or WebP, max 8 MB.',
+            'cover_helper'             => 'On the homepage the news card shows it in 4 : 3, the news detail header as a wide 7 : 2 strip. Both crops are taken from the centre of the image – ideally upload an uncropped photo with the key subject in the middle. JPG, PNG or WebP, max 8 MB.',
         ],
 
         'table' => [

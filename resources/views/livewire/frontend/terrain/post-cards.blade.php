@@ -3,9 +3,9 @@
         @php($cover = $post->coverUrl())
         <article wire:key="terrain-post-{{ $post->id }}" class="group relative flex min-w-0 flex-col overflow-hidden rounded-terrain-panel border border-terrain-line bg-terrain-surface transition-colors hover:bg-terrain-muted motion-reduce:transition-none">
             @if ($cover)
-                <img src="{{ $cover }}" alt="" loading="lazy" class="aspect-[7/2] w-full object-cover">
+                <img src="{{ $cover }}" alt="" loading="lazy" class="aspect-[4/3] w-full object-cover">
             @else
-                <div class="terrain-cover-placeholder aspect-[7/2] w-full" aria-hidden="true"></div>
+                <div class="terrain-cover-placeholder aspect-[4/3] w-full" aria-hidden="true"></div>
             @endif
             <div class="flex flex-1 flex-col p-5">
                 <h3 class="text-base font-bold leading-snug"><a href="{{ url('/novinka', $post->id) }}" class="decoration-terrain-accent underline-offset-4 after:absolute after:inset-0 group-hover:underline">{{ $post->title }}</a></h3>
