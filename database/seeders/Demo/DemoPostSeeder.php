@@ -39,6 +39,18 @@ class DemoPostSeeder extends Seeder
             'Orientační závod pro školy',
             'Podmínky registrace pro nové členy',
             'Konec sezony – bilancování roku',
+            'Noční závod v Moravském krasu',
+            'Nová mapa Babí lom je hotová',
+            'Brigáda na údržbu klubových lampionů',
+            'Štafety na mistrovství oblasti',
+            'Zimní liga – výsledky 3. kola',
+            'Trénink s buzolou pro začátečníky',
+            'Jarní soustředění v Českém ráji',
+            'Hledáme pořadatele na oblastní žebříček',
+            'Klubové oblečení – objednávky do konce měsíce',
+            'MTBO: první závod sezony',
+            'Sprintový pohár v ulicích Brna',
+            'Dorostenci na mezinárodním závodě v Rakousku',
         ];
 
         foreach ($titles as $index => $title) {
@@ -48,7 +60,8 @@ class DemoPostSeeder extends Seeder
             /** @var list<string> $paragraphs */
             $paragraphs = $faker->paragraphs($faker->numberBetween(2, 5));
 
-            $post = Post::create([
+            // forceCreate: created_at is not fillable, a plain create() would silently date every post "now"
+            $post = Post::query()->forceCreate([
                 'user_id'      => $admin->id,
                 'title'        => $title,
                 'editorial'    => $faker->optional(0.7)->sentence(),

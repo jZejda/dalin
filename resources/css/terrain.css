@@ -8,6 +8,8 @@
 @source '../views/livewire/frontend/terrain';
 @source '../views/pages/frontend/single-event.blade.php';
 @source '../views/pages/frontend/show-post.blade.php';
+@source '../views/pages/frontend/posts.blade.php';
+@source '../views/pagination/terrain.blade.php';
 @source '../views/pages/frontend/terrain';
 
 @custom-variant dark (&:where(.dark, .dark *));

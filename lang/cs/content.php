@@ -120,6 +120,10 @@ return [
             'breadcrumb_news'  => 'Novinky',
             'author'           => 'Autor',
             'published'        => 'Publikováno',
+            'more_link'        => 'Ostatní novinky',
+            'index_lead'       => 'Zprávy z oddílu, pozvánky na akce a výsledky – od nejnovějších.',
+            'index_empty'      => 'Zatím tu nejsou žádné novinky. Brzy se dozvíte, co se v klubu děje.',
+            'index_page_title' => 'Novinky – strana :page',
         ],
     ],
 

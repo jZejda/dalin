@@ -33,6 +33,8 @@ it('shows the terrain homepage with the public map, theme controls and configure
         ->assertSee(__('frontend.dalin_promo.heading'))
         ->assertSee('images/dalin/races-dark.webp', false)
         ->assertSee('href="https://dalin.cz"', false)
+        ->assertSee(route('posts.index'), false)
+        ->assertSee(__('content.post.public.more_link'))
         ->assertSee('Mapa nadcházejících akcí')
         ->assertSee('https://mapy.orientacnisporty.cz/cs/clubs/test', false)
         ->assertDontSee('7-jihomoravska-liga-2026-novinky');
@@ -120,7 +122,7 @@ it('shows the post detail in the terrain layout with the uploaded cover and auth
         ->assertOk()
         ->assertSee('conversions/cover-hero.jpg', false)
         ->assertSee('max-w-terrain', false)
-        ->assertSee(url('/#novinky'), false)
+        ->assertSee(route('posts.index'), false)
         ->assertSeeInOrder(['Obsah', $author->name, $post->created_at->format('d. m. Y')]);
 });
 
@@ -193,3 +195,14 @@ it('shortens long places to 30 characters while retaining the full name in the t
     [str_repeat('Ž', 30), str_repeat('Ž', 30)],
     [str_repeat('Ž', 31), str_repeat('Ž', 29) . '…'],
 ]);
+
+it('lists up to six upcoming events on the terrain homepage', function () {
+    SportEvent::factory()->count(7)->create([
+        'date' => Carbon::tomorrow(),
+        'sport_id' => 1,
+        'event_type' => SportEventType::Race,
+        'cancelled' => false,
+    ]);
+
+    expect(Livewire::test(EventList::class, ['terrain' => true])->viewData('events'))->toHaveCount(6);
+});

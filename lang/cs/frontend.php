@@ -9,6 +9,13 @@ return [
         'switch_to_dark'  => 'Přepnout na tmavý režim',
     ],
 
+    'pagination' => [
+        'label'    => 'Stránkování',
+        'previous' => 'Předchozí',
+        'next'     => 'Další',
+        'page'     => 'Strana :page',
+    ],
+
     'dalin_promo' => [
         'label'          => 'O systému DaLin',
         'tagline'        => 'Informační systém pro orientační kluby',

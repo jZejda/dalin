@@ -15,7 +15,7 @@
         <div class="mx-auto max-w-terrain px-4 py-8 sm:px-6 md:py-12">
             <nav aria-label="{{ __('content.post.public.breadcrumb_label') }}" class="mb-6 flex min-w-0 flex-wrap items-center gap-2 text-sm text-terrain-secondary">
                 <a href="{{ url('/') }}" class="inline-flex min-h-11 items-center hover:underline">{{ __('content.post.public.breadcrumb_home') }}</a><span aria-hidden="true">/</span>
-                <a href="{{ url('/#novinky') }}" class="inline-flex min-h-11 items-center hover:underline">{{ __('content.post.public.breadcrumb_news') }}</a><span aria-hidden="true">/</span>
+                <a href="{{ route('posts.index') }}" class="inline-flex min-h-11 items-center hover:underline">{{ __('content.post.public.breadcrumb_news') }}</a><span aria-hidden="true">/</span>
                 <span aria-current="page" class="min-w-0 break-words">{{ $post->title }}</span>
             </nav>
             <h1 class="max-w-3xl break-words text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl md:text-5xl">{{ $post->title }}</h1>

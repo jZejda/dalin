@@ -120,6 +120,10 @@ return [
             'breadcrumb_news'  => 'News',
             'author'           => 'Author',
             'published'        => 'Published',
+            'more_link'        => 'More news',
+            'index_lead'       => 'Club news, event invitations and results – newest first.',
+            'index_empty'      => 'There is no news yet. You will soon find out what is happening in the club.',
+            'index_page_title' => 'News – page :page',
         ],
     ],
 

@@ -39,7 +39,7 @@ class EventList extends Component
                 SportEventType::TrainingCamp->value,
             ])
             ->sport(1)
-            ->limit($this->terrain ? 3 : 6)
+            ->limit(6)
             ->orderBy('date', 'asc')
             ->get();
     }

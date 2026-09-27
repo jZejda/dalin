@@ -11,8 +11,9 @@
         </div>
     </section>
     <div class="mx-auto max-w-terrain px-4 sm:px-6">
-        <section id="novinky" class="py-terrain-section">
-            <x-ui.section-heading>Novinky</x-ui.section-heading>
+        {{-- Bottom padding left to the calendar section so the two blocks sit closer together --}}
+        <section id="novinky" class="pt-terrain-section">
+            <x-ui.section-heading>Novinky<x-slot:action><a href="{{ route('posts.index') }}" class="inline-flex min-h-11 items-center gap-2 text-sm font-semibold hover:underline">{{ __('content.post.public.more_link') }} @svg('lucide-arrow-right', 'size-4', ['aria-hidden' => 'true'])</a></x-slot:action></x-ui.section-heading>
             <livewire:frontend.post-cards :terrain="true" />
         </section>
         <section id="kalendar" class="py-terrain-section">

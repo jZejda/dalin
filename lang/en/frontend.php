@@ -9,6 +9,13 @@ return [
         'switch_to_dark'  => 'Switch to dark mode',
     ],
 
+    'pagination' => [
+        'label'    => 'Pagination',
+        'previous' => 'Previous',
+        'next'     => 'Next',
+        'page'     => 'Page :page',
+    ],
+
     'dalin_promo' => [
         'label'          => 'About DaLin',
         'tagline'        => 'Information system for orienteering clubs',
