@@ -88,7 +88,7 @@ it('offers the existing entry page for guests and signed-in users without exposi
     $url = SportEventResource::getUrl('entry', ['record' => $this->event->id], panel: 'admin');
     $this->get(route('sport-event.show', $this->event->id))
         ->assertOk()->assertSee($url)->assertSee(__('sport-event.public.login_for_entries'))
-        ->assertSee('data-terrain-theme', false);
+        ->assertSee('data-terrain-theme-toggle', false);
 
     $user = User::factory()->create();
     $this->actingAs($user)->get(route('sport-event.show', $this->event->id))

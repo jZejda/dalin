@@ -11,7 +11,7 @@
                 <a href="{{ url('/stranka/o-klubu') }}" class="inline-flex min-h-11 items-center hover:text-terrain-accent focus-visible:outline-terrain-accent!">Klub</a>
                 <a href="{{ url('/stranka/poradane-zavody') }}" class="inline-flex min-h-11 items-center hover:text-terrain-accent focus-visible:outline-terrain-accent!">Závody</a>
             </div>
-            <x-ui.theme-select />
+            <x-ui.theme-toggle class="focus-visible:outline-terrain-accent!" />
             <x-ui.button href="{{ url('/admin') }}" class="focus-visible:outline-terrain-accent!">{{ auth()->check() ? 'Členská sekce' : 'Přihlásit se' }}</x-ui.button>
         </nav>
     </div>

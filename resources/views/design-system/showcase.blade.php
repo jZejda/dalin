@@ -18,14 +18,7 @@
                 <a href="#components" class="hover:underline focus-visible:outline-terrain-accent!">Komponenty</a>
                 <a href="#example" class="hover:underline focus-visible:outline-terrain-accent!">Ukázka akce</a>
             </nav>
-            <div class="flex items-center gap-3 text-sm">
-                <label for="terrain-theme">Vzhled</label>
-                <select id="terrain-theme" data-terrain-theme class="min-h-11 rounded-terrain-control border border-terrain-line bg-terrain-nav px-3 text-terrain-on-nav focus-visible:outline-terrain-accent!">
-                    <option value="system">Podle systému</option>
-                    <option value="light">Světlý</option>
-                    <option value="dark">Tmavý</option>
-                </select>
-            </div>
+            <x-ui.theme-toggle class="focus-visible:outline-terrain-accent!" />
         </div>
     </header>
     <main id="content">

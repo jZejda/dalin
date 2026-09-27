@@ -27,8 +27,12 @@ it('shows the terrain homepage with the public map, theme controls and configure
         ->assertOk()
         ->assertSee('Testovací klub')
         ->assertSee('Orientace')
-        ->assertSee('data-terrain-theme', false)
+        ->assertSee('data-terrain-theme-toggle', false)
+        ->assertSee(__('frontend.theme.switch_to_light'), false)
         ->assertSee('aria-controls="terrain-navigation"', false)
+        ->assertSee(__('frontend.dalin_promo.heading'))
+        ->assertSee('images/dalin/races-dark.webp', false)
+        ->assertSee('href="https://dalin.cz"', false)
         ->assertSee('Mapa nadcházejících akcí')
         ->assertSee('https://mapy.orientacnisporty.cz/cs/clubs/test', false)
         ->assertDontSee('7-jihomoravska-liga-2026-novinky');

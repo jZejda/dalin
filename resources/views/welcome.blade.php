@@ -26,12 +26,7 @@
             </div>
         </section>
     </div>
-    <section class="terrain-contours border-y border-terrain-line bg-terrain-muted">
-        <div class="mx-auto grid max-w-terrain gap-8 px-4 py-12 sm:px-6 md:grid-cols-2 md:items-center">
-            <div><p class="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-terrain-secondary">Více času na to podstatné</p><h2 class="text-4xl font-extrabold tracking-tight">DALIN</h2><p class="mt-3 text-xl font-bold">Informační systém<br>pro orientační kluby</p></div>
-            <div><p class="max-w-lg leading-relaxed text-terrain-secondary">Závody, přihlášky, výsledky i lidé na jednom místě. Pro členy a pořadatele, kteří chtějí trávit více času v terénu.</p><div class="mt-6"><x-ui.button href="https://docs.dalin.cz">Prozkoumat DALIN <span aria-hidden="true">→</span></x-ui.button></div></div>
-        </div>
-    </section>
+    <x-ui.dalin-promo />
     <section class="mx-auto max-w-terrain px-4 py-12 sm:px-6" aria-labelledby="partners-heading">
         <h2 id="partners-heading" class="mb-6 text-sm font-semibold uppercase tracking-widest text-terrain-secondary">Partneři</h2>
         <div class="terrain-partners max-w-xl">@include('partials.frontend.partner-logos-vertical')</div>

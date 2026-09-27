@@ -12,8 +12,8 @@ it('shows the terrain design system without loading club data or filament assets
         ->assertSee('Terrain — DALIN design system')
         ->assertSee('Design tokeny')
         ->assertSee('Ilustrační data')
-        ->assertSee('data-terrain-theme', false)
-        ->assertSee('Podle systému')
+        ->assertSee('data-terrain-theme-toggle', false)
+        ->assertSee(__('frontend.theme.switch_to_dark'))
         ->assertSee('aria-invalid="true"', false)
         ->assertDontSee('filament/filament', false);
 });

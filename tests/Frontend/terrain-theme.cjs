@@ -11,16 +11,24 @@ const assert = require('node:assert/strict');
         page.on('pageerror', error => errors.push(error.message));
         const isDark = () => page.evaluate(() => document.documentElement.classList.contains('dark'));
         const bodyColor = () => page.locator('body').evaluate(el => getComputedStyle(el).backgroundColor);
+        const toggle = '[data-terrain-theme-toggle]';
+        const setTheme = async (target, theme) => {
+            if (await target.evaluate(() => document.documentElement.classList.contains('dark')) !== (theme === 'dark')) {
+                await target.click(toggle);
+            }
+        };
         const url = process.env.TERRAIN_TEST_URL || 'http://localhost/design-system';
         assert.equal((await page.goto(url)).status(), 200);
         assert.equal(await isDark(), true);
         assert.equal(await bodyColor(), 'rgb(23, 27, 29)');
-        assert.equal(await page.locator('[data-terrain-theme]').inputValue(), 'system');
+        assert.equal(await page.locator(toggle).getAttribute('aria-label'), 'Přepnout na světlý režim');
+        assert.equal(await page.evaluate(() => localStorage.getItem('color-theme')), null); // Follows the OS until clicked.
 
         for (const width of [390, 1440]) {
             await page.setViewportSize({ width, height: 1000 });
             for (const theme of ['light', 'dark']) {
-                await page.selectOption('[data-terrain-theme]', theme);
+                await setTheme(page, theme);
+                assert.equal(await page.evaluate(() => localStorage.getItem('color-theme')), theme);
                 assert.equal(await isDark(), theme === 'dark');
                 assert.equal(await bodyColor(), theme === 'dark' ? 'rgb(23, 27, 29)' : 'rgb(250, 250, 248)');
                 assert.equal(await page.locator('.terrain-button-primary').first().evaluate(el => getComputedStyle(el).color), 'rgb(32, 36, 38)');
@@ -32,16 +40,16 @@ const assert = require('node:assert/strict');
         assert.equal(await isDark(), true);
         await page.emulateMedia({ colorScheme: 'light' });
         assert.equal(await isDark(), true); // Explicit preference beats OS theme.
-        await page.selectOption('[data-terrain-theme]', 'system');
+        await page.click(toggle);
         assert.equal(await isDark(), false);
-        assert.equal(await page.evaluate(() => localStorage.getItem('color-theme')), null);
+        assert.equal(await page.locator(toggle).getAttribute('aria-label'), 'Přepnout na tmavý režim');
         await page.emulateMedia({ colorScheme: 'dark' });
-        await page.waitForFunction(() => document.documentElement.classList.contains('dark'));
+        assert.equal(await isDark(), false); // The toggled choice stays pinned.
 
         const other = await context.newPage();
         await other.goto(url);
-        await other.selectOption('[data-terrain-theme]', 'light');
-        await page.waitForFunction(() => !document.documentElement.classList.contains('dark'));
+        await other.click(toggle);
+        await page.waitForFunction(() => document.documentElement.classList.contains('dark'));
 
         const blocked = await browser.newContext({ colorScheme: 'dark' });
         await blocked.addInitScript(() => {
@@ -49,10 +57,10 @@ const assert = require('node:assert/strict');
         });
         const blockedPage = await blocked.newPage();
         await blockedPage.goto(url);
-        await blockedPage.selectOption('[data-terrain-theme]', 'light');
+        await blockedPage.click(toggle);
         assert.equal(await blockedPage.evaluate(() => document.documentElement.classList.contains('dark')), false);
         assert.deepEqual(errors, []);
-        console.log('Terrain: mobile/desktop light/dark, system changes, persistence, cross-tab sync and unavailable storage passed.');
+        console.log('Terrain: mobile/desktop light/dark toggle, OS default, persistence, cross-tab sync and unavailable storage passed.');
     } finally {
         await browser.close();
     }

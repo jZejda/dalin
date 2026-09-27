@@ -21,7 +21,10 @@ const assert = require('node:assert/strict');
                 assert.equal(await page.locator('#terrain-navigation').isVisible(), true);
             }
             for (const theme of ['light', 'dark']) {
-                await page.selectOption('[data-terrain-theme]', theme);
+                if (await page.evaluate(() => document.documentElement.classList.contains('dark')) !== (theme === 'dark')) {
+                    await page.click('[data-terrain-theme-toggle]');
+                }
+                assert.equal(await page.locator('[data-terrain-theme-toggle]').getAttribute('aria-label'), theme === 'dark' ? 'Přepnout na světlý režim' : 'Přepnout na tmavý režim');
                 assert.equal(await page.locator('body').evaluate(el => getComputedStyle(el).backgroundColor), theme === 'dark' ? 'rgb(23, 27, 29)' : 'rgb(250, 250, 248)');
                 assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
                 for (const date of await page.locator('#kalendar time').all()) {

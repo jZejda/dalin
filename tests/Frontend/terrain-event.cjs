@@ -18,7 +18,9 @@ const assert = require('node:assert/strict');
             assert.ok(title.trim());
             for (const theme of ['light', 'dark']) {
                 if (width === 390) await page.getByRole('button', { name: 'Menu' }).click();
-                await page.selectOption('[data-terrain-theme]', theme);
+                if (await page.evaluate(() => document.documentElement.classList.contains('dark')) !== (theme === 'dark')) {
+                    await page.click('[data-terrain-theme-toggle]');
+                }
                 if (width === 390) await page.keyboard.press('Escape');
                 assert.equal(await page.locator('body').evaluate(el => getComputedStyle(el).backgroundColor), theme === 'dark' ? 'rgb(23, 27, 29)' : 'rgb(250, 250, 248)');
                 assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
