@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Frontend;
 
 use App\Models\Post;
@@ -9,17 +11,20 @@ use Livewire\Component;
 
 class PostCards extends Component
 {
+    public bool $terrain = false;
+
     public function render(): View
     {
         //dd($this->getLastPosts());
 
-        return view('livewire.frontend.post-cards', ['posts' => $this->getLastPosts()]);
+        return view($this->terrain ? 'livewire.frontend.terrain.post-cards' : 'livewire.frontend.post-cards', ['posts' => $this->getLastPosts()]);
     }
 
     private function getLastPosts(): Collection
     {
-        return Post::where('private', '=', false)
-            ->limit(6)
+        return Post::with(['media', 'user'])
+            ->where('private', '=', false)
+            ->limit($this->terrain ? 3 : 6)
             ->orderBy('created_at', 'desc')
             ->get();
     }

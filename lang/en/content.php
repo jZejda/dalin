@@ -82,6 +82,8 @@ return [
             'private'                  => 'Internal news',
             'author'                   => 'Author',
             'format'                   => 'Format',
+            'cover'                    => 'Cover image',
+            'cover_helper'             => 'On the homepage the news card shows it in 4 : 3, the news detail header as a wide 7 : 2 strip. Both crops are taken from the centre of the image – ideally upload an uncropped photo with the key subject in the middle. JPG, PNG or WebP, max 8 MB.',
         ],
 
         'table' => [
@@ -110,6 +112,18 @@ return [
                 'selection_interested'      => 'Users who are interested in news',
                 'selection_all'             => 'All active users of the system',
             ],
+        ],
+
+        'public' => [
+            'breadcrumb_label' => 'Breadcrumb',
+            'breadcrumb_home'  => 'Home',
+            'breadcrumb_news'  => 'News',
+            'author'           => 'Author',
+            'published'        => 'Published',
+            'more_link'        => 'More news',
+            'index_lead'       => 'Club news, event invitations and results – newest first.',
+            'index_empty'      => 'There is no news yet. You will soon find out what is happening in the club.',
+            'index_page_title' => 'News – page :page',
         ],
     ],
 

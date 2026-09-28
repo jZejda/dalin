@@ -24,6 +24,7 @@ use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
@@ -127,6 +128,15 @@ class PostResource extends Resource implements HasShieldPermissions
                                     ]
                                 )->default(2)
                                 ->required(),
+                            SpatieMediaLibraryFileUpload::make('cover')
+                                ->label(__('content.post.form.cover'))
+                                ->helperText(__('content.post.form.cover_helper'))
+                                ->collection(Post::MEDIA_COLLECTION_COVER)
+                                ->image()
+                                ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                                ->imageEditor()
+                                ->imageEditorAspectRatioOptions([null, '4:3', '7:2'])
+                                ->maxSize(8192),
                         ])->columnSpan([
                             'sm' => 1,
                             'md' => 4

@@ -15,10 +15,12 @@ use Livewire\Component;
 
 class EventList extends Component
 {
+    public bool $terrain = false;
+
     public function render(): View|Factory|Application
     {
         return view(
-            'livewire.frontend.event-list',
+            $this->terrain ? 'livewire.frontend.terrain.event-list' : 'livewire.frontend.event-list',
             ['events' => $this->getSportEvents()]
         );
     }

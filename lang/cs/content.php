@@ -82,6 +82,8 @@ return [
             'private'                  => 'Interní novinka',
             'author'                   => 'Autor',
             'format'                   => 'Formát',
+            'cover'                    => 'Titulní obrázek',
+            'cover_helper'             => 'Na titulní stránce se zobrazí na kartě novinky ve formátu 4 : 3, v záhlaví detailu jako široký pruh 7 : 2. Oba výřezy se berou ze středu obrázku – nejlépe nahrajte neořezanou fotku s hlavním motivem uprostřed. JPG, PNG nebo WebP, max. 8 MB.',
         ],
 
         'table' => [
@@ -110,6 +112,18 @@ return [
                 'selection_interested'      => 'Uživatelé kteří mají zájem o novinky',
                 'selection_all'             => 'Všem aktivním uživatelům systému',
             ],
+        ],
+
+        'public' => [
+            'breadcrumb_label' => 'Drobečková navigace',
+            'breadcrumb_home'  => 'Úvod',
+            'breadcrumb_news'  => 'Novinky',
+            'author'           => 'Autor',
+            'published'        => 'Publikováno',
+            'more_link'        => 'Ostatní novinky',
+            'index_lead'       => 'Zprávy z oddílu, pozvánky na akce a výsledky – od nejnovějších.',
+            'index_empty'      => 'Zatím tu nejsou žádné novinky. Brzy se dozvíte, co se v klubu děje.',
+            'index_page_title' => 'Novinky – strana :page',
         ],
     ],
 
