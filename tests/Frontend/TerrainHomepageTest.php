@@ -101,7 +101,7 @@ it('prefers the uploaded cover, keeps absolute img_url and ignores lost legacy r
     expect($legacy->coverUrl())->toBeNull()
         ->and($absolute->coverUrl())->toBe('https://example.com/obrazek.jpg')
         ->and($uploaded->coverUrl())->toEndWith('conversions/cover-card.jpg')
-        ->and($uploaded->coverUrl('hero'))->toEndWith('conversions/cover-hero.jpg');
+        ->and($uploaded->coverUrl('detail'))->toEndWith('conversions/cover-detail.jpg');
 });
 
 it('shows the post detail in the terrain layout with the uploaded cover and author', function () {
@@ -120,7 +120,7 @@ it('shows the post detail in the terrain layout with the uploaded cover and auth
 
     $this->get(url('/novinka', $post->id))
         ->assertOk()
-        ->assertSee('conversions/cover-hero.jpg', false)
+        ->assertSee('conversions/cover-detail.jpg', false)
         ->assertSee('max-w-terrain', false)
         ->assertSee(route('posts.index'), false)
         ->assertSeeInOrder(['Obsah', $author->name, $post->created_at->format('d. m. Y')]);

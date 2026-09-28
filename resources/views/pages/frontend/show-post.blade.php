@@ -3,7 +3,7 @@
     use App\Models\Post;
 
     /** @var Post $post */
-    $cover = $post->coverUrl('hero');
+    $cover = $post->coverUrl('detail');
 @endphp
 
 @extends('layouts.terrain')
@@ -24,7 +24,7 @@
 
     <div class="mx-auto max-w-terrain px-4 py-8 sm:px-6 md:py-10">
         @if ($cover)
-            <img src="{{ $cover }}" alt="" class="mb-8 aspect-[7/2] w-full rounded-terrain-panel border border-terrain-line object-cover md:mb-10">
+            <img src="{{ $cover }}" alt="" class="mx-auto mb-8 block h-auto max-h-[70vh] w-auto max-w-full rounded-terrain-panel border border-terrain-line md:mb-10">
         @endif
 
         <div class="terrain-prose">

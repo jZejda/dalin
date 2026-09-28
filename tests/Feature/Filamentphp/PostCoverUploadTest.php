@@ -14,7 +14,7 @@ use function Pest\Livewire\livewire;
 
 uses(DatabaseTransactions::class);
 
-it('stores an uploaded cover image with card and hero conversions', function (): void {
+it('stores an uploaded cover image with card and detail conversions', function (): void {
     Storage::fake('public');
     $admin = actingAsSuperAdmin();
     $post = Post::create([
@@ -35,6 +35,6 @@ it('stores an uploaded cover image with card and hero conversions', function ():
 
     expect($media)->not->toBeNull()
         ->and($media?->hasGeneratedConversion('card'))->toBeTrue()
-        ->and($media?->hasGeneratedConversion('hero'))->toBeTrue()
+        ->and($media?->hasGeneratedConversion('detail'))->toBeTrue()
         ->and($post->coverUrl())->toMatch('~/conversions/[^/]+-card\.jpg$~');
 });
