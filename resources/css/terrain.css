@@ -22,13 +22,32 @@
 
 @layer components {
     .terrain-contours { background-image: linear-gradient(90deg, var(--color-terrain-paper), transparent), url('../../public/images/terrain-contours.svg'); background-position: center, right center; background-repeat: no-repeat; background-size: cover, auto 100%; }
-    .terrain-hero { position: relative; isolation: isolate; overflow: hidden; }
-    .terrain-hero::before, .terrain-hero::after { content: ''; position: absolute; inset: 0; }
-    .terrain-hero::before { z-index: -2; background: url('../../public/images/terrain-hero.jpg') center / cover no-repeat; }
-    .terrain-hero::after { z-index: -1; background: color-mix(in srgb, var(--color-terrain-paper) 88%, transparent); }
+    /* Hero photo: the overlay is painted in the page colour token, so the same markup fades into the light or dark page.
+       Phones get the photo as a band under the text (a full-bleed wash would hide the runner); from lg it sits on the right. */
+    .terrain-hero { position: relative; isolation: isolate; overflow: hidden; padding-bottom: 15rem; }
+    .terrain-hero::before, .terrain-hero::after { content: ''; position: absolute; inset: auto 0 0; height: 18rem; }
+    .terrain-hero::before { z-index: -2; background: url('../../public/images/terrain-hero.webp') 62% 45% / cover no-repeat; }
+    .terrain-hero::after { z-index: -1; background: linear-gradient(180deg, var(--color-terrain-paper) 0, color-mix(in srgb, var(--color-terrain-paper) 40%, transparent) 25%, transparent 55%); }
+    .dark .terrain-hero::before { filter: brightness(0.72) saturate(0.9); }
     @media (min-width: 64rem) {
-        .terrain-hero::before { left: 30%; }
-        .terrain-hero::after { background: linear-gradient(90deg, var(--color-terrain-paper) 0, var(--color-terrain-paper) 30%, transparent 60%); }
+        /* End of the text column: the content is centred in max-w-terrain (72rem), so tie the fade to it, not to the viewport */
+        .terrain-hero { --hero-text-end: max(35.5rem, calc(50% - 2rem)); padding-bottom: 0; }
+        .terrain-hero::before, .terrain-hero::after { inset: 0; height: auto; }
+        .terrain-hero::before { left: calc(var(--hero-text-end) - 6rem); background-position: 70% 40%; }
+        .terrain-hero::after { background: linear-gradient(90deg, var(--color-terrain-paper) 0, var(--color-terrain-paper) var(--hero-text-end), color-mix(in srgb, var(--color-terrain-paper) 55%, transparent) calc(var(--hero-text-end) + 6rem), transparent calc(var(--hero-text-end) + 18rem)); }
+    }
+    /* Forest scene footer: the transparent sky shows the page colour in both themes; the image covers the whole
+       footer from the bottom, so the content starts below the treeline and never runs past the meadow. */
+    .terrain-footer {
+        --scene-h: calc(max(100vw, 60rem) * 816 / 3808);
+        min-height: var(--scene-h);
+        padding-top: calc(var(--scene-h) * 0.42);
+        text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+        background: url('../../public/images/terrain-footer.webp') center bottom / cover no-repeat;
+    }
+    /* On phones the footer is taller than the scene, so the cover image grows: keep the content below the treeline */
+    @media (width < 40rem) {
+        .terrain-footer { padding-top: 11rem; }
     }
     .terrain-cover-placeholder { background: var(--color-terrain-muted) url('../../public/images/terrain-contours.svg') right center / cover no-repeat; }
     .terrain-button { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-terrain-control border px-5 py-2.5 text-sm font-semibold transition-colors motion-reduce:transition-none; }

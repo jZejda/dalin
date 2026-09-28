@@ -1,11 +1,11 @@
 @extends('layouts.terrain')
 
-@section('title', 'Orientace spojuje')
+@section('title', 'Orienťák spojuje')
 
 @section('content')
     <section class="terrain-hero">
         <div class="mx-auto flex min-h-[25rem] max-w-terrain flex-col justify-center px-4 py-12 sm:px-6 lg:py-16">
-            <h1 class="max-w-lg text-terrain-display font-extrabold">Orientace<br>spojuje</h1>
+            <h1 class="max-w-lg text-terrain-display font-extrabold">Orienťák<br>spojuje</h1>
             <p class="mt-5 max-w-md text-lg leading-relaxed">Společný směr, nové zážitky a pohyb v přírodě. Novinky z klubu i akce, na kterých se potkáme.</p>
             <div class="mt-6"><x-ui.button href="{{ url('/stranka/o-klubu') }}">Zjistit více o klubu <span aria-hidden="true">→</span></x-ui.button></div>
         </div>

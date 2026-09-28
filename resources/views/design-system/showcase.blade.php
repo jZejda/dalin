@@ -43,7 +43,7 @@
                 <div class="mt-12 grid gap-10 md:grid-cols-2">
                     <div>
                         <h3 class="mb-5 text-sm font-semibold uppercase tracking-widest text-terrain-secondary">Typografie</h3>
-                        <p class="text-4xl font-extrabold tracking-tight sm:text-5xl">Orientace spojuje</p>
+                        <p class="text-4xl font-extrabold tracking-tight sm:text-5xl">Orienťák spojuje</p>
                         <p class="mt-4 text-2xl font-bold tracking-tight">Nadcházející akce</p>
                         <p class="mt-4 leading-relaxed">Přehledné informace pro závodníky, pořadatele i klub. Systémové písmo bez závislosti na externích službách.</p>
                         <p class="mt-3 text-sm text-terrain-secondary">Sekundární text · 14 px / datum, místo, metadata</p>
