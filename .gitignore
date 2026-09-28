@@ -9,6 +9,8 @@ package-lock.json
 /public/orisdata
 /public/media
 /storage/*.key
+# Spatie Media Library temp files (image conversions)
+/storage/media-library/
 
 /bootstrap/cache
 
