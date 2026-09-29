@@ -44,16 +44,17 @@ V každé release jsou `.env`, `config/site-config.php` a `storage/` symlinky do
 |---|---|---|---|---|
 | `demo` | `site=dalin stage=demo` | dw303:20001 | `…/dalin.cz/_sub/demo` | `v13.x` |
 | `abm` | `site=abm stage=prod` | dw149:20007 | `…/abmbrno.cz/public_html` | `v13.x` |
-| `abm-staging` | `site=abm stage=staging` | dw149:20007 | `…/abmbrno.cz/_sub/staging` | `v12.x` |
-| `pbm` | `site=pbm stage=prod` | dw303:20001 | `…/eob.cz/_sub/pbm-dalin` | `v12.x` |
+| `abm-staging` | `site=abm stage=staging` | dw149:20007 | `…/abmbrno.cz/_sub/staging` | `v13.x` |
+| `pbm` | `site=pbm stage=prod` | dw303:20001 | `…/eob.cz/_sub/pbm-dalin` | `v13.x` |
+| `pbm-staging` | `site=pbm stage=staging` | dw303:20001 | `…/dalin.cz/_sub/pbm-staging` | `v13.x` |
 | `pbm-preview` | `site=pbm stage=preview` | dw303:20001 | `…/eob.cz/_sub/pbm-dalin-preview` | `v12.x` |
 
-Výchozí větev je `v12.x` (na té zatím běží `abm-staging`, `pbm` a `pbm-preview`);
-`demo` a `abm` mají per-host override na `v13.x`. Jednorázově se přebije přes
+Výchozí větev je `v12.x` (na té zatím běží jen `pbm-preview`); ostatní hosty mají
+per-host override na `v13.x`. Jednorázově se přebije přes
 `--branch=` / `--tag=` / `--revision=`.
 
-Kromě `demo` a `abm` běží zatím všechny po staru přes `deploy.sh`; převod je
-stejný postup jako níže.
+Na Deployeru běží všechny sites kromě `pbm-preview`, které jede po staru přes
+`deploy.sh`; jeho převod je stejný postup jako níže (sekce 5).
 
 ## 3. Běžné použití
 
@@ -449,6 +450,31 @@ jako tomu bylo u `abm`) — po převodu musí docroot ukazovat na
 `public_html/current/public`, jinak deploy proběhne, ale web dál servíruje
 starou release (viz **6. Řešení potíží** níže).
 
+### Zkušenosti z převodu `pbm` (29. 9. 2026)
+
+- **Konzistentní záloha:** nejdřív vypnout cron v administraci hostingu a na staré
+  aplikaci `php8.4 artisan down`, teprve pak `mysqldump --no-tablespaces
+  --single-transaction --routines` (bez `--no-tablespaces` dump na sdíleném hostingu
+  padá na chybějící privilegium `PROCESS`). Vedle plného dumpu uložit i schema-only
+  dump a `SELECT migration, batch FROM migrations`.
+- **DB baseline:** porovnat tabulku `migrations` s `database/migrations/` — starší
+  instalace mají `create_bank_accounts_table` / `create_bank_transactions_table`
+  zapsané s datem `2024_05_19_*` místo `2022_05_19_*`; přejmenovat je v tabulce
+  `migrations` ještě před deployem, zbytek doběhne v `artisan:migrate`.
+- **Obnova `storage/` do `shared/storage/`:** vynechat `framework/down`,
+  `framework/maintenance.php`, `framework/views/*` a `framework/cache/data/*` —
+  jinak nová release naběhne rovnou v režimu údržby.
+- **Přepnutí provozu:** stejně jako u dema symlink `public -> current/public` v deploy
+  path (docroot subdomény míří na `…/pbm-dalin/public`). Před `ln -s` ověřit, že
+  `public` neexistuje jako skutečný adresář (Webglobe ho u nových subdomén zakládá).
+- **Site bez veřejné části:** v `shared/config/site-config.php` nastavit
+  `features.public_site.use_public_site => false` — `/` pak přesměruje rovnou na
+  přihlášení do administrace. Soubor je sdílený, takže nastavení přežije každý deploy.
+- **Login shell na dw303 je `fish`** — složené příkazy přes SSH pouštěj jako
+  `ssh … "bash -c '…'"`.
+- **Dlouhé artisan příkazy** (např. `oris:sync-disciplines`, ~2 min) přes
+  `dep run` se tiše utnou — pusť je přes `dep ssh`, případně `nohup … > soubor &`.
+
 ---
 
 ## 6. Řešení potíží
@@ -479,7 +505,7 @@ jen tranzitivně přes dev nástroj. Rsync deploy to maskoval (nahrával lokáln
 balíček do `require` (`composer require <balicek>`) a commitni; `local_archive`
 nasazuje commitnutý stav. Přesně tohle potkalo `laravel/mcp`, které si tahal
 `laravel/boost`, zatímco na něm stojí `AppServiceProvider` a `routes/ai.php`.
-Stejnou past čekej i u `pbm` při jeho převodu.
+U `pbm` se při převodu (29. 9. 2026) žádný další takový balíček neobjevil.
 
 **Deploy proběhne bez chyby, ale web dál ukazuje starou release**
 Docroot v administraci hostingu ukazuje natvrdo na konkrétní starou release
