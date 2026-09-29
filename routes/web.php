@@ -28,15 +28,16 @@ Route::post('/register', function () {
     return redirect(url('/'));
 });
 
+// Sites without a public frontend (per-site `features.public_site.use_public_site`) send `/` straight to the admin login.
 Route::get('/', function () {
+    if (! config('site-config.features.public_site.use_public_site', true)) {
+        return redirect()->route('filament.admin.auth.login');
+    }
+
     return view('welcome', ['sponsorSectionId' => 0]);
 });
 
 Route::view('/design-system', 'design-system.showcase')->name('design-system');
-
-//Route::get('/', function () {
-//    return redirect()->route('filament.admin.auth.login');
-//});
 
 Route::get('/cron-scheduler/'.config('site-config.cron_url_key'), function () {
     Artisan::call('schedule:run');
