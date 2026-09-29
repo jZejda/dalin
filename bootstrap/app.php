@@ -62,6 +62,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->job(new SendNewPostsEmailJob())->everyThirtyMinutes();
         $schedule->job(new SendSportEventEntryEndingEmailJob())->hourly();
         $schedule->call(fn () => \Illuminate\Support\Facades\Artisan::call('marketplace:close-expired'))->everyFifteenMinutes()->name('marketplace:close-expired');
+
+        // pxlrbt/filament-excel schedules its prune via ->command() on its own; skip that one
+        // and run the same command in-process instead.
+        foreach ($schedule->events() as $event) {
+            if (str_contains((string) $event->command, 'filament-excel:prune')) {
+                $event->skip(fn (): bool => true);
+            }
+        }
+        $schedule->call(fn () => \Illuminate\Support\Facades\Artisan::call('filament-excel:prune'))->daily()->name('filament-excel:prune');
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->reportable(function (Throwable $e) {

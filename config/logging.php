@@ -54,7 +54,8 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single', 'betterstack'],
+            // Better Stack only when the site has a token, otherwise LogtailHandler throws on every write.
+            'channels' => array_values(array_filter(['single', env('BETTERSTACK_SOURCE_TOKEN') ? 'betterstack' : null])),
             'ignore_exceptions' => false,
         ],
 
