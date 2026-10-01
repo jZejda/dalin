@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * App\Models\AppSetting
@@ -21,6 +23,10 @@ use Illuminate\Support\Facades\Log;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
+#[Fillable([
+    'key',
+    'value',
+])]
 class AppSetting extends Model
 {
     use HasFactory;
@@ -81,17 +87,18 @@ class AppSetting extends Model
         self::CLUB_TECHNICAL_EMAIL => 'site-config.club.technical_email',
     ];
 
-    /** @var list<string> */
-    protected $fillable = [
-        'key',
-        'value',
-    ];
+    /**
+     * @return array<string, string>
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'value' => 'json',
+        ];
+    }
 
-    /** @var array<string, string> */
-    protected $casts = [
-        'value' => 'json',
-    ];
-
+    #[Override]
     protected static function booted(): void
     {
         self::saved(static function (AppSetting $setting): void {
