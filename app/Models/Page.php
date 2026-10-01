@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\ContentFormat;
 use App\Enums\PageStatus;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -34,7 +35,19 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property-read ContentCategory|null $content_category
  * @property-read User|null $user
  */
-
+#[Fillable([
+    'title',
+    'content_category_id',
+    'content',
+    'status',
+    'slug',
+    'user_id',
+    'page_menu',
+    'content_format',
+    'picture_attachment',
+    'weight',
+    'meta',
+])]
 class Page extends Model implements HasMedia
 {
     use HasFactory;
@@ -45,28 +58,19 @@ class Page extends Model implements HasMedia
     public const string STATUS_DRAFT = 'draft';
     public const string STATUS_ARCHIVE = 'archive';
 
-    protected $casts = [
-        'page_menu' => 'boolean',
-        'status' => PageStatus::class,
-        'content_format' => ContentFormat::class,
-        'meta' => 'array',
-        // content is handled by custom accessor/mutator
-    ];
-
-    /** @var list<string> */
-    protected $fillable = [
-        'title',
-        'content_category_id',
-        'content',
-        'status',
-        'slug',
-        'user_id',
-        'page_menu',
-        'content_format',
-        'picture_attachment',
-        'weight',
-        'meta',
-    ];
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'page_menu' => 'boolean',
+            'status' => PageStatus::class,
+            'content_format' => ContentFormat::class,
+            'meta' => 'array',
+            // content is handled by custom accessor/mutator
+        ];
+    }
 
     public function user(): HasOne
     {
