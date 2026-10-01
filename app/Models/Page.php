@@ -6,11 +6,15 @@ namespace App\Models;
 
 use App\Enums\ContentFormat;
 use App\Enums\PageStatus;
+use App\Services\Seo\PageSeo;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use RalphJSmit\Laravel\SEO\Models\SEO;
+use RalphJSmit\Laravel\SEO\Support\HasSEO;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -24,16 +28,17 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property string $title
  * @property string|null $slug
  * @property string $content
- * @property int $content_format
+ * @property ContentFormat $content_format
  * @property string $picture_attachment
  * @property string $status
  * @property int $weight
  * @property bool $page_menu
- * @property array|null $meta
+ * @property array|null $meta Legacy key/value meta, superseded by the `seo` relation (kept as a backup)
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read ContentCategory|null $content_category
  * @property-read User|null $user
+ * @property-read SEO $seo
  */
 #[Fillable([
     'title',
@@ -52,6 +57,7 @@ class Page extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
+    use HasSEO;
 
     public const string STATUS_OPEN = 'open';
     public const string STATUS_CLOSED = 'close';
@@ -77,9 +83,40 @@ class Page extends Model implements HasMedia
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    /**
+     * @return HasOne<ContentCategory, $this>
+     */
     public function contentCategory(): HasOne
     {
         return $this->hasOne(ContentCategory::class, 'id', 'content_category_id');
+    }
+
+    public function publicUrl(): string
+    {
+        return url('/stranka/'.$this->slug);
+    }
+
+    /**
+     * Search/social metadata for laravel-seo; manual values from the admin SEO section win.
+     */
+    public function getDynamicSEOData(): SEOData
+    {
+        return app(PageSeo::class)->dynamicData($this);
+    }
+
+    /**
+     * Manually entered SEO title/description, as exposed by the API and MCP `meta` field.
+     *
+     * @return array<string, string>|null
+     */
+    public function seoMeta(): ?array
+    {
+        $meta = array_filter([
+            'title' => $this->seo->title,
+            'description' => $this->seo->description,
+        ], static fn (mixed $value): bool => is_string($value) && trim($value) !== '');
+
+        return $meta !== [] ? $meta : null;
     }
 
     /**

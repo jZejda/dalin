@@ -58,9 +58,10 @@ class PageController extends Controller
         }
 
         $pages = $query->orderByDesc('created_at')
+            ->with('seo')
             ->select([
                 'id', 'user_id', 'content_category_id', 'title', 'slug', 'content_format',
-                'picture_attachment', 'status', 'weight', 'page_menu', 'meta', 'created_at', 'updated_at'
+                'picture_attachment', 'status', 'weight', 'page_menu', 'created_at', 'updated_at'
             ])
             ->simplePaginate($request->query('per_page', 20));
 

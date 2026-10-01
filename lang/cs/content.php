@@ -48,9 +48,8 @@ return [
             'category'         => 'Kategorie',
             'show_category_menu' => 'Zobrazit menu kategorie?',
             'weight'           => 'Váha',
-            'meta'             => 'Meta',
-            'meta_key'         => 'Klíč',
-            'meta_value'       => 'Hodnota',
+            'section_seo'      => 'Vyhledávače a sociální sítě',
+            'section_seo_description' => 'Nepovinné. Prázdný titulek převezme název stránky, prázdný popis začátek jejího textu.',
         ],
 
         'table' => [

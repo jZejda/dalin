@@ -53,7 +53,7 @@ class SitemapController extends Controller
             ->orderBy('slug')
             ->get(['id', 'slug', 'updated_at'])
             ->each(fn (Page $page) => $sitemap->add(
-                $this->url(url('/stranka/'.$page->slug), $page->updated_at)
+                $this->url($page->publicUrl(), $page->updated_at)
             ));
 
         SportEvent::query()

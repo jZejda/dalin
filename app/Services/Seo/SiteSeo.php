@@ -24,6 +24,8 @@ final class SiteSeo
 {
     public const string TITLE_SEPARATOR = ' | ';
 
+    private const int DESCRIPTION_LENGTH = 160;
+
     /** @var array<string, string> */
     private const array OG_LOCALES = [
         'cs' => 'cs_CZ',
@@ -107,6 +109,36 @@ final class SiteSeo
         }
 
         return $data;
+    }
+
+    /**
+     * Plain text of an HTML fragment; null when nothing readable is left. Block-level tags
+     * become spaces so adjacent blocks ("</p><p>") don't glue words together, inline tags
+     * ("<em>") are just dropped so no stray space lands before punctuation.
+     */
+    public function plainText(string $html): ?string
+    {
+        $spaced = (string) preg_replace(
+            '#<(?:/?(?:p|div|h[1-6]|li|ul|ol|dl|dt|dd|blockquote|pre|table|tr|td|th|section|article|figure|figcaption)\b[^>]*|br\s*/?|hr\s*/?)>#i',
+            ' ',
+            $html,
+        );
+
+        $text = Str::squish(html_entity_decode(strip_tags($spaced), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+        return $text !== '' ? $text : null;
+    }
+
+    /**
+     * Meta description from an HTML fragment, cut on a word boundary.
+     */
+    public function description(string $html): ?string
+    {
+        $text = $this->plainText($html);
+
+        return $text !== null
+            ? Str::limit($text, self::DESCRIPTION_LENGTH - 1, '…', preserveWords: true)
+            : null;
     }
 
     public function homepage(): SEOData

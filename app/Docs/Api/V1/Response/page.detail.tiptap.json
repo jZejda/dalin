@@ -25,7 +25,8 @@
         "weight": 10,
         "page_menu": false,
         "meta": {
-            "keywords": "tiptap, json"
+            "title": "TipTap stránka pro vyhledávače",
+            "description": "Ukázka stránky s obsahem v TipTap JSON."
         },
         "created_at": "2025-10-05T21:26:52.000000Z",
         "updated_at": "2025-10-05T21:26:52.000000Z"

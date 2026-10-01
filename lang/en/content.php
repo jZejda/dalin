@@ -48,9 +48,8 @@ return [
             'category'         => 'Category',
             'show_category_menu' => 'Show category menu?',
             'weight'           => 'Weight',
-            'meta'             => 'Meta',
-            'meta_key'         => 'Key',
-            'meta_value'       => 'Value',
+            'section_seo'      => 'Search engines and social networks',
+            'section_seo_description' => 'Optional. An empty title falls back to the page title, an empty description to the start of its text.',
         ],
 
         'table' => [

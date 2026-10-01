@@ -23,8 +23,6 @@ final class PostSeo
 
     public const int IMAGE_HEIGHT = 630;
 
-    private const int DESCRIPTION_LENGTH = 160;
-
     /** Google truncates longer NewsArticle headlines */
     private const int HEADLINE_LENGTH = 110;
 
@@ -77,18 +75,7 @@ final class PostSeo
             default => '',
         };
 
-        // Tags become spaces so adjacent blocks ("</p><p>") don't glue words together
-        $text = Str::squish(html_entity_decode(
-            (string) preg_replace('/<[^>]*>/', ' ', $html),
-            ENT_QUOTES | ENT_HTML5,
-            'UTF-8',
-        ));
-
-        if ($text === '') {
-            return null;
-        }
-
-        return Str::limit($text, self::DESCRIPTION_LENGTH - 1, '…', preserveWords: true);
+        return $this->siteSeo->description($html);
     }
 
     public function imageUrl(Post $post): ?string

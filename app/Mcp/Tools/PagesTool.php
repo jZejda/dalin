@@ -45,9 +45,12 @@ class PagesTool extends Tool
         $perPage = min((int) ($request->get('per_page', 20) ?: 20), 100);
 
         $pages = $query
+            ->with('seo')
             ->orderByDesc('created_at')
-            ->select(['id', 'user_id', 'content_category_id', 'title', 'slug', 'content_format', 'picture_attachment', 'status', 'weight', 'page_menu', 'meta', 'created_at', 'updated_at'])
-            ->simplePaginate($perPage);
+            ->select(['id', 'user_id', 'content_category_id', 'title', 'slug', 'content_format', 'picture_attachment', 'status', 'weight', 'page_menu', 'created_at', 'updated_at'])
+            ->simplePaginate($perPage)
+            // `meta` = SEO title/description from the laravel-seo `seo` table
+            ->through(static fn (Page $page): array => array_merge($page->attributesToArray(), ['meta' => $page->seoMeta()]));
 
         return Response::json($pages->toArray());
     }
