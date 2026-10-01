@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Services\Seo\PostSeo;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 use function Pest\Livewire\livewire;
@@ -141,4 +142,44 @@ it('creates the SEO record with a new post and saves it from the admin form', fu
 
     expect($post->refresh()->seo->title)->toBe('Titulek pro Google')
         ->and($post->seo->description)->toBe('Popis pro Google.');
+});
+
+it('keeps the query string when redirecting old links', function (): void {
+    $post = createPublicPost();
+
+    $this->get('/novinka/'.$post->id.'?utm_source=facebook&fbclid=abc')
+        ->assertStatus(301)
+        // Symfony normalizes (sorts) the query string
+        ->assertRedirect($post->publicUrl().'?fbclid=abc&utm_source=facebook');
+});
+
+it('describes TipTap posts from their text instead of the club description', function (): void {
+    $post = createPublicPost([
+        'content_mode' => ContentFormat::TipTapJson,
+        'content' => json_encode([
+            'type' => 'doc',
+            'content' => [['type' => 'paragraph', 'content' => [['type' => 'text', 'text' => 'Výsledky oblastního žebříčku jsou venku.']]]],
+        ]),
+    ]);
+
+    expect(app(PostSeo::class)->excerpt($post))->toBe('Výsledky oblastního žebříčku jsou venku.');
+});
+
+it('reuses the loaded post for its SEO data instead of querying it again', function (): void {
+    $post = createPublicPost();
+
+    DB::enableQueryLog();
+    $this->get($post->publicUrl())->assertOk();
+    $postQueries = collect(DB::getQueryLog())
+        ->filter(static fn (array $query): bool => str_contains($query['query'], 'from `posts`'));
+
+    expect($postQueries)->toHaveCount(1);
+});
+
+it('names the homepage breadcrumb the same on news, pages and events', function (): void {
+    $post = createPublicPost();
+    $html = (string) $this->get($post->publicUrl())->getContent();
+
+    expect(postJsonLd($html)['BreadcrumbList']['itemListElement'][0])
+        ->toMatchArray(['name' => __('app.seo.breadcrumb_home'), 'item' => url('/')]);
 });

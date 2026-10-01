@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Services\Seo;
 
-use App\Enums\ContentFormat;
 use App\Models\Post;
 use Illuminate\Support\Str;
 use RalphJSmit\Laravel\SEO\SchemaCollection;
@@ -36,8 +35,8 @@ final class PostSeo
      */
     public function dynamicData(Post $post): SEOData
     {
-        $title = $this->manualValue($post, 'title') ?? $post->title;
-        $description = $this->manualValue($post, 'description') ?? $this->excerpt($post);
+        $title = $this->siteSeo->manualValue($post, 'title') ?? $post->title;
+        $description = $this->siteSeo->manualValue($post, 'description') ?? $this->excerpt($post);
         $image = $this->imageUrl($post);
         $url = $post->publicUrl();
 
@@ -53,7 +52,6 @@ final class PostSeo
             schema: SchemaCollection::make()
                 ->add(fn (): array => $this->newsArticleSchema($post, $title, $description, $image, $url))
                 ->add(fn (): array => $this->siteSeo->breadcrumbSchema([
-                    ['name' => __('content.post.public.breadcrumb_home'), 'url' => url('/')],
                     ['name' => __('content.post.public.breadcrumb_news'), 'url' => route('posts.index')],
                     ['name' => $post->title, 'url' => $url],
                 ])),
@@ -65,15 +63,11 @@ final class PostSeo
      */
     public function excerpt(Post $post): ?string
     {
-        $editorial = trim((string) $post->editorial);
+        $editorial = SiteSeo::filled($post->editorial);
 
-        $html = match (true) {
-            $editorial !== '' => Str::markdown($editorial),
-            $post->content_mode === ContentFormat::Markdown => Str::markdown($post->content),
-            $post->content_mode === ContentFormat::Html => $post->content,
-            // TipTap JSON would need the rich-content renderer; the club description is used instead
-            default => '',
-        };
+        $html = $editorial !== null
+            ? Str::markdown($editorial)
+            : $this->siteSeo->contentHtml($post->content_mode, $post->content);
 
         return $this->siteSeo->description($html);
     }
@@ -111,12 +105,5 @@ final class PostSeo
             'author' => $post->user !== null ? ['@type' => 'Person', 'name' => $post->user->name] : $publisher,
             'publisher' => $publisher,
         ], static fn (mixed $value): bool => $value !== null);
-    }
-
-    private function manualValue(Post $post, string $attribute): ?string
-    {
-        $value = $post->seo->getAttribute($attribute);
-
-        return is_string($value) && trim($value) !== '' ? trim($value) : null;
     }
 }

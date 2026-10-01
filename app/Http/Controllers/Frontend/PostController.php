@@ -8,6 +8,7 @@ use App\Enums\PostStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Post as PostModel;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class PostController extends Controller
@@ -28,7 +29,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function post(string $post): View|RedirectResponse
+    public function post(Request $request, string $post): View|RedirectResponse
     {
         $model = PostModel::query()
             ->with(['media', 'user', 'seo'])
@@ -40,7 +41,10 @@ class PostController extends Controller
         }
 
         if ($post !== $model->routeSlug()) {
-            return redirect()->to($model->publicUrl(), 301);
+            // Keep campaign parameters (utm_*, fbclid) of old shared links
+            $query = $request->getQueryString();
+
+            return redirect()->to($model->publicUrl().($query !== null ? '?'.$query : ''), 301);
         }
 
         return view('pages.frontend.show-post', [

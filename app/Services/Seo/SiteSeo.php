@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace App\Services\Seo;
 
+use App\Enums\ContentFormat;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\RichContentBlocks;
 use App\Models\AppSetting;
+use App\Models\Page;
+use App\Models\Post;
+use Closure;
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -47,6 +53,13 @@ final class SiteSeo
      */
     public function forView(Model|SEOData|null $source, string $sectionTitle): Model|SEOData
     {
+        if ($source instanceof Post || $source instanceof Page) {
+            // laravel-seo reads the data via $model->seo->model; without this inverse relation
+            // the morphTo would query the model again and getDynamicSEOData() would run on a
+            // fresh copy, ignoring the controller's eager loads.
+            $source->seo->setRelation('model', $source);
+        }
+
         if ($source instanceof Model) {
             return $source;
         }
@@ -85,13 +98,7 @@ final class SiteSeo
         $data->site_name ??= $clubName;
         $data->description ??= AppSetting::getSeoDescription();
 
-        if ($data->image === null) {
-            $imagePath = AppSetting::getSeoImagePath();
-
-            if ($imagePath !== null && Storage::disk('public')->exists($imagePath)) {
-                $data->image = url(Storage::disk('public')->url($imagePath));
-            }
-        }
+        $data->image ??= $this->defaultImageUrl();
 
         if ($data->image !== null && $data->imageMeta === null) {
             $data->imageMeta = $this->publicDiskImageMeta($data->image);
@@ -127,6 +134,34 @@ final class SiteSeo
         $text = Str::squish(html_entity_decode(strip_tags($spaced), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
 
         return $text !== '' ? $text : null;
+    }
+
+    /**
+     * HTML of a post/page body in any of its storage formats (TipTap is rendered to text).
+     */
+    public function contentHtml(ContentFormat $format, mixed $content): string
+    {
+        return match ($format) {
+            ContentFormat::Html => is_string($content) ? $content : '',
+            ContentFormat::Markdown => is_string($content) ? Str::markdown($content) : '',
+            ContentFormat::TipTapJson => $this->richContentText($content),
+        };
+    }
+
+    /**
+     * Value the editor typed into the admin SEO section, or null when left empty.
+     */
+    public function manualValue(Post|Page $model, string $attribute): ?string
+    {
+        return self::filled($model->seo->getAttribute($attribute));
+    }
+
+    /**
+     * Trimmed string, or null for anything blank or not a string.
+     */
+    public static function filled(mixed $value): ?string
+    {
+        return is_string($value) && trim($value) !== '' ? trim($value) : null;
     }
 
     /**
@@ -188,11 +223,12 @@ final class SiteSeo
     }
 
     /**
-     * @param  list<array{name: string, url: string}>  $items  from the homepage down to the current page
+     * @param  list<array{name: string, url: string}>  $items  below the homepage, down to the current page
      * @return array<string, mixed>
      */
     public function breadcrumbSchema(array $items): array
     {
+        $items = [['name' => __('app.seo.breadcrumb_home'), 'url' => url('/')], ...$items];
         $elements = [];
 
         foreach ($items as $index => $item) {
@@ -238,16 +274,54 @@ final class SiteSeo
 
     private static function clubName(): ?string
     {
-        $name = config('site-config.club.full_name');
-
-        return is_string($name) && trim($name) !== '' ? trim($name) : null;
+        return self::filled(config('site-config.club.full_name'));
     }
 
     private static function clubAbbr(): ?string
     {
-        $abbr = config('site-config.club.abbr');
+        return self::filled(config('site-config.club.abbr'));
+    }
 
-        return is_string($abbr) && trim($abbr) !== '' ? trim($abbr) : null;
+    /**
+     * A TipTap document as escaped plain text (a malformed one must not take the page down).
+     */
+    private function richContentText(mixed $content): string
+    {
+        $document = is_string($content) ? json_decode($content, true) : $content;
+
+        if (! is_array($document)) {
+            return '';
+        }
+
+        return e((string) rescue(
+            static fn (): string => RichContentRenderer::make($document)
+                ->customBlocks(RichContentBlocks::all())
+                ->toText(),
+            '',
+            report: false,
+        ));
+    }
+
+    /**
+     * Per-request memo: the package runs the transformer twice per render (once from its
+     * constructor), and the disk checks / image decoding are the same both times. Request
+     * attributes keep it scoped to one request, tests included.
+     *
+     * @template T
+     *
+     * @param  Closure(): T  $callback
+     * @return T
+     */
+    private function remember(string $key, Closure $callback): mixed
+    {
+        $attributes = request()->attributes;
+        $key = 'site-seo.'.$key;
+
+        if (! $attributes->has($key)) {
+            $attributes->set($key, $callback());
+        }
+
+        return $attributes->get($key);
     }
 
     private function homeUrl(): string
@@ -257,11 +331,13 @@ final class SiteSeo
 
     private function publicDiskUrl(?string $path): ?string
     {
-        if ($path === null || ! Storage::disk('public')->exists($path)) {
+        if ($path === null) {
             return null;
         }
 
-        return url(Storage::disk('public')->url($path));
+        return $this->remember('url.'.$path, static fn (): ?string => Storage::disk('public')->exists($path)
+            ? url(Storage::disk('public')->url($path))
+            : null);
     }
 
     /**
@@ -270,6 +346,11 @@ final class SiteSeo
      * (og:image:width/height, Twitter card type) are read here.
      */
     private function publicDiskImageMeta(string $url): ?ImageMeta
+    {
+        return $this->remember('image-meta.'.$url, fn (): ?ImageMeta => $this->measurePublicDiskImage($url));
+    }
+
+    private function measurePublicDiskImage(string $url): ?ImageMeta
     {
         $disk = Storage::disk('public');
         $baseUrl = rtrim(url($disk->url('')), '/').'/';

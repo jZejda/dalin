@@ -5,12 +5,12 @@ declare(strict_types=1);
 use App\Enums\ContentFormat;
 use App\Enums\PageStatus;
 use App\Enums\PostStatus;
-use App\Http\Controllers\Frontend\SitemapController;
 use App\Models\AppSetting;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\SportEvent;
 use App\Models\User;
+use App\Services\Seo\Sitemap;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
@@ -130,5 +130,15 @@ it('lists public posts, open pages and recent events in the sitemap', function (
         ->not->toContain('<loc>'.url('/stranka/'.$draftPage->slug).'</loc>')
         ->toContain('<loc>'.route('sport-event.show', $upcomingEvent->id).'</loc>')
         ->not->toContain('<loc>'.route('sport-event.show', $oldEvent->id).'</loc>')
-        ->and(Cache::has(SitemapController::CACHE_KEY))->toBeTrue();
+        ->and(Cache::has(Sitemap::CACHE_KEY))->toBeTrue();
+});
+
+it('drops the cached sitemap when listed content changes', function (): void {
+    $this->get('/sitemap.xml')->assertOk();
+    expect(Cache::has(Sitemap::CACHE_KEY))->toBeTrue();
+
+    $post = createSeoTestPost(['title' => 'Nová novinka po vygenerování']);
+
+    expect(Cache::has(Sitemap::CACHE_KEY))->toBeFalse();
+    $this->get('/sitemap.xml')->assertSee($post->publicUrl());
 });

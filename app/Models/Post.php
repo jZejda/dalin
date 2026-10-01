@@ -23,6 +23,7 @@ use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Override;
 
 /**
  * App\Models\Post
@@ -62,6 +63,7 @@ class Post extends Model implements HasMedia
     /**
      * @return array<string, string>
      */
+    #[Override]
     protected function casts(): array
     {
         return [

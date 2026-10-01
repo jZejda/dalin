@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Seo;
 
 use App\Enums\ContentFormat;
-use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\RichContentBlocks;
 use App\Models\Page;
-use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Illuminate\Support\Str;
 use RalphJSmit\Laravel\SEO\SchemaCollection;
 use RalphJSmit\Laravel\SEO\Support\SEOData;
@@ -32,8 +30,8 @@ final class PageSeo
         $url = $page->publicUrl();
 
         return new SEOData(
-            title: $this->manualValue($page, 'title') ?? $pageTitle,
-            description: $this->manualValue($page, 'description') ?? $this->excerpt($page),
+            title: $this->siteSeo->manualValue($page, 'title') ?? $pageTitle,
+            description: $this->siteSeo->manualValue($page, 'description') ?? $this->excerpt($page),
             url: $url,
             schema: SchemaCollection::make()
                 ->add(fn (): array => $this->siteSeo->breadcrumbSchema($this->breadcrumbs($page, $pageTitle, $url))),
@@ -42,22 +40,7 @@ final class PageSeo
 
     public function excerpt(Page $page): ?string
     {
-        $content = $page->content;
-
-        $html = match ($page->content_format) {
-            ContentFormat::Html => is_string($content) ? $content : '',
-            ContentFormat::Markdown => is_string($content) ? Str::markdown($content) : '',
-            // A malformed TipTap document must not take the whole page down with it
-            ContentFormat::TipTapJson => (string) rescue(
-                static fn (): string => RichContentRenderer::make($content)
-                    ->customBlocks(RichContentBlocks::all())
-                    ->toText(),
-                '',
-                report: false,
-            ),
-        };
-
-        return $this->siteSeo->description($html);
+        return $this->siteSeo->description($this->siteSeo->contentHtml($page->content_format, $page->content));
     }
 
     /**
@@ -73,15 +56,14 @@ final class PageSeo
     }
 
     /**
-     * Mirrors the visible breadcrumb: an event's pages sit under the event detail;
-     * a plain category has no page of its own, so it is left out.
+     * Mirrors the visible breadcrumb below the homepage: an event's pages sit under the
+     * event detail; a plain category has no page of its own, so it is left out.
      *
      * @return list<array{name: string, url: string}>
      */
     private function breadcrumbs(Page $page, string $pageTitle, string $url): array
     {
-        $items = [['name' => __('content.post.public.breadcrumb_home'), 'url' => url('/')]];
-
+        $items = [];
         $sportEvent = $page->contentCategory?->sportEvent;
 
         if ($sportEvent !== null) {
@@ -91,12 +73,5 @@ final class PageSeo
         $items[] = ['name' => $pageTitle, 'url' => $url];
 
         return $items;
-    }
-
-    private function manualValue(Page $page, string $attribute): ?string
-    {
-        $value = $page->seo->getAttribute($attribute);
-
-        return is_string($value) && trim($value) !== '' ? trim($value) : null;
     }
 }

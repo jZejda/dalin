@@ -36,7 +36,6 @@ final class EventSeo
 
         $schema = SchemaCollection::make()
             ->add(fn (): array => $this->siteSeo->breadcrumbSchema([
-                ['name' => __('sport-event.public.breadcrumb_home'), 'url' => url('/')],
                 ['name' => $event->name, 'url' => $url],
             ]));
 

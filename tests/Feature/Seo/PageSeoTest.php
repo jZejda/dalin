@@ -52,7 +52,7 @@ it('renders title, description from the content and breadcrumbs for a markdown p
         ->getContent();
 
     expect(array_column(pageJsonLd((string) $html)['BreadcrumbList']['itemListElement'], 'name'))
-        ->toBe([__('content.post.public.breadcrumb_home'), 'Členské příspěvky']);
+        ->toBe([__('app.seo.breadcrumb_home'), 'Členské příspěvky']);
 });
 
 it('strips markup from HTML titles and reads TipTap content as text', function (): void {

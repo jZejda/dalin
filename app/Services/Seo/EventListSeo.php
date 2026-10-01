@@ -79,7 +79,7 @@ final class EventListSeo
         ], static fn (?string $fact): bool => $fact !== null && $fact !== '');
 
         $url = url()->current();
-        $breadcrumbs = [['name' => __('sport-event.public.breadcrumb_home'), 'url' => url('/')]];
+        $breadcrumbs = [];
 
         if ($event !== null) {
             $breadcrumbs[] = ['name' => $event->name, 'url' => route('sport-event.show', $event->id)];
@@ -109,8 +109,8 @@ final class EventListSeo
     private function firstFilled(array $values): ?string
     {
         foreach ($values as $value) {
-            if (is_string($value) && trim($value) !== '') {
-                return trim($value);
+            if (($filled = SiteSeo::filled($value)) !== null) {
+                return $filled;
             }
         }
 
