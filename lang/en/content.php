@@ -79,6 +79,8 @@ return [
             'content'                  => 'News content',
             'section_additional'       => 'Additional information',
             'section_additional_description' => 'Editorial summary of the news - optional - available after expanding',
+            'section_seo'              => 'Search engines and social networks',
+            'section_seo_description'  => 'Optional. An empty title falls back to the news title, an empty description to the editorial or the start of the text.',
             'private'                  => 'Internal news',
             'author'                   => 'Author',
             'format'                   => 'Format',

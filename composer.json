@@ -38,6 +38,7 @@
         "phpdocumentor/reflection-docblock": "^5.6",
         "psr/simple-cache": "v3.0",
         "pxlrbt/filament-excel": "^3.6",
+        "ralphjsmit/laravel-filament-seo": "^2.2",
         "ralphjsmit/laravel-seo": "^1.8",
         "sentry/sentry-laravel": "^4.25",
         "simplesoftwareio/simple-qrcode": "^4.2",

@@ -36,6 +36,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use RalphJSmit\Filament\SEO\SEO;
 
 class PostResource extends Resource implements HasShieldPermissions
 {
@@ -98,6 +99,17 @@ class PostResource extends Resource implements HasShieldPermissions
                                 ->collapsible()
                                 ->persistCollapsed()
                                 ->id('post-editorial'),
+
+                            // Stored in the `seo` table; empty fields fall back to the title / editorial (App\Services\Seo\PostSeo)
+                            Section::make(__('content.post.form.section_seo'))
+                                ->description(__('content.post.form.section_seo_description'))
+                                ->schema([
+                                    SEO::make(['title', 'description']),
+                                ])
+                                ->collapsible()
+                                ->collapsed()
+                                ->persistCollapsed()
+                                ->id('post-seo'),
                         ])
                         ->columns(1)
                         ->columnSpan([

@@ -7,6 +7,7 @@ namespace App\Services\Seo;
 use App\Models\AppSetting;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use RalphJSmit\Laravel\SEO\Facades\SEOManager;
 use RalphJSmit\Laravel\SEO\SchemaCollection;
 use RalphJSmit\Laravel\SEO\Support\ImageMeta;
@@ -86,9 +87,12 @@ final class SiteSeo
             $imagePath = AppSetting::getSeoImagePath();
 
             if ($imagePath !== null && Storage::disk('public')->exists($imagePath)) {
-                $data->image = Storage::disk('public')->url($imagePath);
-                $data->imageMeta = $this->imageMeta($imagePath, $data->image);
+                $data->image = url(Storage::disk('public')->url($imagePath));
             }
+        }
+
+        if ($data->image !== null && $data->imageMeta === null) {
+            $data->imageMeta = $this->publicDiskImageMeta($data->image);
         }
 
         if ($data->locale !== null && isset(self::OG_LOCALES[$data->locale])) {
@@ -135,6 +139,47 @@ final class SiteSeo
     }
 
     /**
+     * The club as an article publisher / author (full entity, since the
+     * SportsOrganization block itself is only rendered on the homepage).
+     *
+     * @return array<string, mixed>
+     */
+    public function publisherReference(): array
+    {
+        return array_filter([
+            '@type' => 'SportsOrganization',
+            '@id' => $this->homeUrl().'#organization',
+            'name' => self::clubName(),
+            'url' => $this->homeUrl(),
+            'logo' => $this->publicDiskUrl(AppSetting::getSeoLogoPath()),
+        ], static fn (mixed $value): bool => $value !== null);
+    }
+
+    /**
+     * @param  list<array{name: string, url: string}>  $items  from the homepage down to the current page
+     * @return array<string, mixed>
+     */
+    public function breadcrumbSchema(array $items): array
+    {
+        $elements = [];
+
+        foreach ($items as $index => $item) {
+            $elements[] = [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'name' => $item['name'],
+                'item' => $item['url'],
+            ];
+        }
+
+        return [
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => $elements,
+        ];
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public function websiteSchema(): array
@@ -176,17 +221,30 @@ final class SiteSeo
             return null;
         }
 
-        return Storage::disk('public')->url($path);
+        return url(Storage::disk('public')->url($path));
     }
 
     /**
-     * The package only measures images under public_path(); uploads live on the
-     * `public` disk, so the dimensions (og:image:width/height, Twitter card type)
-     * are read here.
+     * The package only measures images under public_path(); uploads (settings, Media
+     * Library covers) live on the `public` disk, so for its URLs the dimensions
+     * (og:image:width/height, Twitter card type) are read here.
      */
-    private function imageMeta(string $path, string $url): ?ImageMeta
+    private function publicDiskImageMeta(string $url): ?ImageMeta
     {
-        $size = @getimagesize(Storage::disk('public')->path($path));
+        $disk = Storage::disk('public');
+        $baseUrl = rtrim(url($disk->url('')), '/').'/';
+
+        if (! Str::startsWith($url, $baseUrl)) {
+            return null;
+        }
+
+        $path = rawurldecode(Str::after($url, $baseUrl));
+
+        if (Str::contains($path, '..') || ! $disk->exists($path)) {
+            return null;
+        }
+
+        $size = @getimagesize($disk->path($path));
 
         if ($size === false) {
             return null;

@@ -57,7 +57,10 @@ Route::get('/demo-screenshot-mode-off/'.config('demo.screenshot_mode_key'), [Dem
 Route::get('/cron-hourly/'.config('site-config.cron_hourly.url_key'), [CommonCron::class, 'runHourly']);
 
 Route::get('/novinky', [PostController::class, 'index'])->name('posts.index');
-Route::get('/novinka/{id}', [PostController::class, 'post'])->name('posts.show');
+// "{id}-{title-slug}"; a bare id or an outdated slug is 301-redirected to the current URL
+Route::get('/novinka/{post}', [PostController::class, 'post'])
+    ->where('post', '[0-9]+(-[a-z0-9-]*)?')
+    ->name('posts.show');
 Route::get('/stranka/{slug}', [PageController::class, 'page']);
 Route::get('/startovka/{slug}', [StartListController::class, 'singleStartList']);
 Route::get('/startovka/{slug}/bez-vakantu', [StartListController::class, 'downloadWithoutVakant']);

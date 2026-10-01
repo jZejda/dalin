@@ -79,6 +79,8 @@ return [
             'content'                  => 'Obsah novinky',
             'section_additional'       => 'Dodatečné informace',
             'section_additional_description' => 'Editorial pro souhrn novinky - nepovinné - dostupné po rozkliknutí',
+            'section_seo'              => 'Vyhledávače a sociální sítě',
+            'section_seo_description'  => 'Nepovinné. Prázdný titulek převezme název novinky, prázdný popis editorial nebo začátek textu.',
             'private'                  => 'Interní novinka',
             'author'                   => 'Autor',
             'format'                   => 'Formát',

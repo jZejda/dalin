@@ -42,9 +42,9 @@ class SitemapController extends Controller
         Post::query()
             ->where('private', PostStatus::Public)
             ->orderByDesc('created_at')
-            ->get(['id', 'created_at', 'updated_at'])
+            ->get(['id', 'title', 'created_at', 'updated_at'])
             ->each(fn (Post $post) => $sitemap->add(
-                $this->url(route('posts.show', $post->id), $post->updated_at ?? $post->created_at)
+                $this->url($post->publicUrl(), $post->updated_at ?? $post->created_at)
             ));
 
         Page::query()

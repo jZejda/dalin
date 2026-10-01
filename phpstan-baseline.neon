@@ -562,12 +562,6 @@ parameters:
 			message: '#^Parameter \#1 \$code of function abort expects Illuminate\\Contracts\\Support\\Responsable\|int\|Symfony\\Component\\HttpFoundation\\Response, string given\.$#'
 			identifier: argument.type
 			count: 1
-			path: app/Http/Controllers/Frontend/PostController.php
-
-		-
-			message: '#^Parameter \#1 \$code of function abort expects Illuminate\\Contracts\\Support\\Responsable\|int\|Symfony\\Component\\HttpFoundation\\Response, string given\.$#'
-			identifier: argument.type
-			count: 1
 			path: app/Http/Controllers/Frontend/StartListController.php
 
 		-

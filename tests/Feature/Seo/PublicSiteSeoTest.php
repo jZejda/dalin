@@ -55,7 +55,7 @@ it('renders title, social tags and club structured data on the homepage', functi
         ->toContain('<meta name="description" content="Oddíl orientačního běhu z Testova.">')
         ->toContain('<meta property="og:site_name" content="OK Testov">')
         ->toContain('<meta property="og:locale" content="cs_CZ">')
-        ->toContain('<meta property="og:image" content="'.Storage::disk('public')->url('seo/sharing.jpg').'">')
+        ->toContain('<meta property="og:image" content="'.url(Storage::disk('public')->url('seo/sharing.jpg')).'">')
         ->toContain('<meta property="og:image:width" content="1200">')
         ->toContain('<meta name="twitter:card" content="summary_large_image">')
         ->toContain('<link rel="canonical" href="'.url('/').'">');
@@ -82,7 +82,7 @@ it('omits the sharing image when the stored file is missing', function (): void 
 it('uses the page title section with the club suffix and does not double-escape it', function (): void {
     $post = createSeoTestPost(['title' => 'Závody & tréninky']);
 
-    $this->get('/novinka/'.$post->id)
+    $this->get($post->publicUrl())
         ->assertOk()
         ->assertSee('<title>Závody &amp; tréninky | OK Testov</title>', escape: false)
         ->assertSee('<meta property="og:title" content="Závody &amp; tréninky | OK Testov">', escape: false);
@@ -124,8 +124,8 @@ it('lists public posts, open pages and recent events in the sitemap', function (
     $xml = $response->getContent();
 
     expect($xml)
-        ->toContain('<loc>'.route('posts.show', $publicPost->id).'</loc>')
-        ->not->toContain('<loc>'.route('posts.show', $privatePost->id).'</loc>')
+        ->toContain('<loc>'.$publicPost->publicUrl().'</loc>')
+        ->not->toContain('<loc>'.$privatePost->publicUrl().'</loc>')
         ->toContain('<loc>'.url('/stranka/'.$openPage->slug).'</loc>')
         ->not->toContain('<loc>'.url('/stranka/'.$draftPage->slug).'</loc>')
         ->toContain('<loc>'.route('sport-event.show', $upcomingEvent->id).'</loc>')

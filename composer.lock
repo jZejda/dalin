@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "003b2d93fdf535df9ad8005a445d0bef",
+    "content-hash": "e280ffc08b26a83b9c77402e4ff21e49",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -7186,6 +7186,75 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "ralphjsmit/laravel-filament-seo",
+            "version": "2.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ralphjsmit/laravel-filament-seo.git",
+                "reference": "a9841f4db7ed8eb00bc7ab7918f658468e5893b1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ralphjsmit/laravel-filament-seo/zipball/a9841f4db7ed8eb00bc7ab7918f658468e5893b1",
+                "reference": "a9841f4db7ed8eb00bc7ab7918f658468e5893b1",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^4.0|^5.0",
+                "illuminate/contracts": "^11.0|^12.0|^13.0",
+                "php": "^8.0",
+                "ralphjsmit/laravel-seo": "^1.7",
+                "spatie/laravel-package-tools": "^1.9.2"
+            },
+            "require-dev": {
+                "doctrine/dbal": "^3.8|^4.4",
+                "nesbot/carbon": "^2.66|^3.0",
+                "nunomaduro/collision": "^8.0|^9.0",
+                "orchestra/testbench": "^9.0|^10.0|^11.0",
+                "pestphp/pest": "^4.0",
+                "pestphp/pest-plugin-laravel": "^4.0",
+                "phpunit/phpunit": "^12.0",
+                "spatie/laravel-ray": "^1.39"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": [],
+                    "providers": [
+                        "RalphJSmit\\Filament\\SEO\\FilamentSEOServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "RalphJSmit\\Filament\\SEO\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ralph J. Smit",
+                    "email": "rjs@ralphjsmit.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A package to combine the power of Laravel SEO and Filament Admin.",
+            "homepage": "https://github.com/ralphjsmit/laravel-filament-seo",
+            "keywords": [
+                "laravel",
+                "laravel-filament-seo",
+                "ralphjsmit"
+            ],
+            "support": {
+                "issues": "https://github.com/ralphjsmit/laravel-filament-seo/issues",
+                "source": "https://github.com/ralphjsmit/laravel-filament-seo/tree/2.2.1"
+            },
+            "time": "2026-09-11T08:04:52+00:00"
         },
         {
             "name": "ralphjsmit/laravel-helpers",

@@ -53,7 +53,7 @@ it('lists public news newest first, twelve per page with terrain pagination', fu
         ->assertSeeInOrder(['Stránkovaná novinka 01', 'Stránkovaná novinka 02', 'Stránkovaná novinka 12'])
         ->assertDontSee('Stránkovaná novinka 13')
         ->assertDontSee('Interní stránkovaná novinka')
-        ->assertSee(url('/novinka', $posts[0]->id))
+        ->assertSee($posts[0]->publicUrl())
         ->assertSee($author->name)
         ->assertSee('aria-current="page"', false)
         ->assertSee(route('posts.index', ['page' => 2]), false);
