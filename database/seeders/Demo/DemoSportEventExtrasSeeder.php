@@ -15,6 +15,7 @@ use App\Models\SportEventNews;
 use Faker\Generator;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class DemoSportEventExtrasSeeder extends Seeder
@@ -78,15 +79,99 @@ class DemoSportEventExtrasSeeder extends Seeder
             ]);
         }
 
-        // Export definitions listed in the admin panel (no generated files in demo)
-        foreach ($futureEvents->take(2) as $event) {
+        // Export definitions listed in the admin panel; the first one also gets a published
+        // IOF start list so /startovka/{slug} (incl. its SEO) can be showcased
+        foreach ($futureEvents->take(2) as $index => $event) {
+            $slug = Str::slug('startovka-' . $event->id . '-' . $event->place);
+            $path = Carbon::parse($event->date)->format('Y') . '/' . $slug . '.xml';
+
             SportEventExport::factory()->create([
                 'title'          => 'Startovka – ' . $event->name,
-                'slug'           => Str::slug('startovka-' . $event->id . '-' . $event->place),
+                'slug'           => $slug,
                 'sport_event_id' => $event->id,
                 'start_time'     => Carbon::parse($event->date)->setTime(10, 0),
+                'result_path'    => $path,
             ]);
+
+            if ($index === 0) {
+                Storage::disk('events')->put($path, $this->startListXml($event, $faker));
+            }
         }
+    }
+
+    /**
+     * IOF XML 3.0 start list: a few classes, Czech runners from demo clubs, two-minute
+     * intervals and one vacancy per class, as an organizer's software would export it.
+     */
+    private function startListXml(SportEvent $event, Generator $faker): string
+    {
+        $clubs = DemoClubsSeeder::getData();
+        $date = Carbon::parse($event->date)->format('Y-m-d');
+
+        $xml = new \XMLWriter();
+        $xml->openMemory();
+        $xml->setIndent(true);
+        $xml->startDocument('1.0', 'UTF-8');
+        $xml->startElement('StartList');
+        $xml->writeAttribute('xmlns', 'http://www.orienteering.org/datastandard/3.0');
+        $xml->writeAttribute('iofVersion', '3.0');
+        $xml->writeAttribute('createTime', Carbon::parse($event->date)->subDays(3)->setTime(19, 12)->format('Y-m-d\TH:i:s'));
+        $xml->writeAttribute('creator', 'QuickEvent 3.1');
+        $xml->startElement('Event');
+        $xml->writeElement('Name', $event->name);
+        $xml->endElement();
+
+        $classes = ['H21' => [6800, 210, 22], 'D21' => [5400, 170, 18], 'H35' => [5900, 190, 19], 'D14' => [2900, 80, 11]];
+
+        foreach (array_keys($classes) as $classIndex => $className) {
+            [$length, $climb, $controls] = $classes[$className];
+            $female = str_starts_with($className, 'D');
+
+            $xml->startElement('ClassStart');
+            $xml->startElement('Class');
+            $xml->writeElement('Id', (string) ($classIndex + 1));
+            $xml->writeElement('Name', $className);
+            $xml->endElement();
+            $xml->startElement('Course');
+            $xml->writeElement('Name', $className);
+            $xml->writeElement('Length', (string) $length);
+            $xml->writeElement('Climb', (string) $climb);
+            $xml->writeElement('NumberOfControls', (string) $controls);
+            $xml->endElement();
+
+            $runners = $faker->numberBetween(5, 9);
+            for ($i = 0; $i <= $runners; $i++) {
+                $vacancy = $i === $runners;
+                $club = $faker->randomElement($clubs);
+                $startTime = Carbon::parse($date . ' 10:00:00')->addMinutes(2 * $i + $classIndex);
+
+                $xml->startElement('PersonStart');
+                $xml->startElement('Person');
+                $xml->writeElement('Id', $vacancy ? '' : $club['abbr'] . $faker->numberBetween(5000, 9999));
+                $xml->startElement('Name');
+                $xml->writeElement('Family', $vacancy ? 'Vakant' : $faker->lastName($female ? 'female' : 'male'));
+                $xml->writeElement('Given', $vacancy ? 'Vakant' : $faker->firstName($female ? 'female' : 'male'));
+                $xml->endElement();
+                $xml->endElement();
+                $xml->startElement('Organisation');
+                $xml->writeElement('Id', $vacancy ? '0' : $club['oris_id']);
+                $xml->writeElement('Name', $vacancy ? 'Vakant' : $club['name']);
+                $xml->writeElement('ShortName', $vacancy ? 'Vakant' : $club['abbr']);
+                $xml->endElement();
+                $xml->startElement('Start');
+                $xml->writeElement('StartTime', $startTime->format('Y-m-d\TH:i:s'));
+                $xml->writeElement('ControlCard', (string) $faker->numberBetween(2000000, 8999999));
+                $xml->endElement();
+                $xml->endElement();
+            }
+
+            $xml->endElement();
+        }
+
+        $xml->endElement();
+        $xml->endDocument();
+
+        return $xml->outputMemory();
     }
 
     /**

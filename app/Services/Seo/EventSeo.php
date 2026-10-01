@@ -161,7 +161,7 @@ final class EventSeo
     /**
      * ORIS sometimes appends coordinates to the place ("Harrachov, 50.7703N, 15.4311E").
      */
-    private function placeName(SportEvent $event): ?string
+    public function placeName(SportEvent $event): ?string
     {
         $place = Str::squish((string) preg_replace(
             '/,\s*\d+(?:\.\d+)?\s*[NS]\s*,\s*\d+(?:\.\d+)?\s*[EW]\s*$/u',
