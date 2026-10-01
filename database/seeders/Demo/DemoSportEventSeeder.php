@@ -101,13 +101,16 @@ class DemoSportEventSeeder extends Seeder
                 'discipline_id'       => $faker->randomElement($disciplines),
                 'level_id'            => $faker->randomElement($levels),
                 'event_type'          => SportEventType::Race->value,
+                'start_time'          => $faker->randomElement(['09:30:00', '10:00:00', '10:30:00', '11:00:00']),
                 'use_oris_for_entries' => false,
                 'ranking'             => $faker->boolean(70),
                 'ranking_coefficient' => $faker->randomFloat(1, 0.5, 1.5),
                 'entry_date_1'        => $entryDate1,
                 'entry_date_2'        => $entryDate2,
                 'entry_date_3'        => $entryDate3,
-                'cancelled'           => false,
+                // One upcoming race is cancelled to showcase the cancelled state (badge, SEO eventStatus)
+                'cancelled'           => $i === 6,
+                'cancelled_reason'    => $i === 6 ? 'Závod se ruší kvůli kůrovcové těžbě v prostoru shromaždiště.' : null,
                 'organization'        => $faker->randomElements($clubAbbrs, $faker->numberBetween(1, 2)),
                 'weather'             => $daysAhead <= 5 ? SportEventFactory::fakeWeather($date, $faker) : null,
             ]);

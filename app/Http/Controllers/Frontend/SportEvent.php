@@ -7,12 +7,13 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\SportEvent as ModelsSportEvent;
 use App\Models\TransportOffer;
+use App\Services\Seo\EventSeo;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\View\View;
 
 class SportEvent extends Controller
 {
-    public function singleEvent(string|null $eventId): View
+    public function singleEvent(string|null $eventId, EventSeo $eventSeo): View
     {
         try {
             $event = ModelsSportEvent::query()
@@ -41,6 +42,7 @@ class SportEvent extends Controller
             'activeEntriesCount' => $event->userEntryActive(),
             'transportOffersCount' => $transportOffers->count(),
             'transportFreeSeats' => (int) $transportOffers->sum(fn (TransportOffer $offer): int => $offer->freeSeats()),
+            'seo' => $eventSeo->dynamicData($event),
             'sponsorSectionId' => 0,
         ]);
     }

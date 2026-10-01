@@ -163,7 +163,7 @@ final class SiteSeo
             'alternateName' => self::clubAbbr(),
             'url' => $this->homeUrl(),
             'logo' => $this->publicDiskUrl(AppSetting::getSeoLogoPath()),
-            'image' => $this->publicDiskUrl(AppSetting::getSeoImagePath()),
+            'image' => $this->defaultImageUrl(),
             'description' => AppSetting::getSeoDescription(),
             'sport' => 'Orienteering',
             'sameAs' => AppSetting::getSeoSameAs(),
@@ -226,6 +226,14 @@ final class SiteSeo
             'inLanguage' => app()->getLocale(),
             'publisher' => ['@id' => $this->homeUrl().'#organization'],
         ], static fn (mixed $value): bool => $value !== null);
+    }
+
+    /**
+     * The club's default sharing image (Club settings), if uploaded.
+     */
+    public function defaultImageUrl(): ?string
+    {
+        return $this->publicDiskUrl(AppSetting::getSeoImagePath());
     }
 
     private static function clubName(): ?string
