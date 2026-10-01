@@ -67,7 +67,7 @@ class DemoContentSeeder extends Seeder
             // Showcase of the admin "Search engines and social networks" section (manual SEO override)
             if ($page['title'] === 'O našem klubu') {
                 $model->seo->update([
-                    'title'       => 'O klubu SK Demo Orientace',
+                    'title'       => 'O klubu – kdo jsme a kde trénujeme',
                     'description' => 'Kdo jsme, kde trénujeme a jak se k nám přidat. Oddíl orientačního běhu pro děti, dorost i dospělé z Brna a okolí.',
                 ]);
             }
