@@ -55,6 +55,14 @@ class AppSetting extends Model
 
     public const string CLUB_TECHNICAL_EMAIL = 'club.technical_email';
 
+    public const string SEO_DESCRIPTION = 'seo.description';
+
+    public const string SEO_IMAGE = 'seo.image';
+
+    public const string SEO_LOGO = 'seo.logo';
+
+    public const string SEO_SAME_AS = 'seo.same_as';
+
     /**
      * Club settings editable in the admin panel, mapped to the config keys
      * they override. The `abbr` is intentionally missing — it drives the ORIS
@@ -181,6 +189,48 @@ class AppSetting extends Model
     public static function setMapyApiKey(?string $apiKey): void
     {
         self::set(self::MAPY_API_KEY, $apiKey !== null ? Crypt::encryptString($apiKey) : null);
+    }
+
+    public static function getSeoDescription(): ?string
+    {
+        return self::nonEmptyString(self::get(self::SEO_DESCRIPTION));
+    }
+
+    /**
+     * Path of the default social-sharing image on the `public` disk.
+     */
+    public static function getSeoImagePath(): ?string
+    {
+        return self::nonEmptyString(self::get(self::SEO_IMAGE));
+    }
+
+    /**
+     * Path of the club logo (raster, for schema.org `logo`) on the `public` disk.
+     */
+    public static function getSeoLogoPath(): ?string
+    {
+        return self::nonEmptyString(self::get(self::SEO_LOGO));
+    }
+
+    /**
+     * Club profiles on social networks, rendered as schema.org `sameAs`.
+     *
+     * @return list<string>
+     */
+    public static function getSeoSameAs(): array
+    {
+        $value = self::get(self::SEO_SAME_AS);
+
+        if (! is_array($value)) {
+            return [];
+        }
+
+        return array_values(array_filter($value, static fn (mixed $url): bool => is_string($url) && $url !== ''));
+    }
+
+    private static function nonEmptyString(mixed $value): ?string
+    {
+        return is_string($value) && trim($value) !== '' ? trim($value) : null;
     }
 
     /**

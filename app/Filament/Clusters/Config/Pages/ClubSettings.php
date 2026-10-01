@@ -7,12 +7,17 @@ namespace App\Filament\Clusters\Config\Pages;
 use App\Filament\Clusters\Config\ConfigCluster;
 use App\Models\AppSetting;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ClubSettings extends Page implements HasForms
 {
@@ -57,17 +62,36 @@ class ClubSettings extends Page implements HasForms
 
     public ?string $technical_email = null;
 
+    public ?string $seo_description = null;
+
+    public mixed $seo_image = null;
+
+    public mixed $seo_logo = null;
+
+    /** @var list<string> */
+    public array $seo_same_as = [];
+
+    private const string SEO_UPLOAD_DIRECTORY = 'seo';
+
     public function mount(): void
     {
-        $this->abbr = $this->clubConfigString('abbr');
-        $this->full_name = $this->clubConfigString('full_name');
-        $this->primary_bank_account_number = $this->clubConfigString('primary_bank_account_number');
-        $this->primary_bank_account_name = $this->clubConfigString('primary_bank_account_name');
-        $this->iban = $this->clubConfigStringOrNull('iban');
-        $this->user_credit_limit = $this->clubConfigString('user_credit_limit');
-        $this->regular_membership_fees_prefix = $this->clubConfigString('regular_membership_fees_prefix');
-        $this->extra_membership_fees_prefix = $this->clubConfigString('extra_membership_fees_prefix');
-        $this->technical_email = $this->clubConfigStringOrNull('technical_email');
+        // Filled through the schema (not by direct property assignment) so FileUpload runs
+        // its afterStateHydrated() hook, which wraps the stored path into its array state.
+        $this->getForm('form')?->fill([
+            'abbr' => $this->clubConfigString('abbr'),
+            'full_name' => $this->clubConfigString('full_name'),
+            'primary_bank_account_number' => $this->clubConfigString('primary_bank_account_number'),
+            'primary_bank_account_name' => $this->clubConfigString('primary_bank_account_name'),
+            'iban' => $this->clubConfigStringOrNull('iban'),
+            'user_credit_limit' => $this->clubConfigString('user_credit_limit'),
+            'regular_membership_fees_prefix' => $this->clubConfigString('regular_membership_fees_prefix'),
+            'extra_membership_fees_prefix' => $this->clubConfigString('extra_membership_fees_prefix'),
+            'technical_email' => $this->clubConfigStringOrNull('technical_email'),
+            'seo_description' => AppSetting::getSeoDescription(),
+            'seo_image' => AppSetting::getSeoImagePath(),
+            'seo_logo' => AppSetting::getSeoLogoPath(),
+            'seo_same_as' => AppSetting::getSeoSameAs(),
+        ]);
     }
 
     protected function getFormSchema(): array
@@ -127,11 +151,45 @@ class ClubSettings extends Page implements HasForms
                         ->email()
                         ->helperText(__('club-settings.form.contacts.technical_email_helper')),
                 ]),
+            Section::make(__('club-settings.form.seo.section'))
+                ->description(__('club-settings.form.seo.description'))
+                ->schema([
+                    Textarea::make('seo_description')
+                        ->label(__('club-settings.form.seo.seo_description'))
+                        ->helperText(__('club-settings.form.seo.seo_description_helper'))
+                        ->rows(3)
+                        ->maxLength(300),
+                    FileUpload::make('seo_image')
+                        ->label(__('club-settings.form.seo.seo_image'))
+                        ->helperText(__('club-settings.form.seo.seo_image_helper'))
+                        ->image()
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                        ->disk('public')
+                        ->directory(self::SEO_UPLOAD_DIRECTORY)
+                        ->visibility('public')
+                        ->maxSize(4096),
+                    FileUpload::make('seo_logo')
+                        ->label(__('club-settings.form.seo.seo_logo'))
+                        ->helperText(__('club-settings.form.seo.seo_logo_helper'))
+                        ->image()
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                        ->disk('public')
+                        ->directory(self::SEO_UPLOAD_DIRECTORY)
+                        ->visibility('public')
+                        ->maxSize(2048),
+                    TagsInput::make('seo_same_as')
+                        ->label(__('club-settings.form.seo.seo_same_as'))
+                        ->helperText(__('club-settings.form.seo.seo_same_as_helper'))
+                        ->placeholder('https://www.facebook.com/...')
+                        ->nestedRecursiveRules(['url:http,https', 'max:255']),
+                ]),
         ];
     }
 
     public function submit(): void
     {
+        // Read FileUpload values from getState()'s return value: its state cast collapses
+        // the internal array to a path only there, never on the property itself.
         $data = (array) $this->getForm('form')?->getState();
 
         AppSetting::set(AppSetting::CLUB_FULL_NAME, $data['full_name']);
@@ -143,12 +201,43 @@ class ClubSettings extends Page implements HasForms
         AppSetting::set(AppSetting::CLUB_EXTRA_MEMBERSHIP_FEES_PREFIX, $data['extra_membership_fees_prefix']);
         AppSetting::set(AppSetting::CLUB_TECHNICAL_EMAIL, ($data['technical_email'] ?? '') !== '' ? $data['technical_email'] : null);
 
+        $seoDescription = trim((string) ($data['seo_description'] ?? ''));
+        AppSetting::set(AppSetting::SEO_DESCRIPTION, $seoDescription !== '' ? $seoDescription : null);
+        $this->saveSeoUpload(AppSetting::SEO_IMAGE, AppSetting::getSeoImagePath(), $data['seo_image'] ?? null);
+        $this->saveSeoUpload(AppSetting::SEO_LOGO, AppSetting::getSeoLogoPath(), $data['seo_logo'] ?? null);
+        AppSetting::set(AppSetting::SEO_SAME_AS, array_values(array_filter(
+            (array) ($data['seo_same_as'] ?? []),
+            static fn (mixed $url): bool => is_string($url) && $url !== '',
+        )));
+
         AppSetting::applyClubConfigOverrides();
 
         Notification::make()
             ->title(__('club-settings.notification.saved_title'))
             ->success()
             ->send();
+    }
+
+    /**
+     * The FileUpload value is a client-writable Livewire property, so only a real file
+     * inside the SEO upload directory is accepted; a replaced or removed file is deleted.
+     */
+    private function saveSeoUpload(string $settingKey, ?string $previousPath, mixed $newPath): void
+    {
+        $path = is_string($newPath) && $this->isSeoUploadPath($newPath) ? $newPath : null;
+
+        if ($previousPath !== null && $previousPath !== $path && $this->isSeoUploadPath($previousPath)) {
+            Storage::disk('public')->delete($previousPath);
+        }
+
+        AppSetting::set($settingKey, $path);
+    }
+
+    private function isSeoUploadPath(string $path): bool
+    {
+        return Str::startsWith($path, self::SEO_UPLOAD_DIRECTORY.'/')
+            && ! Str::contains($path, '..')
+            && Storage::disk('public')->exists($path);
     }
 
     private function clubConfigString(string $key): string
