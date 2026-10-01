@@ -98,3 +98,20 @@ it('answers 404 for unknown lists while keeping the friendly message', function 
     $this->get('/startovka/neexistuje')->assertNotFound()->assertSee('Startovka');
     $this->get('/vysledky/neexistuje')->assertNotFound()->assertSee('Výsledky');
 });
+
+it('renders a start list whose vacancies have a missing or empty person id', function (string $replacement): void {
+    $xml = str_replace('<Person><Id>TSTVakant</Id>', $replacement, iofStartListXml());
+    createListExport(SportEventExport::ENTRY_LIST_CATEGORY, 'startovka-vakant', $xml);
+
+    $this->get('/startovka/startovka-vakant')->assertOk()->assertSee('Vakant');
+})->with([
+    'missing id' => ['<Person>'],
+    'empty id' => ['<Person><Id></Id>'],
+]);
+
+it('renders a result list whose runner has an empty person id', function (): void {
+    $xml = str_replace('<Person><Id>TSTNovák</Id>', '<Person><Id></Id>', iofResultListXml());
+    createListExport(SportEventExport::RESULT_LIST_CATEGORY, 'vysledky-bez-id', $xml);
+
+    $this->get('/vysledky/vysledky-bez-id')->assertOk()->assertSee('Novák');
+});

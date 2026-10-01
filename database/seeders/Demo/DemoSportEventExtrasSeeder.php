@@ -147,7 +147,9 @@ class DemoSportEventExtrasSeeder extends Seeder
 
                 $xml->startElement('PersonStart');
                 $xml->startElement('Person');
-                $xml->writeElement('Id', $vacancy ? '' : $club['abbr'] . $faker->numberBetween(5000, 9999));
+                if (! $vacancy) {
+                    $xml->writeElement('Id', $club['abbr'] . $faker->numberBetween(5000, 9999));
+                }
                 $xml->startElement('Name');
                 $xml->writeElement('Family', $vacancy ? 'Vakant' : $faker->lastName($female ? 'female' : 'male'));
                 $xml->writeElement('Given', $vacancy ? 'Vakant' : $faker->firstName($female ? 'female' : 'male'));
