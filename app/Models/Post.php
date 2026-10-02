@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\ContentFormat;
 use App\Enums\PostStatus;
+use App\Services\Seo\PostSeo;
 use Filament\Forms\Components\RichEditor\FileAttachmentProviders\SpatieMediaLibraryFileAttachmentProvider;
 use Filament\Forms\Components\RichEditor\Models\Concerns\InteractsWithRichContent;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -15,10 +16,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use RalphJSmit\Laravel\SEO\Models\SEO;
+use RalphJSmit\Laravel\SEO\Support\HasSEO;
+use RalphJSmit\Laravel\SEO\Support\SEOData;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Override;
 
 /**
  * App\Models\Post
@@ -35,6 +40,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read User|null $user
+ * @property-read SEO $seo
  */
 #[Fillable([
     'title',
@@ -50,12 +56,14 @@ class Post extends Model implements HasMedia
     use SoftDeletes;
     use InteractsWithMedia;
     use InteractsWithRichContent;
+    use HasSEO;
 
     public const string MEDIA_COLLECTION_COVER = 'post_cover';
 
     /**
      * @return array<string, string>
      */
+    #[Override]
     protected function casts(): array
     {
         return [
@@ -88,6 +96,30 @@ class Post extends Model implements HasMedia
         return Str::startsWith($path, ['http://', 'https://', '/']) ? $path : null;
     }
 
+    /**
+     * Public URL with a title slug (/novinka/12-jarni-soustredeni). The id alone identifies the
+     * post, so a renamed title keeps old links working via a redirect to the current slug.
+     */
+    public function publicUrl(): string
+    {
+        return route('posts.show', ['post' => $this->routeSlug()]);
+    }
+
+    public function routeSlug(): string
+    {
+        $slug = Str::slug(Str::limit($this->title, 80, ''));
+
+        return $slug !== '' ? $this->id.'-'.$slug : (string) $this->id;
+    }
+
+    /**
+     * Search/social metadata for laravel-seo; manual values from the admin SEO section win.
+     */
+    public function getDynamicSEOData(): SEOData
+    {
+        return app(PostSeo::class)->dynamicData($this);
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection(self::MEDIA_COLLECTION_COVER)
@@ -110,6 +142,13 @@ class Post extends Model implements HasMedia
             ->performOnCollections(self::MEDIA_COLLECTION_COVER)
             ->nonQueued()
             ->fit(Fit::Max, 1600, 1600)
+            ->format('jpg');
+
+        // Social sharing preview (Open Graph / Twitter large card ratio)
+        $this->addMediaConversion(PostSeo::IMAGE_CONVERSION)
+            ->performOnCollections(self::MEDIA_COLLECTION_COVER)
+            ->nonQueued()
+            ->fit(Fit::Crop, PostSeo::IMAGE_WIDTH, PostSeo::IMAGE_HEIGHT)
             ->format('jpg');
     }
 

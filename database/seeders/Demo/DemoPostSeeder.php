@@ -72,6 +72,14 @@ class DemoPostSeeder extends Seeder
                 'updated_at'   => $createdAt->toDateTimeString(),
             ]);
 
+            // Showcase of the admin "Search engines and social networks" section (manual SEO override)
+            if ($title === 'Jarní soustředění v Českém ráji') {
+                $post->seo->update([
+                    'title'       => 'Jarní soustředění 2026 v Českém ráji',
+                    'description' => 'Tři dny orientačního běhu v pískovcových skalách Českého ráje pro žáky, dorost i dospělé. Přihlášky do konce března.',
+                ]);
+            }
+
             // Two of three posts get a cover so the homepage shows both covers and placeholders
             if ($index % 3 !== 2) {
                 $this->attachCover($post, $index);

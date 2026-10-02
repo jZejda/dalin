@@ -7,12 +7,13 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\SportEventExport;
 use App\Services\IofExportsService;
+use App\Services\Seo\EventListSeo;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
 
 class ResultListController extends Controller
 {
-    public function singleResultList(string|null $slug): View
+    public function singleResultList(string|null $slug, EventListSeo $eventListSeo): Response
     {
         if ($slug === null) {
             abort(404);
@@ -41,13 +42,16 @@ class ResultListController extends Controller
             $classResult = $resultList->getClassResult();
         }
 
-        return view('pages.frontend.single-result-list', [
+        // The view shows its own "not found" message; the status keeps search engines from
+        // indexing the empty page as a soft 404
+        return response()->view('pages.frontend.single-result-list', [
             'eventName' => $eventName ?? null,
             'eventAttributes' => $eventAttributes ?? null,
             'classResult' => $classResult ?? null,
             'sportEventExport' => $sportEventExport,
+            'seo' => $eventListSeo->resultList($sportEventExport, $eventName ?? null, $classResult ?? null),
             'sponsorSectionId' => 0,  // logic from model
-        ]);
+        ], isset($classResult) ? 200 : 404);
 
     }
 }

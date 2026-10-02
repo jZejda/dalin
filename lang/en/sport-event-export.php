@@ -41,4 +41,13 @@ return [
         'result_path' => 'File path',
     ],
 
+    'seo' => [
+        'start_list_title'          => 'Start list – :event',
+        'start_list_title_fallback' => 'Start list',
+        'result_list_title'          => 'Results – :event',
+        'result_list_title_fallback' => 'Results',
+        'classes' => '{1} :count class|[2,*] :count classes',
+        'runners' => '{1} :count runner|[2,*] :count runners',
+    ],
+
 ];

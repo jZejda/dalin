@@ -11,7 +11,7 @@
         <article class="mb-8" style="max-width: max-content;">
 
                 <h4 class="card-title">
-                    <a href="{{ url('/novinka', $post->id) }}">{{$post->title}}</a>
+                    <a href="{{ $post->publicUrl() }}">{{$post->title}}</a>
                 </h4>
                 @if($post->content_mode === ContentFormat::Html && !is_null($post->editorial))
                     <p>{!! $post->editorial !!}</p>

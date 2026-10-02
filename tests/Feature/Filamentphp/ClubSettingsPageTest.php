@@ -5,7 +5,9 @@ declare(strict_types=1);
 use App\Filament\Clusters\Config\Pages\ClubSettings;
 use App\Models\AppSetting;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 beforeEach(function (): void {
@@ -86,4 +88,53 @@ it('rejects positive credit limit and invalid fee prefix', function (): void {
         ->set('extra_membership_fees_prefix', '999')
         ->call('submit')
         ->assertHasErrors(['user_credit_limit', 'regular_membership_fees_prefix']);
+});
+
+it('saves public website SEO settings and replaces the sharing image', function (): void {
+    actingAsSuperAdmin();
+    Storage::fake('public');
+    Storage::disk('public')->putFileAs('seo', UploadedFile::fake()->image('old.jpg', 1200, 630), 'old.jpg');
+    Storage::disk('public')->putFileAs('seo', UploadedFile::fake()->image('new.jpg', 1200, 630), 'new.jpg');
+    Storage::disk('public')->putFileAs('seo', UploadedFile::fake()->image('logo.png', 256, 256), 'logo.png');
+    AppSetting::set(AppSetting::SEO_IMAGE, 'seo/old.jpg');
+
+    Livewire::test(ClubSettings::class)
+        ->assertSet('seo_image', fn (mixed $state): bool => is_array($state) && in_array('seo/old.jpg', $state, true))
+        ->set('seo_description', '  Oddíl orientačního běhu z Testova.  ')
+        ->set('seo_image', ['new' => 'seo/new.jpg'])
+        ->set('seo_logo', ['logo' => 'seo/logo.png'])
+        ->set('seo_same_as', ['https://www.facebook.com/oktestov'])
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    expect(AppSetting::getSeoDescription())->toBe('Oddíl orientačního běhu z Testova.')
+        ->and(AppSetting::getSeoImagePath())->toBe('seo/new.jpg')
+        ->and(AppSetting::getSeoLogoPath())->toBe('seo/logo.png')
+        ->and(AppSetting::getSeoSameAs())->toBe(['https://www.facebook.com/oktestov'])
+        ->and(Storage::disk('public')->exists('seo/old.jpg'))->toBeFalse();
+});
+
+it('ignores a sharing image path outside the SEO upload directory', function (): void {
+    actingAsSuperAdmin();
+    Storage::fake('public');
+    Storage::disk('public')->put('avatars/1/avatar.jpg', 'x');
+
+    Livewire::test(ClubSettings::class)
+        ->set('seo_image', ['forged' => 'avatars/1/avatar.jpg'])
+        ->set('seo_logo', ['forged' => 'seo/../avatars/1/avatar.jpg'])
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    expect(AppSetting::getSeoImagePath())->toBeNull()
+        ->and(AppSetting::getSeoLogoPath())->toBeNull()
+        ->and(Storage::disk('public')->exists('avatars/1/avatar.jpg'))->toBeTrue();
+});
+
+it('rejects social profiles that are not urls', function (): void {
+    actingAsSuperAdmin();
+
+    Livewire::test(ClubSettings::class)
+        ->set('seo_same_as', ['facebook oktestov'])
+        ->call('submit')
+        ->assertHasErrors(['seo_same_as.0']);
 });

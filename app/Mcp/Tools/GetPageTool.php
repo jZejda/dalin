@@ -42,7 +42,7 @@ class GetPageTool extends Tool
             'status'              => $page->status instanceof \App\Enums\PageStatus ? $page->status->value : $page->status,
             'weight'              => $page->weight,
             'page_menu'           => $page->page_menu,
-            'meta'                => $page->meta,
+            'meta'                => $page->seoMeta(),
             'created_at'          => $page->created_at,
             'updated_at'          => $page->updated_at,
         ]);

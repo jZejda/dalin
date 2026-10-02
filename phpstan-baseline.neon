@@ -247,18 +247,6 @@ parameters:
 			path: app/Filament/Resources/Pages/PageResource.php
 
 		-
-			message: '#^Unable to resolve the template type TKey in call to function collect$#'
-			identifier: argument.templateType
-			count: 1
-			path: app/Filament/Resources/Pages/PageResource.php
-
-		-
-			message: '#^Unable to resolve the template type TValue in call to function collect$#'
-			identifier: argument.templateType
-			count: 1
-			path: app/Filament/Resources/Pages/PageResource.php
-
-		-
 			message: '#^Cannot call method format\(\) on Illuminate\\Support\\Carbon\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -557,12 +545,6 @@ parameters:
 			identifier: property.unusedType
 			count: 1
 			path: app/Http/Controllers/Cron/Jobs/UpdateEventWeather.php
-
-		-
-			message: '#^Parameter \#1 \$code of function abort expects Illuminate\\Contracts\\Support\\Responsable\|int\|Symfony\\Component\\HttpFoundation\\Response, string given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Http/Controllers/Frontend/PostController.php
 
 		-
 			message: '#^Parameter \#1 \$code of function abort expects Illuminate\\Contracts\\Support\\Responsable\|int\|Symfony\\Component\\HttpFoundation\\Response, string given\.$#'

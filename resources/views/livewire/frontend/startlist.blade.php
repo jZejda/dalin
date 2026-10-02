@@ -131,11 +131,9 @@
                                             </td>
                                             <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 <div class="flex items-center">
-                                                    @if(\App\Shared\Helpers\EmptyType::arrayNotEmpty($person->getPerson()->getId()))
-                                                        {{$person->getPerson()->getId()[0]}}
-                                                    @else
-                                                        {{$person->getPerson()->getId()}}
-                                                    @endif
+                                                    {{-- An empty <Id/> (e.g. a vacancy) is parsed as an empty array --}}
+                                                    @php $personId = $person->getPerson()->getId(); @endphp
+                                                    {{ is_array($personId) ? ($personId[0] ?? '') : $personId }}
                                                 </div>
                                             </td>
                                             <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">

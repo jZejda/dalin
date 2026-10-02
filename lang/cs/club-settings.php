@@ -45,6 +45,18 @@ return [
             'technical_email' => 'Technický e-mail',
             'technical_email_helper' => 'Kontakt uváděný v e-mailech členům (reset hesla, změny kreditu apod.).',
         ],
+        'seo' => [
+            'section' => 'Veřejný web a sociální sítě',
+            'description' => 'Údaje pro vyhledávače (SEO) a náhledy odkazů sdílených na sociálních sítích.',
+            'seo_description' => 'Popis klubu',
+            'seo_description_helper' => 'Jedna až dvě věty o klubu (ideálně do 160 znaků). Zobrazuje se ve výsledcích vyhledávání a v náhledech odkazů u stránek bez vlastního popisu.',
+            'seo_image' => 'Výchozí obrázek pro sdílení',
+            'seo_image_helper' => 'JPG nebo PNG ve velikosti 1200 × 630 px (např. logo na barvách klubu). Použije se v náhledu odkazu na Facebooku, WhatsAppu apod. u stránek bez vlastního obrázku.',
+            'seo_logo' => 'Logo klubu',
+            'seo_logo_helper' => 'Čtvercové PNG nebo JPG, alespoň 112 × 112 px. Vyhledávače ho mohou zobrazit u výsledků klubu.',
+            'seo_same_as' => 'Profily na sociálních sítích',
+            'seo_same_as_helper' => 'Celé adresy profilů klubu (Facebook, Instagram, Strava…). Každou potvrďte klávesou Enter.',
+        ],
     ],
 
     'notification' => [

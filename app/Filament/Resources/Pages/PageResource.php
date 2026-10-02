@@ -32,7 +32,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\Repeater;
 use Filament\Support\Enums\FontWeight;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
@@ -43,6 +42,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use RalphJSmit\Filament\SEO\SEO;
 
 class PageResource extends Resource implements HasShieldPermissions
 {
@@ -247,42 +247,16 @@ class PageResource extends Resource implements HasShieldPermissions
                                 ->numeric()
                                 ->default(50),
 
-                            Repeater::make('meta_items')
-                                ->label(__('content.page.form.meta'))
+                            // Stored in the `seo` table; empty fields fall back to the title / content (App\Services\Seo\PageSeo)
+                            Section::make(__('content.page.form.section_seo'))
+                                ->description(__('content.page.form.section_seo_description'))
                                 ->schema([
-                                    Select::make('key')
-                                        ->label(__('content.page.form.meta_key'))
-                                        ->options([
-                                            'title' => 'Title',
-                                            'description' => 'Description',
-                                            'keywords' => 'Keywords',
-                                            'og:title' => 'OG Title',
-                                            'og:description' => 'OG Description',
-                                            'og:image' => 'OG Image',
-                                        ])
-                                        ->required()
-                                        ->searchable()
-                                        ->live()
-                                        ->afterStateUpdated(function (Set $set, $state, $get) {
-                                            $currentItems = $get('../../meta_items') ?? [];
-                                            $duplicates = collect($currentItems)
-                                                ->where('key', $state)
-                                                ->keys();
-
-                                            if ($duplicates->count() > 1) {
-                                                $set('key', null);
-                                            }
-                                        }),
-                                    TextInput::make('value')
-                                        ->label(__('content.page.form.meta_value'))
-                                        ->required(),
+                                    SEO::make(['title', 'description']),
                                 ])
-                                ->columns(2)
-                                ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
-                                ->defaultItems(0)
-                                ->deletable(true)
-                                ->addable(true)
-                                ->reorderable(false)
+                                ->collapsible()
+                                ->collapsed()
+                                ->persistCollapsed()
+                                ->id('page-seo'),
                         ])->columnSpan([
                             'sm' => 1,
                             'md' => 4

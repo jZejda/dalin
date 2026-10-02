@@ -48,9 +48,8 @@ return [
             'category'         => 'Kategorie',
             'show_category_menu' => 'Zobrazit menu kategorie?',
             'weight'           => 'Váha',
-            'meta'             => 'Meta',
-            'meta_key'         => 'Klíč',
-            'meta_value'       => 'Hodnota',
+            'section_seo'      => 'Vyhledávače a sociální sítě',
+            'section_seo_description' => 'Nepovinné. Prázdný titulek převezme název stránky, prázdný popis začátek jejího textu.',
         ],
 
         'table' => [
@@ -79,6 +78,8 @@ return [
             'content'                  => 'Obsah novinky',
             'section_additional'       => 'Dodatečné informace',
             'section_additional_description' => 'Editorial pro souhrn novinky - nepovinné - dostupné po rozkliknutí',
+            'section_seo'              => 'Vyhledávače a sociální sítě',
+            'section_seo_description'  => 'Nepovinné. Prázdný titulek převezme název novinky, prázdný popis editorial nebo začátek textu.',
             'private'                  => 'Interní novinka',
             'author'                   => 'Autor',
             'format'                   => 'Formát',

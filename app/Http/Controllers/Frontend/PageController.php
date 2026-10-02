@@ -25,7 +25,11 @@ class PageController extends Controller
     {
         $page = null;
         if (EmptyType::stringNotEmpty($slug)) {
-            $page = Page::where('slug', '=', $slug)->where('status', '=', Page::STATUS_OPEN)->first();
+            $page = Page::query()
+                ->with(['seo', 'contentCategory.sportEvent'])
+                ->where('slug', '=', $slug)
+                ->where('status', '=', Page::STATUS_OPEN)
+                ->first();
         }
 
         if ($page !== null) {
@@ -34,11 +38,13 @@ class PageController extends Controller
                     'page' => $page,
                     'relatedPages' => $this->getAsideMenu($page),
                     'relatedLinks' => $this->getAsideLinks($page),
+                    'seo' => $page,
                     'sponsorSectionId' => 1,  // logic from model
                 ]);
             } else {
                 return view('pages.frontend.show-page', [
                     'page' => $page,
+                    'seo' => $page,
                     'sponsorSectionId' => 0,  // logic from model
                 ]);
             }

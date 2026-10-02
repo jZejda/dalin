@@ -20,6 +20,11 @@ return [
         'actions' => 'Akce',
     ],
 
+    // Public frontend SEO (shared homepage item of the BreadcrumbList JSON-LD)
+    'seo' => [
+        'breadcrumb_home' => 'Úvod',
+    ],
+
     // Shared navigation groups (Filament sidebar)
     'navigation_groups' => [
         'users'         => 'Uživatel',

@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * App\Models\AppSetting
@@ -21,6 +23,10 @@ use Illuminate\Support\Facades\Log;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
+#[Fillable([
+    'key',
+    'value',
+])]
 class AppSetting extends Model
 {
     use HasFactory;
@@ -55,6 +61,14 @@ class AppSetting extends Model
 
     public const string CLUB_TECHNICAL_EMAIL = 'club.technical_email';
 
+    public const string SEO_DESCRIPTION = 'seo.description';
+
+    public const string SEO_IMAGE = 'seo.image';
+
+    public const string SEO_LOGO = 'seo.logo';
+
+    public const string SEO_SAME_AS = 'seo.same_as';
+
     /**
      * Club settings editable in the admin panel, mapped to the config keys
      * they override. The `abbr` is intentionally missing — it drives the ORIS
@@ -73,17 +87,18 @@ class AppSetting extends Model
         self::CLUB_TECHNICAL_EMAIL => 'site-config.club.technical_email',
     ];
 
-    /** @var list<string> */
-    protected $fillable = [
-        'key',
-        'value',
-    ];
+    /**
+     * @return array<string, string>
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'value' => 'json',
+        ];
+    }
 
-    /** @var array<string, string> */
-    protected $casts = [
-        'value' => 'json',
-    ];
-
+    #[Override]
     protected static function booted(): void
     {
         self::saved(static function (AppSetting $setting): void {
@@ -181,6 +196,48 @@ class AppSetting extends Model
     public static function setMapyApiKey(?string $apiKey): void
     {
         self::set(self::MAPY_API_KEY, $apiKey !== null ? Crypt::encryptString($apiKey) : null);
+    }
+
+    public static function getSeoDescription(): ?string
+    {
+        return self::nonEmptyString(self::get(self::SEO_DESCRIPTION));
+    }
+
+    /**
+     * Path of the default social-sharing image on the `public` disk.
+     */
+    public static function getSeoImagePath(): ?string
+    {
+        return self::nonEmptyString(self::get(self::SEO_IMAGE));
+    }
+
+    /**
+     * Path of the club logo (raster, for schema.org `logo`) on the `public` disk.
+     */
+    public static function getSeoLogoPath(): ?string
+    {
+        return self::nonEmptyString(self::get(self::SEO_LOGO));
+    }
+
+    /**
+     * Club profiles on social networks, rendered as schema.org `sameAs`.
+     *
+     * @return list<string>
+     */
+    public static function getSeoSameAs(): array
+    {
+        $value = self::get(self::SEO_SAME_AS);
+
+        if (! is_array($value)) {
+            return [];
+        }
+
+        return array_values(array_filter($value, static fn (mixed $url): bool => is_string($url) && $url !== ''));
+    }
+
+    private static function nonEmptyString(mixed $value): ?string
+    {
+        return is_string($value) && trim($value) !== '' ? trim($value) : null;
     }
 
     /**

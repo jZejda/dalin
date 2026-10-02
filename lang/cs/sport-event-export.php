@@ -41,4 +41,13 @@ return [
         'result_path' => 'Cesta k souboru',
     ],
 
+    'seo' => [
+        'start_list_title'          => 'Startovka – :event',
+        'start_list_title_fallback' => 'Startovka',
+        'result_list_title'          => 'Výsledky – :event',
+        'result_list_title_fallback' => 'Výsledky',
+        'classes' => '{1} :count kategorie|[2,4] :count kategorie|[5,*] :count kategorií',
+        'runners' => '{1} :count závodník|[2,4] :count závodníci|[5,*] :count závodníků',
+    ],
+
 ];

@@ -11,7 +11,7 @@
         <div class="terrain-cover-placeholder aspect-[4/3] w-full" aria-hidden="true"></div>
     @endif
     <div class="flex flex-1 flex-col p-5">
-        <{{ $heading }} class="text-base font-bold leading-snug"><a href="{{ url('/novinka', $post->id) }}" class="decoration-terrain-accent underline-offset-4 after:absolute after:inset-0 group-hover:underline">{{ $post->title }}</a></{{ $heading }}>
+        <{{ $heading }} class="text-base font-bold leading-snug"><a href="{{ $post->publicUrl() }}" class="decoration-terrain-accent underline-offset-4 after:absolute after:inset-0 group-hover:underline">{{ $post->title }}</a></{{ $heading }}>
         <div class="mt-auto flex items-center justify-between gap-4 pt-5 text-xs text-terrain-secondary">
             <p class="flex min-w-0 flex-wrap items-center gap-x-2">
                 @if ($post->user)<span class="truncate font-semibold text-terrain-ink">{{ $post->user->name }}</span><span aria-hidden="true">·</span>@endif

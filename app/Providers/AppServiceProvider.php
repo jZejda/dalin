@@ -6,6 +6,8 @@ namespace App\Providers;
 
 use App\Mcp\Servers\DalinServer;
 use App\Services\AppVersionService;
+use App\Services\Seo\Sitemap;
+use App\Services\Seo\SiteSeo;
 use App\Models\AppSetting;
 use App\Models\UserCredit;
 use App\Observers\UserCreditObserver;
@@ -45,6 +47,10 @@ class AppServiceProvider extends ServiceProvider
         // Club settings from the admin panel override config/site-config.php;
         // rescue() covers fresh installs where app_settings does not exist yet.
         rescue(static fn () => AppSetting::applyClubConfigOverrides(), report: false);
+
+        // Public frontend SEO defaults (title suffix, fallback description/image, og:locale)
+        SiteSeo::configure();
+        Sitemap::flushOnContentChanges();
 
         // Verze a sestavení v `php artisan about` (a tedy i v deploy tasku app:version)
         AboutCommand::add('DaLin', fn (): array => [

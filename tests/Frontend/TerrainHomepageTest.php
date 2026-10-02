@@ -71,10 +71,10 @@ it('keeps public news filtering and shows a cover image or a placeholder with a 
     Livewire::test(PostCards::class, ['terrain' => true])
         ->assertSee('Veřejná Terrain novinka')
         ->assertSeeInOrder([$user->name, $public->created_at->format('d. m. Y')])
-        ->assertSee(url('/novinka', $public->id))
+        ->assertSee($public->publicUrl())
         ->assertSee('terrain-cover-placeholder', false)
         ->assertSee('conversions/cover-card.jpg', false)
-        ->assertSee(url('/novinka', $withCover->id))
+        ->assertSee($withCover->publicUrl())
         ->assertDontSee('Text s odkazem.')
         ->assertDontSee('Interní Terrain novinka');
 
@@ -118,7 +118,7 @@ it('shows the post detail in the terrain layout with the uploaded cover and auth
     $post->addMedia(UploadedFile::fake()->image('cover.jpg', 1400, 400))
         ->toMediaCollection(Post::MEDIA_COLLECTION_COVER);
 
-    $this->get(url('/novinka', $post->id))
+    $this->get($post->publicUrl())
         ->assertOk()
         ->assertSee('conversions/cover-detail.jpg', false)
         ->assertSee('max-w-terrain', false)

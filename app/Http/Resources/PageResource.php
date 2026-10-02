@@ -40,7 +40,7 @@ class PageResource extends JsonResource
             'status' => $page->status,
             'weight' => $page->weight,
             'page_menu' => $page->page_menu,
-            'meta' => $page->meta,
+            'meta' => $page->seoMeta(),
             'created_at' => $page->created_at?->toIso8601String(),
             'updated_at' => $page->updated_at?->toIso8601String(),
         ];
