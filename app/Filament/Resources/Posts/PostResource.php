@@ -8,6 +8,7 @@ use App\Shared\Helpers\AppHelper;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Support\Enums\TextSize;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\ViewAction;
@@ -18,6 +19,7 @@ use App\Filament\Resources\Posts\Pages\EditPost;
 use App\Filament\Resources\Posts\Pages\ViewPost;
 use Filament\Actions\Action;
 use App\Enums\AppRoles;
+use App\Enums\PostStatus;
 use App\Filament\Resources\Posts\Jobs\SendNewsMail;
 use App\Models\Post;
 use App\Models\User;
@@ -98,7 +100,8 @@ class PostResource extends Resource implements HasShieldPermissions
                                 ])
                                 ->collapsible()
                                 ->persistCollapsed()
-                                ->id('post-editorial'),
+                                ->id('post-editorial')
+                                ->hidden(fn (Get $get): bool => self::isInternal($get('private'))),
 
                             // Stored in the `seo` table; empty fields fall back to the title / editorial (App\Services\Seo\PostSeo)
                             Section::make(__('content.post.form.section_seo'))
@@ -109,7 +112,8 @@ class PostResource extends Resource implements HasShieldPermissions
                                 ->collapsible()
                                 ->collapsed()
                                 ->persistCollapsed()
-                                ->id('post-seo'),
+                                ->id('post-seo')
+                                ->hidden(fn (Get $get): bool => self::isInternal($get('private'))),
                         ])
                         ->columns(1)
                         ->columnSpan([
@@ -124,7 +128,8 @@ class PostResource extends Resource implements HasShieldPermissions
                                 ->label(__('content.post.form.private'))
                                 ->onIcon('heroicon-m-bolt')
                                 ->offIcon('heroicon-s-user')
-                                ->default(true),
+                                ->default(true)
+                                ->live(),
                             Select::make('user_id')
                                 ->label(__('content.post.form.author'))
                                 ->options(User::all()->pluck('name', 'id'))
@@ -148,7 +153,8 @@ class PostResource extends Resource implements HasShieldPermissions
                                 ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                                 ->imageEditor()
                                 ->imageEditorAspectRatioOptions([null, '4:3', '7:2'])
-                                ->maxSize(8192),
+                                ->maxSize(8192)
+                                ->hidden(fn (Get $get): bool => self::isInternal($get('private'))),
                         ])->columnSpan([
                             'sm' => 1,
                             'md' => 4
@@ -156,6 +162,17 @@ class PostResource extends Resource implements HasShieldPermissions
 
                 ])->columnSpanFull()
             ]);
+    }
+
+    /**
+     * Internal posts never reach the public site, so the editorial, SEO and cover fields are irrelevant.
+     * The toggle state is a bool after interaction, but the hydrated enum value (0/1) on edit.
+     */
+    private static function isInternal(mixed $state): bool
+    {
+        return $state instanceof PostStatus
+            ? $state === PostStatus::Private
+            : (bool) $state;
     }
 
     public static function table(Table $table): Table
