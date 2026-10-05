@@ -84,8 +84,8 @@ it('uses the page title section with the club suffix and does not double-escape 
 
     $this->get($post->publicUrl())
         ->assertOk()
-        ->assertSee('<title>Závody &amp; tréninky | OK Testov</title>', escape: false)
-        ->assertSee('<meta property="og:title" content="Závody &amp; tréninky | OK Testov">', escape: false);
+        ->assertSee('<title>Závody &amp; tréninky | TST</title>', escape: false)
+        ->assertSee('<meta property="og:title" content="Závody &amp; tréninky | TST">', escape: false);
 });
 
 it('keeps the page number in the canonical url of paginated listings', function (): void {

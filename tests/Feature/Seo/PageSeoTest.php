@@ -20,7 +20,7 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
     Cache::flush();
-    config(['site-config.club.full_name' => 'OK Testov']);
+    config(['site-config.club.full_name' => 'OK Testov', 'site-config.club.abbr' => 'TST']);
 });
 
 /**
@@ -46,7 +46,7 @@ it('renders title, description from the content and breadcrumbs for a markdown p
 
     $html = $this->get('/stranka/clenske-prispevky')
         ->assertOk()
-        ->assertSee('<title>Členské příspěvky | OK Testov</title>', escape: false)
+        ->assertSee('<title>Členské příspěvky | TST</title>', escape: false)
         ->assertSee('<meta name="description" content="Kolik platíme Příspěvek na rok 2026 je 1 200 Kč.">', escape: false)
         ->assertSee('<link rel="canonical" href="'.$page->publicUrl().'">', escape: false)
         ->getContent();
@@ -89,7 +89,7 @@ it('prefers the manual SEO title and description from the admin', function (): v
     $page->seo->update(['title' => 'Ruční titulek', 'description' => 'Ruční popis stránky.']);
 
     $this->get($page->publicUrl())
-        ->assertSee('<title>Ruční titulek | OK Testov</title>', escape: false)
+        ->assertSee('<title>Ruční titulek | TST</title>', escape: false)
         ->assertSee('<meta name="description" content="Ruční popis stránky.">', escape: false);
 });
 

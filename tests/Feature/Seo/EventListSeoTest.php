@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 beforeEach(function (): void {
     Cache::flush();
     Storage::fake('events');
-    config(['site-config.club.full_name' => 'OK Testov']);
+    config(['site-config.club.full_name' => 'OK Testov', 'site-config.club.abbr' => 'TST']);
 });
 
 function iofPerson(string $family, string $given): string
@@ -76,7 +76,7 @@ it('describes a start list with the event, classes and runners without vacancies
 
     $html = $this->get('/startovka/startovka-jml-14')
         ->assertOk()
-        ->assertSee('<title>Startovka – 14. Jihomoravská liga | OK Testov</title>', escape: false)
+        ->assertSee('<title>Startovka – 14. Jihomoravská liga | TST</title>', escape: false)
         ->assertSee('<meta name="description" content="24.10.2026 · Brno, Líšeň · 2 kategorie · 3 závodníci">', escape: false)
         ->assertSee('<link rel="canonical" href="'.url('/startovka/startovka-jml-14').'">', escape: false)
         ->getContent();
@@ -90,7 +90,7 @@ it('describes a result list without a linked event', function (): void {
 
     $this->get('/vysledky/vysledky-jml-14')
         ->assertOk()
-        ->assertSee('<title>Výsledky – 14. Jihomoravská liga | OK Testov</title>', escape: false)
+        ->assertSee('<title>Výsledky – 14. Jihomoravská liga | TST</title>', escape: false)
         ->assertSee('<meta name="description" content="1 kategorie · 1 závodník">', escape: false);
 });
 

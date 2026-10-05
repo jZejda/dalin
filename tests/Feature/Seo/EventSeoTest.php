@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Cache;
 
 beforeEach(function (): void {
     Cache::flush();
-    config(['site-config.club.full_name' => 'OK Testov']);
+    config(['site-config.club.full_name' => 'OK Testov', 'site-config.club.abbr' => 'TST']);
 });
 
 /**
@@ -55,7 +55,7 @@ it('renders a factual description and SportsEvent structured data for a race', f
 
     $html = $this->get(route('sport-event.show', $event->id))
         ->assertOk()
-        ->assertSee('<title>14. Jihomoravská liga | OK Testov</title>', escape: false)
+        ->assertSee('<title>14. Jihomoravská liga | TST</title>', escape: false)
         ->assertSee('<meta name="description" content="'.__('sport-event.type_enum.race').' · 24.10.2026 · Brno, Líšeň · PBM">', escape: false)
         ->assertSee('<link rel="canonical" href="'.route('sport-event.show', $event->id).'">', escape: false)
         ->getContent();

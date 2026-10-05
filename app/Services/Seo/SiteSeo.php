@@ -82,16 +82,17 @@ final class SiteSeo
     public function applyDefaults(SEOData $data): SEOData
     {
         $clubName = self::clubName();
+        $titleSuffix = $this->titleSuffix();
 
         // Done here rather than via config('seo.title.suffix'), which the package reads
         // before the transformers run.
-        if ($clubName !== null && $data->enableTitleSuffix) {
+        if ($titleSuffix !== null && $data->enableTitleSuffix) {
             if ($data->title !== null) {
-                $data->title .= self::TITLE_SEPARATOR.$clubName;
+                $data->title .= self::TITLE_SEPARATOR.$titleSuffix;
             }
 
             if ($data->openGraphTitle !== null) {
-                $data->openGraphTitle .= self::TITLE_SEPARATOR.$clubName;
+                $data->openGraphTitle .= self::TITLE_SEPARATOR.$titleSuffix;
             }
         }
 
@@ -270,6 +271,20 @@ final class SiteSeo
     public function defaultImageUrl(): ?string
     {
         return $this->publicDiskUrl(AppSetting::getSeoImagePath());
+    }
+
+    /**
+     * Club after the page title: the short abbreviation keeps long post titles readable in
+     * search results and share previews, while the homepage carries the full name people
+     * search the club by.
+     */
+    private function titleSuffix(): ?string
+    {
+        if (request()->is('/')) {
+            return self::clubName() ?? self::clubAbbr();
+        }
+
+        return self::clubAbbr() ?? self::clubName();
     }
 
     private static function clubName(): ?string

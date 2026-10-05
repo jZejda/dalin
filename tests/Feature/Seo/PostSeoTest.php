@@ -17,7 +17,7 @@ use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
     Cache::flush();
-    config(['site-config.club.full_name' => 'OK Testov']);
+    config(['site-config.club.full_name' => 'OK Testov', 'site-config.club.abbr' => 'TST']);
 });
 
 function createPublicPost(array $attributes = []): Post
@@ -67,7 +67,7 @@ it('renders article meta tags with the editorial as description', function (): v
 
     $this->get($post->publicUrl())
         ->assertOk()
-        ->assertSee('<title>Jarní soustředění v Jeseníkách | OK Testov</title>', escape: false)
+        ->assertSee('<title>Jarní soustředění v Jeseníkách | TST</title>', escape: false)
         ->assertSee('<meta name="description" content="Zveme vás na jarní soustředění. Přihlášky do pátku.">', escape: false)
         ->assertSee('<meta name="author" content="Jana Nováková">', escape: false)
         ->assertSee('<meta property="og:type" content="article">', escape: false)
@@ -122,7 +122,7 @@ it('prefers the manual SEO title and description from the admin', function (): v
     $post->seo->update(['title' => 'Soustředění Jeseníky 2026', 'description' => 'Ruční popis pro vyhledávače.']);
 
     $this->get($post->publicUrl())
-        ->assertSee('<title>Soustředění Jeseníky 2026 | OK Testov</title>', escape: false)
+        ->assertSee('<title>Soustředění Jeseníky 2026 | TST</title>', escape: false)
         ->assertSee('<meta name="description" content="Ruční popis pro vyhledávače.">', escape: false);
 });
 
