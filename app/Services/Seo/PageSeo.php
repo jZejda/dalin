@@ -31,7 +31,7 @@ final class PageSeo
 
         return new SEOData(
             title: $this->siteSeo->manualValue($page, 'title') ?? $pageTitle,
-            description: $this->siteSeo->manualValue($page, 'description') ?? $this->excerpt($page),
+            description: $this->siteSeo->manualDescription($page) ?? $this->excerpt($page),
             url: $url,
             schema: SchemaCollection::make()
                 ->add(fn (): array => $this->siteSeo->breadcrumbSchema($this->breadcrumbs($page, $pageTitle, $url))),

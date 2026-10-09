@@ -158,6 +158,16 @@ final class SiteSeo
     }
 
     /**
+     * Manual description as plain text: editors often write Markdown (`**bold**`) into it.
+     */
+    public function manualDescription(Post|Page $model): ?string
+    {
+        $value = $this->manualValue($model, 'description');
+
+        return $value !== null ? $this->plainText(Str::markdown($value)) : null;
+    }
+
+    /**
      * Trimmed string, or null for anything blank or not a string.
      */
     public static function filled(mixed $value): ?string

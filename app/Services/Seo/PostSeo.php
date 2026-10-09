@@ -12,6 +12,9 @@ use RalphJSmit\Laravel\SEO\Support\SEOData;
 /**
  * Search/social metadata of a news post: description from the editorial or the content,
  * the cover cropped for sharing, NewsArticle + BreadcrumbList JSON-LD.
+ *
+ * The JSON-LD author is the club: Google wants `author.url` and members have no public
+ * profile page. The writer's name stays in the `author` meta tag.
  */
 final class PostSeo
 {
@@ -36,7 +39,7 @@ final class PostSeo
     public function dynamicData(Post $post): SEOData
     {
         $title = $this->siteSeo->manualValue($post, 'title') ?? $post->title;
-        $description = $this->siteSeo->manualValue($post, 'description') ?? $this->excerpt($post);
+        $description = $this->siteSeo->manualDescription($post) ?? $this->excerpt($post);
         $image = $this->imageUrl($post);
         $url = $post->publicUrl();
 
@@ -102,7 +105,7 @@ final class PostSeo
             'image' => $image !== null ? [$image] : null,
             'datePublished' => $post->created_at?->toIso8601String(),
             'dateModified' => ($post->updated_at ?? $post->created_at)?->toIso8601String(),
-            'author' => $post->user !== null ? ['@type' => 'Person', 'name' => $post->user->name] : $publisher,
+            'author' => $publisher,
             'publisher' => $publisher,
         ], static fn (mixed $value): bool => $value !== null);
     }

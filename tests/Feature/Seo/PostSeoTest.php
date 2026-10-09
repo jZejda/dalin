@@ -109,12 +109,21 @@ it('uses the cropped cover for sharing and publishes NewsArticle and breadcrumbs
         ->toMatchArray([
             'headline' => 'Jarní soustředění v Jeseníkách',
             'image' => [$imageUrl],
-            'author' => ['@type' => 'Person', 'name' => 'Jana Nováková'],
             'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => $post->publicUrl()],
         ])
+        // Google wants author.url; members have no public profile, so the club is the author
+        ->and($schemas['NewsArticle']['author'])->toMatchArray(['@type' => 'SportsOrganization', 'name' => 'OK Testov'])->toHaveKey('url')
         ->and($schemas['NewsArticle']['publisher']['name'])->toBe('OK Testov')
         ->and(array_column($schemas['BreadcrumbList']['itemListElement'], 'item'))
         ->toBe([url('/'), route('posts.index'), $post->publicUrl()]);
+});
+
+it('strips Markdown from the manual SEO description', function (): void {
+    $post = createPublicPost();
+    $post->seo->update(['description' => 'Závod pořádal **KOS TJ Tesla Brno**, mapa _Kočičí žleb_.']);
+
+    $this->get($post->publicUrl())
+        ->assertSee('<meta name="description" content="Závod pořádal KOS TJ Tesla Brno, mapa Kočičí žleb.">', escape: false);
 });
 
 it('prefers the manual SEO title and description from the admin', function (): void {
