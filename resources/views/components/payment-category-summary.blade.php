@@ -20,11 +20,11 @@
     };
 @endphp
 
-<div class="min-w-56 space-y-1.5 py-1 text-left text-sm">
+<div class="min-w-60 space-y-2.5 py-1.5 text-left text-sm">
     <div class="pb-1 text-xs font-medium text-gray-500 dark:text-gray-400">{{ __('user-credit.payment_summary.heading') }}</div>
 
     @foreach ($rows as $row)
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2.5">
             <x-payment-category-badge :category="$row['category']" size="xs" />
             <span class="font-semibold {{ $labelClasses($row['category']) }}">{{ $row['category']->getLabel() }}</span>
             <span class="text-xs text-gray-400 dark:text-gray-500">{{ $row['count'] }}×</span>
@@ -33,7 +33,7 @@
     @endforeach
 
     @if (count($rows) > 1)
-        <div class="flex items-center gap-2 border-t border-gray-200 pt-1.5 dark:border-white/10">
+        <div class="flex items-center gap-2.5 border-t border-gray-200 pt-2.5 dark:border-white/10">
             <span class="font-semibold text-gray-950 dark:text-white">{{ __('user-credit.payment_summary.total') }}</span>
             <span class="ms-auto ps-4 font-semibold tabular-nums whitespace-nowrap {{ $amountClasses($total) }}">{{ $money($total) }}</span>
         </div>
