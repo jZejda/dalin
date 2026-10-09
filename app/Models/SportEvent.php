@@ -11,6 +11,7 @@ use App\Enums\SportEventType;
 use App\Shared\Helpers\AppHelper;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -232,13 +233,12 @@ class SportEvent extends Model
     }
 
     /**
-     * Scope a query to only include specific SportId.
-     *
-     * @method Builder sport(Builder $query, int $sportId)
+     * Scope a query to only include specific SportId. Not named sport() — that is the relation.
      */
-    public function scopeSport(Builder $query, int $sportId): Builder
+    #[Scope]
+    protected function ofSport(Builder $query, int $sportId): void
     {
-        return $query->where('sport_id', '=', $sportId);
+        $query->where('sport_id', '=', $sportId);
     }
 
     // Attributes
@@ -258,9 +258,11 @@ class SportEvent extends Model
 
     public function getSportEventOrisTitleAttribute(): string
     {
-        return ($this->alt_name !== null ? $this->alt_name.' | ' : '').
-            $this->name.' | '.
-            ($this->oris_id !== null ? '(ORIS ID: '.$this->oris_id.')' : '');
+        return implode(' | ', array_filter([
+            $this->alt_name,
+            $this->name,
+            $this->oris_id !== null ? '(ORIS ID: '.$this->oris_id.')' : null,
+        ], fn (?string $part): bool => $part !== null && $part !== ''));
     }
 
     public function getSportEventLastCostCalculateAttribute(): string

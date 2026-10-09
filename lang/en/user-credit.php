@@ -45,6 +45,23 @@ return [
         'donation' => 'Donation',
     ],
 
+    'payment_category_enum' => [
+        'entry_fee' => 'Entry fee',
+        'additional_service' => 'Additional service',
+        'transport' => 'Transport',
+        'marketplace' => 'Marketplace',
+        'membership_fee' => 'Membership fees',
+        'deposit' => 'Deposit',
+        'initial_deposit' => 'Opening balance',
+        'transfer' => 'Transfer between users',
+        'other' => 'Other',
+    ],
+
+    'payment_summary' => [
+        'heading' => 'Event payments summary',
+        'total' => 'Total',
+    ],
+
     'credit_status_enum' => [
         UserCreditStatus::Done->value => 'Done',
         UserCreditStatus::UnAssign->value => 'Unassigned',
@@ -59,6 +76,8 @@ return [
 
     // Table
     'table' => [
+        'payment_category_title' => 'Payment type',
+        'payment_category_reversal' => 'reversal',
         'created_at_title' => 'Transaction',
         'sport_event_date' => 'Event date',
         'sport_event_title' => 'Race/Event',

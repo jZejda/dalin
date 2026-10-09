@@ -79,16 +79,20 @@ final class LeafletMap extends Component
      */
     private function getSportEvents(): Collection
     {
-        return SportEvent::query()
+        $query = SportEvent::query()
             ->where('date', '>', Carbon::now()->subDays(2))
-            //->where('sport_id', '=', $this->sportType)
             ->where('cancelled', '=', 0)
             ->whereIn('event_type', [
                 SportEventType::Race->value,
                 SportEventType::Training->value,
                 SportEventType::TrainingCamp->value,
-            ])
-            ->sport($this->sportType)
-            ->get();
+            ]);
+
+        // A null sport type shows events of all sports.
+        if ($this->sportType !== null) {
+            $query->ofSport($this->sportType);
+        }
+
+        return $query->get();
     }
 }

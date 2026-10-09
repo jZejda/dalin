@@ -2,6 +2,7 @@
 
 namespace App\Filament\Clusters\Config\Resources\Users\RelationManagers;
 
+use App\Enums\PaymentCategory;
 use App\Filament\Resources\UserCredits\UserCreditResource;
 use App\Shared\Helpers\AppHelper;
 use Filament\Actions\ActionGroup;
@@ -9,6 +10,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\DatePicker;
+use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\Width;
 use App\Models\SportEvent;
 use App\Models\UserCredit;
@@ -77,6 +79,7 @@ class UserCreditRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('sportService'))
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
@@ -87,6 +90,7 @@ class UserCreditRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
+                    ->weight(FontWeight::Bold)
                     ->description(function (UserCredit $record): string {
                         $description = '';
                         if (!is_null($record->sportEvent?->alt_name)) {
@@ -100,6 +104,19 @@ class UserCreditRelationManager extends RelationManager
                     })
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('payment_category')
+                    ->label(__('user-credit.table.payment_category_title'))
+                    ->state(fn (UserCredit $record): PaymentCategory => PaymentCategory::fromCredit($record))
+                    // The badge component renders the icon itself; stop Filament adding the enum icon again.
+                    ->icon(false)
+                    ->html()
+                    ->formatStateUsing(fn (PaymentCategory $state, UserCredit $record): HtmlString => new HtmlString(
+                        (string) view('components.payment-category-identity', [
+                            'category' => $state,
+                            'description' => self::paymentCategoryDescription($record),
+                            'size' => 'sm',
+                        ])
+                    )),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label(__('users.user_credit_relation.table.registration'))
                     ->html()
@@ -112,7 +129,6 @@ class UserCreditRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('amount')
-                    ->icon(fn (UserCredit $record): string => $record->amount >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                     ->color(fn (UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')
                     ->label(__('user-credit.table.amount_title'))
                     ->summarize(Sum::make())->money('CZK')->label(__('users.user_credit_relation.table.amount_total')),
@@ -130,6 +146,23 @@ class UserCreditRelationManager extends RelationManager
                     ->label(__('users.user_credit_relation.filters.sport_event'))
                     ->options(SportEvent::all()->pluck('sport_event_oris_title', 'id'))
                     ->default(fn (): ?int => request()->integer('sport_event_id') ?: null),
+                SelectFilter::make('payment_category')
+                    ->label(__('users.user_credit_relation.filters.payment_category'))
+                    ->options(PaymentCategory::options())
+                    ->multiple()
+                    ->query(function (Builder $query, array $data): Builder {
+                        $categories = array_map(PaymentCategory::from(...), $data['values'] ?? []);
+
+                        if ($categories === []) {
+                            return $query;
+                        }
+
+                        return $query->where(function (Builder $query) use ($categories): void {
+                            foreach ($categories as $category) {
+                                $query->orWhere(fn (Builder $q) => $category->constrain($q));
+                            }
+                        });
+                    }),
                 Filter::make('created_at')
                     ->schema([
                         DatePicker::make('created_from')
@@ -180,5 +213,21 @@ class UserCreditRelationManager extends RelationManager
                             ]),
                     ]),
             ]);
+    }
+
+    /**
+     * Second line of the payment type column: the additional service name, marked when it is a reversal.
+     */
+    private static function paymentCategoryDescription(UserCredit $record): ?string
+    {
+        if ($record->sport_service_id === null) {
+            return null;
+        }
+
+        $name = $record->sportService->service_name_cz ?? '#'.$record->sport_service_id;
+
+        return $record->amount > 0
+            ? $name.' · '.__('user-credit.table.payment_category_reversal')
+            : $name;
     }
 }
