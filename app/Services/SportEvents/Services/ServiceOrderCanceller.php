@@ -33,20 +33,28 @@ class ServiceOrderCanceller
             $order->status = ServiceOrderStatus::Cancelled;
             $order->saveOrFail();
 
-            $service = $order->sportService;
-            if ($service === null) {
-                return;
-            }
-
-            if ($service->qty_remaining !== null) {
-                $service->qty_remaining += $order->qty;
-            }
-            if ($service->qty_already_ordered !== null) {
-                $service->qty_already_ordered = max(0, $service->qty_already_ordered - $order->qty);
-            }
-            $service->save();
+            $this->releaseCapacity($order);
         });
 
         return new ServiceOrderResult(success: true, order: $order);
+    }
+
+    /**
+     * Returns the quantity of a cancelled order back to the service capacity.
+     */
+    public function releaseCapacity(SportServiceOrder $order): void
+    {
+        $service = $order->sportService;
+        if ($service === null) {
+            return;
+        }
+
+        if ($service->qty_remaining !== null) {
+            $service->qty_remaining += $order->qty;
+        }
+        if ($service->qty_already_ordered !== null) {
+            $service->qty_already_ordered = max(0, $service->qty_already_ordered - $order->qty);
+        }
+        $service->save();
     }
 }
