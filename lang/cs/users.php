@@ -83,6 +83,7 @@ return [
         ],
         'filters' => [
             'sport_event' => 'Závod',
+            'payment_category' => 'Typ platby',
             'created_from' => 'Datum od',
             'created_until' => 'Datum do',
         ],

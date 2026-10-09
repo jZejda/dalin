@@ -6,6 +6,7 @@ use App\Enums\AppRoles;
 use App\Enums\EntryStatus;
 use App\Enums\PaymentCategory;
 use App\Enums\ServiceOrderStatus;
+use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Filament\Clusters\Config\Resources\Users\RelationManagers\UserCreditRelationManager;
 use App\Filament\Resources\MemberFinances\Pages\ViewMemberFinance;
@@ -321,4 +322,74 @@ describe('PaymentCategory', function (): void {
             ->assertSee('Ubytování v tělocvičně')
             ->assertSee(__('user-credit.table.payment_category_reversal'));
     });
+
+    it('filters the credit table by payment type consistently with fromCredit()', function (): void {
+        $owner = User::query()->findOrFail($this->profile->user_id);
+        $samples = [
+            [UserCreditType::CashOut, $this->event->id, null],
+            [UserCreditType::CashOut, null, null],
+            [UserCreditType::ServiceFee, $this->event->id, $this->service->id],
+            [UserCreditType::CashOut, $this->event->id, $this->service->id],
+            [UserCreditType::TransportBilling, $this->event->id, null],
+            [UserCreditType::MarketplaceBilling, null, null],
+            [UserCreditType::MembershipFees, null, null],
+            [UserCreditType::UserDonation, null, null],
+            [UserCreditType::InitialDeposit, null, null],
+            [UserCreditType::TransferCreditBetweenUsers, null, null],
+        ];
+
+        foreach ($samples as [$type, $eventId, $serviceId]) {
+            $credit = new UserCredit();
+            $credit->user_id = $owner->id;
+            $credit->sport_event_id = $eventId;
+            $credit->sport_service_id = $serviceId;
+            $credit->amount = -10;
+            $credit->currency = UserCredit::CURRENCY_CZK;
+            $credit->credit_type = $type;
+            $credit->source = UserCredit::SOURCE_USER;
+            $credit->status = UserCreditStatus::Done;
+            $credit->save();
+        }
+
+        $credits = UserCredit::query()->where('user_id', $owner->id)->get();
+
+        foreach (PaymentCategory::cases() as $category) {
+            $query = UserCredit::query()->where('user_id', $owner->id);
+            $category->constrain($query);
+
+            expect($query->pluck('id')->sort()->values()->all())->toBe(
+                $credits->filter(fn (UserCredit $c): bool => PaymentCategory::fromCredit($c) === $category)
+                    ->pluck('id')->sort()->values()->all(),
+                $category->value,
+            );
+        }
+
+        $admin = User::factory()->create(['active' => true]);
+        $admin->assignRole(AppRoles::SuperAdmin->value);
+        $this->actingAs($admin);
+
+        $entryFees = $credits->filter(fn (UserCredit $c): bool => PaymentCategory::fromCredit($c) === PaymentCategory::EntryFee);
+
+        Livewire::test(UserCreditRelationManager::class, [
+            'ownerRecord' => $owner,
+            'pageClass' => ViewMemberFinance::class,
+        ])
+            ->filterTable('payment_category', [PaymentCategory::EntryFee->value])
+            ->assertCanSeeTableRecords($entryFees)
+            ->assertCanNotSeeTableRecords($credits->diff($entryFees))
+            ->assertDontSeeHtml('heroicon-m-arrow-trending');
+    });
+});
+
+describe('SportEvent::sport_event_oris_title', function (): void {
+    it('joins only the present parts', function (?string $altName, ?int $orisId, string $expected): void {
+        $event = new SportEvent();
+        $event->forceFill(['name' => 'Oddílový přebor', 'alt_name' => $altName, 'oris_id' => $orisId]);
+
+        expect($event->sport_event_oris_title)->toBe($expected);
+    })->with([
+        'name only' => [null, null, 'Oddílový přebor'],
+        'with oris id' => [null, 9123, 'Oddílový přebor | (ORIS ID: 9123)'],
+        'with alt name' => ['Přebor', 9123, 'Přebor | Oddílový přebor | (ORIS ID: 9123)'],
+    ]);
 });

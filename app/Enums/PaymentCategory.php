@@ -9,6 +9,7 @@ use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
+use Illuminate\Database\Eloquent\Builder;
 use Override;
 
 /**
@@ -44,10 +45,63 @@ enum PaymentCategory: string implements HasColor, HasIcon, HasLabel
         };
     }
 
+    /**
+     * Restricts a UserCredit query to this category; the SQL twin of fromCredit().
+     *
+     * @param  Builder<UserCredit>  $query
+     */
+    public function constrain(Builder $query): void
+    {
+        if ($this === self::AdditionalService) {
+            $query->where(fn (Builder $q) => $q
+                ->whereNotNull('sport_service_id')
+                ->orWhere('credit_type', '=', UserCreditType::ServiceFee->value));
+
+            return;
+        }
+
+        $query->whereNull('sport_service_id')
+            ->where('credit_type', '=', $this->creditType()->value);
+
+        match ($this) {
+            self::EntryFee => $query->whereNotNull('sport_event_id'),
+            self::Other => $query->whereNull('sport_event_id'),
+            default => null,
+        };
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public static function options(): array
+    {
+        $options = [];
+
+        foreach (self::cases() as $case) {
+            $options[$case->value] = $case->getLabel();
+        }
+
+        return $options;
+    }
+
     #[Override]
     public function getLabel(): string
     {
         return __('user-credit.payment_category_enum.'.$this->value);
+    }
+
+    private function creditType(): UserCreditType
+    {
+        return match ($this) {
+            self::EntryFee, self::Other => UserCreditType::CashOut,
+            self::AdditionalService => UserCreditType::ServiceFee,
+            self::Transport => UserCreditType::TransportBilling,
+            self::Marketplace => UserCreditType::MarketplaceBilling,
+            self::MembershipFee => UserCreditType::MembershipFees,
+            self::Deposit => UserCreditType::UserDonation,
+            self::InitialDeposit => UserCreditType::InitialDeposit,
+            self::Transfer => UserCreditType::TransferCreditBetweenUsers,
+        };
     }
 
     #[Override]
