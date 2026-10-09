@@ -105,18 +105,16 @@ class UserCreditRelationManager extends RelationManager
                 TextColumn::make('payment_category')
                     ->label(__('user-credit.table.payment_category_title'))
                     ->state(fn (UserCredit $record): PaymentCategory => PaymentCategory::fromCredit($record))
-                    ->badge()
-                    ->description(function (UserCredit $record): ?string {
-                        if ($record->sport_service_id === null) {
-                            return null;
-                        }
-
-                        $name = $record->sportService->service_name_cz ?? '#'.$record->sport_service_id;
-
-                        return $record->amount > 0
-                            ? $name.' · '.__('user-credit.table.payment_category_reversal')
-                            : $name;
-                    }),
+                    // The badge component renders the icon itself; stop Filament adding the enum icon again.
+                    ->icon(false)
+                    ->html()
+                    ->formatStateUsing(fn (PaymentCategory $state, UserCredit $record): HtmlString => new HtmlString(
+                        (string) view('components.payment-category-identity', [
+                            'category' => $state,
+                            'description' => self::paymentCategoryDescription($record),
+                            'size' => 'sm',
+                        ])
+                    )),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label(__('users.user_credit_relation.table.registration'))
                     ->html()
@@ -197,5 +195,21 @@ class UserCreditRelationManager extends RelationManager
                             ]),
                     ]),
             ]);
+    }
+
+    /**
+     * Second line of the payment type column: the additional service name, marked when it is a reversal.
+     */
+    private static function paymentCategoryDescription(UserCredit $record): ?string
+    {
+        if ($record->sport_service_id === null) {
+            return null;
+        }
+
+        $name = $record->sportService->service_name_cz ?? '#'.$record->sport_service_id;
+
+        return $record->amount > 0
+            ? $name.' · '.__('user-credit.table.payment_category_reversal')
+            : $name;
     }
 }
