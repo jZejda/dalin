@@ -38,7 +38,7 @@ class EventList extends Component
                 SportEventType::Training->value,
                 SportEventType::TrainingCamp->value,
             ])
-            ->sport(1)
+            ->ofSport(1)
             ->limit(6)
             ->orderBy('date', 'asc')
             ->get();

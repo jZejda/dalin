@@ -667,12 +667,6 @@ parameters:
 			path: app/Livewire/Shared/Maps/LeafletMap.php
 
 		-
-			message: '#^Parameter \#1 \$sportId of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\SportEvent\>\:\:sport\(\) expects int, int\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Livewire/Shared/Maps/LeafletMap.php
-
-		-
 			message: '#^Anonymous function never returns null so it can be removed from the return type\.$#'
 			identifier: return.unusedType
 			count: 2
