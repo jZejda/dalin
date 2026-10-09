@@ -381,6 +381,50 @@ describe('PaymentCategory', function (): void {
     });
 });
 
+describe('Payment summary popover', function (): void {
+    beforeEach(function (): void {
+        $this->actingAs($this->billing);
+
+        Livewire::test(RaceProfilePaymentList::class, ['sportEvent' => $this->event])
+            ->selectTableRecords([$this->profile->id])
+            ->callAction(TestAction::make('assignEventPayment')->table()->bulk(), ['amount' => 120]);
+
+        $manager = new ServiceCreditManager();
+        $manager->assign($this->service, [$this->profile], 2, null, $this->billing);
+        $manager->reverse($this->service, [$this->profile], 1, null, $this->billing);
+    });
+
+    it('sums the event payments per payment type in enum order', function (): void {
+        $summary = PaymentCategory::summarize(UserCredit::query()->where('user_race_profile_id', $this->profile->id)->get());
+
+        expect($summary)->toBe([
+            ['category' => PaymentCategory::EntryFee, 'amount' => -120.0, 'count' => 1],
+            ['category' => PaymentCategory::AdditionalService, 'amount' => -150.0, 'count' => 2],
+        ]);
+    });
+
+    it('renders the summary rows with a total', function (): void {
+        $html = view('components.payment-category-summary', [
+            'rows' => PaymentCategory::summarize(UserCredit::query()->where('user_race_profile_id', $this->profile->id)->get()),
+        ])->render();
+
+        expect($html)
+            ->toContain(PaymentCategory::EntryFee->getLabel())
+            ->toContain(PaymentCategory::AdditionalService->getLabel())
+            ->toContain(__('user-credit.payment_summary.total'))
+            ->toContain('270');
+    });
+
+    it('attaches the popover only to profiles with payments', function (): void {
+        // The second profile has no payments for the event, so only one popover is rendered.
+        $html = Livewire::test(RaceProfilePaymentList::class, ['sportEvent' => $this->event])
+            ->assertSuccessful()
+            ->html();
+
+        expect(substr_count($html, 'x-tooltip.html.interactive'))->toBe(1);
+    });
+});
+
 describe('SportEvent::sport_event_oris_title', function (): void {
     it('joins only the present parts', function (?string $altName, ?int $orisId, string $expected): void {
         $event = new SportEvent();

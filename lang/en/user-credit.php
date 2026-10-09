@@ -57,6 +57,11 @@ return [
         'other' => 'Other',
     ],
 
+    'payment_summary' => [
+        'heading' => 'Event payments summary',
+        'total' => 'Total',
+    ],
+
     'credit_status_enum' => [
         UserCreditStatus::Done->value => 'Done',
         UserCreditStatus::UnAssign->value => 'Unassigned',

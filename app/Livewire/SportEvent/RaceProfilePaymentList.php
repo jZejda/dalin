@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\SportEvent;
 
 use App\Enums\EntryStatus;
+use App\Enums\PaymentCategory;
 use App\Filament\Resources\MemberFinances\MemberFinanceResource;
 use App\Filament\Resources\SportEvents\Pages\Actions\BulkAssignPayment;
 use App\Filament\Resources\SportEvents\Pages\Actions\BulkAssignService;
@@ -76,9 +77,14 @@ class RaceProfilePaymentList extends Component implements HasActions, HasForms, 
                 TextColumn::make('event_payment_count')
                     ->label('Počet plateb')
                     ->alignCenter()
-                    ->badge()
-                    ->color(fn (?int $state): string => ($state ?? 0) > 0 ? 'primary' : 'gray')
-                    ->formatStateUsing(fn (?int $state): string => (string) ($state ?? 0))
+                    ->html()
+                    // Hovering the count shows the event payments summed per payment type.
+                    ->formatStateUsing(fn (?int $state, UserRaceProfile $record): HtmlString => new HtmlString(
+                        (string) view('components.payment-count-summary', [
+                            'count' => $state ?? 0,
+                            'summary' => PaymentCategory::summarize($record->userCredits),
+                        ])
+                    ))
                     ->sortable(),
                 TextColumn::make('payment_status')
                     ->label('Stav platby')
@@ -158,6 +164,10 @@ class RaceProfilePaymentList extends Component implements HasActions, HasForms, 
                 'userEntries' => function ($q) use ($eventId): void {
                     $q->where('sport_event_id', '=', $eventId)
                         ->where('entry_status', '!=', EntryStatus::Cancel->value);
+                },
+                'userCredits' => function ($q) use ($eventId): void {
+                    $q->where('sport_event_id', '=', $eventId)
+                        ->select(['id', 'user_race_profile_id', 'sport_event_id', 'sport_service_id', 'credit_type', 'amount']);
                 },
             ])
             ->withSum(

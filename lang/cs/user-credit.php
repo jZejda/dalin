@@ -57,6 +57,11 @@ return [
         'other' => 'Ostatní',
     ],
 
+    'payment_summary' => [
+        'heading' => 'Souhrn plateb na závod',
+        'total' => 'Celkem',
+    ],
+
     'credit_status_enum' => [
         UserCreditStatus::Done->value => 'Hotovo',
         UserCreditStatus::UnAssign->value => 'Nepřiřazeno',

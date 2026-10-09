@@ -46,6 +46,34 @@ enum PaymentCategory: string implements HasColor, HasIcon, HasLabel
     }
 
     /**
+     * Sums credits per category, in the order of the enum cases; categories without credits are left out.
+     *
+     * @param  iterable<UserCredit>  $credits
+     * @return list<array{category: self, amount: float, count: int}>
+     */
+    public static function summarize(iterable $credits): array
+    {
+        $totals = [];
+
+        foreach ($credits as $credit) {
+            $category = self::fromCredit($credit);
+            $totals[$category->value] ??= ['category' => $category, 'amount' => 0.0, 'count' => 0];
+            $totals[$category->value]['amount'] += (float) $credit->amount;
+            $totals[$category->value]['count']++;
+        }
+
+        $summary = [];
+
+        foreach (self::cases() as $case) {
+            if (isset($totals[$case->value])) {
+                $summary[] = [...$totals[$case->value], 'amount' => round($totals[$case->value]['amount'], 2)];
+            }
+        }
+
+        return $summary;
+    }
+
+    /**
      * Restricts a UserCredit query to this category; the SQL twin of fromCredit().
      *
      * @param  Builder<UserCredit>  $query
