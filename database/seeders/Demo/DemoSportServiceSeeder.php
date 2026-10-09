@@ -10,7 +10,9 @@ use App\Models\SportService;
 use App\Models\SportServiceOrder;
 use App\Models\SportServicePaymentDate;
 use App\Models\User;
+use App\Models\UserEntry;
 use App\Models\UserRaceProfile;
+use App\Services\SportEvents\Services\ServiceCreditManager;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
@@ -87,7 +89,31 @@ class DemoSportServiceSeeder extends Seeder
                     'qty_already_ordered' => $ordered,
                     'qty_remaining'       => max(0, $template['qty'] - $ordered),
                 ]);
+
+                $this->seedServiceCredits($service, $admin);
             }
         }
+    }
+
+    /**
+     * Services charged directly by the billing specialist on the event's
+     * "Platby / Finance" tab, including one reversal (storno).
+     */
+    private function seedServiceCredits(SportService $service, User $admin): void
+    {
+        $entered = UserRaceProfile::query()
+            ->whereIn('id', UserEntry::query()
+                ->where('sport_event_id', '=', $service->sport_event_id)
+                ->select('user_race_profile_id'))
+            ->take(2)
+            ->get();
+
+        if ($entered->isEmpty()) {
+            return;
+        }
+
+        $manager = new ServiceCreditManager();
+        $manager->assign($service, $entered, 1, null, $admin);
+        $manager->reverse($service, $entered->take(1), 1, 'Služba zrušena na žádost člena.', $admin);
     }
 }

@@ -9,14 +9,12 @@ use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Models\SportEvent;
-use App\Models\SportService;
 use App\Models\UserCredit;
 use App\Models\UserCreditNote;
 use App\Models\UserRaceProfile;
 use App\Shared\Helpers\EmptyType;
 use Filament\Actions\BulkAction;
 use Filament\Forms\Components\MarkdownEditor;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,10 +23,6 @@ use Illuminate\Support\Facades\DB;
 
 class BulkAssignPayment
 {
-    public const string PAYMENT_CATEGORY_ENTRY_FEE = 'entry_fee';
-
-    public const string PAYMENT_CATEGORY_SERVICE_PREFIX = 'service:';
-
     public static function make(SportEvent $sportEvent): BulkAction
     {
         return BulkAction::make('assignEventPayment')
@@ -40,11 +34,6 @@ class BulkAssignPayment
             ->modalSubmitActionLabel(__('sport-event.actions.assign_payment.modal_submit'))
             ->visible(fn (): bool => Auth::user()?->hasRole([AppRoles::BillingSpecialist, AppRoles::SuperAdmin]) ?? false)
             ->schema([
-                Select::make('payment_category')
-                    ->label(__('sport-event.actions.assign_payment.payment_category'))
-                    ->options(self::paymentCategoryOptions($sportEvent))
-                    ->default(self::PAYMENT_CATEGORY_ENTRY_FEE)
-                    ->required(),
                 TextInput::make('amount')
                     ->label(__('sport-event.actions.assign_payment.amount'))
                     ->numeric()
@@ -59,18 +48,12 @@ class BulkAssignPayment
                 $created = 0;
 
                 DB::transaction(function () use ($records, $data, $sportEvent, &$created): void {
-                    $category = (string) $data['payment_category'];
-                    $sportServiceId = $category === self::PAYMENT_CATEGORY_ENTRY_FEE
-                        ? null
-                        : (int) substr($category, strlen(self::PAYMENT_CATEGORY_SERVICE_PREFIX));
-
                     foreach ($records as $raceProfile) {
                         /** @var UserRaceProfile $raceProfile */
                         $credit = new UserCredit();
                         $credit->user_id = $raceProfile->user_id;
                         $credit->user_race_profile_id = $raceProfile->id;
                         $credit->sport_event_id = $sportEvent->id;
-                        $credit->sport_service_id = $sportServiceId;
                         $credit->amount = -(float) $data['amount'];
                         $credit->currency = UserCredit::CURRENCY_CZK;
                         $credit->credit_type = UserCreditType::CashOut;
@@ -103,26 +86,4 @@ class BulkAssignPayment
             ->deselectRecordsAfterCompletion();
     }
 
-    /**
-     * @return array<string, string>
-     */
-    private static function paymentCategoryOptions(SportEvent $sportEvent): array
-    {
-        $options = [
-            self::PAYMENT_CATEGORY_ENTRY_FEE => __('sport-event.actions.assign_payment.entry_fee_option'),
-        ];
-
-        $services = SportService::query()
-            ->where('sport_event_id', '=', $sportEvent->id)
-            ->get();
-
-        foreach ($services as $service) {
-            $key = self::PAYMENT_CATEGORY_SERVICE_PREFIX.$service->id;
-            $options[$key] = __('sport-event.actions.assign_payment.service_option', [
-                'service' => $service->service_name_cz ?? ('#'.$service->id),
-            ]);
-        }
-
-        return $options;
-    }
 }

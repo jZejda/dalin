@@ -7,6 +7,8 @@ namespace App\Livewire\SportEvent;
 use App\Enums\EntryStatus;
 use App\Filament\Resources\MemberFinances\MemberFinanceResource;
 use App\Filament\Resources\SportEvents\Pages\Actions\BulkAssignPayment;
+use App\Filament\Resources\SportEvents\Pages\Actions\BulkAssignService;
+use App\Filament\Resources\SportEvents\Pages\Actions\BulkReverseService;
 use App\Models\SportEvent;
 use App\Models\UserRaceProfile;
 use Filament\Actions\BulkActionGroup;
@@ -125,6 +127,8 @@ class RaceProfilePaymentList extends Component implements HasActions, HasForms, 
             ->toolbarActions([
                 BulkActionGroup::make([
                     BulkAssignPayment::make($this->sportEvent),
+                    BulkAssignService::make($this->sportEvent),
+                    BulkReverseService::make($this->sportEvent),
                 ]),
             ])
             ->recordClasses('!py-0')
