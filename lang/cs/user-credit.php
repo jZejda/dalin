@@ -45,6 +45,18 @@ return [
         'donation' => 'Dar',
     ],
 
+    'payment_category_enum' => [
+        'entry_fee' => 'Startovné',
+        'additional_service' => 'Doplňková služba',
+        'transport' => 'Doprava',
+        'marketplace' => 'Tržiště',
+        'membership_fee' => 'Členské příspěvky',
+        'deposit' => 'Vklad',
+        'initial_deposit' => 'Počáteční stav',
+        'transfer' => 'Převod mezi uživateli',
+        'other' => 'Ostatní',
+    ],
+
     'credit_status_enum' => [
         UserCreditStatus::Done->value => 'Hotovo',
         UserCreditStatus::UnAssign->value => 'Nepřiřazeno',
@@ -59,6 +71,8 @@ return [
 
     // Table
     'table' => [
+        'payment_category_title' => 'Typ platby',
+        'payment_category_reversal' => 'storno',
         'created_at_title' => 'Transakce',
         'sport_event_date' => 'Datum akce',
         'sport_event_title' => 'Závod/Akce',

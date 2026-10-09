@@ -2,6 +2,7 @@
 
 namespace App\Filament\Clusters\Config\Resources\Users\RelationManagers;
 
+use App\Enums\PaymentCategory;
 use App\Filament\Resources\UserCredits\UserCreditResource;
 use App\Shared\Helpers\AppHelper;
 use Filament\Actions\ActionGroup;
@@ -77,6 +78,7 @@ class UserCreditRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('sportService'))
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
@@ -100,6 +102,21 @@ class UserCreditRelationManager extends RelationManager
                     })
                     ->sortable()
                     ->searchable(),
+                TextColumn::make('payment_category')
+                    ->label(__('user-credit.table.payment_category_title'))
+                    ->state(fn (UserCredit $record): PaymentCategory => PaymentCategory::fromCredit($record))
+                    ->badge()
+                    ->description(function (UserCredit $record): ?string {
+                        if ($record->sport_service_id === null) {
+                            return null;
+                        }
+
+                        $name = $record->sportService->service_name_cz ?? '#'.$record->sport_service_id;
+
+                        return $record->amount > 0
+                            ? $name.' · '.__('user-credit.table.payment_category_reversal')
+                            : $name;
+                    }),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label(__('users.user_credit_relation.table.registration'))
                     ->html()

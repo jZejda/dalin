@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 use App\Enums\AppRoles;
 use App\Enums\EntryStatus;
+use App\Enums\PaymentCategory;
 use App\Enums\ServiceOrderStatus;
 use App\Enums\UserCreditType;
+use App\Filament\Clusters\Config\Resources\Users\RelationManagers\UserCreditRelationManager;
+use App\Filament\Resources\MemberFinances\Pages\ViewMemberFinance;
 use App\Livewire\SportEvent\RaceProfilePaymentList;
 use App\Models\AppSetting;
 use App\Models\SportClassDefinition;
@@ -274,7 +277,48 @@ describe('RaceProfilePaymentList service actions', function (): void {
         $credit = UserCredit::query()->where('user_race_profile_id', $this->profile->id)->sole();
 
         expect((float) $credit->amount)->toBe(-250.0)
-            ->and($credit->sport_service_id)->toBeNull();
+            ->and($credit->sport_service_id)->toBeNull()
+            ->and(PaymentCategory::fromCredit($credit))->toBe(PaymentCategory::EntryFee);
     });
 });
 
+describe('PaymentCategory', function (): void {
+    it('derives the category from the credit', function (array $attributes, PaymentCategory $expected): void {
+        $credit = new UserCredit();
+        $credit->forceFill($attributes);
+
+        expect(PaymentCategory::fromCredit($credit))->toBe($expected);
+    })->with([
+        'entry fee' => [['credit_type' => UserCreditType::CashOut, 'sport_event_id' => 1], PaymentCategory::EntryFee],
+        'manual deduction' => [['credit_type' => UserCreditType::CashOut, 'sport_event_id' => null], PaymentCategory::Other],
+        'service fee' => [['credit_type' => UserCreditType::ServiceFee, 'sport_event_id' => 1], PaymentCategory::AdditionalService],
+        'legacy service payment' => [['credit_type' => UserCreditType::CashOut, 'sport_event_id' => 1, 'sport_service_id' => 5], PaymentCategory::AdditionalService],
+        'transport' => [['credit_type' => UserCreditType::TransportBilling], PaymentCategory::Transport],
+        'marketplace' => [['credit_type' => UserCreditType::MarketplaceBilling], PaymentCategory::Marketplace],
+        'membership' => [['credit_type' => UserCreditType::MembershipFees], PaymentCategory::MembershipFee],
+        'deposit' => [['credit_type' => UserCreditType::UserDonation], PaymentCategory::Deposit],
+        'initial deposit' => [['credit_type' => UserCreditType::InitialDeposit], PaymentCategory::InitialDeposit],
+        'transfer' => [['credit_type' => UserCreditType::TransferCreditBetweenUsers], PaymentCategory::Transfer],
+    ]);
+
+    it('shows the payment type and service name in the member finance credit table', function (): void {
+        $manager = new ServiceCreditManager();
+        $manager->assign($this->service, [$this->profile], 1, null, $this->billing);
+        $manager->reverse($this->service, [$this->profile], 1, null, $this->billing);
+
+        $admin = User::factory()->create(['active' => true]);
+        $admin->assignRole(AppRoles::SuperAdmin->value);
+        $this->actingAs($admin);
+
+        $owner = User::query()->findOrFail($this->profile->user_id);
+
+        Livewire::test(UserCreditRelationManager::class, [
+            'ownerRecord' => $owner,
+            'pageClass' => ViewMemberFinance::class,
+        ])
+            ->assertCanSeeTableRecords(UserCredit::query()->where('user_id', $owner->id)->get())
+            ->assertSee(PaymentCategory::AdditionalService->getLabel())
+            ->assertSee('Ubytování v tělocvičně')
+            ->assertSee(__('user-credit.table.payment_category_reversal'));
+    });
+});
