@@ -59,8 +59,10 @@ class RaceProfilePaymentList extends Component implements HasActions, HasForms, 
                     ->sortable(),
                 TextColumn::make('active_categories')
                     ->label('Kategorie')
-                    ->html()
-                    ->state(fn (UserRaceProfile $record): HtmlString => $this->renderCategories($record)),
+                    ->badge()
+                    ->color('info')
+                    ->placeholder('—')
+                    ->state(fn (UserRaceProfile $record): array => $this->categoryNames($record)),
                 TextColumn::make('event_payment_sum')
                     ->label('Platby na závod')
                     ->money('CZK')
@@ -167,22 +169,21 @@ class RaceProfilePaymentList extends Component implements HasActions, HasForms, 
             ]);
     }
 
-    private function renderCategories(UserRaceProfile $record): HtmlString
+    /**
+     * Distinct category names the profile is entered in for this event.
+     *
+     * @return list<string>
+     */
+    private function categoryNames(UserRaceProfile $record): array
     {
-        $categories = $record->userEntries
+        /** @var list<string> $names */
+        $names = $record->userEntries
             ->pluck('class_name')
             ->filter()
             ->unique()
-            ->values();
+            ->values()
+            ->all();
 
-        if ($categories->isEmpty()) {
-            return new HtmlString('<span class="text-xs text-gray-400">—</span>');
-        }
-
-        $badges = $categories
-            ->map(fn (string $name): string => '<span class="inline-flex items-center rounded px-1.5 py-0.5 mr-1 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">'.e($name).'</span>')
-            ->implode('');
-
-        return new HtmlString($badges);
+        return $names;
     }
 }
