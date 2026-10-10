@@ -7,12 +7,14 @@ use App\Enums\BadgeColor;
 use App\Filament\Clusters\Other\Pages\MyMarketOfferList;
 use App\Filament\Clusters\Other\Resources\UserRaceProfiles\UserRaceProfileResource;
 use App\Filament\Pages\UserRaceProfileList;
+use App\Livewire\Backend\UserRaceProfileTable;
 use App\Models\AppSetting;
 use App\Models\MailLog;
 use App\Models\MarketOffer;
 use App\Models\User;
 use App\Models\UserRaceProfile;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Livewire;
 
 beforeEach(function (): void {
     Cache::flush();
@@ -57,7 +59,8 @@ it('renders the user race profile list with an active and an inactive account', 
     UserRaceProfile::factory()->create(['user_id' => $activeUser->id]);
     UserRaceProfile::factory()->create(['user_id' => $inactiveUser->id]);
 
-    $this->get(UserRaceProfileResource::getUrl('index'))
+    // Search narrows the paginated list to these two (the testing DB may hold demo profiles)
+    $this->get(UserRaceProfileResource::getUrl('index', ['search' => 'Uživatel']))
         ->assertOk()
         ->assertSee('Aktivní Uživatel')
         ->assertSee('Neaktivní Uživatel');
@@ -72,8 +75,11 @@ it('renders the admin user race profile list with the full identity column', fun
     UserRaceProfile::factory()->create(['user_id' => $activeUser->id]);
     UserRaceProfile::factory()->create(['user_id' => $inactiveUser->id]);
 
-    $this->get(UserRaceProfileList::getUrl())
-        ->assertOk()
+    $this->get(UserRaceProfileList::getUrl())->assertOk();
+
+    // The page embeds a paginated table; search narrows it to these two (the testing DB may hold demo profiles)
+    Livewire::test(UserRaceProfileTable::class)
+        ->searchTable('Uživatel')
         ->assertSee('Aktivní Uživatel')
         ->assertSee($activeUser->email)
         ->assertSee('Neaktivní Uživatel')

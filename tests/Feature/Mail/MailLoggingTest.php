@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Mail;
 
 beforeEach(function () {
     Context::flush();
+    // The testing DB may hold demo data; rolled back by DatabaseTransactions
+    MailLog::query()->delete();
 });
 
 /**

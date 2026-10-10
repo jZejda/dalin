@@ -39,12 +39,12 @@ function pageJsonLd(string $html): array
 it('renders title, description from the content and breadcrumbs for a markdown page', function (): void {
     $page = Page::factory()->create([
         'title' => 'Členské **příspěvky**',
-        'slug' => 'clenske-prispevky',
+        'slug' => 'clenske-prispevky-seo-test',
         'content_format' => ContentFormat::Markdown,
         'content' => "## Kolik platíme\n\nPříspěvek na rok 2026 je *1 200 Kč*.",
     ]);
 
-    $html = $this->get('/stranka/clenske-prispevky')
+    $html = $this->get('/stranka/clenske-prispevky-seo-test')
         ->assertOk()
         ->assertSee('<title>Členské příspěvky | TST</title>', escape: false)
         ->assertSee('<meta name="description" content="Kolik platíme Příspěvek na rok 2026 je 1 200 Kč.">', escape: false)

@@ -17,12 +17,14 @@ use App\Filament\Resources\UserCredits\UserCreditResource;
 use App\Filament\Resources\UserEntries\UserEntryResource;
 use App\Filament\Clusters\Other\Resources\UserRaceProfiles\UserRaceProfileResource;
 use App\Filament\Clusters\Config\Resources\Users\UserResource;
+use App\Models\AppSetting;
 use App\Models\SportEvent;
 use Filament\Actions\Testing\TestAction;
 
 use function Pest\Livewire\livewire;
 
 it('can render BankTransactionResource index', function () {
+    AppSetting::set(AppSetting::BANK_MODULE_ENABLED, true);
     actingAsSuperAdmin();
 
     $this->get(BankTransactionResource::getUrl('index'))->assertOk();

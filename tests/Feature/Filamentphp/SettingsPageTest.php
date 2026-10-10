@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Cache;
 use Livewire\Livewire;
 
 beforeEach(function (): void {
+    // The testing DB may hold demo data (club overrides, module toggles); rolled back by DatabaseTransactions
+    AppSetting::query()->delete();
     Cache::flush();
 });
 

@@ -6,6 +6,8 @@ use App\Models\AppSetting;
 use Illuminate\Support\Facades\Cache;
 
 beforeEach(function (): void {
+    // The testing DB may hold demo data (club overrides, module toggles); rolled back by DatabaseTransactions
+    AppSetting::query()->delete();
     Cache::flush();
 });
 

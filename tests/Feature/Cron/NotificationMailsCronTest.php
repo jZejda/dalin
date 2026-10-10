@@ -23,8 +23,6 @@ use App\Models\UserSetting;
 use Illuminate\Support\Facades\Mail;
 
 beforeEach(function (): void {
-    // The default store is "file" (config reads CACHE_DRIVER), which would leak dedup keys between runs
-    config(['cache.default' => 'array']);
     Mail::fake();
 });
 

@@ -175,10 +175,11 @@ it('shows free seats badge in sport events list only for events with active offe
     AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, true);
     actingAsSuperAdmin();
 
+    // Distinct names so a table search narrows the list to these two (the testing DB may hold demo races)
     $withOffer = createTransportTestSportEvent();
-    $withOffer->update(['date' => now()->addMonth(), 'event_type' => SportEventType::Race]);
+    $withOffer->update(['name' => 'Dopravní test s nabídkou', 'date' => now()->addMonth(), 'event_type' => SportEventType::Race]);
     $withoutOffer = createTransportTestSportEvent();
-    $withoutOffer->update(['date' => now()->addMonth(), 'event_type' => SportEventType::Race]);
+    $withoutOffer->update(['name' => 'Dopravní test bez nabídky', 'date' => now()->addMonth(), 'event_type' => SportEventType::Race]);
 
     $driver = User::factory()->create();
     TransportOffer::factory()->create([
@@ -191,16 +192,22 @@ it('shows free seats badge in sport events list only for events with active offe
 
     expect($withOffer->fresh()?->load(['transportOffers.requests'])->transportFreeSeats())->toBe(3);
 
-    Livewire::test(ListSportEvents::class)
-        ->assertCanSeeTableRecords([$withOffer, $withoutOffer])
-        ->assertTableColumnExists('transport')
+    $list = Livewire::test(ListSportEvents::class)
+        ->searchTable('Dopravní test');
+
+    // assertCanSeeTableRecords() compares against a component id that changes after the search round-trip
+    expect($list->instance()->getTableRecords()->modelKeys())->toEqualCanonicalizing([$withOffer->id, $withoutOffer->id]);
+
+    $list->assertTableColumnExists('transport')
         ->assertSeeHtml('bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-300')
         ->assertSeeText('3');
 
     AppSetting::set(AppSetting::TRANSPORT_MODULE_ENABLED, false);
 
-    Livewire::test(ListSportEvents::class)
-        ->loadTable()
-        ->assertCanSeeTableRecords([$withOffer, $withoutOffer])
-        ->assertDontSeeHtml('bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-300');
+    $list = Livewire::test(ListSportEvents::class)
+        ->searchTable('Dopravní test');
+
+    expect($list->instance()->getTableRecords()->modelKeys())->toEqualCanonicalizing([$withOffer->id, $withoutOffer->id]);
+
+    $list->assertDontSeeHtml('bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-300');
 });

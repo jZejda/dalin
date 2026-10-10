@@ -233,7 +233,7 @@ describe('ServiceOrderCreator (ORIS závod)', function (): void {
 
         expect($result->success)->toBeFalse()
             ->and($result->error)->toContain('ERR_SERVICE_FULL')
-            ->and(SportServiceOrder::query()->count())->toBe(0);
+            ->and(SportServiceOrder::query()->where('sport_service_id', '=', $this->service->id)->count())->toBe(0);
     });
 
     it('fails when the race profile has no ORIS club user id', function (): void {
@@ -321,12 +321,12 @@ describe('ServiceOrderBiller', function (): void {
             ->and($credit->user_id)->toBe($this->user->id)
             ->and($credit->sport_service_id)->toBe($this->service->id);
 
-        $order = SportServiceOrder::query()->firstOrFail();
+        $order = SportServiceOrder::query()->where('sport_service_id', '=', $this->service->id)->firstOrFail();
         expect($order->status)->toBe(ServiceOrderStatus::Billed);
 
         // Second run must not create duplicate credits.
         expect($biller->billEvent($this->event, $billingUser))->toBe(0)
-            ->and(UserCredit::query()->whereNotNull('sport_service_order_id')->count())->toBe(1);
+            ->and(UserCredit::query()->where('sport_event_id', '=', $this->event->id)->whereNotNull('sport_service_order_id')->count())->toBe(1);
     });
 
     it('skips cancelled orders', function (): void {
