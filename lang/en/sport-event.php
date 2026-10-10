@@ -5,6 +5,7 @@ use App\Enums\ServiceOrderStatus;
 use App\Enums\SportEventTransportType;
 use App\Enums\SportEventType;
 use App\Enums\SportEventMarkerType;
+use App\Enums\SportEventLinkSource;
 use App\Enums\SportEventLinkType;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
@@ -412,6 +413,7 @@ return [
             'name_cz' => 'Link (Czech)',
             'name_en' => 'Link (English)',
             'source_url' => 'Link',
+            'source' => 'Source',
         ],
     ],
 
@@ -514,6 +516,29 @@ return [
         SportEventMarkerType::ObRaceStages->value => 'Single-day stage race',
         SportEventMarkerType::Training->value => 'Training',
         SportEventMarkerType::TrainingCamp->value => 'Training camp',
+    ],
+
+    'link_source_enum' => [
+        SportEventLinkSource::Dalin->value => 'DaLin',
+        SportEventLinkSource::Oris->value => 'ORIS',
+        SportEventLinkSource::CsosMaps->value => 'ČSOS map archive',
+        SportEventLinkSource::OResults->value => 'OResults',
+        SportEventLinkSource::Liveresultat->value => 'Liveresultat',
+        SportEventLinkSource::Livelox->value => 'Livelox',
+        SportEventLinkSource::Rajce->value => 'Rajče',
+        SportEventLinkSource::Mapy->value => 'Mapy.com',
+        SportEventLinkSource::Facebook->value => 'Facebook',
+        SportEventLinkSource::Instagram->value => 'Instagram',
+        SportEventLinkSource::YouTube->value => 'YouTube',
+        SportEventLinkSource::GoogleDrive->value => 'Google Drive',
+        SportEventLinkSource::GoogleDocs->value => 'Google Docs',
+        SportEventLinkSource::GoogleSheets->value => 'Google Sheets',
+        SportEventLinkSource::GoogleForms->value => 'Google Forms',
+        SportEventLinkSource::GooglePhotos->value => 'Google Photos',
+        SportEventLinkSource::GoogleMaps->value => 'Google Maps',
+        SportEventLinkSource::Flickr->value => 'Flickr',
+        SportEventLinkSource::Booking->value => 'Booking.com',
+        SportEventLinkSource::Web->value => 'Website',
     ],
 
     'type_enum_links' => [

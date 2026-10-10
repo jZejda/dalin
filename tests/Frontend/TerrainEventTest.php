@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\SportEventLinkSource;
 use App\Enums\SportEventLinkType;
 use App\Enums\SportEventMarkerType;
 use App\Enums\SportEventTransportType;
@@ -120,6 +121,7 @@ it('preserves documents, categories, services, news, warnings, weather and map m
     $this->get(route('sport-event.show', $this->event->id))
         ->assertOk()->assertSee('https://example.org/rozpis.pdf', false)
         ->assertSee('id="event-documents"', false)
+        ->assertSee('title="'.SportEventLinkSource::Web->getLabel().'"', false)
         ->assertSee('H21 Terrain')->assertSee('Parkování Terrain')->assertSee('50 Kč')
         ->assertSee('Nové informace Terrain.')->assertSee('Parkujte pouze na vyznačených místech.')
         ->assertSee('Jasno')->assertSee('18.5')

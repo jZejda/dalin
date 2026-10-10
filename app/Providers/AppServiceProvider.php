@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Enums\SportEventLinkSource;
 use App\Mcp\Servers\DalinServer;
 use App\Services\AppVersionService;
 use App\Services\Seo\Sitemap;
@@ -12,6 +13,7 @@ use App\Models\AppSetting;
 use App\Models\UserCredit;
 use App\Observers\UserCreditObserver;
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
+use BladeUI\Icons\Factory as IconFactory;
 use Filament\Facades\Filament;
 use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Font;
@@ -36,7 +38,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Square link-source icons (ORIS, OResults, …) — see docs/link-source-icons.md
+        $this->callAfterResolving(IconFactory::class, static function (IconFactory $factory): void {
+            $factory->add('link-sources', [
+                'path' => resource_path('svg/link-sources'),
+                'prefix' => SportEventLinkSource::ICON_SET_PREFIX,
+            ]);
+        });
     }
 
     /**

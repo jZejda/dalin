@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\SportEventLinkSource;
 use App\Enums\SportEventLinkType;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -61,5 +62,17 @@ class SportEventLink extends Model
     public function sportEvent(): HasOne
     {
         return $this->hasOne(SportEvent::class, 'id', 'sport_event_id');
+    }
+
+    /**
+     * Where the link leads; a file uploaded to DaLin (source_path) always resolves to DaLin.
+     */
+    public function source(): SportEventLinkSource
+    {
+        if (filled($this->source_path)) {
+            return SportEventLinkSource::Dalin;
+        }
+
+        return SportEventLinkSource::fromUrl($this->source_url);
     }
 }

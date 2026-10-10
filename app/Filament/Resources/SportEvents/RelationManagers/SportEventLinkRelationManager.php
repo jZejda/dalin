@@ -11,10 +11,12 @@ use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\CreateAction;
 use App\Enums\SportEventLinkType;
+use App\Models\SportEventLink;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
@@ -74,6 +76,11 @@ class SportEventLinkRelationManager extends RelationManager
     {
         return $table
             ->columns([
+                IconColumn::make('source')
+                    ->label(__('sport-event.relation_links.table.source'))
+                    ->state(fn (SportEventLink $record) => $record->source())
+                    ->tooltip(fn (SportEventLink $record): string => $record->source()->getLabel())
+                    ->color('gray'),
                 TextColumn::make('name_cz')
                     ->label(__('sport-event.relation_links.table.name_cz'))
                     ->searchable()

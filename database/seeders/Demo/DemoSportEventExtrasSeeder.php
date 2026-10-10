@@ -27,12 +27,13 @@ class DemoSportEventExtrasSeeder extends Seeder
         $pastEvents   = SportEvent::where('date', '<', Carbon::today())->orderByDesc('date')->take(6)->get();
         $futureEvents = SportEvent::where('date', '>=', Carbon::today())->orderBy('date')->take(6)->get();
 
-        // Links: invitations for upcoming, results for finished events
+        // Links: invitations for upcoming, results for finished events; the URLs mimic the
+        // real sources (ORIS, OResults, Rajče, …) so every link-source icon shows up
         foreach ($futureEvents as $event) {
             SportEventLink::factory()->ofType(SportEventLinkType::Invitation)->create([
                 'sport_event_id' => $event->id,
                 'name_cz'        => 'Rozpis závodu',
-                'source_url'     => 'https://example.org/rozpis/' . $event->id,
+                'source_url'     => 'https://oris.orientacnisporty.cz/files/' . $event->id . '_demo_rozpis.pdf',
             ]);
 
             if ($faker->boolean(50)) {
@@ -48,8 +49,25 @@ class DemoSportEventExtrasSeeder extends Seeder
             SportEventLink::factory()->ofType(SportEventLinkType::Results)->create([
                 'sport_event_id' => $event->id,
                 'name_cz'        => 'Oficiální výsledky',
-                'source_url'     => 'https://example.org/vysledky/' . $event->id,
+                'source_url'     => 'https://oresults.eu/events/' . $event->id,
             ]);
+
+            SportEventLink::factory()->ofType(SportEventLinkType::Photos)->create([
+                'sport_event_id' => $event->id,
+                'name_cz'        => 'Fotogalerie',
+                'source_url'     => $faker->randomElement([
+                    'https://demo-klub.rajce.idnes.cz/zavod-' . $event->id,
+                    'https://photos.app.goo.gl/demo' . $event->id,
+                ]),
+            ]);
+
+            if ($faker->boolean(50)) {
+                SportEventLink::factory()->ofType(SportEventLinkType::RouteChoices)->create([
+                    'sport_event_id' => $event->id,
+                    'name_cz'        => 'Postupy',
+                    'source_url'     => 'https://www.livelox.com/Viewer/Event?eventId=' . $event->id,
+                ]);
+            }
         }
 
         // Map markers laid out around the real coordinates of each event —
