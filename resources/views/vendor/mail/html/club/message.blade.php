@@ -37,6 +37,8 @@
 .club-event, .club-person, .club-footer { border-color: #43514b !important; }
 .club-secondary-negative a { color: #ffb0b4 !important; }
 .club-status-positive .club-status-label { color: #8fd6ad !important; }
+.club-balance-amount { color: #eef3f1 !important; }
+.club-balance-label, .club-balance-note { color: #b5c3bf !important; }
 .club-status-negative .club-status-label { color: #ffb0b4 !important; }
 }
 </style>

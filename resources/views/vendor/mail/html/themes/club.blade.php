@@ -269,6 +269,39 @@ img {
     color: #52605d;
 }
 
+.club-balance {
+    margin: 0 0 16px;
+    border-radius: 12px;
+}
+
+.club-balance td {
+    padding: 18px 22px;
+}
+
+.club-balance-label {
+    margin: 0;
+    font-size: 13px;
+    color: #52605d;
+}
+
+.club-balance-amount {
+    margin: 4px 0;
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 1.2;
+    color: {{ \App\Services\Mail\MailBranding::INK }};
+}
+
+.club-balance-note {
+    margin: 0;
+    font-size: 13px;
+    color: #52605d;
+}
+
+.club-fact-value-break {
+    word-break: break-all;
+}
+
 .club-status {
     margin: 0 0 16px;
     border-radius: 12px;
