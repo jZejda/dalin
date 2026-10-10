@@ -69,6 +69,8 @@ class AppSetting extends Model
 
     public const string SEO_SAME_AS = 'seo.same_as';
 
+    public const string BRANDING_ACCENT_COLOR = 'branding.accent_color';
+
     /**
      * Club settings editable in the admin panel, mapped to the config keys
      * they override. The `abbr` is intentionally missing — it drives the ORIS
@@ -233,6 +235,16 @@ class AppSetting extends Model
         }
 
         return array_values(array_filter($value, static fn (mixed $url): bool => is_string($url) && $url !== ''));
+    }
+
+    /**
+     * Club accent colour as a `#rrggbb` hex string, used to brand outgoing e-mails.
+     */
+    public static function getBrandingAccentColor(): ?string
+    {
+        $value = self::nonEmptyString(self::get(self::BRANDING_ACCENT_COLOR));
+
+        return $value !== null && preg_match('/^#[0-9a-f]{6}$/i', $value) === 1 ? strtolower($value) : null;
     }
 
     private static function nonEmptyString(mixed $value): ?string

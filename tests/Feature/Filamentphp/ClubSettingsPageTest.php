@@ -138,3 +138,38 @@ it('rejects social profiles that are not urls', function (): void {
         ->call('submit')
         ->assertHasErrors(['seo_same_as.0']);
 });
+
+it('saves the club accent colour and clears it when emptied', function (): void {
+    actingAsSuperAdmin();
+
+    $fillRequired = fn ($component) => $component
+        ->set('full_name', 'Orientační klub Testov')
+        ->set('primary_bank_account_number', '987654321/0100')
+        ->set('primary_bank_account_name', 'Komerční banka')
+        ->set('user_credit_limit', '-500')
+        ->set('regular_membership_fees_prefix', '222')
+        ->set('extra_membership_fees_prefix', '999');
+
+    $fillRequired(Livewire::test(ClubSettings::class))
+        ->set('accent_color', '#1F7A5C')
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    expect(AppSetting::getBrandingAccentColor())->toBe('#1f7a5c');
+
+    $fillRequired(Livewire::test(ClubSettings::class))
+        ->set('accent_color', null)
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    expect(AppSetting::getBrandingAccentColor())->toBeNull();
+});
+
+it('rejects an accent colour that is not a hex value', function (): void {
+    actingAsSuperAdmin();
+
+    Livewire::test(ClubSettings::class)
+        ->set('accent_color', 'red')
+        ->call('submit')
+        ->assertHasErrors(['accent_color']);
+});

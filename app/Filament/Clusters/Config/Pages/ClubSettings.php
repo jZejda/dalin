@@ -6,7 +6,9 @@ namespace App\Filament\Clusters\Config\Pages;
 
 use App\Filament\Clusters\Config\ConfigCluster;
 use App\Models\AppSetting;
+use App\Services\Mail\MailBranding;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
@@ -71,6 +73,8 @@ class ClubSettings extends Page implements HasForms
     /** @var list<string> */
     public array $seo_same_as = [];
 
+    public ?string $accent_color = null;
+
     private const string SEO_UPLOAD_DIRECTORY = 'seo';
 
     public function mount(): void
@@ -91,6 +95,7 @@ class ClubSettings extends Page implements HasForms
             'seo_image' => AppSetting::getSeoImagePath(),
             'seo_logo' => AppSetting::getSeoLogoPath(),
             'seo_same_as' => AppSetting::getSeoSameAs(),
+            'accent_color' => AppSetting::getBrandingAccentColor(),
         ]);
     }
 
@@ -151,6 +156,14 @@ class ClubSettings extends Page implements HasForms
                         ->email()
                         ->helperText(__('club-settings.form.contacts.technical_email_helper')),
                 ]),
+            Section::make(__('club-settings.form.branding.section'))
+                ->description(__('club-settings.form.branding.description'))
+                ->schema([
+                    ColorPicker::make('accent_color')
+                        ->label(__('club-settings.form.branding.accent_color'))
+                        ->helperText(__('club-settings.form.branding.accent_color_helper', ['default' => MailBranding::DEFAULT_ACCENT]))
+                        ->regex('/^#[0-9a-fA-F]{6}$/'),
+                ]),
             Section::make(__('club-settings.form.seo.section'))
                 ->description(__('club-settings.form.seo.description'))
                 ->schema([
@@ -209,6 +222,9 @@ class ClubSettings extends Page implements HasForms
             (array) ($data['seo_same_as'] ?? []),
             static fn (mixed $url): bool => is_string($url) && $url !== '',
         )));
+
+        $accentColor = trim((string) ($data['accent_color'] ?? ''));
+        AppSetting::set(AppSetting::BRANDING_ACCENT_COLOR, $accentColor !== '' ? strtolower($accentColor) : null);
 
         AppSetting::applyClubConfigOverrides();
 

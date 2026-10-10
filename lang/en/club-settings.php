@@ -45,6 +45,12 @@ return [
             'technical_email' => 'Technical e-mail',
             'technical_email_helper' => 'Contact shown in e-mails to members (password reset, credit changes, etc.).',
         ],
+        'branding' => [
+            'section' => 'Club colours',
+            'description' => 'Club accent colour used in e-mails (header stripe, main button, highlighted deadlines). The button text colour and light tints are derived automatically.',
+            'accent_color' => 'Accent colour',
+            'accent_color_helper' => 'Colour in #rrggbb format. When left empty, the default :default is used. The logo and social links in e-mails come from the Public website and social networks section.',
+        ],
         'seo' => [
             'section' => 'Public website and social networks',
             'description' => 'Data for search engines (SEO) and previews of links shared on social networks.',
@@ -53,7 +59,7 @@ return [
             'seo_image' => 'Default sharing image',
             'seo_image_helper' => 'JPG or PNG sized 1200 × 630 px (e.g. the logo on the club colours). Used in link previews on Facebook, WhatsApp etc. for pages without their own image.',
             'seo_logo' => 'Club logo',
-            'seo_logo_helper' => 'Square PNG or JPG, at least 112 × 112 px. Search engines may show it next to the club\'s results.',
+            'seo_logo_helper' => 'Square PNG or JPG, at least 112 × 112 px. Search engines may show it next to the club\'s results; it is also shown in the e-mail header (PNG recommended).',
             'seo_same_as' => 'Social network profiles',
             'seo_same_as_helper' => 'Full URLs of the club profiles (Facebook, Instagram, Strava…). Confirm each with Enter.',
         ],
