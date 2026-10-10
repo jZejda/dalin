@@ -9,6 +9,8 @@ use App\Filament\Resources\SportEvents\SportEventResource;
 use App\Mail\EntryEndsToPay;
 use App\Mail\EventEntryEnds;
 use App\Mail\EventWeeklyEndsBySport;
+use App\Mail\MarketOfferAnnouncement;
+use App\Mail\MarketOfferClosed;
 use App\Mail\NewPost;
 use App\Mail\NewPosts;
 use App\Mail\PreRaceSummaryMail;
@@ -28,6 +30,9 @@ use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Models\AppSetting;
 use App\Models\BankTransaction;
+use App\Models\MarketOffer;
+use App\Models\MarketOrder;
+use App\Models\MarketProduct;
 use App\Models\Post;
 use App\Models\UserCredit;
 use App\Models\SportClass;
@@ -513,4 +518,74 @@ it('lists every article of the news digest with a separator', function (): void 
         ->assertSeeInHtml('club-article-separated', false)
         ->assertSeeInHtml('Nastavení oznámení')
         ->assertSeeInText('Sraz v 17:00 u lesního parkoviště.');
+});
+
+function clubMailMarketOffer(): MarketOffer
+{
+    $offer = MarketOffer::factory()->create([
+        'user_id' => User::factory()->create(['name' => 'Petr Svoboda'])->id,
+        'is_club_offer' => true,
+        'title' => 'Podzimní oblečení',
+        'description' => 'Společná objednávka klubového oblečení.',
+        'closes_at' => '2026-10-18 20:00:00',
+    ]);
+    MarketProduct::factory()->limited(20)->create(['market_offer_id' => $offer->id, 'name' => 'Klubový dres', 'unit_price' => 850.0]);
+    MarketProduct::factory()->directPayment()->create(['market_offer_id' => $offer->id, 'name' => 'Čelenka', 'unit_price' => 180.0]);
+    MarketProduct::factory()->free()->limited(30)->create(['market_offer_id' => $offer->id, 'name' => 'Starší mapy']);
+
+    return $offer->refresh();
+}
+
+it('announces a marketplace offer with its products and order deadline', function (): void {
+    (new MarketOfferAnnouncement(clubMailMarketOffer()))
+        ->assertSeeInHtml('Na tržišti je nová klubová nabídka.')
+        ->assertSeeInHtml('Petr Svoboda zveřejňuje za klub nabídku „Podzimní oblečení“.')
+        ->assertSeeInHtml('Společná objednávka klubového oblečení.')
+        ->assertSeeInHtml('Objednávky do 18. 10. 2026 · 20:00')
+        ->assertSeeInHtml('Klubový dres')
+        ->assertSeeInHtml('Cena za kus · k dispozici 20 ks')
+        ->assertSeeInHtml("850\u{00A0}Kč")
+        ->assertSeeInHtml('Cena za kus · množství bez omezení')
+        ->assertSeeInHtml('K dispozici 30 ks')
+        ->assertSeeInHtml('Zdarma')
+        ->assertSeeInHtml('Prohlédnout nabídku')
+        // Members can't opt out of marketplace announcements, so no settings link
+        ->assertDontSeeInHtml('Nastavení oznámení');
+});
+
+it('tells a buyer what they ordered and how each item is paid', function (): void {
+    $offer = clubMailMarketOffer();
+    $buyer = User::factory()->create();
+    [$jersey, $headband, $maps] = $offer->products->sortBy('id')->values()->all();
+    MarketOrder::factory()->create(['market_product_id' => $jersey->id, 'user_id' => $buyer->id, 'qty' => 1, 'unit_price' => 850.0]);
+    MarketOrder::factory()->create(['market_product_id' => $headband->id, 'user_id' => $buyer->id, 'qty' => 2, 'unit_price' => 180.0]);
+    MarketOrder::factory()->create(['market_product_id' => $maps->id, 'user_id' => $buyer->id, 'qty' => 3, 'unit_price' => 0]);
+    MarketOrder::factory()->cancelled()->create(['market_product_id' => $jersey->id, 'user_id' => $buyer->id, 'qty' => 5, 'unit_price' => 850.0]);
+    $offer->update(['closed_at' => '2026-10-18 20:00:00']);
+
+    (new MarketOfferClosed($offer->refresh(), $buyer))
+        ->assertSeeInHtml('Tvoje objednávka je uzavřená.')
+        ->assertSeeInHtml('Nabídka „Podzimní oblečení“ (Petr Svoboda) byla uzavřena 18. 10. 2026 · 20:00.')
+        ->assertSeeInHtml('Klubový dres · 1 ks')
+        ->assertSeeInHtml("850\u{00A0}Kč za kus · platba z klubového kreditu")
+        ->assertSeeInHtml('Čelenka · 2 ks')
+        ->assertSeeInHtml("360\u{00A0}Kč")
+        ->assertSeeInHtml('platba přímo prodejci')
+        ->assertSeeInHtml('Starší mapy · 3 ks')
+        ->assertSeeInHtml('Bez úhrady')
+        ->assertSeeInHtml('Jak proběhne úhrada')
+        ->assertSeeInHtml('U položek s přímou platbou se domluv s prodejcem.')
+        ->assertDontSeeInHtml('5 ks')
+        ->assertDontSeeInHtml('Další postup');
+});
+
+it('gives the offer author the next steps instead of a buyer summary', function (): void {
+    $offer = clubMailMarketOffer();
+
+    (new MarketOfferClosed($offer, $offer->user))
+        ->assertSeeInHtml('Tvoje nabídka je uzavřená.')
+        ->assertSeeInHtml('Další postup')
+        ->assertSeeInHtml('Moje nabídky')
+        ->assertDontSeeInHtml('Tvoje objednávky')
+        ->assertDontSeeInHtml('Jak proběhne úhrada');
 });

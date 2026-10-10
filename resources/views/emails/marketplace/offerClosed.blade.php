@@ -1,31 +1,30 @@
-<x-mail::message>
-
-## {{ __('marketplace.mail.offer_closed_heading') }}
-
-@component('mail::divider')
-{{ __('marketplace.mail.offer_closed_intro', ['title' => $offer->title, 'author' => $offer->user?->name, 'date' => $offer->closed_at?->format('j. n. Y H:i')]) }}
-@endcomponent
-
+@php
+    /** @var bool $isAuthor */
+    /** @var list<array{name: string, detail: string, amount: string}> $orders */
+    $key = $isAuthor ? 'marketplace.mail.club.closed_author' : 'marketplace.mail.club.closed';
+@endphp
+<x-mail::club.message
+    :eyebrow="__($key.'.eyebrow')"
+    :title="__($key.'.title')"
+    :lead="__($key.'.lead', ['title' => $title, 'author' => $author, 'date' => $closedAt])"
+>
 @if ($isAuthor)
-{{ __('marketplace.mail.offer_closed_author_note') }}
-@endif
+<x-mail::club.note :label="__('marketplace.mail.club.closed_author.note_label')">{{ __('marketplace.mail.club.closed_author.note') }}</x-mail::club.note>
 
-@if ($recipientOrders->isNotEmpty())
-{{ __('marketplace.mail.offer_closed_orders_heading') }}
-
-@foreach ($recipientOrders as $order)
-- **{{ $order->marketProduct?->name }}** — {{ __('marketplace.mail.qty_suffix', ['qty' => $order->qty]) }}
-@if ($order->unit_price > 0)
-{{ __('marketplace.mail.offer_closed_unit_price', ['price' => number_format($order->unit_price, 2, ',', ' ')]) }}
-= {{ __('marketplace.mail.offer_closed_total_price', ['total' => number_format($order->totalAmount(), 2, ',', ' ')]) }}
-({{ $order->marketProduct?->payment_method->getLabel() }})
-@else
-({{ __('marketplace.mail.free_product_label') }})
 @endif
+@if ($orders !== [])
+<x-mail::club.section :title="__('marketplace.mail.club.closed.orders_heading')" />
+
+@foreach ($orders as $order)
+<x-mail::club.person :name="$order['name']" :lines="[['text' => $order['detail']]]" :amount="$order['amount']" />
+
 @endforeach
-
-{{ __('marketplace.mail.offer_closed_footer_credit') }}
-{{ __('marketplace.mail.offer_closed_footer_direct') }}
 @endif
+@if ($payByCredit || $payDirectly)
+<x-mail::club.note :label="__('marketplace.mail.club.closed.payment_label')">{{ collect([
+    $payByCredit ? __('marketplace.mail.club.closed.payment_credit') : null,
+    $payDirectly ? __('marketplace.mail.club.closed.payment_direct') : null,
+])->filter()->implode(' ') }}</x-mail::club.note>
 
-</x-mail::message>
+@endif
+</x-mail::club.message>

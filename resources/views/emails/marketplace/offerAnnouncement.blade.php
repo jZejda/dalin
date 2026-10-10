@@ -1,35 +1,22 @@
-<x-mail::message>
+@php
+    /** @var list<array{name: string, detail: string, price: string}> $products */
+@endphp
+<x-mail::club.message
+    :eyebrow="__('marketplace.mail.club.announcement.eyebrow')"
+    :title="__($isClubOffer ? 'marketplace.mail.club.announcement.title_club' : 'marketplace.mail.club.announcement.title')"
+    :lead="__($isClubOffer ? 'marketplace.mail.club.announcement.lead_club' : 'marketplace.mail.club.announcement.lead', ['author' => $author, 'title' => $title])"
+>
+@if (filled($description))
+<x-mail::club.note :label="__('marketplace.mail.club.announcement.description_label')">{{ $description }}</x-mail::club.note>
 
-## {{ __('marketplace.mail.announcement_heading') }}
-
-@component('mail::divider')
-{{ $offer->is_club_offer
-    ? __('marketplace.mail.announcement_intro_club', ['user' => $offer->user?->name, 'title' => $offer->title])
-    : __('marketplace.mail.announcement_intro', ['user' => $offer->user?->name, 'title' => $offer->title]) }}
-
-@if ($offer->description)
-{{ $offer->description }}
 @endif
+<x-mail::club.pill :label="__('marketplace.mail.club.announcement.orders_until', ['date' => $closesAt])" />
 
-{{ __('marketplace.mail.announcement_orders_until', ['date' => $offer->closes_at->format('j. n. Y H:i')]) }}
-@endcomponent
+<x-mail::club.section :title="__('marketplace.mail.club.announcement.products_heading')" />
 
-{{ __('marketplace.mail.announcement_products_heading') }}
+@foreach ($products as $product)
+<x-mail::club.person :name="$product['name']" :lines="[['text' => $product['detail']]]" :amount="$product['price']" />
 
-@foreach ($offer->products as $product)
-- **{{ $product->name }}**
-@if ($product->isFree())
-— {{ __('marketplace.mail.free_product_label') }}
-@else
-— {{ __('marketplace.mail.announcement_price_per_unit', ['price' => number_format($product->unit_price, 2, ',', ' ')]) }}
-@endif
-@unless ($product->hasUnlimitedQty())
-({{ __('marketplace.mail.qty_suffix', ['qty' => $product->qty_available]) }})
-@endunless
 @endforeach
-
-<x-mail::button :url="$marketplaceUrl">
-{{ __('marketplace.browse_marketplace') }}
-</x-mail::button>
-
-</x-mail::message>
+<x-mail::club.actions :url="$marketplaceUrl" :label="__('marketplace.mail.club.announcement.action')" />
+</x-mail::club.message>

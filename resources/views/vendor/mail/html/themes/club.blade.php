@@ -294,6 +294,10 @@ img {
     margin-right: 6px;
 }
 
+.club-pill-row {
+    margin: 0 0 6px;
+}
+
 .club-pill {
     display: inline-block;
     margin-top: 8px;
