@@ -14,11 +14,12 @@ return [
     |
     */
 
-    'body' => [
-        'heading'    => 'Notifikace k závodu',
-        'intro'      => 'Zpráva k závodu **:name**:alt_name odeslána na všechny aktuálně přihlášené závodníky.',
-        'date_line'  => 'Datum: **:date**',
-        'place_line' => 'Místo: **:place**',
+    'club' => [
+        'eyebrow' => 'Zpráva přihlášeným · závod',
+        'title' => 'Nové informace k závodu.',
+        'date_label' => 'Datum závodu',
+        'place_label' => 'Místo',
+        'heading' => 'Zpráva od klubu',
     ],
 
 ];

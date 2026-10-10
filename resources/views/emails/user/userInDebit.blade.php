@@ -1,25 +1,19 @@
-<?php
-    use Illuminate\Support\Carbon;
-    /** @var array{array{fullName: string, email: string, debit: float|int}} $usersData */
-?>
+@php
+    /** @var list<array{name: string, email: string, amount: string}> $debtors */
+@endphp
+<x-mail::club.message
+    :eyebrow="__('mail/users-in-debit.club.eyebrow')"
+    :title="__('mail/users-in-debit.club.title')"
+    :lead="__('mail/users-in-debit.club.lead', ['date' => $date])"
+>
+<x-mail::club.section :title="__('mail/users-in-debit.club.section')" />
 
-<x-mail::message>
+@forelse ($debtors as $debtor)
+<x-mail::club.person :name="$debtor['name']" :lines="[['text' => $debtor['email']]]" :amount="$debtor['amount']" />
 
-## {{ __('mail/users-in-debit.body.heading') }}
+@empty
+{{ __('mail/users-in-debit.club.empty') }}
 
-{{ __('mail/users-in-debit.body.intro', [
-    'club' => Config::get('site-config.club.abbr'),
-    'date' => Carbon::now()->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT),
-]) }}
-
-{{ __('mail/users-in-debit.body.check_note') }}
-
-@component('mail::table')
-    | {{ __('mail/users-in-debit.body.table_header_user') }} | {{ __('mail/users-in-debit.body.table_header_balance') }} |
-    | :----------------- |:------------- |
-    @foreach ($usersData as $user)
-        | {{$user['fullName'] }} ({{$user['email']}})  | {{ __('mail/users-in-debit.body.table_row_debit', ['debit' => $user['debit']]) }} |
-    @endforeach
-@endcomponent
-
-</x-mail::message>
+@endforelse
+<x-mail::club.fine>{{ __('mail/users-in-debit.club.fine') }}</x-mail::club.fine>
+</x-mail::club.message>

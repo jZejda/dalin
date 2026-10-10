@@ -14,8 +14,11 @@ use App\Mail\TransportOfferCancelled;
 use App\Mail\TransportRequestCancelled;
 use App\Mail\TransportRequestCreated;
 use App\Mail\TransportRequestDecided;
+use App\Mail\UserAppNotification;
 use App\Mail\UserCreditChange;
+use App\Mail\UserEntryNotification;
 use App\Mail\UserPasswordSend;
+use App\Mail\UsersInDebit;
 use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
@@ -390,4 +393,61 @@ it('renders the account mails in English', function (): void {
     (new UserCreditChange($user->refresh(), $credit))
         ->assertSeeInHtml("500\u{00A0}CZK was added to your account.")
         ->assertSeeInHtml('Current balance');
+});
+
+it('lists members with a negative balance for billing specialists', function (): void {
+    $debtor = User::factory()->create(['name' => 'Tomáš Dlužník', 'email' => 'tomas.dluznik@example.test']);
+    clubMailCredit($debtor, 200.0);
+    clubMailCredit($debtor, -1480.0);
+    $solvent = User::factory()->create(['name' => 'Eva Solventní']);
+    clubMailCredit($solvent, 300.0);
+
+    (new UsersInDebit())
+        ->assertSeeInHtml('Přehled záporných zůstatků.')
+        ->assertSeeInHtml('Členové s nízkým kreditem')
+        ->assertSeeInHtml('Tomáš Dlužník')
+        ->assertSeeInHtml('tomas.dluznik@example.test')
+        ->assertSeeInHtml("\u{2212}1\u{00A0}280\u{00A0}Kč")
+        ->assertSeeInHtml('club-person-amount', false)
+        ->assertDontSeeInHtml('Eva Solventní')
+        ->assertDontSeeInHtml('Nastavení oznámení');
+});
+
+it('renders the organiser message to race entrants as Markdown with the race details', function (): void {
+    $event = clubMailWeeklyEvent(['alt_name' => 'podzimní oblastní žebříček', 'place' => 'Brno, Mariánské údolí', 'date' => '2026-10-24']);
+
+    (new UserEntryNotification($event, 'Změna shromaždiště', "Shromaždiště se **přesouvá** na louku.\n\n<script>alert(1)</script>", null))
+        ->assertSeeInHtml('Nové informace k závodu.')
+        ->assertSeeInHtml('Oblastní přebor Testov · podzimní oblastní žebříček')
+        ->assertSeeInHtml('24. října 2026')
+        ->assertSeeInHtml('Brno, Mariánské údolí')
+        ->assertSeeInHtml('Zpráva od klubu')
+        ->assertSeeInHtml('přesouvá</strong>', false)
+        ->assertDontSeeInHtml('<script>', false);
+});
+
+it('shows the sender, not the recipient, of a message from the club', function (): void {
+    $sender = User::factory()->create(['name' => 'Petr Svoboda']);
+    $this->travelTo(now()->setDate(2026, 10, 10)->setTime(15, 30));
+
+    $mail = new UserAppNotification($sender, 'Klubové oblečení', 'Oblečení si můžeš *vyzvednout* na tréninku.', 'petr@example.test');
+    $this->travelTo(now()->addHours(2));
+
+    $mail->assertSeeInHtml('Máš zprávu od klubu.')
+        ->assertSeeInHtml('Odesílatel')
+        ->assertSeeInHtml('Petr Svoboda')
+        ->assertSeeInHtml('10. 10. 2026 · 15:30')
+        ->assertSeeInHtml('vyzvednout</em>', false);
+    expect($mail->hasReplyTo('petr@example.test'))->toBeTrue();
+});
+
+it('renders the report and messages in English', function (): void {
+    App::setLocale('en');
+    $event = clubMailWeeklyEvent();
+
+    (new UsersInDebit())->assertSeeInHtml('Negative balances overview.');
+    (new UserEntryNotification($event, 'Info', 'Hello', null))->assertSeeInHtml('Message from the club');
+    (new UserAppNotification(null, 'Info', 'Hello', null))
+        ->assertSeeInHtml('You have a message from the club.')
+        ->assertDontSeeInHtml('Sender');
 });

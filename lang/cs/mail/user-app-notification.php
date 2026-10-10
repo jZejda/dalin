@@ -14,11 +14,13 @@ return [
     |
     */
 
-    'body' => [
-        'heading'   => 'Hromadná zpráva',
-        'intro'     => 'Upozornění z interního systému :abbr na vybrané uživatele systému.',
-        'from_user' => 'Zpráva od uživatele **:name**.',
-        'sent_at'   => 'Zpráva zaslána dne: **:date**',
+    'club' => [
+        'eyebrow' => 'Klubové zprávy · osobní zpráva',
+        'title' => 'Máš zprávu od klubu.',
+        'lead' => 'Zpráva z členské sekce tvého klubu.',
+        'sender_label' => 'Odesílatel',
+        'sent_at_label' => 'Odesláno',
+        'heading' => 'Zpráva',
     ],
 
 ];

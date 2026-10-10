@@ -14,11 +14,12 @@ return [
     |
     */
 
-    'body' => [
-        'heading'    => 'Race notification',
-        'intro'      => 'Message about the race **:name**:alt_name sent to all currently registered racers.',
-        'date_line'  => 'Date: **:date**',
-        'place_line' => 'Location: **:place**',
+    'club' => [
+        'eyebrow' => 'Message to entrants · race',
+        'title' => 'New information about the race.',
+        'date_label' => 'Race date',
+        'place_label' => 'Venue',
+        'heading' => 'Message from the club',
     ],
 
 ];
