@@ -50,7 +50,7 @@ class PreRaceSummaryMail extends Mailable
             markdown: 'emails.event.preRaceSummary',
             with: [
                 'event' => $this->event,
-                'eyebrowDate' => $this->event->date?->translatedFormat('j. F'),
+                'eyebrowDate' => $this->event->date?->isoFormat(__('mail/common.club_layout.day_month_format')),
                 'facts' => $this->facts(),
                 'runners' => $this->entries->map(fn (UserEntry $entry): array => $this->runner($entry))->values()->all(),
                 'detailUrl' => SportEventResource::getUrl('view', ['record' => $this->event], panel: 'admin'),
@@ -69,7 +69,7 @@ class PreRaceSummaryMail extends Mailable
         $facts = [];
 
         if ($event->date !== null) {
-            $date = $event->date->translatedFormat('j. F Y');
+            $date = $event->date->isoFormat('LL');
 
             if ($event->date_end !== null && $event->date_end->ne($event->date)) {
                 $days = (int) $event->date->diffInDays($event->date_end) + 1;

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Mail;
 
 use App\Models\User;
-use App\Shared\Helpers\EmptyType;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -41,7 +40,7 @@ class UserAppNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            replyTo: EmptyType::stringNotEmpty($this->userReplyTo) ? [$this->userReplyTo] : [],
+            replyTo: $this->userReplyTo !== null && trim($this->userReplyTo) !== '' ? [$this->userReplyTo] : [],
             subject: config('app.name').' | '.$this->userSubject
         );
     }

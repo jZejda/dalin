@@ -679,24 +679,6 @@ parameters:
 			path: app/Livewire/UserCredit/UserCreditList.php
 
 		-
-			message: '#^Cannot access property \$id on array\<mixed\>\|object\|null\.$#'
-			identifier: property.nonObject
-			count: 1
-			path: app/Mail/AddUpdateSportEvent.php
-
-		-
-			message: '#^Parameter \$replyTo of class Illuminate\\Mail\\Mailables\\Envelope constructor expects array\<int, Illuminate\\Mail\\Mailables\\Address\|string\>, list\<string\|null\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Mail/UserAppNotification.php
-
-		-
-			message: '#^Parameter \$replyTo of class Illuminate\\Mail\\Mailables\\Envelope constructor expects array\<int, Illuminate\\Mail\\Mailables\\Address\|string\>, list\<string\|null\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: app/Mail/UserEntryNotification.php
-
-		-
 			message: '#^Parameter \#1 \$array of static method Illuminate\\Support\\Arr\:\:join\(\) expects array, array\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -869,12 +851,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 2
 			path: app/Services/OrisApiService.php
-
-		-
-			message: '#^If condition is always true\.$#'
-			identifier: if.alwaysTrue
-			count: 1
-			path: app/Services/UserCreditService.php
 
 		-
 			message: '#^Strict comparison using \!\=\= between Illuminate\\Support\\Carbon\|null and false will always evaluate to true\.$#'

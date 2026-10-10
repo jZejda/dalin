@@ -18,6 +18,8 @@ return [
         'notification_settings' => 'Notification settings',
         'quote_open' => '“',
         'quote_close' => '”',
+        // Carbon isoFormat pattern for a day and month without the year
+        'day_month_format' => 'MMMM D',
         'deadline' => 'Entries until :date',
         'terms' => [
             1 => 'First entry deadline',

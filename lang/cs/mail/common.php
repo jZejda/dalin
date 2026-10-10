@@ -18,6 +18,8 @@ return [
         'notification_settings' => 'Nastavení oznámení',
         'quote_open' => '„',
         'quote_close' => '“',
+        // Carbon isoFormat pattern for a day and month without the year
+        'day_month_format' => 'D. MMMM',
         'deadline' => 'Přihlášky do :date',
         'terms' => [
             1 => 'První termín přihlášek',
