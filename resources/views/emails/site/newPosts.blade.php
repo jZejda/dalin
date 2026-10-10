@@ -1,15 +1,15 @@
-<x-mail::message>
-## {{ __('mail/new-posts.body.heading') }}
+@php
+    /** @var list<array{title: string, html: string, text: string}> $articles */
+    $count = count($articles);
+@endphp
+<x-mail::club.message
+    :eyebrow="__('mail/new-posts.club.eyebrow')"
+    :title="trans_choice('mail/new-posts.club.title', $count, ['count' => $count])"
+    :lead="__('mail/new-posts.club.lead')"
+    :settings-url="$settingsUrl"
+>
+@foreach ($articles as $article)
+<x-mail::club.article :title="$article['title']" :html="$article['html']" :text="$article['text']" :separated="! $loop->first" />
 
-{{ __('mail/new-posts.body.intro') }}
-
-
-@foreach ($postContent as $post)
-## {{ $post->title }}
-
-{{ $post->content }}
-
-***
 @endforeach
-
-</x-mail::message>
+</x-mail::club.message>

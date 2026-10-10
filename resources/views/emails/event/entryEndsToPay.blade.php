@@ -1,39 +1,16 @@
-<?php
+@php
+    /** @var list<array{day: string, month: string, name: string, url: string, meta: string, deadline: string}> $events */
+@endphp
+<x-mail::club.message
+    :eyebrow="__('mail/entry-ends-to-pay.club.eyebrow')"
+    :title="__('mail/entry-ends-to-pay.club.title')"
+    :lead="__('mail/entry-ends-to-pay.club.lead', ['term' => $term])"
+>
+<x-mail::club.section :title="$termTitle" />
 
-use App\Models\SportEvent;
-use App\Services\OrisApiService;
-use Illuminate\Support\Carbon;
+@foreach ($events as $event)
+<x-mail::club.event :day="$event['day']" :month="$event['month']" :name="$event['name']" :url="$event['url']" :meta="$event['meta']" :deadline="__('mail/common.club_layout.deadline', ['date' => $event['deadline']])" />
 
-/** @var SportEvent[] $sportEvents */
-/** @var int $deadline */
-?>
-
-<x-mail::message>
-
-## {{ __('mail/entry-ends-to-pay.body.heading') }}
-
-{{ __('mail/entry-ends-to-pay.body.intro', ['deadline' => $deadline]) }}
-
-@if(!is_null($sportEvents))
-@component('mail::divider')
-## {{ __('mail/entry-ends-to-pay.body.deadline_heading', ['deadline' => $deadline]) }}
-
-{{ __('mail/entry-ends-to-pay.body.deadline_text', ['deadline' => $deadline]) }}
-@endcomponent
-
-@component('mail::table')
-    | {{ __('mail/entry-ends-to-pay.body.table_entry_until') }}       | {{ __('mail/entry-ends-to-pay.body.table_event_name') }}        | {{ __('mail/entry-ends-to-pay.body.table_oris_id') }}
-    | :----------------- |:------------- |:------------- |
-    @foreach ($sportEvents as $event)
-        @if ($deadline === 1)
-        | {{ Carbon::parse($event->entry_date_1)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}  | {{$event->name }} | @if($event->oris_id !== null)[{{$event->oris_id }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$event->oris_id}})@endif  |
-        @elseif($deadline === 2)
-        | {{ Carbon::parse($event->entry_date_2)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}  | {{$event->name }} | @if($event->oris_id !== null)[{{$event->oris_id }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$event->oris_id}})@endif  |
-        @elseif($deadline === 3)
-        | {{ Carbon::parse($event->entry_date_3)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT) }}  | {{$event->name }} | @if($event->oris_id !== null)[{{$event->oris_id }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$event->oris_id}})@endif  |
-        @endif
-    @endforeach
-@endcomponent
-@endif
-
-</x-mail::message>
+@endforeach
+<x-mail::club.fine>{{ __('mail/entry-ends-to-pay.club.fine') }}</x-mail::club.fine>
+</x-mail::club.message>

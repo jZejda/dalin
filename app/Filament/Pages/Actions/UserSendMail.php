@@ -28,6 +28,7 @@ final class UserSendMail
                     $data['content'],
                     $data['replyTo'],
                     $data['targetUsers'],
+                    Auth::user(),
                 ))->send();
 
                 Notification::make()

@@ -40,4 +40,22 @@ return [
         'news_heading'       => 'Novinky',
     ],
 
+    'club' => [
+        'eyebrow' => 'Tvoje přihlášky · :date',
+        'title' => 'Vše podstatné před startem.',
+        'lead' => ':event. Přehled pro tebe a přihlášené členy rodiny.',
+        'date_label' => 'Datum závodu',
+        'first_start_label' => 'První start',
+        'place_label' => 'Místo',
+        'discipline_label' => 'Disciplína',
+        'runners_heading' => 'Kdo z rodiny běží',
+        'start_line' => 'Start :time · :relative min',
+        'course_distance' => ':distance km',
+        'course_controls' => '{1} :count kontrola|[2,4] :count kontroly|[5,*] :count kontrol',
+        'course_climbing' => '↑ :climbing m',
+        'action' => 'Otevřít detail závodu',
+        'oris_link' => 'Závod v ORISu',
+        'fine' => 'Časy a parametry tratí podle posledních dostupných údajů.',
+    ],
+
 ];

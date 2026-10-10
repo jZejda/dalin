@@ -65,28 +65,65 @@ return [
         'request_cancelled_subject' => 'Passenger cancelled the reservation',
         'offer_cancelled_subject' => 'Transport offer was cancelled',
 
-        'offer_cancelled_heading' => 'Transport offer cancelled',
-        'offer_cancelled_intro' => 'Driver **:driver** cancelled the transport offer for the race **:event** in which you had a seat request.',
-        'try_another_offer_footer' => 'Try another transport offer on the Transport page for the race.',
-
-        'request_cancelled_heading' => 'Passenger cancelled the reservation',
-        'request_cancelled_intro' => '**:passenger** cancelled their reservation in your transport offer for the race **:event**.',
-        'request_cancelled_seats_label' => 'Seats freed up',
-        'request_cancelled_footer' => 'The seats are free again for other interested passengers.',
-
-        'request_created_heading' => 'New carpool request',
-        'request_created_intro' => '**:passenger** is interested in a seat in your transport offer for the race **:event**.',
-        'request_created_note_label' => 'Passenger note',
-        'request_created_cta' => 'You can handle the request directly from this e-mail:',
         'request_created_approve_button' => 'Approve request',
         'request_created_reject_button' => 'Reject request',
-        'request_created_footer' => 'The links are valid until the day of the race. You can also find the requests in the app on the Transport page for the race.',
 
-        'request_decided_heading_approved' => 'Your carpool request was approved 🎉',
-        'request_decided_heading_rejected' => 'Your carpool request was rejected',
-        'request_decided_race_label' => 'Race',
-        'request_decided_driver_label' => 'Driver',
-        'request_decided_footer_approved' => 'Your seat in the car is reserved. Arrange the details directly with the driver.',
+        'club' => [
+            'seats_value' => '{1} :count seat|[2,*] :count seats',
+            'driver_label' => 'Driver',
+            'passenger_label' => 'Passenger',
+            'direction_label' => 'Direction',
+            'seats_label' => 'Number of seats',
+            'reserved_seats_label' => 'Reserved seats',
+            'cancelled_seats_label' => 'Cancelled seats',
+            'departure_label' => 'Departure point',
+            'departure_from_label' => 'Departing from',
+            'vehicle_label' => 'Your car',
+        ],
+
+        'request_created_club' => [
+            'eyebrow' => 'Carpool · new request',
+            'title' => ':passenger wants to ride with you.',
+            'lead' => '{1} Asking for :count seat to :event, :date.|[2,*] Asking for :count seats to :event, :date.',
+            'note_label' => 'Note with the request',
+            'fine' => 'You can handle the request until the race day. You will also find it in DaLin under Transport.',
+        ],
+
+        'request_approved_club' => [
+            'eyebrow' => 'Carpool · request approved',
+            'title' => 'Your seat in the car is confirmed.',
+            'lead' => 'Your carpool request to :event, :date, has been approved.',
+            'status' => '{1} Approved · :count seat|[2,*] Approved · :count seats',
+            'action' => 'Open transport for the race',
+            'fine' => 'Arrange the departure details with the driver. You will find the booking in DaLin under Transport.',
+        ],
+
+        'request_rejected_club' => [
+            'eyebrow' => 'Carpool · request rejected',
+            'title' => 'This carpool did not work out.',
+            'lead' => 'Your carpool request to :event, :date, has been rejected.',
+            'status' => 'Request rejected',
+            'action' => 'Browse other transport offers',
+            'fine' => 'Look at other transport options for the race or arrange another way to get there.',
+        ],
+
+        'request_cancelled_club' => [
+            'eyebrow' => 'Carpool · for the driver',
+            'title' => ':passenger cancels the booking.',
+            'lead' => '{1} :count reserved seat in your car to :event, :date, is free again.|[2,*] :count reserved seats in your car to :event, :date, are free again.',
+            'action' => 'Open your transport offer',
+            'fine' => 'You will find the current occupancy of your car on the race\'s Transport page.',
+        ],
+
+        'offer_cancelled_club' => [
+            'eyebrow' => 'Carpool · offer cancelled',
+            'title' => 'The driver cancelled the transport offer.',
+            'lead' => 'The carpool to :event, :date, is cancelled.',
+            'note_label' => 'Plan other transport',
+            'note' => 'Your seat request in this offer no longer applies. Have a look at other ways to get there.',
+            'action' => 'Browse transport for the race',
+            'fine' => 'You will find the current offers in DaLin under Transport.',
+        ],
     ],
 
     'direction_enum' => [

@@ -17,9 +17,10 @@ return [
         'new_posts' => 'News',
     ],
 
-    'body' => [
-        'heading' => 'A new post has been published',
-        'intro'   => 'Something new on the website :-).',
+    'club' => [
+        'eyebrow' => 'Club news · digest',
+        'title' => '{1} One piece of news worth knowing.|[2,*] :count pieces of news worth knowing.',
+        'lead' => 'News from the members\' section in one place.',
     ],
 
 ];

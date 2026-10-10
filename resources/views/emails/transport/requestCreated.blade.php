@@ -1,34 +1,20 @@
-<x-mail::message>
+@php
+    /** @var string $passenger */
+    /** @var int $seats */
+    /** @var list<array{icon: string, label: string, value: string}> $facts */
+@endphp
+<x-mail::club.message
+    :eyebrow="__('transport.mail.request_created_club.eyebrow')"
+    :title="__('transport.mail.request_created_club.title', ['passenger' => $passenger])"
+    :lead="trans_choice('transport.mail.request_created_club.lead', $seats, ['count' => $seats, 'event' => $eventName, 'date' => $eventDate])"
+>
+<x-mail::club.facts :items="$facts" />
 
-## {{ __('transport.mail.request_created_heading') }}
+@if (filled($note))
+<x-mail::club.note :label="__('transport.mail.request_created_club.note_label')" quoted>{{ $note }}</x-mail::club.note>
 
-@component('mail::divider')
-{{ __('transport.mail.request_created_intro', ['passenger' => $transportRequest->user?->name, 'event' => $transportRequest->transportOffer?->sportEvent?->name]) }}
-
-- {{ __('transport.direction') }}: **{{ $transportRequest->direction->label() }}**
-- {{ __('transport.seats') }}: **{{ $transportRequest->seats }}**
-- {{ __('transport.departure_place') }}: **{{ $transportRequest->transportOffer?->departure_place }}**
-- {{ __('transport.vehicle') }}: **{{ $transportRequest->transportOffer?->vehicle?->name }}**
-@endcomponent
-
-@if(filled($transportRequest->note))
-{{ __('transport.mail.request_created_note_label') }}:
-
-<x-mail::panel>
-{{ $transportRequest->note }}
-</x-mail::panel>
 @endif
+<x-mail::club.actions :url="$approveUrl" :label="__('transport.mail.request_created_approve_button')" :secondary-url="$rejectUrl" :secondary-label="__('transport.mail.request_created_reject_button')" secondary-tone="negative" />
 
-{{ __('transport.mail.request_created_cta') }}
-
-<x-mail::button :url="$approveUrl" color="success">
-{{ __('transport.mail.request_created_approve_button') }}
-</x-mail::button>
-
-<x-mail::button :url="$rejectUrl" color="error">
-{{ __('transport.mail.request_created_reject_button') }}
-</x-mail::button>
-
-{{ __('transport.mail.request_created_footer') }}
-
-</x-mail::message>
+<x-mail::club.fine>{{ __('transport.mail.request_created_club.fine') }}</x-mail::club.fine>
+</x-mail::club.message>

@@ -30,6 +30,9 @@ class DemoAppSettingsSeeder extends Seeder
         AppSetting::set(AppSetting::CLUB_EXTRA_MEMBERSHIP_FEES_PREFIX, '888');
         AppSetting::set(AppSetting::CLUB_TECHNICAL_EMAIL, 'technik@demo.cz');
 
+        // Club accent colour used by the branded e-mail layout (Club settings → Club colours)
+        AppSetting::set(AppSetting::BRANDING_ACCENT_COLOR, '#1f7a5c');
+
         // Public website SEO / social sharing (Club settings → Public website section)
         AppSetting::set(
             AppSetting::SEO_DESCRIPTION,

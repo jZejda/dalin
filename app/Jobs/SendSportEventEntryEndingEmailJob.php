@@ -45,6 +45,7 @@ class SendSportEventEntryEndingEmailJob implements ShouldQueue
                     $daysBefore = $mailNotification->options['days_before_event_entry_ends'];
 
                     $mailContent = SportEvent::query()
+                        ->with('sportDiscipline')
                         ->wherein('sport_id', $options)
                         ->where('entry_date_1', '>', Carbon::now()->addDays($daysBefore))
                         ->where('entry_date_1', '<', Carbon::now()->addDays($daysBefore + 1))

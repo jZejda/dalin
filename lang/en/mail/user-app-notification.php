@@ -14,11 +14,13 @@ return [
     |
     */
 
-    'body' => [
-        'heading'   => 'Bulk message',
-        'intro'     => 'Notification from the internal :abbr system to selected users.',
-        'from_user' => 'Message from user **:name**.',
-        'sent_at'   => 'Message sent on: **:date**',
+    'club' => [
+        'eyebrow' => 'Club news · personal message',
+        'title' => 'You have a message from the club.',
+        'lead' => 'A message from your club\'s members\' section.',
+        'sender_label' => 'Sender',
+        'sent_at_label' => 'Sent',
+        'heading' => 'Message',
     ],
 
 ];

@@ -16,12 +16,16 @@ final class SendUserMail
     private string $replyTo;
     private array $targetUsers;
 
-    public function __construct(string $subject, string $content, string $replyTo, array $targetUsers)
+    /** Who wrote the message; shown as the sender in the e-mail. */
+    private ?User $sender;
+
+    public function __construct(string $subject, string $content, string $replyTo, array $targetUsers, ?User $sender = null)
     {
         $this->subject = $subject;
         $this->content = $content;
         $this->replyTo = $replyTo;
         $this->targetUsers = $targetUsers;
+        $this->sender = $sender;
     }
 
     public function send(): void
@@ -34,7 +38,7 @@ final class SendUserMail
             foreach ($users as $user) {
                 Mail::to($user)
                     ->queue(new UserAppNotification(
-                        $user,
+                        $this->sender,
                         $this->subject,
                         $this->content,
                         $this->replyTo,

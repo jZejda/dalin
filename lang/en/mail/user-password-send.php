@@ -18,21 +18,34 @@ return [
         'reset_password' => 'Portal password reset',
     ],
 
-    'body' => [
-        'heading_new_account'  => 'Password for the members section - :club.',
-        'heading_reset'        => 'Password reset for the members section - :club.',
-        'intro_new_account'    => 'A new account has been created for you in the :club club registration system.',
-        'intro_reset'          => 'Your password has been reset in the :club club registration system.',
-        'address_label'        => 'Address',
-        'name_label'            => 'Name',
-        'login_label'           => 'Login',
-        'password_label'        => 'Password',
-        'help_heading'          => 'Help / Troubleshooting',
-        'help_text'             => 'For more information on how to use the application, please visit our help on [this page](:url).',
-        'help_login_issues'     => 'If you have any login issues, please direct your questions to :email.',
-        'help_password_change'  => 'You can change the generated password after logging into the system.',
-        'tips_heading'          => 'This might come in handy',
-        'tips_text'             => 'It is best to store your password in a trusted password manager such as [KeePassXC](https://keepassxc.org/), [BitWarden](https://bitwarden.com/), or similar.',
+    'club' => [
+        'name_label' => 'Name',
+        'email_label' => 'Login e-mail',
+        'password_label' => 'Generated password',
+        'url_label' => 'Members\' section',
+        'action' => 'Log in to DaLin',
+
+        'new_account' => [
+            'eyebrow' => 'Members\' section · new account',
+            'title' => 'Welcome to your club.',
+            'lead' => 'Your DaLin account is ready. You will find races, entries and club news in it.',
+            'secondary' => 'Getting started',
+            'note_label' => 'After your first login',
+            'note' => 'You can change the generated password in your account settings.',
+            'fine' => 'The club administrator will help you with logging in: :email. You can store the password in a password manager.',
+            'fine_no_contact' => 'The club administrator will help you with logging in. You can store the password in a password manager.',
+        ],
+
+        'reset' => [
+            'eyebrow' => 'Members\' section · password reset',
+            'title' => 'Your password has been reset.',
+            'lead' => 'You can now log in to the members\' section with these details.',
+            'secondary' => 'Help with logging in',
+            'note_label' => 'Setting a password',
+            'note' => 'After logging in you can set your own password.',
+            'fine' => 'If you need help, write to the club administrator at :email.',
+            'fine_no_contact' => 'If you need help, contact the club administrator.',
+        ],
     ],
 
 ];

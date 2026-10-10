@@ -15,17 +15,19 @@ return [
         'userCreditChange' => 'Movement on the user account',
     ],
 
-    'body' => [
-        'heading'                  => 'Account movement',
-        'intro'                    => 'There has been a movement on the account of **:name**.',
-        'balance'                  => 'Current account balance: **:balance** CZK as of **:date**.',
-        'last_transaction_heading' => 'Latest transaction',
-        'amount'                   => 'amount: **:amount CZK**',
-        'transaction_date'         => 'transaction date: :date',
-        'transaction_id'           => 'transaction ID: :id',
-        'bank_transaction_id'      => 'linked bank transaction ID: :id',
-        'contact'                  => 'If there is any discrepancy in the transaction, please contact us at: :email',
-        'signoff'                  => 'Take care and see you at the races - :club',
+    'club' => [
+        'eyebrow' => 'Club account · new movement',
+        'title_credit' => ':amount was added to your account.',
+        'title_debit' => ':amount was deducted from your account.',
+        'lead' => 'We recorded a new movement on your club account.',
+        'balance_label' => 'Current balance',
+        'balance_note' => 'As of :date',
+        'amount_label' => 'Amount',
+        'date_label' => 'Date',
+        'transaction_id_label' => 'Transaction ID',
+        'bank_transaction_id_label' => 'Bank transaction ID',
+        'fine' => 'If you have questions about this movement, contact the club: :email.',
+        'fine_no_contact' => 'If you have questions about this movement, contact the club.',
     ],
 
 ];

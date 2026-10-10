@@ -14,17 +14,14 @@ return [
     */
 
     'subject' => [
-        'entry_ends_to_pay' => 'Payment due for the :deadline entry deadline',
+        'entry_ends_to_pay' => 'Entry fees due – :term entry deadline',
     ],
 
-    'body' => [
-        'heading'             => 'End of race entries',
-        'intro'               => 'The **:deadline entry deadline** for the races listed below is ending now. Please pay the entry fees for the registered members.',
-        'deadline_heading'    => ':deadline entry deadline',
-        'deadline_text'       => 'Races for which the **:deadline entry deadline** is ending now.',
-        'table_entry_until'   => 'Entry until',
-        'table_event_name'    => 'Event/race name',
-        'table_oris_id'       => 'ORIS ID',
+    'club' => [
+        'eyebrow' => 'For the billing team · entry fees',
+        'title' => 'Time to pay the entry fees.',
+        'lead' => 'The :term entry deadline is ending. Please pay the entry fees for the entered members at these races.',
+        'fine' => 'Check the payment details and the exact amount in the organiser\'s documents. This overview is a deadline reminder.',
     ],
 
 ];

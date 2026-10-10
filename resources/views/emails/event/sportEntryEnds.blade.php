@@ -1,21 +1,16 @@
 @php
-    use App\Shared\Helpers\EmptyType;
-    use App\Services\OrisApiService;
-    use Illuminate\Support\Str;
+    /** @var list<array{day: string, month: string, name: string, url: string, meta: string, deadline: string}> $events */
+    /** @var int $daysBefore */
 @endphp
+<x-mail::club.message
+    :eyebrow="__('mail/event-entry-ends.club.eyebrow')"
+    :title="__('mail/event-entry-ends.club.title')"
+    :lead="trans_choice('mail/event-entry-ends.club.lead', $daysBefore, ['count' => $daysBefore])"
+    :settings-url="$settingsUrl"
+>
+@foreach ($events as $event)
+<x-mail::club.event :day="$event['day']" :month="$event['month']" :name="$event['name']" :url="$event['url']" :meta="$event['meta']" :deadline="__('mail/common.club_layout.deadline', ['date' => $event['deadline']])" />
 
-<x-mail::message>
-
-## {{ __('mail/event-entry-ends.body.heading') }}
-
-{{ __('mail/event-entry-ends.body.intro', ['days' => $daysBefore]) }}
-
-@component('mail::table')
-    | {{ __('mail/event-entry-ends.body.table_entry_until') }}       | {{ __('mail/event-entry-ends.body.table_event_name') }}        | {{ __('mail/event-entry-ends.body.table_oris_id') }}
-    | :----------------- |:------------- |:------------- |
-    @foreach ($sportEventContent as $sportEvent)
-        | {{\Carbon\Carbon::parse($sportEvent->entry_date_1)->format(\App\Shared\Helpers\AppHelper::DATE_TIME_FORMAT)}}  | {{$sportEvent->name }}<br>@if(EmptyType::stringNotEmpty($sportEvent->alt_name)) {{Str::limit($sportEvent->alt_name, 35)}}@endif   | @if($sportEvent->oris_id !== null)[{{$sportEvent->oris_id }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{$sportEvent->oris_id}})@endif  |
-    @endforeach
-@endcomponent
-
-</x-mail::message>
+@endforeach
+<x-mail::club.actions :url="$eventsUrl" :label="__('mail/event-entry-ends.club.action')" />
+</x-mail::club.message>

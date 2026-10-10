@@ -19,9 +19,10 @@ return [
         'new_post' => 'Novinky',
     ],
 
-    'body' => [
-        'heading' => 'Novinka v interní sekci',
-        'intro'   => 'V členské sekci byla zveřejněna novinka.',
+    'club' => [
+        'eyebrow' => 'Klubové novinky · nový článek',
+        'title' => 'Co je nového v klubu.',
+        'lead' => 'V členské sekci přibyla nová zpráva.',
     ],
 
 ];

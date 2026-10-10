@@ -17,12 +17,11 @@ return [
         'event_entry_ends' => 'Blíží se konec přihlášek závodů',
     ],
 
-    'body' => [
-        'heading'             => 'Konec přihlášek - 1 termín',
-        'intro'               => 'Blíží se konec přihlášek na závody vypsané níže. Do termínu přihlášení zbývají necelé **:days dny**. Přihlášení proveď podle pokynů v administraci.',
-        'table_entry_until'   => 'Přihláška do',
-        'table_event_name'    => 'Název akce/závodu',
-        'table_oris_id'       => 'ORIS ID',
+    'club' => [
+        'eyebrow' => 'Přihlášky · blíží se uzávěrka',
+        'title' => 'Ještě stihneš první termín.',
+        'lead' => '{1} Za :count den končí první termín přihlášek na následující závody.|[2,4] Za :count dny končí první termín přihlášek na následující závody.|[5,*] Za :count dní končí první termín přihlášek na následující závody.',
+        'action' => 'Vybrat závod a přihlásit se',
     ],
 
 ];

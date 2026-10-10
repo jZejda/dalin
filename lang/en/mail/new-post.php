@@ -19,9 +19,10 @@ return [
         'new_post' => 'News',
     ],
 
-    'body' => [
-        'heading' => 'New post in the members section',
-        'intro'   => 'A new post has been published in the members section.',
+    'club' => [
+        'eyebrow' => 'Club news · new article',
+        'title' => 'What\'s new in the club.',
+        'lead' => 'A new article was added to the members\' section.',
     ],
 
 ];

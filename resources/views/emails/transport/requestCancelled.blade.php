@@ -1,14 +1,18 @@
-<x-mail::message>
+@php
+    /** @var string $passenger */
+    /** @var int $seats */
+    /** @var list<array{icon: string, label: string, value: string}> $facts */
+@endphp
+<x-mail::club.message
+    :eyebrow="__('transport.mail.request_cancelled_club.eyebrow')"
+    :title="__('transport.mail.request_cancelled_club.title', ['passenger' => $passenger])"
+    :lead="trans_choice('transport.mail.request_cancelled_club.lead', $seats, ['count' => $seats, 'event' => $eventName, 'date' => $eventDate])"
+>
+<x-mail::club.facts :items="$facts" />
 
-## {{ __('transport.mail.request_cancelled_heading') }}
+@if (filled($transportUrl))
+<x-mail::club.actions :url="$transportUrl" :label="__('transport.mail.request_cancelled_club.action')" />
 
-@component('mail::divider')
-{{ __('transport.mail.request_cancelled_intro', ['passenger' => $transportRequest->user?->name, 'event' => $transportRequest->transportOffer?->sportEvent?->name]) }}
-
-- {{ __('transport.direction') }}: **{{ $transportRequest->direction->label() }}**
-- {{ __('transport.mail.request_cancelled_seats_label') }}: **{{ $transportRequest->seats }}**
-@endcomponent
-
-{{ __('transport.mail.request_cancelled_footer') }}
-
-</x-mail::message>
+@endif
+<x-mail::club.fine>{{ __('transport.mail.request_cancelled_club.fine') }}</x-mail::club.fine>
+</x-mail::club.message>
