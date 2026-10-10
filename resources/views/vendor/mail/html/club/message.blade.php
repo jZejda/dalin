@@ -40,6 +40,8 @@
 .club-balance-amount { color: #eef3f1 !important; }
 .club-heading, .club-person-amount, .club-body h1, .club-body h2, .club-body h3 { color: #eef3f1 !important; }
 .club-body blockquote { color: #b5c3bf !important; border-color: #43514b !important; }
+.club-article h1, .club-article h3, .club-article h4 { color: #eef3f1 !important; }
+.club-article-separated { border-color: #43514b !important; }
 .club-balance-label, .club-balance-note { color: #b5c3bf !important; }
 .club-status-negative .club-status-label { color: #ffb0b4 !important; }
 }

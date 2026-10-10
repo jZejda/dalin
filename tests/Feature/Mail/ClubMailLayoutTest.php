@@ -9,6 +9,8 @@ use App\Filament\Resources\SportEvents\SportEventResource;
 use App\Mail\EntryEndsToPay;
 use App\Mail\EventEntryEnds;
 use App\Mail\EventWeeklyEndsBySport;
+use App\Mail\NewPost;
+use App\Mail\NewPosts;
 use App\Mail\PreRaceSummaryMail;
 use App\Mail\TransportOfferCancelled;
 use App\Mail\TransportRequestCancelled;
@@ -19,11 +21,14 @@ use App\Mail\UserCreditChange;
 use App\Mail\UserEntryNotification;
 use App\Mail\UserPasswordSend;
 use App\Mail\UsersInDebit;
+use App\Enums\ContentFormat;
+use App\Enums\PostStatus;
 use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Models\AppSetting;
 use App\Models\BankTransaction;
+use App\Models\Post;
 use App\Models\UserCredit;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
@@ -450,4 +455,62 @@ it('renders the report and messages in English', function (): void {
     (new UserAppNotification(null, 'Info', 'Hello', null))
         ->assertSeeInHtml('You have a message from the club.')
         ->assertDontSeeInHtml('Sender');
+});
+
+function clubMailPost(string $title, string $content, ContentFormat $format = ContentFormat::Html): Post
+{
+    return Post::query()->create([
+        'user_id' => User::factory()->create()->id,
+        'title' => $title,
+        'content' => $content,
+        'content_mode' => $format,
+        'private' => PostStatus::Public,
+    ]);
+}
+
+it('renders the article HTML instead of raw tags and strips unsafe markup', function (): void {
+    $post = clubMailPost(
+        'Podzimní soustředění v terénu',
+        "<p>Zaměříme se na <strong>čtení vrstevnic</strong>.</p>\n\n<ul><li>Sobota: technický trénink</li></ul>"
+            .'<script>alert(1)</script><p onclick="steal()">Podrobnosti brzy.</p><img src="/storage/posts/mapa.jpg" alt="Mapa">',
+    );
+
+    $mail = new NewPost($post, 'Soustředění');
+
+    $mail->assertSeeInHtml('Co je nového v klubu.')
+        ->assertSeeInHtml('Podzimní soustředění v terénu')
+        ->assertSeeInHtml('čtení vrstevnic</strong>', false)
+        ->assertSeeInHtml('Sobota: technický trénink</li>', false)
+        ->assertSeeInHtml('Podrobnosti brzy.</p>', false)
+        ->assertSeeInHtml('src="'.url('/storage/posts/mapa.jpg').'"', false)
+        ->assertDontSeeInHtml('&lt;p&gt;', false)
+        ->assertDontSeeInHtml('<script', false)
+        ->assertDontSeeInHtml('onclick', false)
+        ->assertDontSeeInHtml('<pre', false)
+        ->assertSeeInHtml('Nastavení oznámení')
+        ->assertSeeInText('- Sobota: technický trénink')
+        ->assertDontSeeInText('<p>');
+    $mail->assertHasSubject(config('app.name').' - '.__('mail/new-post.subject.new_post').' - Soustředění');
+});
+
+it('renders Markdown articles and escapes HTML written into them', function (): void {
+    $post = clubMailPost('Trénink', "Sraz je **v 17:00**.\n\n<b onclick=\"x()\">tučné</b>", ContentFormat::Markdown);
+
+    (new NewPost($post, null))
+        ->assertSeeInHtml('v 17:00</strong>', false)
+        ->assertSeeInHtml('&lt;b onclick', false)
+        ->assertDontSeeInHtml('<b onclick', false);
+});
+
+it('lists every article of the news digest with a separator', function (): void {
+    $first = clubMailPost('Podzimní soustředění v terénu', '<p>Víkend mapových tréninků.</p>');
+    $second = clubMailPost('Klubový trénink v úterý', '<p>Sraz v 17:00 u lesního parkoviště.</p>');
+
+    (new NewPosts(collect([$first, $second])))
+        ->assertSeeInHtml('2 zprávy, které se hodí vědět.')
+        ->assertSeeInHtml('Podzimní soustředění v terénu')
+        ->assertSeeInHtml('Klubový trénink v úterý')
+        ->assertSeeInHtml('club-article-separated', false)
+        ->assertSeeInHtml('Nastavení oznámení')
+        ->assertSeeInText('Sraz v 17:00 u lesního parkoviště.');
 });

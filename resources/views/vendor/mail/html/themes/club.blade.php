@@ -187,6 +187,50 @@ img {
     color: #52605d;
 }
 
+.club-article-separated {
+    margin-top: 22px;
+    padding-top: 4px;
+    border-top: 1px solid #dde4df;
+}
+
+.club-article p {
+    margin: 0 0 12px;
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+.club-article ul,
+.club-article ol {
+    margin: 0 0 12px;
+    padding-left: 22px;
+}
+
+.club-article li {
+    margin: 0 0 4px;
+}
+
+.club-article h1,
+.club-article h3,
+.club-article h4 {
+    margin: 18px 0 8px;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 1.35;
+}
+
+.club-article blockquote {
+    margin: 0 0 12px;
+    padding: 2px 0 2px 14px;
+    border-left: 3px solid #dde4df;
+    color: #52605d;
+}
+
+.club-article img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
 .club-body .club-section {
     margin: 22px 0 10px;
     font-size: 13px;

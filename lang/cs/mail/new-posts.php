@@ -17,9 +17,10 @@ return [
         'new_posts' => 'Novinky',
     ],
 
-    'body' => [
-        'heading' => 'Byla zveřejněna novinka',
-        'intro'   => 'Něco nového na stránkách :-).',
+    'club' => [
+        'eyebrow' => 'Klubové novinky · souhrn',
+        'title' => '{1} Jedna zpráva, která se hodí vědět.|[2,4] :count zprávy, které se hodí vědět.|[5,*] :count zpráv, které se hodí vědět.',
+        'lead' => 'Novinky z členské sekce na jednom místě.',
     ],
 
 ];
