@@ -157,6 +157,36 @@ img {
     margin: 0 0 6px;
 }
 
+.club-body .club-heading {
+    margin: 26px 0 10px;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1.3;
+    color: {{ \App\Services\Mail\MailBranding::INK }};
+}
+
+.club-body > h1,
+.club-body > h2,
+.club-body > h3 {
+    margin: 20px 0 8px;
+    font-size: 17px;
+    font-weight: bold;
+    line-height: 1.35;
+    color: {{ \App\Services\Mail\MailBranding::INK }};
+}
+
+.club-body > ol {
+    margin: 0 0 12px;
+    padding-left: 20px;
+}
+
+.club-body > blockquote {
+    margin: 0 0 12px;
+    padding: 2px 0 2px 14px;
+    border-left: 3px solid #dde4df;
+    color: #52605d;
+}
+
 .club-body .club-section {
     margin: 22px 0 10px;
     font-size: 13px;
@@ -330,6 +360,14 @@ img {
 
 .club-status-negative .club-status-label {
     color: #9f3035;
+}
+
+.club-person-amount {
+    padding-left: 16px;
+    font-size: 16px;
+    font-weight: bold;
+    white-space: nowrap;
+    color: {{ \App\Services\Mail\MailBranding::INK }};
 }
 
 .club-note {
