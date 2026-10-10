@@ -1,50 +1,22 @@
-<?php
+@php
+    /** @var string $variant new_account | reset */
+    /** @var list<array{icon: string, label: string, value: string, wide?: bool}> $facts */
+    $key = 'mail/user-password-send.club.'.$variant;
+@endphp
+<x-mail::club.message
+    :eyebrow="__($key.'.eyebrow')"
+    :title="__($key.'.title')"
+    :lead="__($key.'.lead')"
+>
+<x-mail::club.facts :items="$facts" />
 
-use App\Mail\UserPasswordSend;
-use App\Models\User;
-use Illuminate\Support\Facades\URL;
+<x-mail::club.actions :url="$loginUrl" :label="__('mail/user-password-send.club.action')" :secondary-url="$helpUrl" :secondary-label="__($key.'.secondary')" />
 
-/** @var string $newPassword */
-/** @var User $user */
-/** @var string $action */
+<x-mail::club.note :label="__($key.'.note_label')">{{ __($key.'.note') }}</x-mail::club.note>
 
-$isNewAccount = $action === UserPasswordSend::ACTION_SEND_PASSWORD;
-$loginUrl = URL::to('/') . '/admin/login';
-$club = config('site-config.club.abbr');
-?>
-
-<x-mail::message>
-
-@if ($isNewAccount)
-## {{ __('mail/user-password-send.body.heading_new_account', ['club' => $club]) }}
-
-{{ __('mail/user-password-send.body.intro_new_account', ['club' => $club]) }}
+@if (filled($contactEmail))
+<x-mail::club.fine>{{ __($key.'.fine', ['email' => $contactEmail]) }}</x-mail::club.fine>
 @else
-## {{ __('mail/user-password-send.body.heading_reset', ['club' => $club]) }}
-
-{{ __('mail/user-password-send.body.intro_reset', ['club' => $club]) }}
+<x-mail::club.fine>{{ __($key.'.fine_no_contact') }}</x-mail::club.fine>
 @endif
-
-@component('mail::divider')
-{{ __('mail/user-password-send.body.address_label') }}: **[{{ $loginUrl }}]({{ $loginUrl }})**
-
-{{ __('mail/user-password-send.body.name_label') }}: **{{ $user->name }}**
-
-{{ __('mail/user-password-send.body.login_label') }}: **{{ $user->email }}**
-
-{{ __('mail/user-password-send.body.password_label') }}: **{{ $newPassword }}**
-
-
-@endcomponent
-
-### {{ __('mail/user-password-send.body.help_heading') }}
-
-{{ __('mail/user-password-send.body.help_text', ['url' => \App\Shared\Helpers\AppHelper::getPageHelpUrl('')]) }}
-{{ __('mail/user-password-send.body.help_login_issues', ['email' => config('site-config.club.technical_email')]) }}
-{{ __('mail/user-password-send.body.help_password_change') }}
-
-#### {{ __('mail/user-password-send.body.tips_heading') }}
-
-{{ __('mail/user-password-send.body.tips_text') }}
-
-</x-mail::message>
+</x-mail::club.message>

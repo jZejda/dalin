@@ -14,7 +14,14 @@ use App\Mail\TransportOfferCancelled;
 use App\Mail\TransportRequestCancelled;
 use App\Mail\TransportRequestCreated;
 use App\Mail\TransportRequestDecided;
+use App\Mail\UserCreditChange;
+use App\Mail\UserPasswordSend;
+use App\Enums\UserCreditSource;
+use App\Enums\UserCreditStatus;
+use App\Enums\UserCreditType;
 use App\Models\AppSetting;
+use App\Models\BankTransaction;
+use App\Models\UserCredit;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
 use App\Models\SportEvent;
@@ -25,6 +32,7 @@ use App\Models\UserEntry;
 use App\Models\UserRaceProfile;
 use App\Models\Vehicle;
 use App\Services\Mail\MailBranding;
+use App\Services\Mail\MailMoney;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 
@@ -288,4 +296,98 @@ it('renders the deadline mails in English', function (): void {
     (new EntryEndsToPay(collect([$event]), 1))
         ->assertHasSubject(config('app.name').' - Entry fees due – first entry deadline')
         ->assertSeeInHtml('First entry deadline');
+});
+
+function clubMailCredit(User $user, float $amount, ?int $bankTransactionId = null): UserCredit
+{
+    $credit = new UserCredit();
+    $credit->user_id = $user->id;
+    $credit->amount = $amount;
+    $credit->currency = 'CZK';
+    $credit->bank_transaction_id = $bankTransactionId;
+    $credit->source = UserCreditSource::User->value;
+    $credit->status = UserCreditStatus::Done;
+    $credit->credit_type = UserCreditType::UserDonation;
+    $credit->saveOrFail();
+
+    return $credit;
+}
+
+it('formats money amounts for the club mails', function (): void {
+    expect(MailMoney::format(2000.0))->toBe("2\u{00A0}000\u{00A0}Kč")
+        ->and(MailMoney::format(-320.0))->toBe("\u{2212}320\u{00A0}Kč")
+        ->and(MailMoney::format(2000.0, signed: true))->toBe("+2\u{00A0}000\u{00A0}Kč")
+        ->and(MailMoney::format(12.5))->toBe("12,50\u{00A0}Kč");
+
+    App::setLocale('en');
+
+    expect(MailMoney::format(2000.0))->toBe("2,000\u{00A0}CZK")
+        ->and(MailMoney::format(-12.5, 'EUR'))->toBe("\u{2212}12.50\u{00A0}EUR");
+});
+
+it('sends login details for a new account', function (): void {
+    $user = User::factory()->create(['name' => 'Jana Nováková', 'email' => 'jana@example.test']);
+
+    (new UserPasswordSend('Ukazka-7xP4', $user))
+        ->assertSeeInHtml('Vítej ve svém klubu.')
+        ->assertSeeInHtml('Jana Nováková')
+        ->assertSeeInHtml('jana@example.test')
+        ->assertSeeInHtml('Ukazka-7xP4')
+        ->assertSeeInHtml('/admin/login')
+        ->assertSeeInHtml('Přihlásit se do DaLinu')
+        ->assertSeeInHtml('Jak začít')
+        ->assertSeeInHtml('napoveda/ovladani-aplikace', false)
+        ->assertSeeInHtml('S přihlášením ti pomůže správce klubu: technik@testov.cz.')
+        ->assertDontSeeInHtml('Nastavení oznámení');
+});
+
+it('sends login details after a password reset', function (): void {
+    $user = User::factory()->create();
+
+    (new UserPasswordSend('Ukazka-7xP4', $user, UserPasswordSend::ACTION_RESET_PASSWORD))
+        ->assertSeeInHtml('Tvoje heslo bylo resetováno.')
+        ->assertSeeInHtml('Nápověda k přihlášení')
+        ->assertSeeInHtml('Po přihlášení si můžeš nastavit vlastní heslo.')
+        ->assertDontSeeInHtml('Vítej ve svém klubu.');
+});
+
+it('shows the balance and the bank reference of a credited payment', function (): void {
+    $user = User::factory()->create();
+    clubMailCredit($user, 450.0);
+    $bankTransaction = BankTransaction::factory()->create();
+    $credit = clubMailCredit($user, 2000.0, $bankTransaction->id);
+
+    (new UserCreditChange($user->refresh(), $credit))
+        ->assertSeeInHtml("Na účtu přibylo 2\u{00A0}000\u{00A0}Kč.")
+        ->assertSeeInHtml('Aktuální zůstatek')
+        ->assertSeeInHtml("2\u{00A0}450\u{00A0}Kč")
+        ->assertSeeInHtml("+2\u{00A0}000\u{00A0}Kč")
+        ->assertSeeInHtml('ID bankovní transakce')
+        ->assertSeeInHtml('S dotazy k pohybu na účtu kontaktuj klub: technik@testov.cz.')
+        ->assertDontSeeInHtml('Nastavení oznámení');
+});
+
+it('shows a manual debit without an empty bank reference', function (): void {
+    $user = User::factory()->create();
+    $credit = clubMailCredit($user, -320.0);
+
+    (new UserCreditChange($user->refresh(), $credit))
+        ->assertSeeInHtml("Z účtu odešlo 320\u{00A0}Kč.")
+        ->assertSeeInHtml("\u{2212}320\u{00A0}Kč")
+        ->assertSeeInHtml('ID transakce')
+        ->assertDontSeeInHtml('ID bankovní transakce');
+});
+
+it('renders the account mails in English', function (): void {
+    App::setLocale('en');
+    $user = User::factory()->create();
+    $credit = clubMailCredit($user, 500.0);
+
+    (new UserPasswordSend('Ukazka-7xP4', $user))
+        ->assertSeeInHtml('Welcome to your club.')
+        ->assertSeeInHtml('Getting started');
+
+    (new UserCreditChange($user->refresh(), $credit))
+        ->assertSeeInHtml("500\u{00A0}CZK was added to your account.")
+        ->assertSeeInHtml('Current balance');
 });

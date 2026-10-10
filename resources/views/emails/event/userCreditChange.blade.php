@@ -1,35 +1,19 @@
 @php
-use Illuminate\Support\Carbon;
-use App\Enums\UserParamType;
-use App\Shared\Helpers\AppHelper;
-
-/** @var App\Models\User $user */
-/** @var App\Models\UserCredit $userCredit */
+    /** @var bool $isDebit */
+    /** @var list<array{icon: string, label: string, value: string}> $facts */
 @endphp
+<x-mail::club.message
+    :eyebrow="__('mail/user-credit-change.club.eyebrow')"
+    :title="__($isDebit ? 'mail/user-credit-change.club.title_debit' : 'mail/user-credit-change.club.title_credit', ['amount' => $amount])"
+    :lead="__('mail/user-credit-change.club.lead')"
+>
+<x-mail::club.balance :label="__('mail/user-credit-change.club.balance_label')" :amount="$balance" :note="__('mail/user-credit-change.club.balance_note', ['date' => $balanceDate])" />
 
-<x-mail::message>
+<x-mail::club.facts :items="$facts" />
 
-## {{ __('mail/user-credit-change.body.heading') }}
-
-{{ __('mail/user-credit-change.body.intro', ['name' => $user->name]) }}
-
-{{ __('mail/user-credit-change.body.balance', [
-    'balance' => $user->getParam(UserParamType::UserActualBalance),
-    'date' => Carbon::now()->format(AppHelper::DATE_TIME_FORMAT),
-]) }}
-
-@component('mail::divider')
-## {{ __('mail/user-credit-change.body.last_transaction_heading') }}
-
-- {{ __('mail/user-credit-change.body.amount', ['amount' => $userCredit->amount]) }}
-- {{ __('mail/user-credit-change.body.transaction_date', ['date' => Carbon::parse($userCredit->created_at)->format(AppHelper::DATE_TIME_FORMAT)]) }}
-- {{ __('mail/user-credit-change.body.transaction_id', ['id' => $userCredit->id]) }}
-- {{ __('mail/user-credit-change.body.bank_transaction_id', ['id' => $userCredit->bank_transaction_id]) }}
-
-@endcomponent
-
-{{ __('mail/user-credit-change.body.contact', ['email' => config('site-config.club.technical_email')]) }}
-
-{{ __('mail/user-credit-change.body.signoff', ['club' => config('site-config.club.abbr')]) }}
-
-</x-mail::message>
+@if (filled($contactEmail))
+<x-mail::club.fine>{{ __('mail/user-credit-change.club.fine', ['email' => $contactEmail]) }}</x-mail::club.fine>
+@else
+<x-mail::club.fine>{{ __('mail/user-credit-change.club.fine_no_contact') }}</x-mail::club.fine>
+@endif
+</x-mail::club.message>
