@@ -407,8 +407,13 @@ return [
         'description_en' => 'Popis odkazu anglicky',
         'source_url' => 'URL odkazu',
         'source_type' => 'Typ odkazu',
-        'internal' => 'Odkaz',
-        'internal_external_option' => 'Externí odkaz',
+        'link_kind' => 'Cíl odkazu',
+        'link_kind_options' => [
+            'url' => 'Odkaz na web',
+            'file' => 'Soubor v DaLinu',
+        ],
+        'source_file' => 'Soubor',
+        'source_file_helper' => 'PDF, obrázek, Word/Excel/OpenDocument nebo text, max. 10 MB. Soubor bude veřejně dostupný.',
         'table' => [
             'name_cz' => 'Odkaz česky',
             'name_en' => 'Odkaz anglicky',

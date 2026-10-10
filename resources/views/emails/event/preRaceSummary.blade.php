@@ -76,7 +76,7 @@
 | {{ __('mail/pre-race-summary.body.link_name_label') }} | {{ __('mail/pre-race-summary.body.link_url_label') }} |
 |:---|:---|
 @foreach($event->sportEventLinks as $link)
-| {{ $link->name_cz ?? $link->description_cz ?? '–' }} | @if($link->source_url)[{{ $link->name_cz ?? $link->source_url }}]({{ $link->source_url }})@else–@endif |
+| {{ $link->label() }} | @if($link->url())[{{ $link->name_cz ?? $link->url() }}]({{ $link->url() }})@else–@endif |
 @endforeach
 @endcomponent
 @endif

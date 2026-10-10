@@ -94,7 +94,7 @@
                 <x-ui.section-heading>{{ __('sport-event.public.links_title') }}</x-ui.section-heading>
                 <ul class="grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($event->sportEventLinks as $link)
-                        <li class="min-w-0"><a href="{{ $link->source_url }}" target="_blank" rel="noopener noreferrer" class="group flex min-h-8 items-center gap-2.5 py-0.5 text-sm"><x-link-source-icon :source="$link->source()" class="text-terrain-secondary" /><span class="min-w-0 break-words font-semibold group-hover:underline">{{ $link->label() }}</span><span aria-hidden="true" class="shrink-0 text-terrain-secondary">↗</span><span class="sr-only">{{ __('sport-event.public.new_window') }}</span></a></li>
+                        <li class="min-w-0"><a href="{{ $link->url() }}" target="_blank" rel="noopener noreferrer" class="group flex min-h-8 items-center gap-2.5 py-0.5 text-sm"><x-link-source-icon :source="$link->source()" class="text-terrain-secondary" /><span class="min-w-0 break-words font-semibold group-hover:underline">{{ $link->label() }}</span><span aria-hidden="true" class="shrink-0 text-terrain-secondary">↗</span><span class="sr-only">{{ __('sport-event.public.new_window') }}</span></a></li>
                     @endforeach
                 </ul>
             </section>

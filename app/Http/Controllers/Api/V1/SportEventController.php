@@ -186,7 +186,7 @@ final class SportEventController extends Controller
             ->map(static fn (SportEventLink $link): array => [
                 'id' => $link->id,
                 'name' => $link->name_cz ?? $link->name_en,
-                'url' => $link->source_url,
+                'url' => $link->url(),
                 'type' => $link->source_type->value,
             ])
             ->values()

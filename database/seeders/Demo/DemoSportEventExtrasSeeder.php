@@ -45,6 +45,28 @@ class DemoSportEventExtrasSeeder extends Seeder
             }
         }
 
+        // A file uploaded straight to DaLin (shows the DaLin source icon)
+        if ($uploadEvent = $futureEvents->first()) {
+            $path = SportEventLink::FILE_DIRECTORY . '/' . $uploadEvent->id . '/pokyny-pro-zavodniky.txt';
+            Storage::disk(SportEventLink::FILE_DISK)->put($path, implode(PHP_EOL, [
+                'Pokyny pro závodníky – ' . $uploadEvent->name,
+                '',
+                'Prezentace: v centru závodu od 8:30, start 00 v 10:00.',
+                'Parkování: na louce u lesa, dodržujte pokyny pořadatelů.',
+                'Vzdálenosti: parkoviště – centrum 300 m, centrum – start 1,2 km.',
+                'Mapa: 1:10 000, E 5 m, stav jaro ' . now()->year . '.',
+            ]));
+
+            SportEventLink::factory()->ofType(SportEventLinkType::Information)->create([
+                'sport_event_id' => $uploadEvent->id,
+                'name_cz'        => 'Pokyny pro závodníky',
+                'name_en'        => 'Final information',
+                'source_url'     => null,
+                'source_path'    => $path,
+                'internal'       => true,
+            ]);
+        }
+
         foreach ($pastEvents as $event) {
             SportEventLink::factory()->ofType(SportEventLinkType::Results)->create([
                 'sport_event_id' => $event->id,

@@ -45,6 +45,26 @@ and `oris-color.svg` is `linksource-oris-color`. A blade-icons prefix must not c
   (`partials/backend/sport-event-links.blade.php`), links relation manager in the admin.
 - Not used in e-mails — SVG is not reliably supported by mail clients.
 
+## Files uploaded to DaLin
+
+The "Create/Edit link" modal (`SportEventLinkRelationManager`) has a **Link target** toggle:
+*Web link* (`source_url`) or *File in DaLin* (`source_path`). A link is always one or the other —
+`normalizeTarget()` clears the other column and sets `internal = true` for files. ORIS links
+(`external_key` set) are locked to *Web link*, ORIS sync rewrites them anyway.
+
+- Storage: public disk **`events`** (`storage/app/public/events`, shared between deploys) under
+  `links/<sport_event_id>/` — constants `SportEventLink::FILE_DISK` / `FILE_DIRECTORY`.
+- Always link via **`$link->url()`** (disk URL for a file, else `source_url`) — never
+  `source_url` directly. Views, the API (`url`) and the pre-race mail already do.
+- Allowed: PDF, JPG/PNG/WebP/GIF, TXT, DOC(X), XLS(X), ODT/ODS, max 10 MB (Livewire's default
+  temporary upload limit is 12 MB). The MIME type is detected from the content; the stored
+  extension comes from `ACCEPTED_FILE_TYPES` for that type, **never from the client** (Filament's
+  default keeps the client extension — on a public disk served by Apache a text file named
+  `x.php` could otherwise end up executable). Stored name: `<slug of original name>-<ulid>.<ext>`.
+  Never add HTML, SVG or anything executable to the list.
+- `SportEventLinkObserver` deletes the file when the link is deleted or its file is replaced /
+  switched to a URL. Not covered: links removed by a DB cascade when a whole event is deleted.
+
 ## Icon set
 
 | Case | Domains | Icon source | Colour |

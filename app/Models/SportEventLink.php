@@ -6,11 +6,14 @@ namespace App\Models;
 
 use App\Enums\SportEventLinkSource;
 use App\Enums\SportEventLinkType;
+use App\Observers\SportEventLinkObserver;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Override;
 
 /**
@@ -43,9 +46,16 @@ use Override;
     'description_cz',
     'description_en',
 ])]
+#[ObservedBy(SportEventLinkObserver::class)]
 class SportEventLink extends Model
 {
     use HasFactory;
+
+    /** Public disk for files uploaded to DaLin (source_path is relative to it). */
+    public const string FILE_DISK = 'events';
+
+    /** Uploaded files go to <FILE_DIRECTORY>/<sport_event_id>/ on FILE_DISK. */
+    public const string FILE_DIRECTORY = 'links';
 
     /**
      * @return array<string, string>
@@ -85,11 +95,28 @@ class SportEventLink extends Model
     }
 
     /**
+     * Target of the link: the public URL of a file uploaded to DaLin, else the external URL.
+     */
+    public function url(): ?string
+    {
+        if ($this->isUploadedFile()) {
+            return Storage::disk(self::FILE_DISK)->url((string) $this->source_path);
+        }
+
+        return $this->source_url;
+    }
+
+    public function isUploadedFile(): bool
+    {
+        return filled($this->source_path);
+    }
+
+    /**
      * Where the link leads; a file uploaded to DaLin (source_path) always resolves to DaLin.
      */
     public function source(): SportEventLinkSource
     {
-        if (filled($this->source_path)) {
+        if ($this->isUploadedFile()) {
             return SportEventLinkSource::Dalin;
         }
 

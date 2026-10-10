@@ -407,8 +407,13 @@ return [
         'description_en' => 'Link description (English)',
         'source_url' => 'Link URL',
         'source_type' => 'Link type',
-        'internal' => 'Link',
-        'internal_external_option' => 'External link',
+        'link_kind' => 'Link target',
+        'link_kind_options' => [
+            'url' => 'Web link',
+            'file' => 'File in DaLin',
+        ],
+        'source_file' => 'File',
+        'source_file_helper' => 'PDF, image, Word/Excel/OpenDocument or text, max 10 MB. The file will be publicly accessible.',
         'table' => [
             'name_cz' => 'Link (Czech)',
             'name_en' => 'Link (English)',
