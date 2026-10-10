@@ -69,7 +69,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read int|null $user_credits_count
  * @property-read Collection<int, UserRaceProfile> $userRaceProfiles
  * @property-read int|null $user_race_profiles_count
- * @property-read UserSetting|null $userSetting
+ * @property-read UserSetting|null $mailSetting
  */
 
 #[Fillable(['name', 'email', 'password', 'payer_variable_symbol', 'active', 'locale', 'calendar_token', 'badge_color', 'avatar_path'])]
@@ -159,21 +159,24 @@ class User extends Authenticatable implements FilamentUser, HasLocalePreference
         return "{$this->name} - VS: {$userVs}  ({$this->email})";
     }
 
-    public function userSetting(): HasOne
+    /**
+     * A user has several user_settings rows (mail, event_filters, usersAllowSignForRace, …),
+     * so the relation must be narrowed to the mail one — an unfiltered hasOne picks an arbitrary row.
+     *
+     * @return HasOne<UserSetting, $this>
+     */
+    public function mailSetting(): HasOne
     {
-        return $this->hasOne(UserSetting::class, 'user_id', 'id');
+        return $this->hasOne(UserSetting::class, 'user_id', 'id')
+            ->where('type', '=', UserSetting::TYPE_MAIL);
     }
 
-    public function getUserOptions(): array
+    /**
+     * @return array<string, mixed>
+     */
+    public function getMailOptions(): array
     {
-        /** @var UserSetting $userSetting */
-        $userSetting = $this->userSetting()->first();
-
-        if (!is_null($userSetting) && !is_null($userSetting->options)) {
-            return $userSetting->options;
-        } else {
-            return [];
-        }
+        return $this->mailSetting->options ?? [];
     }
 
     public function getUserRaceProfilesIds(?User $user): \Illuminate\Support\Collection

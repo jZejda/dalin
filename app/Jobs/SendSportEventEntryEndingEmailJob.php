@@ -26,18 +26,29 @@ class SendSportEventEntryEndingEmailJob implements ShouldQueue
 
     public function handle(): void
     {
-        $hour = Carbon::now()->format('H');
+        $hour = Carbon::now()->hour;
 
         Log::channel('site')->info(sprintf('E-mail notifikace SportEvent v %d hodin', $hour));
 
-        $mailNotifications = UserSetting::query()->where('options->sport_time_trigger', $hour)->get();
+        // The trigger hour is stored as an int, older rows may hold a zero-padded string ("08"),
+        // so compare in PHP rather than against the formatted 'H' string in SQL
+        $mailNotifications = UserSetting::query()
+            ->where('type', '=', UserSetting::TYPE_MAIL)
+            ->get()
+            ->filter(fn (UserSetting $setting): bool => is_numeric($setting->options['sport_time_trigger'] ?? null)
+                && (int) $setting->options['sport_time_trigger'] === $hour);
 
         if ($mailNotifications->isNotEmpty()) {
             /** @var UserSetting $mailNotification */
             foreach ($mailNotifications as $mailNotification) {
-                $user = User::query()->where('id', '=', $mailNotification->user_id)->first();
+                $user = User::query()
+                    ->where('id', '=', $mailNotification->user_id)
+                    ->where('active', '=', 1)
+                    ->first();
 
                 if (
+                    $user !== null
+                    &&
                     isset($mailNotification->options['sport'])
                     && isset($mailNotification->options['days_before_event_entry_ends'])
                 ) {

@@ -18,16 +18,15 @@ class ReportEmailEventWeeklyEndsBySport implements CommonCronJobs
     public function run(): void
     {
         $users = User::query()
+            ->with('mailSetting')
             ->where('active', '=', 1)
             ->get();
 
         /** @var User $user */
         foreach ($users as $user) {
-            if (
-                isset($user->getUserOptions()['week_report_by_sport'][0]) &&
-                $user->getUserOptions()['week_report_by_sport'][0] === '1'
-            ) {
-                $sportIds = $user->getUserOptions()['week_report_by_sport'];
+            $sportIds = $user->getMailOptions()['week_report_by_sport'] ?? [];
+
+            if (is_array($sportIds) && $sportIds !== []) {
                 $eventFirstDateEnd = $this->eventsWithDeadlineThisWeek($sportIds, 'entry_date_1');
                 $eventSecondDateEnd = $this->eventsWithDeadlineThisWeek($sportIds, 'entry_date_2');
                 $eventThirdDateEnd = $this->eventsWithDeadlineThisWeek($sportIds, 'entry_date_3');

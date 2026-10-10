@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Cron\Jobs;
 use App\Mail\PreRaceSummaryMail;
 use App\Models\SportEvent;
 use App\Models\UserEntry;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -22,7 +23,7 @@ class ReportEmailPreRaceSummary implements CommonCronJobs
             $events = SportEvent::whereDate('date', $targetDate)
                 ->whereHas('userEntry')
                 ->with([
-                    'userEntry.userRaceProfile.user.userSetting',
+                    'userEntry.userRaceProfile.user.mailSetting',
                     'userEntry.sportClassDefinition',
                     'sportClasses',
                     'sportEventNews' => fn ($q) => $q->orderByDesc('date')->limit(5),
@@ -46,11 +47,11 @@ class ReportEmailPreRaceSummary implements CommonCronJobs
                     $firstEntry = $entries[0];
                     $user = $firstEntry->userRaceProfile?->user;
 
-                    if ($user === null) {
+                    if ($user === null || !$user->isActive()) {
                         continue;
                     }
 
-                    $options = $user->getUserOptions();
+                    $options = $user->getMailOptions();
 
                     if (!($options['pre_race_summary_enabled'] ?? false)) {
                         continue;
@@ -62,6 +63,11 @@ class ReportEmailPreRaceSummary implements CommonCronJobs
                         continue;
                     }
 
+                    // The hourly cron URL may be hit more than once within the trigger hour
+                    if (!Cache::add(self::sentCacheKey($event, $user->id), true, now()->addDays(2))) {
+                        continue;
+                    }
+
                     $profile = $firstEntry->userRaceProfile;
                     $emailTo = ($profile !== null && $profile->email !== null) ? $profile->email : $user->email;
 
@@ -70,5 +76,10 @@ class ReportEmailPreRaceSummary implements CommonCronJobs
                 }
             }
         }
+    }
+
+    private static function sentCacheKey(SportEvent $event, int $userId): string
+    {
+        return sprintf('mail:pre-race-summary:%d:%d:%s', $event->id, $userId, now()->toDateString());
     }
 }

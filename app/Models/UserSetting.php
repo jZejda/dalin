@@ -38,6 +38,9 @@ class UserSetting extends Model
         ];
     }
 
+    /** Mail notification preferences (news digest, entry deadlines, pre-race summary, …) */
+    public const string TYPE_MAIL = 'mail';
+
     public const string USER_EVENT_FILTERS_NAME = 'event_filters';
 
     public function user(): HasOne

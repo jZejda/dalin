@@ -23,7 +23,7 @@ class SendPreRaceSummaryMailCommand extends Command
         $email = (string) $this->argument('email');
 
         $event = SportEvent::with([
-            'userEntry.userRaceProfile.user.userSetting',
+            'userEntry.userRaceProfile',
             'userEntry.sportClassDefinition',
             'sportClasses',
             'sportEventNews' => fn ($q) => $q->orderByDesc('date')->limit(5),

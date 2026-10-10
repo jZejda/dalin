@@ -59,7 +59,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // so ->command() would spawn a subprocess with the PHP binary FPM reports —
         // /usr/bin/php, which is PHP 7.3 on the shared hosting — and fail with exit 126.
         $schedule->call(fn () => \Illuminate\Support\Facades\Artisan::call('queue:work', ['--stop-when-empty' => true]))->everyFiveMinutes()->name('queue:work');
-        $schedule->job(new SendNewPostsEmailJob())->everyThirtyMinutes();
+        $schedule->job(new SendNewPostsEmailJob())->hourly();
         $schedule->job(new SendSportEventEntryEndingEmailJob())->hourly();
         $schedule->call(fn () => \Illuminate\Support\Facades\Artisan::call('marketplace:close-expired'))->everyFifteenMinutes()->name('marketplace:close-expired');
 
