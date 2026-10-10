@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * App\Models\UserSetting
@@ -20,21 +22,21 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read User|null $user
  */
+#[Fillable(['user_id', 'type', 'options'])]
 class UserSetting extends Model
 {
     use HasFactory;
 
-    /** @var list<string> */
-    protected $fillable = [
-        'user_id',
-        'type',
-        'options',
-    ];
-
-    /** @var array<string, string> */
-    protected $casts = [
-        'options' => 'array',
-    ];
+    /**
+     * @return array<string, string>
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'options' => 'array',
+        ];
+    }
 
     public const string USER_EVENT_FILTERS_NAME = 'event_filters';
 
