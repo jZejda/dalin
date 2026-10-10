@@ -1,0 +1,3 @@
+@props(['label'])
+{{ $label }}:
+„{{ $slot }}“

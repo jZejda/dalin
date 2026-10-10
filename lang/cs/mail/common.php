@@ -14,4 +14,12 @@ return [
         'unsubscribe_note' => 'Zrušit zasílání zpráv můžete z klientské sekce. Případně prostudujte [nápovědu](:url).',
     ],
 
+    'club_layout' => [
+        'tagline' => 'Orientační sporty · klubové zprávy',
+        'footer_sender' => ':club · klubová zpráva prostřednictvím :product',
+        'help' => 'Nápověda',
+        'contact' => 'Kontakt na klub',
+        'notification_settings' => 'Nastavení oznámení',
+    ],
+
 ];
