@@ -12,7 +12,7 @@ $brand = \App\Services\Mail\MailBranding::fromSettings();
 </td>
 @endforeach
 @if (count($row) === 1)
-<td class="club-fact" width="50%">&nbsp;</td>
+<td class="club-fact club-fact-filler" width="50%">&nbsp;</td>
 @endif
 </tr>
 @endforeach

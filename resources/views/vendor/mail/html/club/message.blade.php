@@ -23,6 +23,7 @@
 .club-wordmark { display: none !important; }
 .club-title { font-size: 23px !important; }
 .club-fact { display: block !important; width: 100% !important; }
+.club-fact-filler { display: none !important; }
 .club-button { display: block !important; text-align: center !important; }
 .club-secondary { display: block !important; padding: 14px 0 0 !important; text-align: center !important; }
 }
