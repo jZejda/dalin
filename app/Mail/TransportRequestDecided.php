@@ -45,12 +45,13 @@ class TransportRequestDecided extends Mailable
             markdown: 'emails.transport.requestDecided',
             with: [
                 'approved' => $request->isApproved(),
+                'seats' => $request->seats,
                 'eventName' => (string) $this->transportEvent($request)?->name,
                 'eventDate' => $this->transportEventDate($request),
                 'facts' => $this->filledFacts([
                     $this->driverFact($request),
                     $this->directionFact($request),
-                    $this->seatsFact($request, __('transport.seats')),
+                    $this->seatsFact($request, $request->isApproved() ? 'reserved_seats_label' : 'seats_label'),
                     $this->departureFact($request),
                 ]),
                 'transportUrl' => $this->transportPageUrl($request),

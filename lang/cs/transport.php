@@ -65,54 +65,65 @@ return [
         'request_cancelled_subject' => 'Spolujezdec zrušil rezervaci',
         'offer_cancelled_subject' => 'Nabídka dopravy byla zrušena',
 
-        'request_cancelled_seats_label' => 'Počet uvolněných míst',
-
         'request_created_approve_button' => 'Schválit žádost',
         'request_created_reject_button' => 'Zamítnout žádost',
+
+        'club' => [
+            'seats_value' => '{1} :count místo|[2,4] :count místa|[5,*] :count míst',
+            'driver_label' => 'Řidič',
+            'passenger_label' => 'Spolujezdec',
+            'direction_label' => 'Směr',
+            'seats_label' => 'Počet míst',
+            'reserved_seats_label' => 'Rezervovaná místa',
+            'cancelled_seats_label' => 'Zrušená místa',
+            'departure_label' => 'Místo odjezdu',
+            'departure_from_label' => 'Odjezd z',
+            'vehicle_label' => 'Tvoje auto',
+        ],
 
         'request_created_club' => [
             'eyebrow' => 'Spolujízda · nová žádost',
             'title' => ':passenger chce jet s tebou.',
-            'lead' => '{1} Žádá o :count místo na závod :event, :date.|[2,4] Žádá o :count místa na závod :event, :date.|[5,*] Žádá o :count míst na závod :event, :date.',
-            'seats_value' => '{1} :count místo|[2,4] :count místa|[5,*] :count míst',
-            'vehicle_label' => 'Tvoje auto',
-            'note_label' => 'Poznámka od :passenger',
-            'fine' => 'Žádost můžeš vyřídit do dne závodu. Najdeš ji také v aplikaci na stránce Doprava u závodu.',
+            'lead' => '{1} Žádá o :count místo na :event, :date.|[2,4] Žádá o :count místa na :event, :date.|[5,*] Žádá o :count míst na :event, :date.',
+            'note_label' => 'Poznámka k žádosti',
+            'fine' => 'Žádost můžeš vyřídit do dne závodu. Najdeš ji také v DaLinu v sekci Doprava.',
         ],
 
         'request_approved_club' => [
             'eyebrow' => 'Spolujízda · žádost schválena',
-            'title' => 'Máš místo v autě.',
-            'lead' => 'Žádost o spolujízdu na závod :event, :date je schválená. Detaily cesty domluv přímo s řidičem.',
-            'action' => 'Zobrazit dopravu u závodu',
-            'fine' => 'Když nakonec nepojedeš, zruš žádost v aplikaci na stránce Doprava u závodu, ať se místo uvolní.',
+            'title' => 'Máš potvrzené místo v autě.',
+            'lead' => 'Tvoje žádost o spolujízdu na :event, :date, byla schválena.',
+            'status' => '{1} Schváleno · :count místo|[2,4] Schváleno · :count místa|[5,*] Schváleno · :count míst',
+            'action' => 'Otevřít dopravu k závodu',
+            'fine' => 'Domluv si s řidičem podrobnosti odjezdu. Rezervaci najdeš v DaLinu v sekci Doprava.',
         ],
 
         'request_rejected_club' => [
             'eyebrow' => 'Spolujízda · žádost zamítnuta',
-            'title' => 'Tentokrát to nevyšlo.',
-            'lead' => 'Žádost o spolujízdu na závod :event, :date byla zamítnuta. Zkus jinou nabídku dopravy.',
-            'action' => 'Najít jinou dopravu',
-            'fine' => 'Všechny nabídky dopravy najdeš v aplikaci na stránce Doprava u závodu.',
+            'title' => 'Tentokrát spolujízda nevyšla.',
+            'lead' => 'Tvoje žádost o spolujízdu na :event, :date, byla zamítnuta.',
+            'status' => 'Žádost zamítnuta',
+            'action' => 'Prohlédnout další nabídky dopravy',
+            'fine' => 'Podívej se na další možnosti dopravy k závodu nebo si zajisti jiný způsob cesty.',
         ],
 
         'request_cancelled_club' => [
-            'eyebrow' => 'Spolujízda · zrušená rezervace',
-            'title' => 'Místa v autě se uvolnila.',
-            'lead' => '{1} :passenger s tebou na závod :event, :date nepojede — :count místo je opět volné.|[2,4] :passenger s tebou na závod :event, :date nepojede — :count místa jsou opět volná.|[5,*] :passenger s tebou na závod :event, :date nepojede — :count míst je opět volných.',
-            'action' => 'Zobrazit moji nabídku',
-            'fine' => 'Uvolněná místa se v nabídce zobrazují ostatním členům automaticky.',
+            'eyebrow' => 'Spolujízda · pro řidiče',
+            'title' => ':passenger ruší rezervaci.',
+            'lead' => '{1} Na :event, :date, se ve tvém autě uvolnilo :count rezervované místo.|[2,4] Na :event, :date, se ve tvém autě uvolnila :count rezervovaná místa.|[5,*] Na :event, :date, se ve tvém autě uvolnilo :count rezervovaných míst.',
+            'action' => 'Otevřít svoji nabídku dopravy',
+            'fine' => 'Aktuální obsazení auta najdeš v sekci Doprava u závodu.',
         ],
 
         'offer_cancelled_club' => [
             'eyebrow' => 'Spolujízda · nabídka zrušena',
-            'title' => 'Odvoz na závod se ruší.',
-            'lead' => 'Řidič zrušil nabídku dopravy na závod :event, :date, takže tvoje žádost o místo padá. Zkus jinou nabídku dopravy.',
-            'action' => 'Najít jinou dopravu',
-            'fine' => 'Všechny nabídky dopravy najdeš v aplikaci na stránce Doprava u závodu.',
+            'title' => 'Řidič zrušil nabídku dopravy.',
+            'lead' => 'Spolujízda na :event, :date, se ruší.',
+            'note_label' => 'Počítej s jinou dopravou',
+            'note' => 'Tvoje žádost o místo v této nabídce už neplatí. Podívej se na další možnosti cesty.',
+            'action' => 'Prohlédnout dopravu k závodu',
+            'fine' => 'Aktuální nabídky najdeš v DaLinu v sekci Doprava.',
         ],
-
-        'request_decided_driver_label' => 'Řidič',
     ],
 
     'direction_enum' => [

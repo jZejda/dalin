@@ -36,6 +36,8 @@
 .club-pill { background-color: #2c3834 !important; color: #eef3f1 !important; }
 .club-event, .club-person, .club-footer { border-color: #43514b !important; }
 .club-secondary-negative a { color: #ffb0b4 !important; }
+.club-status-positive .club-status-label { color: #8fd6ad !important; }
+.club-status-negative .club-status-label { color: #ffb0b4 !important; }
 }
 </style>
 </head>

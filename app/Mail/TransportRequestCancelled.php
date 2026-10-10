@@ -45,9 +45,10 @@ class TransportRequestCancelled extends Mailable
                 'eventName' => (string) $this->transportEvent($request)?->name,
                 'eventDate' => $this->transportEventDate($request),
                 'facts' => $this->filledFacts([
+                    $this->passengerFact($request),
+                    $this->seatsFact($request, 'cancelled_seats_label'),
                     $this->directionFact($request),
-                    $this->seatsFact($request, __('transport.mail.request_cancelled_seats_label')),
-                    $this->vehicleFact($request, __('transport.mail.request_created_club.vehicle_label')),
+                    $this->departureFact($request),
                 ]),
                 'transportUrl' => $this->transportPageUrl($request),
             ],

@@ -49,9 +49,9 @@ class TransportRequestCreated extends Mailable
                 'note' => $request->note,
                 'facts' => $this->filledFacts([
                     $this->directionFact($request),
-                    $this->seatsFact($request, __('transport.seats')),
-                    $this->departureFact($request),
-                    $this->vehicleFact($request, __('transport.mail.request_created_club.vehicle_label')),
+                    $this->seatsFact($request),
+                    $this->departureFact($request, 'departure_from_label'),
+                    $this->vehicleFact($request),
                 ]),
                 'approveUrl' => $this->approveUrl,
                 'rejectUrl' => $this->rejectUrl,

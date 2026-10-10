@@ -65,33 +65,35 @@ trait DescribesTransportRequest
      */
     protected function directionFact(TransportRequest $transportRequest): array
     {
-        return ['icon' => 'repeat-2', 'label' => __('transport.direction'), 'value' => $transportRequest->direction->label()];
+        return ['icon' => 'repeat-2', 'label' => __('transport.mail.club.direction_label'), 'value' => $transportRequest->direction->label()];
     }
 
     /**
+     * @param string $labelKey key under transport.mail.club, e.g. seats_label or reserved_seats_label
      * @return array{icon: string, label: string, value: string}
      */
-    protected function seatsFact(TransportRequest $transportRequest, string $label): array
+    protected function seatsFact(TransportRequest $transportRequest, string $labelKey = 'seats_label'): array
     {
         $seats = $transportRequest->seats;
 
-        return ['icon' => 'users', 'label' => $label, 'value' => trans_choice('transport.mail.request_created_club.seats_value', $seats, ['count' => $seats])];
+        return ['icon' => 'users', 'label' => __('transport.mail.club.'.$labelKey), 'value' => trans_choice('transport.mail.club.seats_value', $seats, ['count' => $seats])];
+    }
+
+    /**
+     * @param string $labelKey key under transport.mail.club, departure_label or departure_from_label
+     * @return array{icon: string, label: string, value: string}
+     */
+    protected function departureFact(TransportRequest $transportRequest, string $labelKey = 'departure_label'): array
+    {
+        return ['icon' => 'map-pin', 'label' => __('transport.mail.club.'.$labelKey), 'value' => (string) $this->transportOffer($transportRequest)?->departure_place];
     }
 
     /**
      * @return array{icon: string, label: string, value: string}
      */
-    protected function departureFact(TransportRequest $transportRequest): array
+    protected function vehicleFact(TransportRequest $transportRequest): array
     {
-        return ['icon' => 'map-pin', 'label' => __('transport.departure_place'), 'value' => (string) $this->transportOffer($transportRequest)?->departure_place];
-    }
-
-    /**
-     * @return array{icon: string, label: string, value: string}
-     */
-    protected function vehicleFact(TransportRequest $transportRequest, string $label): array
-    {
-        return ['icon' => 'car', 'label' => $label, 'value' => (string) $this->transportOffer($transportRequest)?->vehicle?->name];
+        return ['icon' => 'car', 'label' => __('transport.mail.club.vehicle_label'), 'value' => (string) $this->transportOffer($transportRequest)?->vehicle?->name];
     }
 
     /**
@@ -99,6 +101,14 @@ trait DescribesTransportRequest
      */
     protected function driverFact(TransportRequest $transportRequest): array
     {
-        return ['icon' => 'id-card', 'label' => __('transport.mail.request_decided_driver_label'), 'value' => (string) $this->transportOffer($transportRequest)?->user?->name];
+        return ['icon' => 'user', 'label' => __('transport.mail.club.driver_label'), 'value' => (string) $this->transportOffer($transportRequest)?->user?->name];
+    }
+
+    /**
+     * @return array{icon: string, label: string, value: string}
+     */
+    protected function passengerFact(TransportRequest $transportRequest): array
+    {
+        return ['icon' => 'user', 'label' => __('transport.mail.club.passenger_label'), 'value' => (string) $transportRequest->user?->name];
     }
 }

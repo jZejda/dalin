@@ -20,6 +20,8 @@ return [
         'help' => 'Nápověda',
         'contact' => 'Kontakt na klub',
         'notification_settings' => 'Nastavení oznámení',
+        'quote_open' => '„',
+        'quote_close' => '“',
         'deadline' => 'Přihlášky do :date',
         'terms' => [
             1 => 'První termín přihlášek',

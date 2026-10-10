@@ -269,6 +269,36 @@ img {
     color: #52605d;
 }
 
+.club-status {
+    margin: 0 0 16px;
+    border-radius: 12px;
+}
+
+.club-status td {
+    padding: 14px 20px;
+}
+
+.club-status-label {
+    margin: 0;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.club-status-label .club-icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: -4px;
+    margin-right: 8px;
+}
+
+.club-status-positive .club-status-label {
+    color: #23704a;
+}
+
+.club-status-negative .club-status-label {
+    color: #9f3035;
+}
+
 .club-note {
     margin: 20px 0;
     padding: 16px 18px;

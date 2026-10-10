@@ -8,6 +8,8 @@
 >
 <x-mail::club.facts :items="$facts" />
 
+<x-mail::club.note :label="__('transport.mail.offer_cancelled_club.note_label')">{{ __('transport.mail.offer_cancelled_club.note') }}</x-mail::club.note>
+
 @if (filled($transportUrl))
 <x-mail::club.actions :url="$transportUrl" :label="__('transport.mail.offer_cancelled_club.action')" />
 

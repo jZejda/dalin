@@ -168,7 +168,9 @@ it('renders the car-sharing request with approve button and reject link', functi
         ->assertSeeInHtml('Romana Klímová chce jet s tebou.')
         ->assertSeeInHtml('2 místa')
         ->assertSeeInHtml('Rodinné kombi')
-        ->assertSeeInHtml('Poznámka od Romana Klímová')
+        ->assertSeeInHtml('Poznámka k žádosti')
+        ->assertSeeInHtml('„Mám s sebou kolo na střeše.“')
+        ->assertSeeInHtml('Odjezd z')
         ->assertSeeInHtml('https://example.test/approve', false)
         ->assertSeeInHtml('club-secondary-negative', false)
         ->assertSeeInText('https://example.test/reject');
@@ -179,32 +181,39 @@ it('renders the approved car-sharing request with the driver and a link to the t
     $event = $request->transportOffer?->sportEvent;
 
     (new TransportRequestDecided($request))
-        ->assertSeeInHtml('Máš místo v autě.')
-        ->assertSeeInHtml('Oblastní přebor Testov, 14. listopadu 2026')
+        ->assertSeeInHtml('Máš potvrzené místo v autě.')
+        ->assertSeeInHtml('Tvoje žádost o spolujízdu na Oblastní přebor Testov, 14. listopadu 2026, byla schválena.')
+        ->assertSeeInHtml('Schváleno · 2 místa')
+        ->assertSeeInHtml('club-status-positive', false)
+        ->assertSeeInHtml('Rezervovaná místa')
         ->assertSeeInHtml('Petr Dvořák')
         ->assertSeeInHtml('Brno, Riviéra')
-        ->assertSeeInHtml('Zobrazit dopravu u závodu')
+        ->assertSeeInHtml('Otevřít dopravu k závodu')
         ->assertSeeInText(SportEventResource::getUrl('entry', ['record' => $event], panel: 'admin'))
         ->assertDontSeeInHtml('Nastavení oznámení');
 });
 
-it('renders the rejected car-sharing request with a hint to find other transport', function (): void {
+it('renders the rejected car-sharing request with a negative status', function (): void {
     $request = clubMailTransportRequest(['status' => TransportRequestStatus::Rejected]);
 
     (new TransportRequestDecided($request))
-        ->assertSeeInHtml('Tentokrát to nevyšlo.')
-        ->assertSeeInHtml('Najít jinou dopravu')
-        ->assertDontSeeInHtml('Máš místo v autě.');
+        ->assertSeeInHtml('Tentokrát spolujízda nevyšla.')
+        ->assertSeeInHtml('Žádost zamítnuta')
+        ->assertSeeInHtml('club-status-negative', false)
+        ->assertSeeInHtml('Prohlédnout další nabídky dopravy')
+        ->assertDontSeeInHtml('Rezervovaná místa')
+        ->assertDontSeeInHtml('Máš potvrzené místo v autě.');
 });
 
-it('tells the driver how many seats a cancelled booking freed up', function (): void {
+it('tells the driver which passenger cancelled and how many seats freed up', function (): void {
     $request = clubMailTransportRequest();
 
     (new TransportRequestCancelled($request))
-        ->assertSeeInHtml('Místa v autě se uvolnila.')
-        ->assertSeeInHtml('Romana Klímová s tebou na závod Oblastní přebor Testov, 14. listopadu 2026 nepojede — 2 místa jsou opět volná.')
-        ->assertSeeInHtml('Rodinné kombi')
-        ->assertSeeInHtml('Zobrazit moji nabídku');
+        ->assertSeeInHtml('Romana Klímová ruší rezervaci.')
+        ->assertSeeInHtml('Na Oblastní přebor Testov, 14. listopadu 2026, se ve tvém autě uvolnila 2 rezervovaná místa.')
+        ->assertSeeInHtml('Zrušená místa')
+        ->assertSeeInHtml('Brno, Riviéra')
+        ->assertSeeInHtml('Otevřít svoji nabídku dopravy');
 });
 
 it('still names the race and driver when the cancelled offer was deleted', function (): void {
@@ -212,10 +221,11 @@ it('still names the race and driver when the cancelled offer was deleted', funct
     $request->transportOffer?->delete();
 
     (new TransportOfferCancelled(TransportRequest::query()->findOrFail($request->id)))
-        ->assertSeeInHtml('Odvoz na závod se ruší.')
-        ->assertSeeInHtml('Oblastní přebor Testov, 14. listopadu 2026')
+        ->assertSeeInHtml('Řidič zrušil nabídku dopravy.')
+        ->assertSeeInHtml('Spolujízda na Oblastní přebor Testov, 14. listopadu 2026, se ruší.')
         ->assertSeeInHtml('Petr Dvořák')
-        ->assertSeeInHtml('Najít jinou dopravu');
+        ->assertSeeInHtml('Počítej s jinou dopravou')
+        ->assertSeeInHtml('Prohlédnout dopravu k závodu');
 });
 
 it('renders the car-sharing mails in English', function (): void {
@@ -223,11 +233,15 @@ it('renders the car-sharing mails in English', function (): void {
     $request = clubMailTransportRequest(['status' => TransportRequestStatus::Approved]);
 
     (new TransportRequestDecided($request))
-        ->assertSeeInHtml('You have a seat in the car.')
+        ->assertSeeInHtml('Your seat in the car is confirmed.')
+        ->assertSeeInHtml('Approved · 2 seats')
         ->assertSeeInHtml('November 14, 2026');
 
     (new TransportRequestCancelled($request))
-        ->assertSeeInHtml('2 seats are free again.');
+        ->assertSeeInHtml('2 reserved seats in your car to Oblastní přebor Testov, November 14, 2026, are free again.');
+
+    (new TransportRequestCreated($request, 'https://example.test/approve', 'https://example.test/reject'))
+        ->assertSeeInHtml('“Mám s sebou kolo na střeše.”');
 });
 
 it('reminds the member of the approaching first entry deadline', function (): void {

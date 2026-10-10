@@ -11,7 +11,7 @@
 <x-mail::club.facts :items="$facts" />
 
 @if (filled($note))
-<x-mail::club.note :label="__('transport.mail.request_created_club.note_label', ['passenger' => $passenger])">{{ $note }}</x-mail::club.note>
+<x-mail::club.note :label="__('transport.mail.request_created_club.note_label')" quoted>{{ $note }}</x-mail::club.note>
 
 @endif
 <x-mail::club.actions :url="$approveUrl" :label="__('transport.mail.request_created_approve_button')" :secondary-url="$rejectUrl" :secondary-label="__('transport.mail.request_created_reject_button')" secondary-tone="negative" />

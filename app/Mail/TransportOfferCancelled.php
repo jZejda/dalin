@@ -45,7 +45,8 @@ class TransportOfferCancelled extends Mailable
                 'facts' => $this->filledFacts([
                     $this->driverFact($request),
                     $this->directionFact($request),
-                    $this->seatsFact($request, __('transport.seats')),
+                    $this->seatsFact($request),
+                    $this->departureFact($request),
                 ]),
                 'transportUrl' => $this->transportPageUrl($request),
             ],

@@ -20,6 +20,8 @@ return [
         'help' => 'Help',
         'contact' => 'Contact the club',
         'notification_settings' => 'Notification settings',
+        'quote_open' => '“',
+        'quote_close' => '”',
         'deadline' => 'Entries until :date',
         'terms' => [
             1 => 'First entry deadline',
