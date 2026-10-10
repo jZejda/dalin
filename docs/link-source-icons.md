@@ -39,7 +39,9 @@ and `oris-color.svg` is `linksource-oris-color`. A blade-icons prefix must not c
   decorative (`aria-hidden`), the source name is in `title`.
 - Filament table: `IconColumn::make('source')->state(fn (SportEventLink $r) => $r->source())` — the
   enum implements `HasIcon`/`HasLabel` (see `SportEventLinkRelationManager`).
-- Used in: public event detail (`pages/frontend/single-event.blade.php`), event entry page
+- Link text everywhere is `$link->label()` (name → description → link type; EN falls back to the
+  Czech texts) — ORIS "other" links carry the meaningful text in the description.
+- Used in: public event detail (`pages/frontend/single-event.blade.php`, compact list), event entry page
   (`partials/backend/sport-event-links.blade.php`), links relation manager in the admin.
 - Not used in e-mails — SVG is not reliably supported by mail clients.
 

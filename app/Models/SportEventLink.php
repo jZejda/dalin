@@ -65,6 +65,26 @@ class SportEventLink extends Model
     }
 
     /**
+     * Human-readable name: the ORIS/manual name, else its description (ORIS "other" links carry
+     * the meaningful text there), else the link type. English falls back to the Czech texts,
+     * which say more than a generic type label.
+     */
+    public function label(): string
+    {
+        $candidates = app()->getLocale() === 'en'
+            ? [$this->name_en, $this->description_en, $this->name_cz, $this->description_cz]
+            : [$this->name_cz, $this->description_cz];
+
+        foreach ($candidates as $candidate) {
+            if (filled($candidate)) {
+                return trim($candidate);
+            }
+        }
+
+        return __('sport-event.type_enum_links.'.$this->source_type->value);
+    }
+
+    /**
      * Where the link leads; a file uploaded to DaLin (source_path) always resolves to DaLin.
      */
     public function source(): SportEventLinkSource

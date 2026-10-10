@@ -106,6 +106,10 @@ it('preserves documents, categories, services, news, warnings, weather and map m
     $this->event->sportEventLinks()->create([
         'source_url' => 'https://example.org/rozpis.pdf', 'source_type' => SportEventLinkType::Invitation,
     ]);
+    $this->event->sportEventLinks()->create([
+        'source_url' => 'https://oris.ceskyorientak.cz/files/1_foto.pdf', 'source_type' => SportEventLinkType::Other,
+        'description_cz' => 'Fotky z terénu Terrain',
+    ]);
     $definition = SportClassDefinition::create(['sport_id' => $this->event->sport_id, 'name' => 'H21 Terrain', 'age_from' => 18, 'age_to' => 40, 'gender' => 'M']);
     $this->event->sportClasses()->create(['class_definition_id' => $definition->id, 'name' => 'H21 Terrain']);
     $this->event->sportServices()->create([
@@ -122,6 +126,7 @@ it('preserves documents, categories, services, news, warnings, weather and map m
         ->assertOk()->assertSee('https://example.org/rozpis.pdf', false)
         ->assertSee('id="event-documents"', false)
         ->assertSee('title="'.SportEventLinkSource::Web->getLabel().'"', false)
+        ->assertSee('Fotky z terénu Terrain')->assertSee('title="'.SportEventLinkSource::Oris->getLabel().'"', false)
         ->assertSee('H21 Terrain')->assertSee('Parkování Terrain')->assertSee('50 Kč')
         ->assertSee('Nové informace Terrain.')->assertSee('Parkujte pouze na vyznačených místech.')
         ->assertSee('Jasno')->assertSee('18.5')
