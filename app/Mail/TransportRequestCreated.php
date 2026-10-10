@@ -16,6 +16,9 @@ class TransportRequestCreated extends Mailable
     use Queueable;
     use SerializesModels;
 
+    /** Branded club layout, see resources/views/vendor/mail/html/themes/club.blade.php. */
+    public $theme = 'club';
+
     public function __construct(
         private readonly TransportRequest $transportRequest,
         private readonly string $approveUrl,

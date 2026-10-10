@@ -31,4 +31,15 @@ return [
         'table_event_name'     => 'Název akce/závodu',
     ],
 
+    'club' => [
+        'eyebrow' => 'Přihlášky · :from – :to',
+        'title' => 'Vyber si svůj další závod.',
+        'lead' => '{1} Tento týden se uzavírají přihlášky na :count závod. Ať ti neuteče.|[2,4] Tento týden se uzavírají přihlášky na :count závody. Ať ti žádný neuteče.|[5,*] Tento týden se uzavírají přihlášky na :count závodů. Ať ti žádný neuteče.',
+        'first_term' => 'První termín přihlášek',
+        'second_term' => 'Druhý termín přihlášek',
+        'third_term' => 'Třetí termín přihlášek',
+        'deadline' => 'Přihlášky do :date',
+        'action' => 'Vybrat závod a přihlásit se',
+    ],
+
 ];

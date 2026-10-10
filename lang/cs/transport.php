@@ -82,6 +82,16 @@ return [
         'request_created_reject_button' => 'Zamítnout žádost',
         'request_created_footer' => 'Odkazy platí do dne konání závodu. Žádosti najdeš i v aplikaci na stránce Doprava u závodu.',
 
+        'request_created_club' => [
+            'eyebrow' => 'Spolujízda · nová žádost',
+            'title' => ':passenger chce jet s tebou.',
+            'lead' => '{1} Žádá o :count místo na závod :event, :date.|[2,4] Žádá o :count místa na závod :event, :date.|[5,*] Žádá o :count míst na závod :event, :date.',
+            'seats_value' => '{1} :count místo|[2,4] :count místa|[5,*] :count míst',
+            'vehicle_label' => 'Tvoje auto',
+            'note_label' => 'Poznámka od :passenger',
+            'fine' => 'Žádost můžeš vyřídit do dne závodu. Najdeš ji také v aplikaci na stránce Doprava u závodu.',
+        ],
+
         'request_decided_heading_approved' => 'Tvoje žádost o spolujízdu byla schválena 🎉',
         'request_decided_heading_rejected' => 'Tvoje žádost o spolujízdu byla zamítnuta',
         'request_decided_race_label' => 'Závod',

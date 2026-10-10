@@ -31,4 +31,15 @@ return [
         'table_event_name'     => 'Race/event name',
     ],
 
+    'club' => [
+        'eyebrow' => 'Entries · :from – :to',
+        'title' => 'Pick your next race.',
+        'lead' => '{1} Entries close for :count race this week. Don\'t miss it.|[2,*] Entries close for :count races this week. Don\'t miss any of them.',
+        'first_term' => 'First entry deadline',
+        'second_term' => 'Second entry deadline',
+        'third_term' => 'Third entry deadline',
+        'deadline' => 'Entries until :date',
+        'action' => 'Choose a race and enter',
+    ],
+
 ];

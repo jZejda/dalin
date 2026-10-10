@@ -1,101 +1,55 @@
 @php
-    use App\Services\OrisApiService;
-
-    $days = $event->date_end && $event->date_end->ne($event->date) ? $event->date->diffInDays($event->date_end) + 1 : null;
+    /** @var \App\Models\SportEvent $event */
+    /** @var list<array{icon: string, label: string, value: string}> $facts */
+    /** @var list<array{name: string, detail: ?string, extra: ?string, lines: list<array{icon: string, text: string}>}> $runners */
+    $lead = $event->name.(filled($event->alt_name) ? ' – '.$event->alt_name : '');
 @endphp
+<x-mail::club.message
+    :eyebrow="__('mail/pre-race-summary.club.eyebrow', ['date' => $eyebrowDate])"
+    :title="__('mail/pre-race-summary.club.title')"
+    :lead="__('mail/pre-race-summary.club.lead', ['event' => $lead])"
+    :settings-url="$settingsUrl"
+>
+@if ($facts !== [])
+<x-mail::club.facts :items="$facts" />
 
-<x-mail::message>
-
-## {{ __('mail/pre-race-summary.body.heading', ['event' => $event->name]) }}
-
-{{ $event->alt_name }}
-
-@component('mail::divider')
-### {{ __('mail/pre-race-summary.body.info_heading') }}
-@endcomponent
-
-@component('mail::table')
-| | |
-|:---|:---|
-| **{{ __('mail/pre-race-summary.body.date_label') }}** | {{ $event->date->format('d.m.Y') }}@if($days !== null) – {{ $event->date_end->format('d.m.Y') }} ({{ trans_choice('mail/pre-race-summary.body.days_count', $days, ['count' => $days]) }})@endif |
-| **{{ __('mail/pre-race-summary.body.start_time_label') }}** | {{ $event->start_time ?? '–' }} |
-@if($event->oris_id)
-| **{{ __('mail/pre-race-summary.body.oris_label') }}** | [{{ __('mail/pre-race-summary.body.oris_link_text', ['id' => $event->oris_id]) }}]({{ OrisApiService::ORIS_URL }}/Zavod?id={{ $event->oris_id }}) |
 @endif
-@endcomponent
+@if ($runners !== [])
+<x-mail::club.section :title="__('mail/pre-race-summary.club.runners_heading')" />
 
----
+@foreach ($runners as $runner)
+<x-mail::club.person :name="$runner['name']" :detail="$runner['detail']" :extra="$runner['extra']" :lines="$runner['lines']" />
 
-### {{ __('mail/pre-race-summary.body.profiles_heading') }}
-
-@component('mail::table')
-| {{ __('mail/pre-race-summary.body.reg_number_label') }} | {{ __('mail/pre-race-summary.body.name_label') }} | {{ __('mail/pre-race-summary.body.category_label') }} | {{ __('mail/pre-race-summary.body.plus_min_label') }} | {{ __('mail/pre-race-summary.body.distance_label') }} | {{ __('mail/pre-race-summary.body.controls_label') }} | {{ __('mail/pre-race-summary.body.climbing_label') }} |
-|:---|:---|:---|:---|:---|:---|:---|
-@foreach($entries as $entry)
-@php
-    $profile = $entry->userRaceProfile;
-    $startRaw = $entry->requested_start ?? ($entry->real_start?->format('H:i:s'));
-    $startDisplay = $startRaw ? \Illuminate\Support\Str::substr($startRaw, 0, 5) : null;
-    $relativeMinutes = null;
-    $parseTimeToMinutes = static function (string $time): ?int {
-        $parts = explode(':', trim($time));
-        if (count($parts) < 2) {
-            return null;
-        }
-        return (int) $parts[0] * 60 + (int) $parts[1];
-    };
-    if ($startRaw !== null && $event->start_time !== null) {
-        $entryMinutes = $parseTimeToMinutes($startRaw);
-        $eventMinutes = $parseTimeToMinutes($event->start_time);
-        if ($entryMinutes !== null && $eventMinutes !== null) {
-            $relativeMinutes = $entryMinutes - $eventMinutes;
-        }
-    }
-    $sportClass = $event->sportClasses->firstWhere('class_definition_id', $entry->class_definition_id);
-@endphp
-| {{ $profile?->reg_number ?? '–' }} | {{ $profile?->first_name }} {{ $profile?->last_name }} | {{ $entry->class_name ?? '–' }} | {{ $relativeMinutes !== null ? ($relativeMinutes >= 0 ? '+'.$relativeMinutes : $relativeMinutes) : '–' }} | {{ $sportClass?->distance ? $sportClass->distance.' km' : '–' }} | {{ $sportClass?->controls ?? '–' }} | {{ $sportClass?->climbing ? $sportClass->climbing.' m' : '–' }} |
 @endforeach
-@endcomponent
+@endif
+<x-mail::club.actions :url="$detailUrl" :label="__('mail/pre-race-summary.club.action')" :secondary-url="$orisUrl" :secondary-label="__('mail/pre-race-summary.club.oris_link')" />
 
-@if($event->event_info)
+<x-mail::club.fine>{{ __('mail/pre-race-summary.club.fine') }}</x-mail::club.fine>
 
----
-
-### {{ __('mail/pre-race-summary.body.description_heading') }}
+@if (filled($event->event_info))
+<x-mail::club.section :title="__('mail/pre-race-summary.body.description_heading')" />
 
 {{ $event->event_info }}
+
 @endif
+@if ($event->sportEventLinks->isNotEmpty())
+<x-mail::club.section :title="__('mail/pre-race-summary.body.links_heading')" />
 
-@if($event->sportEventLinks->isNotEmpty())
-
----
-
-### {{ __('mail/pre-race-summary.body.links_heading') }}
-
-@component('mail::table')
-| {{ __('mail/pre-race-summary.body.link_name_label') }} | {{ __('mail/pre-race-summary.body.link_url_label') }} |
-|:---|:---|
-@foreach($event->sportEventLinks as $link)
-| {{ $link->label() }} | @if($link->url())[{{ $link->name_cz ?? $link->url() }}]({{ $link->url() }})@else–@endif |
-@endforeach
-@endcomponent
-@endif
-
-@if($event->sportEventNews->isNotEmpty())
-
----
-
-### {{ __('mail/pre-race-summary.body.news_heading') }}
-
-@foreach($event->sportEventNews as $news)
-**{{ $news->date->format('d.m.Y') }}**
-
-{{ $news->text }}
-
-@if(!$loop->last)
----
+@foreach ($event->sportEventLinks as $link)
+@if ($link->url())
+- [{{ $link->label() }}]({{ $link->url() }})
+@else
+- {{ $link->label() }}
 @endif
 @endforeach
-@endif
 
-</x-mail::message>
+@endif
+@if ($event->sportEventNews->isNotEmpty())
+<x-mail::club.section :title="__('mail/pre-race-summary.body.news_heading')" />
+
+@foreach ($event->sportEventNews as $news)
+**{{ $news->date->format('j. n. Y') }}** – {{ $news->text }}
+
+@endforeach
+@endif
+</x-mail::club.message>

@@ -82,6 +82,16 @@ return [
         'request_created_reject_button' => 'Reject request',
         'request_created_footer' => 'The links are valid until the day of the race. You can also find the requests in the app on the Transport page for the race.',
 
+        'request_created_club' => [
+            'eyebrow' => 'Car sharing · new request',
+            'title' => ':passenger wants to ride with you.',
+            'lead' => '{1} Asking for :count seat to :event, :date.|[2,*] Asking for :count seats to :event, :date.',
+            'seats_value' => '{1} :count seat|[2,*] :count seats',
+            'vehicle_label' => 'Your car',
+            'note_label' => 'Note from :passenger',
+            'fine' => 'You can handle the request until the race day. You will also find it in the app on the race\'s Transport page.',
+        ],
+
         'request_decided_heading_approved' => 'Your carpool request was approved 🎉',
         'request_decided_heading_rejected' => 'Your carpool request was rejected',
         'request_decided_race_label' => 'Race',

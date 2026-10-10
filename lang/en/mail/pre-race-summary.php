@@ -40,4 +40,22 @@ return [
         'news_heading'       => 'News',
     ],
 
+    'club' => [
+        'eyebrow' => 'Your entries · :date',
+        'title' => 'Everything you need before the start.',
+        'lead' => ':event. An overview for you and your entered family members.',
+        'date_label' => 'Race date',
+        'first_start_label' => 'First start',
+        'place_label' => 'Venue',
+        'discipline_label' => 'Discipline',
+        'runners_heading' => 'Who from the family is running',
+        'start_line' => 'Start :time · :relative min',
+        'course_distance' => ':distance km',
+        'course_controls' => '{1} :count control|[2,*] :count controls',
+        'course_climbing' => '↑ :climbing m',
+        'action' => 'Open race details',
+        'oris_link' => 'Race in ORIS',
+        'fine' => 'Start times and course details are based on the latest available data.',
+    ],
+
 ];
