@@ -12,7 +12,7 @@
 <x-mail::club.section :title="$termTitle" />
 
 @foreach ($events as $event)
-<x-mail::club.event :day="$event['day']" :month="$event['month']" :name="$event['name']" :url="$event['url']" :meta="$event['meta']" :deadline="__('mail/event-weekly-ends-by-sport.club.deadline', ['date' => $event['deadline']])" />
+<x-mail::club.event :day="$event['day']" :month="$event['month']" :name="$event['name']" :url="$event['url']" :meta="$event['meta']" :deadline="__('mail/common.club_layout.deadline', ['date' => $event['deadline']])" />
 
 @endforeach
 @endforeach
