@@ -13,6 +13,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Services\Mail\MailBranding;
 
 /**
  * A new marketplace offer announced to all active members except its author.
@@ -35,7 +36,7 @@ class MarketOfferAnnouncement extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name').' | '.__('marketplace.mail.announcement_subject'),
+            subject: MailBranding::subject(__('marketplace.mail.announcement_subject')),
         );
     }
 

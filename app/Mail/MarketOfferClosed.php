@@ -15,6 +15,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Services\Mail\MailBranding;
 
 /**
  * A closed marketplace offer: buyers get their orders and how they'll pay, the author
@@ -39,7 +40,7 @@ class MarketOfferClosed extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name').' | '.__('marketplace.mail.offer_closed_subject'),
+            subject: MailBranding::subject(__('marketplace.mail.offer_closed_subject')),
         );
     }
 

@@ -11,6 +11,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Services\Mail\MailBranding;
 
 class TransportRequestDecided extends Mailable
 {
@@ -33,7 +34,7 @@ class TransportRequestDecided extends Mailable
             : __('transport.mail.request_rejected_subject');
 
         return new Envelope(
-            subject: config('app.name').' | '.$subject,
+            subject: MailBranding::subject($subject),
         );
     }
 

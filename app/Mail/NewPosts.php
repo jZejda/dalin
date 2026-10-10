@@ -13,6 +13,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use App\Services\Mail\MailBranding;
 
 /**
  * Digest of the news articles from the last days, by the member's notification settings.
@@ -36,7 +37,7 @@ class NewPosts extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name').' - '.__('mail/new-posts.subject.new_posts'),
+            subject: MailBranding::subject(__('mail/new-posts.subject.new_posts')),
         );
     }
 

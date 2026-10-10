@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Services\Mail\MailBranding;
 
 /**
  * A message written by an organiser to everyone entered for a race; the content is Markdown.
@@ -34,7 +35,7 @@ class UserEntryNotification extends Mailable
     {
         return new Envelope(
             replyTo: $this->userReplyTo !== null && trim($this->userReplyTo) !== '' ? [$this->userReplyTo] : [],
-            subject: config('app.name').' | '.$this->userSubject
+            subject: MailBranding::subject($this->userSubject)
         );
     }
 

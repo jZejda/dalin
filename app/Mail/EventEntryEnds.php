@@ -14,6 +14,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use App\Services\Mail\MailBranding;
 
 /**
  * Reminder of races whose first entry deadline ends in the member's chosen number of days.
@@ -39,7 +40,7 @@ class EventEntryEnds extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name').' - '.__('mail/event-entry-ends.subject.event_entry_ends'),
+            subject: MailBranding::subject(__('mail/event-entry-ends.subject.event_entry_ends')),
         );
     }
 

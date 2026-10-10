@@ -13,6 +13,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Services\Mail\MailBranding;
 
 /**
  * Login details for a new account or after a password reset (the password is generated
@@ -48,7 +49,7 @@ class UserPasswordSend extends Mailable implements ShouldQueue
         }
 
         return new Envelope(
-            subject: config('app.name').' - '.$actionSubject,
+            subject: MailBranding::subject($actionSubject),
         );
     }
 

@@ -141,6 +141,16 @@ final readonly class MailBranding
         return [(int) hexdec(substr($hex, 0, 2)), (int) hexdec(substr($hex, 2, 2)), (int) hexdec(substr($hex, 4, 2))];
     }
 
+    /**
+     * Subject of a club mail: the club abbreviation (falls back to the app name), a dash, the text.
+     */
+    public static function subject(string $text): string
+    {
+        $prefix = self::configString('site-config.club.abbr') ?? self::configString('app.name') ?? self::PRODUCT_NAME;
+
+        return $prefix.' – '.$text;
+    }
+
     private static function configString(string $key): ?string
     {
         $value = config($key);

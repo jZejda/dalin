@@ -15,6 +15,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use App\Services\Mail\MailBranding;
 
 class EventWeeklyEndsBySport extends Mailable
 {
@@ -40,7 +41,7 @@ class EventWeeklyEndsBySport extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name') . ' - ' . __('mail/event-weekly-ends-by-sport.subject.event_weekly_ends_by_sport'),
+            subject: MailBranding::subject(__('mail/event-weekly-ends-by-sport.subject.event_weekly_ends_by_sport')),
         );
     }
 

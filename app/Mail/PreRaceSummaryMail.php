@@ -17,6 +17,7 @@ use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use App\Services\Mail\MailBranding;
 
 class PreRaceSummaryMail extends Mailable
 {
@@ -38,7 +39,7 @@ class PreRaceSummaryMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name') . ' - ' . __('mail/pre-race-summary.subject.pre_race_summary', ['event' => $this->event->name]),
+            subject: MailBranding::subject(__('mail/pre-race-summary.subject.pre_race_summary', ['event' => $this->event->name])),
         );
     }
 

@@ -11,6 +11,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
+use App\Services\Mail\MailBranding;
 
 /**
  * A message written in the admin panel to members with the selected roles; the content is Markdown.
@@ -41,7 +42,7 @@ class UserAppNotification extends Mailable
     {
         return new Envelope(
             replyTo: $this->userReplyTo !== null && trim($this->userReplyTo) !== '' ? [$this->userReplyTo] : [],
-            subject: config('app.name').' | '.$this->userSubject
+            subject: MailBranding::subject($this->userSubject)
         );
     }
 

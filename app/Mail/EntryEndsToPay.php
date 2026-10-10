@@ -11,6 +11,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Support\Collection;
+use App\Services\Mail\MailBranding;
 
 /**
  * Report for billing specialists: races whose given entry deadline (1–3) is ending
@@ -36,7 +37,7 @@ class EntryEndsToPay extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name').' - '.__('mail/entry-ends-to-pay.subject.entry_ends_to_pay', ['term' => $this->termOrdinal()]),
+            subject: MailBranding::subject(__('mail/entry-ends-to-pay.subject.entry_ends_to_pay', ['term' => $this->termOrdinal()])),
         );
     }
 

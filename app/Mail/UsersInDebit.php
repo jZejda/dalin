@@ -10,6 +10,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Support\Carbon;
+use App\Services\Mail\MailBranding;
 
 /**
  * Monthly report for billing specialists: members whose credit balance is negative.
@@ -24,7 +25,7 @@ class UsersInDebit extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name').' - '.__('mail/users-in-debit.subject.users_in_debit'),
+            subject: MailBranding::subject(__('mail/users-in-debit.subject.users_in_debit')),
         );
     }
 

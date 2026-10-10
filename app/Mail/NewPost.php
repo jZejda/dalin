@@ -12,6 +12,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Services\Mail\MailBranding;
 
 /**
  * A single news article sent from the admin panel.
@@ -36,7 +37,7 @@ class NewPost extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name').' - '.__('mail/new-post.subject.new_post').($this->subject !== '' ? ' - '.$this->subject : ''),
+            subject: MailBranding::subject(__('mail/new-post.subject.new_post').($this->subject !== '' ? ' – '.$this->subject : '')),
         );
     }
 

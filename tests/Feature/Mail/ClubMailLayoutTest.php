@@ -288,7 +288,7 @@ it('asks billing specialists to pay the entry fees for the given deadline', func
 
     $mail = new EntryEndsToPay(collect([$event]), 2);
 
-    $mail->assertHasSubject(config('app.name').' - Startovné k úhradě – druhý termín přihlášek');
+    $mail->assertHasSubject('TST – Startovné k úhradě – druhý termín přihlášek');
     $mail->assertSeeInHtml('Je čas uhradit startovné.')
         ->assertSeeInHtml('Končí druhý termín přihlášek.')
         ->assertSeeInHtml('Druhý termín přihlášek')
@@ -307,7 +307,7 @@ it('renders the deadline mails in English', function (): void {
         ->assertSeeInHtml('Entries until 14. 10. · 23:59');
 
     (new EntryEndsToPay(collect([$event]), 1))
-        ->assertHasSubject(config('app.name').' - Entry fees due – first entry deadline')
+        ->assertHasSubject('TST – Entry fees due – first entry deadline')
         ->assertSeeInHtml('First entry deadline');
 });
 
@@ -495,7 +495,7 @@ it('renders the article HTML instead of raw tags and strips unsafe markup', func
         ->assertSeeInHtml('Nastavení oznámení')
         ->assertSeeInText('- Sobota: technický trénink')
         ->assertDontSeeInText('<p>');
-    $mail->assertHasSubject(config('app.name').' - '.__('mail/new-post.subject.new_post').' - Soustředění');
+    $mail->assertHasSubject('TST – '.__('mail/new-post.subject.new_post').' – Soustředění');
 });
 
 it('renders Markdown articles and escapes HTML written into them', function (): void {
@@ -588,4 +588,15 @@ it('gives the offer author the next steps instead of a buyer summary', function 
         ->assertSeeInHtml('Moje nabídky')
         ->assertDontSeeInHtml('Tvoje objednávky')
         ->assertDontSeeInHtml('Jak proběhne úhrada');
+});
+
+it('prefixes every subject with the club abbreviation, falling back to the app name', function (): void {
+    expect(MailBranding::subject('Nová žádost o spolujízdu'))->toBe('TST – Nová žádost o spolujízdu');
+    (new TransportRequestCreated(clubMailTransportRequest(), 'https://example.test/a', 'https://example.test/r'))
+        ->assertHasSubject('TST – '.__('transport.mail.request_created_subject'));
+
+    config()->set('site-config.club.abbr', '');
+    config()->set('app.name', 'DaLin');
+
+    expect(MailBranding::subject('Novinky'))->toBe('DaLin – Novinky');
 });

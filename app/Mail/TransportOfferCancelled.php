@@ -11,6 +11,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Services\Mail\MailBranding;
 
 class TransportOfferCancelled extends Mailable
 {
@@ -29,7 +30,7 @@ class TransportOfferCancelled extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name').' | '.__('transport.mail.offer_cancelled_subject'),
+            subject: MailBranding::subject(__('transport.mail.offer_cancelled_subject')),
         );
     }
 

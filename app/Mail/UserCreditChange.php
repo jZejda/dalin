@@ -14,6 +14,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
+use App\Services\Mail\MailBranding;
 
 /**
  * A movement on the member's club account (e.g. a paired bank payment) with the new balance.
@@ -37,7 +38,7 @@ class UserCreditChange extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: config('app.name').' - '.__('mail/user-credit-change.subject.userCreditChange'),
+            subject: MailBranding::subject(__('mail/user-credit-change.subject.userCreditChange')),
         );
     }
 
