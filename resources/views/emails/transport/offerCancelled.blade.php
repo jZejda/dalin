@@ -1,14 +1,16 @@
-<x-mail::message>
+@php
+    /** @var list<array{icon: string, label: string, value: string}> $facts */
+@endphp
+<x-mail::club.message
+    :eyebrow="__('transport.mail.offer_cancelled_club.eyebrow')"
+    :title="__('transport.mail.offer_cancelled_club.title')"
+    :lead="__('transport.mail.offer_cancelled_club.lead', ['event' => $eventName, 'date' => $eventDate])"
+>
+<x-mail::club.facts :items="$facts" />
 
-## {{ __('transport.mail.offer_cancelled_heading') }}
+@if (filled($transportUrl))
+<x-mail::club.actions :url="$transportUrl" :label="__('transport.mail.offer_cancelled_club.action')" />
 
-@component('mail::divider')
-{{ __('transport.mail.offer_cancelled_intro', ['driver' => $transportRequest->transportOffer?->user?->name, 'event' => $transportRequest->transportOffer?->sportEvent?->name]) }}
-
-- {{ __('transport.direction') }}: **{{ $transportRequest->direction->label() }}**
-- {{ __('transport.seats') }}: **{{ $transportRequest->seats }}**
-@endcomponent
-
-{{ __('transport.mail.try_another_offer_footer') }}
-
-</x-mail::message>
+@endif
+<x-mail::club.fine>{{ __('transport.mail.offer_cancelled_club.fine') }}</x-mail::club.fine>
+</x-mail::club.message>

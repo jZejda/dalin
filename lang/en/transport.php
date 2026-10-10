@@ -65,22 +65,10 @@ return [
         'request_cancelled_subject' => 'Passenger cancelled the reservation',
         'offer_cancelled_subject' => 'Transport offer was cancelled',
 
-        'offer_cancelled_heading' => 'Transport offer cancelled',
-        'offer_cancelled_intro' => 'Driver **:driver** cancelled the transport offer for the race **:event** in which you had a seat request.',
-        'try_another_offer_footer' => 'Try another transport offer on the Transport page for the race.',
-
-        'request_cancelled_heading' => 'Passenger cancelled the reservation',
-        'request_cancelled_intro' => '**:passenger** cancelled their reservation in your transport offer for the race **:event**.',
         'request_cancelled_seats_label' => 'Seats freed up',
-        'request_cancelled_footer' => 'The seats are free again for other interested passengers.',
 
-        'request_created_heading' => 'New carpool request',
-        'request_created_intro' => '**:passenger** is interested in a seat in your transport offer for the race **:event**.',
-        'request_created_note_label' => 'Passenger note',
-        'request_created_cta' => 'You can handle the request directly from this e-mail:',
         'request_created_approve_button' => 'Approve request',
         'request_created_reject_button' => 'Reject request',
-        'request_created_footer' => 'The links are valid until the day of the race. You can also find the requests in the app on the Transport page for the race.',
 
         'request_created_club' => [
             'eyebrow' => 'Car sharing · new request',
@@ -92,11 +80,39 @@ return [
             'fine' => 'You can handle the request until the race day. You will also find it in the app on the race\'s Transport page.',
         ],
 
-        'request_decided_heading_approved' => 'Your carpool request was approved 🎉',
-        'request_decided_heading_rejected' => 'Your carpool request was rejected',
-        'request_decided_race_label' => 'Race',
+        'request_approved_club' => [
+            'eyebrow' => 'Car sharing · request approved',
+            'title' => 'You have a seat in the car.',
+            'lead' => 'Your car-sharing request to :event, :date has been approved. Arrange the details directly with the driver.',
+            'action' => 'Show transport for the race',
+            'fine' => 'If you end up not going, cancel the request in the app on the race\'s Transport page to free up the seat.',
+        ],
+
+        'request_rejected_club' => [
+            'eyebrow' => 'Car sharing · request rejected',
+            'title' => 'Not this time.',
+            'lead' => 'Your car-sharing request to :event, :date has been rejected. Try another transport offer.',
+            'action' => 'Find other transport',
+            'fine' => 'You will find all transport offers in the app on the race\'s Transport page.',
+        ],
+
+        'request_cancelled_club' => [
+            'eyebrow' => 'Car sharing · booking cancelled',
+            'title' => 'Seats in your car are free again.',
+            'lead' => '{1} :passenger will not ride with you to :event, :date — :count seat is free again.|[2,*] :passenger will not ride with you to :event, :date — :count seats are free again.',
+            'action' => 'Show my offer',
+            'fine' => 'Freed seats are shown to other members in your offer automatically.',
+        ],
+
+        'offer_cancelled_club' => [
+            'eyebrow' => 'Car sharing · offer cancelled',
+            'title' => 'Your ride to the race is cancelled.',
+            'lead' => 'The driver cancelled the transport offer to :event, :date, so your seat request no longer applies. Try another transport offer.',
+            'action' => 'Find other transport',
+            'fine' => 'You will find all transport offers in the app on the race\'s Transport page.',
+        ],
+
         'request_decided_driver_label' => 'Driver',
-        'request_decided_footer_approved' => 'Your seat in the car is reserved. Arrange the details directly with the driver.',
     ],
 
     'direction_enum' => [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mail;
 
+use App\Mail\Concerns\DescribesTransportRequest;
 use App\Models\TransportRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -13,6 +14,7 @@ use Illuminate\Queue\SerializesModels;
 
 class TransportRequestCreated extends Mailable
 {
+    use DescribesTransportRequest;
     use Queueable;
     use SerializesModels;
 
@@ -35,10 +37,22 @@ class TransportRequestCreated extends Mailable
 
     public function content(): Content
     {
+        $request = $this->transportRequest;
+
         return new Content(
             markdown: 'emails.transport.requestCreated',
             with: [
-                'transportRequest' => $this->transportRequest,
+                'passenger' => (string) $request->user?->name,
+                'seats' => $request->seats,
+                'eventName' => (string) $this->transportEvent($request)?->name,
+                'eventDate' => $this->transportEventDate($request),
+                'note' => $request->note,
+                'facts' => $this->filledFacts([
+                    $this->directionFact($request),
+                    $this->seatsFact($request, __('transport.seats')),
+                    $this->departureFact($request),
+                    $this->vehicleFact($request, __('transport.mail.request_created_club.vehicle_label')),
+                ]),
                 'approveUrl' => $this->approveUrl,
                 'rejectUrl' => $this->rejectUrl,
             ],

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mail;
 
+use App\Mail\Concerns\DescribesTransportRequest;
 use App\Models\TransportRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -13,8 +14,12 @@ use Illuminate\Queue\SerializesModels;
 
 class TransportRequestCancelled extends Mailable
 {
+    use DescribesTransportRequest;
     use Queueable;
     use SerializesModels;
+
+    /** Branded club layout, see resources/views/vendor/mail/html/themes/club.blade.php. */
+    public $theme = 'club';
 
     public function __construct(
         private readonly TransportRequest $transportRequest,
@@ -30,10 +35,21 @@ class TransportRequestCancelled extends Mailable
 
     public function content(): Content
     {
+        $request = $this->transportRequest;
+
         return new Content(
             markdown: 'emails.transport.requestCancelled',
             with: [
-                'transportRequest' => $this->transportRequest,
+                'passenger' => (string) $request->user?->name,
+                'seats' => $request->seats,
+                'eventName' => (string) $this->transportEvent($request)?->name,
+                'eventDate' => $this->transportEventDate($request),
+                'facts' => $this->filledFacts([
+                    $this->directionFact($request),
+                    $this->seatsFact($request, __('transport.mail.request_cancelled_seats_label')),
+                    $this->vehicleFact($request, __('transport.mail.request_created_club.vehicle_label')),
+                ]),
+                'transportUrl' => $this->transportPageUrl($request),
             ],
         );
     }

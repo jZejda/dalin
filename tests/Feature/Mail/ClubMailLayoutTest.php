@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 use App\Enums\EntryStatus;
 use App\Enums\TransportDirection;
+use App\Enums\TransportRequestStatus;
+use App\Filament\Resources\SportEvents\SportEventResource;
 use App\Mail\EventWeeklyEndsBySport;
 use App\Mail\PreRaceSummaryMail;
+use App\Mail\TransportOfferCancelled;
+use App\Mail\TransportRequestCancelled;
 use App\Mail\TransportRequestCreated;
+use App\Mail\TransportRequestDecided;
 use App\Models\AppSetting;
 use App\Models\SportClass;
 use App\Models\SportClassDefinition;
@@ -131,10 +136,10 @@ it('renders the pre-race summary with runners and course details', function (): 
         ->assertSeeInText('TST8501');
 });
 
-it('renders the car-sharing request with approve button and reject link', function (): void {
-    AppSetting::set(AppSetting::BRANDING_ACCENT_COLOR, '#ffd329');
-    $event = clubMailWeeklyEvent();
-    $driver = User::factory()->create();
+function clubMailTransportRequest(array $attributes = []): TransportRequest
+{
+    $event = clubMailWeeklyEvent(['date' => '2026-11-14']);
+    $driver = User::factory()->create(['name' => 'Petr Dvořák']);
     $offer = TransportOffer::factory()->create([
         'sport_event_id' => $event->id,
         'user_id' => $driver->id,
@@ -142,13 +147,20 @@ it('renders the car-sharing request with approve button and reject link', functi
         'direction' => TransportDirection::Both,
         'departure_place' => 'Brno, Riviéra',
     ]);
-    $request = TransportRequest::factory()->create([
+
+    return TransportRequest::factory()->create([
         'transport_offer_id' => $offer->id,
         'user_id' => User::factory()->create(['name' => 'Romana Klímová'])->id,
         'direction' => TransportDirection::Both,
         'seats' => 2,
         'note' => 'Mám s sebou kolo na střeše.',
+        ...$attributes,
     ]);
+}
+
+it('renders the car-sharing request with approve button and reject link', function (): void {
+    AppSetting::set(AppSetting::BRANDING_ACCENT_COLOR, '#ffd329');
+    $request = clubMailTransportRequest();
 
     (new TransportRequestCreated($request, 'https://example.test/approve', 'https://example.test/reject'))
         ->assertSeeInHtml('Romana Klímová chce jet s tebou.')
@@ -158,4 +170,60 @@ it('renders the car-sharing request with approve button and reject link', functi
         ->assertSeeInHtml('https://example.test/approve', false)
         ->assertSeeInHtml('club-secondary-negative', false)
         ->assertSeeInText('https://example.test/reject');
+});
+
+it('renders the approved car-sharing request with the driver and a link to the transport tab', function (): void {
+    $request = clubMailTransportRequest(['status' => TransportRequestStatus::Approved]);
+    $event = $request->transportOffer?->sportEvent;
+
+    (new TransportRequestDecided($request))
+        ->assertSeeInHtml('Máš místo v autě.')
+        ->assertSeeInHtml('Oblastní přebor Testov, 14. listopadu 2026')
+        ->assertSeeInHtml('Petr Dvořák')
+        ->assertSeeInHtml('Brno, Riviéra')
+        ->assertSeeInHtml('Zobrazit dopravu u závodu')
+        ->assertSeeInText(SportEventResource::getUrl('entry', ['record' => $event], panel: 'admin'))
+        ->assertDontSeeInHtml('Nastavení oznámení');
+});
+
+it('renders the rejected car-sharing request with a hint to find other transport', function (): void {
+    $request = clubMailTransportRequest(['status' => TransportRequestStatus::Rejected]);
+
+    (new TransportRequestDecided($request))
+        ->assertSeeInHtml('Tentokrát to nevyšlo.')
+        ->assertSeeInHtml('Najít jinou dopravu')
+        ->assertDontSeeInHtml('Máš místo v autě.');
+});
+
+it('tells the driver how many seats a cancelled booking freed up', function (): void {
+    $request = clubMailTransportRequest();
+
+    (new TransportRequestCancelled($request))
+        ->assertSeeInHtml('Místa v autě se uvolnila.')
+        ->assertSeeInHtml('Romana Klímová s tebou na závod Oblastní přebor Testov, 14. listopadu 2026 nepojede — 2 místa jsou opět volná.')
+        ->assertSeeInHtml('Rodinné kombi')
+        ->assertSeeInHtml('Zobrazit moji nabídku');
+});
+
+it('still names the race and driver when the cancelled offer was deleted', function (): void {
+    $request = clubMailTransportRequest();
+    $request->transportOffer?->delete();
+
+    (new TransportOfferCancelled(TransportRequest::query()->findOrFail($request->id)))
+        ->assertSeeInHtml('Odvoz na závod se ruší.')
+        ->assertSeeInHtml('Oblastní přebor Testov, 14. listopadu 2026')
+        ->assertSeeInHtml('Petr Dvořák')
+        ->assertSeeInHtml('Najít jinou dopravu');
+});
+
+it('renders the car-sharing mails in English', function (): void {
+    App::setLocale('en');
+    $request = clubMailTransportRequest(['status' => TransportRequestStatus::Approved]);
+
+    (new TransportRequestDecided($request))
+        ->assertSeeInHtml('You have a seat in the car.')
+        ->assertSeeInHtml('November 14, 2026');
+
+    (new TransportRequestCancelled($request))
+        ->assertSeeInHtml('2 seats are free again.');
 });
