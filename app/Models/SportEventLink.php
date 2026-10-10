@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\SportEventLinkType;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * App\Models\SportEventLink
@@ -28,32 +30,36 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property-read SportEvent|null $sportEvent
  */
+#[Fillable([
+    'external_key',
+    'sport_event_id',
+    'internal',
+    'source_path',
+    'source_url',
+    'source_type',
+    'name_cz',
+    'name_en',
+    'description_cz',
+    'description_en',
+])]
 class SportEventLink extends Model
 {
     use HasFactory;
 
-    /** @var list<string> */
-    protected $fillable = [
-        'external_key',
-        'sport_event_id',
-        'internal',
-        'source_path',
-        'source_url',
-        'source_type',
-        'name_cz',
-        'name_en',
-        'description_cz',
-        'description_en',
-    ];
-
-    protected $casts = [
-        'internal' => 'boolean',
-        'source_type' => SportEventLinkType::class,
-    ];
+    /**
+     * @return array<string, string>
+     */
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'internal' => 'boolean',
+            'source_type' => SportEventLinkType::class,
+        ];
+    }
 
     public function sportEvent(): HasOne
     {
         return $this->hasOne(SportEvent::class, 'id', 'sport_event_id');
     }
-
 }
