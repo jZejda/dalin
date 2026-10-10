@@ -17,12 +17,11 @@ return [
         'event_entry_ends' => 'Race entry deadline approaching',
     ],
 
-    'body' => [
-        'heading'             => 'Entry deadline - 1st term',
-        'intro'               => 'The entry deadline for the races listed below is approaching. Less than **:days days** remain until the entry deadline. Please enter according to the instructions in the administration.',
-        'table_entry_until'   => 'Entry deadline',
-        'table_event_name'    => 'Race/event name',
-        'table_oris_id'       => 'ORIS ID',
+    'club' => [
+        'eyebrow' => 'Entries · deadline approaching',
+        'title' => 'You can still make the first deadline.',
+        'lead' => '{1} The first entry deadline for the following races ends in :count day.|[2,*] The first entry deadline for the following races ends in :count days.',
+        'action' => 'Choose a race and enter',
     ],
 
 ];

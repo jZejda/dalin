@@ -14,17 +14,14 @@ return [
     */
 
     'subject' => [
-        'entry_ends_to_pay' => 'Zaslání platby k :deadline termínu závodů',
+        'entry_ends_to_pay' => 'Startovné k úhradě – :term termín přihlášek',
     ],
 
-    'body' => [
-        'heading'             => 'Konec přihlášek závodu',
-        'intro'               => 'Aktuálně končí **:deadline termín** přihlášek k závodu vypsaných níže. Prosím o uhrazení startovného přihlášených členů.',
-        'deadline_heading'    => ':deadline termín přihlášek',
-        'deadline_text'       => 'Závody u kterých právě končí **:deadline termín** přihlášek.',
-        'table_entry_until'   => 'Přihláška do',
-        'table_event_name'    => 'Název akce/závodu',
-        'table_oris_id'       => 'ORIS ID',
+    'club' => [
+        'eyebrow' => 'Pro správce plateb · startovné',
+        'title' => 'Je čas uhradit startovné.',
+        'lead' => 'Končí :term termín přihlášek. Prosím uhraď startovné za přihlášené členy na těchto závodech.',
+        'fine' => 'Platební údaje a konkrétní částku ověř v podkladech pořadatele. Tento přehled připomíná uzávěrky.',
     ],
 
 ];

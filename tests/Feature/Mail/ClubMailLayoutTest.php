@@ -6,6 +6,8 @@ use App\Enums\EntryStatus;
 use App\Enums\TransportDirection;
 use App\Enums\TransportRequestStatus;
 use App\Filament\Resources\SportEvents\SportEventResource;
+use App\Mail\EntryEndsToPay;
+use App\Mail\EventEntryEnds;
 use App\Mail\EventWeeklyEndsBySport;
 use App\Mail\PreRaceSummaryMail;
 use App\Mail\TransportOfferCancelled;
@@ -226,4 +228,50 @@ it('renders the car-sharing mails in English', function (): void {
 
     (new TransportRequestCancelled($request))
         ->assertSeeInHtml('2 seats are free again.');
+});
+
+it('reminds the member of the approaching first entry deadline', function (): void {
+    $event = clubMailWeeklyEvent(['oris_id' => 18421, 'date' => '2026-10-24', 'entry_date_1' => '2026-10-14 23:59:00']);
+
+    (new EventEntryEnds(collect([$event]), 3))
+        ->assertSeeInHtml('Ještě stihneš první termín.')
+        ->assertSeeInHtml('Za 3 dny končí první termín přihlášek na následující závody.')
+        ->assertSeeInHtml('ORIS 18421')
+        ->assertSeeInHtml('Přihlášky do 14. 10. · 23:59')
+        ->assertSeeInHtml('Vybrat závod a přihlásit se')
+        ->assertSeeInHtml('Nastavení oznámení')
+        ->assertSeeInText('24. ŘÍJ – Oblastní přebor Testov');
+});
+
+it('asks billing specialists to pay the entry fees for the given deadline', function (): void {
+    $event = clubMailWeeklyEvent([
+        'oris_id' => 18422,
+        'date' => '2026-10-25',
+        'entry_date_1' => '2026-10-08 23:59:00',
+        'entry_date_2' => '2026-10-15 23:59:00',
+    ]);
+
+    $mail = new EntryEndsToPay(collect([$event]), 2);
+
+    $mail->assertHasSubject(config('app.name').' - Startovné k úhradě – druhý termín přihlášek');
+    $mail->assertSeeInHtml('Je čas uhradit startovné.')
+        ->assertSeeInHtml('Končí druhý termín přihlášek.')
+        ->assertSeeInHtml('Druhý termín přihlášek')
+        ->assertSeeInHtml('Přihlášky do 15. 10. · 23:59')
+        ->assertSeeInHtml('ORIS 18422')
+        ->assertSeeInHtml('Platební údaje a konkrétní částku ověř v podkladech pořadatele.')
+        ->assertDontSeeInHtml('Nastavení oznámení');
+});
+
+it('renders the deadline mails in English', function (): void {
+    App::setLocale('en');
+    $event = clubMailWeeklyEvent(['entry_date_1' => '2026-10-14 23:59:00']);
+
+    (new EventEntryEnds(collect([$event]), 1))
+        ->assertSeeInHtml('The first entry deadline for the following races ends in 1 day.')
+        ->assertSeeInHtml('Entries until 14. 10. · 23:59');
+
+    (new EntryEndsToPay(collect([$event]), 1))
+        ->assertHasSubject(config('app.name').' - Entry fees due – first entry deadline')
+        ->assertSeeInHtml('First entry deadline');
 });
