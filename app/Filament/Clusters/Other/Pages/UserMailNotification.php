@@ -371,7 +371,7 @@ class UserMailNotification extends Page implements HasForms
                                 TextInput::make('sport_time_trigger')
                                     ->label(__('user-mail-notification.form.sport_time_trigger'))
                                     ->numeric()
-                                    ->maxValue(24)
+                                    ->maxValue(23)
                                     ->minValue(0)
                                     ->default(self::DEFAULT_TRIGGER_EVENT),
                                 TextInput::make('days_before_event_entry_ends')
