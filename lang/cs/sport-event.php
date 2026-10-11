@@ -593,6 +593,20 @@ return [
     ],
 
     'widgets' => [
+        'oris_payment' => [
+            'heading' => 'Platba startovného v ORIS',
+            'description' => 'Vyúčtování klubu, jak ho pořadatel eviduje v ORIS. Načteno :time.',
+            'unavailable' => 'Vyúčtování se nepodařilo načíst z ORIS. Zkuste to později.',
+            'no_entries' => 'V ORIS nemá klub na tento závod žádné přihlášky ani vyúčtování.',
+            'fee_total' => 'Celkem k úhradě',
+            'fee_breakdown' => 'startovné :entry · čipy :si · služby :service',
+            'paid' => 'Uhrazeno',
+            'to_be_paid' => 'Zbývá uhradit',
+            'status_paid' => 'Uhrazeno v plné výši',
+            'status_unpaid' => 'Neuhrazeno',
+            'status_overpaid' => 'Přeplatek :amount',
+            'payment_vs' => 'Variabilní symbol :vs',
+        ],
         'map' => [
             'event_date' => 'datum',
             'event_place' => 'místo',
