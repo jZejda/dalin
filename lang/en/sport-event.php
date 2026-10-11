@@ -593,6 +593,20 @@ return [
     ],
 
     'widgets' => [
+        'oris_payment' => [
+            'heading' => 'Entry fee payment in ORIS',
+            'description' => 'Club settlement as recorded by the organizer in ORIS. Loaded :time.',
+            'unavailable' => 'The settlement could not be loaded from ORIS. Please try again later.',
+            'no_entries' => 'The club has no entries or settlement for this event in ORIS.',
+            'fee_total' => 'Total due',
+            'fee_breakdown' => 'entry fees :entry · SI rental :si · services :service',
+            'paid' => 'Paid',
+            'to_be_paid' => 'Remaining',
+            'status_paid' => 'Paid in full',
+            'status_unpaid' => 'Unpaid',
+            'status_overpaid' => 'Overpaid by :amount',
+            'payment_vs' => 'Variable symbol :vs',
+        ],
         'map' => [
             'event_date' => 'date',
             'event_place' => 'place',
