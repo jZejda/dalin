@@ -50,6 +50,8 @@ class ClubSettings extends Page implements HasForms
 
     public string $full_name = '';
 
+    public ?string $short_name = null;
+
     public string $primary_bank_account_number = '';
 
     public string $primary_bank_account_name = '';
@@ -84,6 +86,7 @@ class ClubSettings extends Page implements HasForms
         $this->getForm('form')?->fill([
             'abbr' => $this->clubConfigString('abbr'),
             'full_name' => $this->clubConfigString('full_name'),
+            'short_name' => $this->clubConfigStringOrNull('short_name'),
             'primary_bank_account_number' => $this->clubConfigString('primary_bank_account_number'),
             'primary_bank_account_name' => $this->clubConfigString('primary_bank_account_name'),
             'iban' => $this->clubConfigStringOrNull('iban'),
@@ -113,6 +116,10 @@ class ClubSettings extends Page implements HasForms
                         ->label(__('club-settings.form.identification.full_name'))
                         ->required()
                         ->maxLength(255),
+                    TextInput::make('short_name')
+                        ->label(__('club-settings.form.identification.short_name'))
+                        ->helperText(__('club-settings.form.identification.short_name_helper'))
+                        ->maxLength(60),
                 ]),
             Section::make(__('club-settings.form.bank_details.section'))
                 ->description(__('club-settings.form.bank_details.description'))
@@ -206,6 +213,8 @@ class ClubSettings extends Page implements HasForms
         $data = (array) $this->getForm('form')?->getState();
 
         AppSetting::set(AppSetting::CLUB_FULL_NAME, $data['full_name']);
+        $shortName = trim((string) ($data['short_name'] ?? ''));
+        AppSetting::set(AppSetting::CLUB_SHORT_NAME, $shortName !== '' ? $shortName : null);
         AppSetting::set(AppSetting::CLUB_PRIMARY_BANK_ACCOUNT_NUMBER, $data['primary_bank_account_number']);
         AppSetting::set(AppSetting::CLUB_PRIMARY_BANK_ACCOUNT_NAME, $data['primary_bank_account_name']);
         AppSetting::set(AppSetting::CLUB_IBAN, ($data['iban'] ?? '') !== '' ? $data['iban'] : null);

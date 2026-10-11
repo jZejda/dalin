@@ -47,6 +47,8 @@ class AppSetting extends Model
 
     public const string CLUB_FULL_NAME = 'club.full_name';
 
+    public const string CLUB_SHORT_NAME = 'club.short_name';
+
     public const string CLUB_PRIMARY_BANK_ACCOUNT_NUMBER = 'club.primary_bank_account_number';
 
     public const string CLUB_PRIMARY_BANK_ACCOUNT_NAME = 'club.primary_bank_account_name';
@@ -80,6 +82,7 @@ class AppSetting extends Model
      */
     public const array CLUB_CONFIG_MAP = [
         self::CLUB_FULL_NAME => 'site-config.club.full_name',
+        self::CLUB_SHORT_NAME => 'site-config.club.short_name',
         self::CLUB_PRIMARY_BANK_ACCOUNT_NUMBER => 'site-config.club.primary_bank_account_number',
         self::CLUB_PRIMARY_BANK_ACCOUNT_NAME => 'site-config.club.primary_bank_account_name',
         self::CLUB_IBAN => 'site-config.club.iban',

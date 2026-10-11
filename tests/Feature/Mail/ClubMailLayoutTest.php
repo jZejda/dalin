@@ -55,6 +55,7 @@ beforeEach(function (): void {
     Cache::flush();
     App::setLocale('cs');
     config()->set('site-config.club.full_name', 'Orientační klub Testov');
+    config()->set('site-config.club.short_name', null);
     config()->set('site-config.club.abbr', 'TST');
     config()->set('site-config.club.technical_email', 'technik@testov.cz');
 });
@@ -92,6 +93,44 @@ it('falls back to the default accent when none or an invalid one is set', functi
     AppSetting::set(AppSetting::BRANDING_ACCENT_COLOR, 'red');
 
     expect(MailBranding::fromSettings()->accent)->toBe(MailBranding::DEFAULT_ACCENT);
+});
+
+it('falls back to the full club name when no short name is set', function (): void {
+    expect(MailBranding::fromSettings()->clubShortName)->toBe('Orientační klub Testov');
+});
+
+it('shows the short club name in the header and the full name as the footer sender', function (): void {
+    config()->set('site-config.club.short_name', 'OK Testov');
+    $mail = new EventWeeklyEndsBySport(collect([clubMailWeeklyEvent()]), collect(), collect());
+
+    $mail->assertSeeInHtml('OK Testov')
+        ->assertSeeInHtml('Orientační klub Testov · klubová zpráva')
+        ->assertSeeInText("OK Testov\n")
+        ->assertSeeInText('Orientační klub Testov · klubová zpráva');
+});
+
+it('ends the footer with the DaLin logo linking to the docs and the help index', function (): void {
+    $mail = new EventWeeklyEndsBySport(collect([clubMailWeeklyEvent()]), collect(), collect());
+
+    $mail->assertSeeInHtml('href="'.MailBranding::PRODUCT_URL.'"', false)
+        ->assertSeeInHtml('images/mail/dalin-logo.png', false)
+        ->assertSeeInHtml('href="https://docs.dalin.cz/napoveda/index/"', false)
+        ->assertDontSeeInHtml('prostřednictvím')
+        ->assertSeeInText('DaLin: '.MailBranding::PRODUCT_URL);
+});
+
+it('links events in the deadline and pre-race mails to the entry page', function (): void {
+    $event = clubMailWeeklyEvent();
+    $entryUrl = SportEventResource::getUrl('entry', ['record' => $event], panel: 'admin');
+    $viewHref = 'href="'.SportEventResource::getUrl('view', ['record' => $event], panel: 'admin').'"';
+
+    (new EventWeeklyEndsBySport(collect([$event]), collect(), collect()))
+        ->assertSeeInHtml($entryUrl, false)
+        ->assertDontSeeInHtml($viewHref, false);
+
+    (new PreRaceSummaryMail($event, collect()))
+        ->assertSeeInHtml($entryUrl, false)
+        ->assertDontSeeInHtml($viewHref, false);
 });
 
 it('renders the weekly summary in the club layout with the club accent', function (): void {

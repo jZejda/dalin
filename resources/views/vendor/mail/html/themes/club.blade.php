@@ -95,11 +95,6 @@ img {
     color: #52605d;
 }
 
-.club-wordmark {
-    font-size: 13px;
-    color: #52605d;
-}
-
 .club-hero {
     padding-top: 10px;
     padding-bottom: 16px;
@@ -484,4 +479,15 @@ img {
 .club-footer a {
     color: #52605d;
     text-decoration: underline;
+}
+
+.club-footer .club-product {
+    margin: 14px 0 0;
+}
+
+.club-product-logo {
+    display: block;
+    width: 76px;
+    height: 26px;
+    border: 0;
 }

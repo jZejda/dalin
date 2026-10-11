@@ -35,7 +35,7 @@ trait ListsSportEventDeadlines
                 'day' => $date->format('j'),
                 'month' => Str::upper($date->isoFormat('MMM')),
                 'name' => $event->name,
-                'url' => SportEventResource::getUrl('view', ['record' => $event], panel: 'admin'),
+                'url' => SportEventResource::getUrl('entry', ['record' => $event], panel: 'admin'),
                 'meta' => collect($metaParts($event))->filter()->implode(' · '),
                 'deadline' => $deadline->format('j. n. · H:i'),
             ];

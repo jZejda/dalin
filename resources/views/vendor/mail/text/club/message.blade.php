@@ -7,7 +7,7 @@
 @php
     $brand = \App\Services\Mail\MailBranding::fromSettings();
 @endphp
-{{ $brand->clubName }}
+{{ $brand->clubShortName }}
 
 @if (filled($eyebrow))
 {{ $eyebrow }}
@@ -22,7 +22,7 @@
 {{ $slot }}
 
 ---
-{{ __('mail/common.club_layout.footer_sender', ['club' => $brand->clubName, 'product' => \App\Services\Mail\MailBranding::PRODUCT_NAME]) }}
+{{ __('mail/common.club_layout.footer_sender', ['club' => $brand->clubName]) }}
 {{ __('mail/common.club_layout.help') }}: {{ $brand->helpUrl }}
 @if ($brand->contactEmail !== null)
 {{ __('mail/common.club_layout.contact') }}: {{ $brand->contactEmail }}
@@ -33,3 +33,4 @@
 @foreach ($brand->socialLinks as $social)
 {{ $social['label'] }}: {{ $social['url'] }}
 @endforeach
+{{ \App\Services\Mail\MailBranding::PRODUCT_NAME }}: {{ \App\Services\Mail\MailBranding::PRODUCT_URL }}

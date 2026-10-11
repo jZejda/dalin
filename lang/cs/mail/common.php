@@ -12,7 +12,7 @@ return [
 
     'club_layout' => [
         'tagline' => 'Orientační sporty · klubové zprávy',
-        'footer_sender' => ':club · klubová zpráva prostřednictvím :product',
+        'footer_sender' => ':club · klubová zpráva',
         'help' => 'Nápověda',
         'contact' => 'Kontakt na klub',
         'notification_settings' => 'Nastavení oznámení',

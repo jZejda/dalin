@@ -20,7 +20,6 @@
 .club-card { width: 100% !important; border-radius: 0 !important; }
 .club-stripe { border-radius: 0 !important; }
 .club-pad { padding-left: 18px !important; padding-right: 18px !important; }
-.club-wordmark { display: none !important; }
 .club-title { font-size: 23px !important; }
 .club-fact { display: block !important; width: 100% !important; }
 .club-fact-filler { display: none !important; }
@@ -31,7 +30,7 @@
 .club-wrapper, body { background-color: #151c20 !important; }
 .club-card { background-color: #222b30 !important; border-color: #43514b !important; }
 .club-name, .club-eyebrow, .club-title, .club-body, .club-body p, .club-body a, .club-date, .club-event-name a, .club-fact-value, .club-person-name, .club-secondary a { color: #eef3f1 !important; }
-.club-tagline, .club-wordmark, .club-lead, .club-section, .club-meta, .club-person-extra, .club-note-label, .club-fine, .club-footer, .club-footer a { color: #b5c3bf !important; }
+.club-tagline, .club-lead, .club-section, .club-meta, .club-person-extra, .club-note-label, .club-fine, .club-footer, .club-footer a { color: #b5c3bf !important; }
 .club-soft { background-color: #2c3834 !important; }
 .club-pill { background-color: #2c3834 !important; color: #eef3f1 !important; }
 .club-event, .club-person, .club-footer { border-color: #43514b !important; }
@@ -61,16 +60,15 @@
 <tr>
 <td width="42" valign="middle">
 @if ($brand->logoUrl !== null)
-<img class="club-logo" src="{{ $brand->logoUrl }}" width="42" height="42" alt="{{ $brand->clubName }}">
+<img class="club-logo" src="{{ $brand->logoUrl }}" width="42" height="42" alt="{{ $brand->clubShortName }}">
 @else
 <table cellpadding="0" cellspacing="0" role="presentation"><tr><td class="club-initials" width="42" height="42" align="center" valign="middle">{{ $brand->clubInitials }}</td></tr></table>
 @endif
 </td>
 <td class="club-brand" valign="middle">
-<span class="club-name">{{ $brand->clubName }}</span>
+<span class="club-name">{{ $brand->clubShortName }}</span>
 <span class="club-tagline">{{ __('mail/common.club_layout.tagline') }}</span>
 </td>
-<td class="club-wordmark" align="right" valign="middle">{{ \App\Services\Mail\MailBranding::PRODUCT_NAME }}</td>
 </tr>
 </table>
 </td>
@@ -97,7 +95,7 @@
 </tr>
 <tr>
 <td class="club-pad club-footer">
-<p>{{ __('mail/common.club_layout.footer_sender', ['club' => $brand->clubName, 'product' => \App\Services\Mail\MailBranding::PRODUCT_NAME]) }}</p>
+<p>{{ __('mail/common.club_layout.footer_sender', ['club' => $brand->clubName]) }}</p>
 <p>
 <a href="{{ $brand->helpUrl }}">{{ __('mail/common.club_layout.help') }}</a>
 @if ($brand->contactEmail !== null)
@@ -114,6 +112,7 @@
 @endforeach
 </p>
 @endif
+<p class="club-product"><a href="{{ \App\Services\Mail\MailBranding::PRODUCT_URL }}"><img class="club-product-logo" src="{{ $brand->productLogoUrl() }}" width="76" height="26" alt="{{ \App\Services\Mail\MailBranding::PRODUCT_NAME }}"></a></p>
 </td>
 </tr>
 </table>

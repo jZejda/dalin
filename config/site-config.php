@@ -14,6 +14,7 @@ return [
     'club' => [
         'abbr' => 'ABC',
         'full_name' => 'KLUB ABC',
+        'short_name' => null, // friendly name for e-mail headers; falls back to full_name
         'primary_bank_account_number' => '123456789/1234',
         'primary_bank_account_name' => 'Bank',
         'iban' => env('CLUB_IBAN', null),

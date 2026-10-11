@@ -54,7 +54,7 @@ class PreRaceSummaryMail extends Mailable
                 'eyebrowDate' => $this->event->date?->isoFormat(__('mail/common.club_layout.day_month_format')),
                 'facts' => $this->facts(),
                 'runners' => $this->entries->map(fn (UserEntry $entry): array => $this->runner($entry))->values()->all(),
-                'detailUrl' => SportEventResource::getUrl('view', ['record' => $this->event], panel: 'admin'),
+                'detailUrl' => SportEventResource::getUrl('entry', ['record' => $this->event], panel: 'admin'),
                 'orisUrl' => $this->event->oris_id !== null ? OrisApiService::ORIS_URL.'/Zavod?id='.$this->event->oris_id : null,
                 'settingsUrl' => UserMailNotification::getUrl(panel: 'admin'),
             ]

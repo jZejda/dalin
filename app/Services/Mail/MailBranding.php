@@ -22,6 +22,8 @@ final readonly class MailBranding
 
     public const string PRODUCT_NAME = 'DaLin';
 
+    public const string PRODUCT_URL = 'https://docs.dalin.cz';
+
     /** Share of the accent mixed into white for soft highlights (deadline pill, note). */
     private const float SOFT_ACCENT_RATIO = 0.17;
 
@@ -45,10 +47,13 @@ final readonly class MailBranding
     ];
 
     /**
+     * @param string $clubName formal full name, used in the footer as the sender
+     * @param string $clubShortName informal name for the header; the full name when not set
      * @param list<array{label: string, url: string}> $socialLinks
      */
     public function __construct(
         public string $clubName,
+        public string $clubShortName,
         public string $clubInitials,
         public ?string $logoUrl,
         public string $accent,
@@ -65,15 +70,17 @@ final readonly class MailBranding
         $abbr = self::configString('site-config.club.abbr') ?? '';
         $accent = AppSetting::getBrandingAccentColor() ?? self::DEFAULT_ACCENT;
         $logoPath = AppSetting::getSeoLogoPath();
+        $clubName = self::configString('site-config.club.full_name') ?? ($abbr !== '' ? $abbr : self::PRODUCT_NAME);
 
         return new self(
-            clubName: self::configString('site-config.club.full_name') ?? ($abbr !== '' ? $abbr : self::PRODUCT_NAME),
+            clubName: $clubName,
+            clubShortName: self::configString('site-config.club.short_name') ?? $clubName,
             clubInitials: Str::upper(Str::substr($abbr !== '' ? $abbr : self::PRODUCT_NAME, 0, 3)),
             logoUrl: $logoPath !== null ? Storage::disk('public')->url($logoPath) : null,
             accent: $accent,
             onAccent: self::contrastText($accent),
             accentSoft: self::mixWithWhite($accent, self::SOFT_ACCENT_RATIO),
-            helpUrl: AppHelper::getPageHelpUrl(''),
+            helpUrl: AppHelper::getPageHelpUrl('index/'),
             contactEmail: self::configString('site-config.club.technical_email'),
             socialLinks: array_map(
                 static fn (string $url): array => ['label' => self::socialLabel($url), 'url' => $url],
@@ -85,6 +92,11 @@ final readonly class MailBranding
     public function iconUrl(string $name): string
     {
         return asset('images/mail/icons/'.$name.'.png');
+    }
+
+    public function productLogoUrl(): string
+    {
+        return asset('images/mail/dalin-logo.png');
     }
 
     /**

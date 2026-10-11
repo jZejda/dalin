@@ -12,7 +12,7 @@ return [
 
     'club_layout' => [
         'tagline' => 'Orienteering · club news',
-        'footer_sender' => ':club · club message sent via :product',
+        'footer_sender' => ':club · club message',
         'help' => 'Help',
         'contact' => 'Contact the club',
         'notification_settings' => 'Notification settings',

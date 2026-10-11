@@ -76,6 +76,28 @@ it('stores empty iban and technical email as null to keep file defaults', functi
         ->and(AppSetting::get(AppSetting::CLUB_TECHNICAL_EMAIL))->toBeNull();
 });
 
+it('saves the short club name and stores an empty one as null', function (): void {
+    actingAsSuperAdmin();
+
+    $component = Livewire::test(ClubSettings::class)
+        ->set('full_name', 'Orientační klub Testov')
+        ->set('short_name', '  OK Testov ')
+        ->set('primary_bank_account_number', '987654321/0100')
+        ->set('primary_bank_account_name', 'Komerční banka')
+        ->set('user_credit_limit', '-500')
+        ->set('regular_membership_fees_prefix', '222')
+        ->set('extra_membership_fees_prefix', '999')
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    expect(AppSetting::get(AppSetting::CLUB_SHORT_NAME))->toBe('OK Testov')
+        ->and(config('site-config.club.short_name'))->toBe('OK Testov');
+
+    $component->set('short_name', '')->call('submit')->assertHasNoErrors();
+
+    expect(AppSetting::get(AppSetting::CLUB_SHORT_NAME))->toBeNull();
+});
+
 it('rejects positive credit limit and invalid fee prefix', function (): void {
     actingAsSuperAdmin();
 

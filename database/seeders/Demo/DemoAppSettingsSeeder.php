@@ -22,6 +22,7 @@ class DemoAppSettingsSeeder extends Seeder
 
         // Club settings visible in the Config cluster settings page
         AppSetting::set(AppSetting::CLUB_FULL_NAME, 'SK Demo Orientace');
+        AppSetting::set(AppSetting::CLUB_SHORT_NAME, 'SK Demo');
         AppSetting::set(AppSetting::CLUB_PRIMARY_BANK_ACCOUNT_NUMBER, '123456789/0100');
         AppSetting::set(AppSetting::CLUB_PRIMARY_BANK_ACCOUNT_NAME, 'SK Demo Orientace, z. s.');
         AppSetting::set(AppSetting::CLUB_IBAN, 'CZ6501000000000123456789');

@@ -22,6 +22,8 @@ return [
             'abbr' => 'Club abbreviation',
             'abbr_helper' => 'The abbreviation is used for the ORIS API and the logo path, so it can only be changed in config/site-config.php.',
             'full_name' => 'Full club name',
+            'short_name' => 'Short club name',
+            'short_name_helper' => 'Informal name shown in the e-mail header (e.g. "ABM Brno"). If left empty, the full club name is used.',
         ],
         'bank_details' => [
             'section' => 'Bank details',

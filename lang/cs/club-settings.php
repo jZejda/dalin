@@ -22,6 +22,8 @@ return [
             'abbr' => 'Zkratka klubu',
             'abbr_helper' => 'Zkratka se používá pro ORIS API a cestu k logu, proto ji lze změnit pouze v souboru config/site-config.php.',
             'full_name' => 'Celý název klubu',
+            'short_name' => 'Krátký název klubu',
+            'short_name_helper' => 'Neformální název, který se zobrazuje v hlavičce e-mailů (např. „ABM Brno“). Pokud ho nevyplníte, použije se celý název klubu.',
         ],
         'bank_details' => [
             'section' => 'Bankovní údaje',
