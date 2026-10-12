@@ -48,5 +48,8 @@ class SendNewsMail
 
             Log::channel('site')->info('E-mail Novinka notifikace pro uzivatele ' . $user->name);
         }
+
+        // Keeps the post out of the daily digest; updated_at stays, the content did not change
+        Post::withoutTimestamps(fn (): bool => $this->post->forceFill(['news_mailed_at' => now()])->save());
     }
 }

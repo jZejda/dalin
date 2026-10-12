@@ -5,12 +5,14 @@ declare(strict_types=1);
 use App\Enums\ContentFormat;
 use App\Enums\EntryStatus;
 use App\Enums\PostStatus;
+use App\Filament\Resources\Posts\Jobs\SendNewsMail;
 use App\Http\Controllers\Cron\Jobs\ReportEmailEventWeeklyEndsBySport;
 use App\Http\Controllers\Cron\Jobs\ReportEmailPreRaceSummary;
 use App\Jobs\SendNewPostsEmailJob;
 use App\Jobs\SendSportEventEntryEndingEmailJob;
 use App\Mail\EventEntryEnds;
 use App\Mail\EventWeeklyEndsBySport;
+use App\Mail\NewPost;
 use App\Mail\NewPosts;
 use App\Mail\PreRaceSummaryMail;
 use App\Models\Post;
@@ -20,6 +22,7 @@ use App\Models\User;
 use App\Models\UserEntry;
 use App\Models\UserRaceProfile;
 use App\Models\UserSetting;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 beforeEach(function (): void {
@@ -103,6 +106,49 @@ it('matches a single-digit news trigger hour and respects the public/internal ch
 
     Mail::assertQueuedCount(1);
     Mail::assertQueued(NewPosts::class, fn (NewPosts $mail): bool => $mail->hasTo($legacyPadded->email));
+});
+
+it('leaves a post mailed out manually out of the news digest', function (): void {
+    $subscriber = notificationUser(['news' => ['0', '1'], 'news_time_trigger' => 17]);
+    $author = User::factory()->create();
+
+    // A fixed future day keeps demo posts in the testing DB out of the digest window
+    $this->travelTo(Carbon::parse('2031-03-04 09:10'));
+    $mailedPost = notificationPost('Důležité: změna termínu oddílového soustředění', PostStatus::Public, $author);
+    $digestPost = notificationPost('Výsledky Jihomoravského žebříčku', PostStatus::Public, $author);
+    $updatedAt = $mailedPost->updated_at;
+
+    $this->travelTo(now()->setTime(10, 0));
+    (new SendNewsMail($mailedPost, $mailedPost->title, 2))->send();
+
+    expect($mailedPost->fresh()->news_mailed_at)->not->toBeNull()
+        ->and($mailedPost->fresh()->updated_at->equalTo($updatedAt))->toBeTrue();
+
+    $this->travelTo(now()->setTime(17, 0));
+    (new SendNewPostsEmailJob())->handle();
+
+    Mail::assertQueued(NewPost::class, fn (NewPost $mail): bool => $mail->hasTo($subscriber->email));
+    Mail::assertQueued(
+        NewPosts::class,
+        fn (NewPosts $mail): bool => $mail->hasTo($subscriber->email)
+            && str_contains($mail->render(), $digestPost->title)
+            && !str_contains($mail->render(), $mailedPost->title),
+    );
+});
+
+it('skips the news digest when every post in the window was mailed out manually', function (): void {
+    $subscriber = notificationUser(['news' => ['0', '1'], 'news_time_trigger' => 17]);
+
+    $this->travelTo(Carbon::parse('2031-03-04 09:10'));
+    $post = notificationPost('Důležité: změna termínu oddílového soustředění', PostStatus::Public, User::factory()->create());
+
+    (new SendNewsMail($post, $post->title, 2))->send();
+
+    $this->travelTo(now()->setTime(17, 0));
+    (new SendNewPostsEmailJob())->handle();
+
+    Mail::assertNotQueued(NewPosts::class);
+    Mail::assertQueued(NewPost::class, fn (NewPost $mail): bool => $mail->hasTo($subscriber->email));
 });
 
 it('skips inactive users in the news digest', function (): void {
