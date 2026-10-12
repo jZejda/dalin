@@ -68,6 +68,8 @@ class DemoPostSeeder extends Seeder
                 'content'      => '<p>' . implode('</p><p>', $paragraphs) . '</p>',
                 'content_mode' => ContentFormat::Html->value,
                 'private'      => $isPrivate ? PostStatus::Private->value : PostStatus::Public->value,
+                // An urgent notice the editor mailed to everyone right away, so the daily digest skips it
+                'news_mailed_at' => $title === 'Změna termínu závodů v dubnu' ? $createdAt->copy()->addHour()->toDateTimeString() : null,
                 'created_at'   => $createdAt->toDateTimeString(),
                 'updated_at'   => $createdAt->toDateTimeString(),
             ]);

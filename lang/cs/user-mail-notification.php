@@ -31,7 +31,7 @@ return [
     'sections' => [
         'news' => [
             'heading'     => 'Upozornění na Novinky',
-            'description' => 'Zde si můžete nastavit upozornění na novinky veřejné a novinky z členské sekce.',
+            'description' => 'Zde si můžete nastavit upozornění na novinky veřejné a novinky z členské sekce. Nové novinky vám přijdou jednou denně souhrnně v nastavenou hodinu.',
         ],
         'entry_deadline' => [
             'heading'     => 'Upozornění na blížící se konec přihlášek k závodům',
@@ -63,6 +63,7 @@ return [
         'news'                         => 'Novinky',
         'news_option_public'           => 'Novinky veřejné',
         'news_option_members'          => 'Novinky členské sekce',
+        'news_time_trigger'            => 'Přibližná hodina upozornění',
         'sport'                        => 'Sport',
         'sport_time_trigger'           => 'Přibližná hodina upozornění',
         'days_before_event_entry_ends' => 'Dnů před ukončením přihlášek',

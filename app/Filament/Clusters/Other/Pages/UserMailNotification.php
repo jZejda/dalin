@@ -350,7 +350,7 @@ class UserMailNotification extends Page implements HasForms
                         Section::make(__('user-mail-notification.sections.news.heading'))
                             ->description(__('user-mail-notification.sections.news.description'))
                             ->aside()
-                            ->columns(1)
+                            ->columns(2)
                             ->schema([
                                 CheckboxList::make('news')
                                     ->label(__('user-mail-notification.form.news'))
@@ -358,6 +358,12 @@ class UserMailNotification extends Page implements HasForms
                                         '0' => __('user-mail-notification.form.news_option_public'),
                                         '1' => __('user-mail-notification.form.news_option_members'),
                                     ]),
+                                TextInput::make('news_time_trigger')
+                                    ->label(__('user-mail-notification.form.news_time_trigger'))
+                                    ->numeric()
+                                    ->minValue(0)
+                                    ->maxValue(23)
+                                    ->default(self::DEFAULT_TRIGGER_EVENT),
                             ]),
                         Section::make(__('user-mail-notification.sections.entry_deadline.heading'))
                             ->description(__('user-mail-notification.sections.entry_deadline.description'))

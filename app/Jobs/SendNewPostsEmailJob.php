@@ -55,8 +55,10 @@ class SendNewPostsEmailJob implements ShouldQueue
                 continue;
             }
 
+            // Posts an editor already mailed out manually would reach the subscriber twice
             $mailContent = Post::query()
                 ->whereIn('private', $postStatuses)
+                ->whereNull('news_mailed_at')
                 ->where('created_at', '>=', $windowStart)
                 ->where('created_at', '<', $windowEnd)
                 ->get();

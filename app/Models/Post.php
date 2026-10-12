@@ -36,6 +36,7 @@ use Override;
  * @property string $content
  * @property ContentFormat $content_mode
  * @property PostStatus|null $private
+ * @property Carbon|null $news_mailed_at
  * @property Carbon|null $deleted_at
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -69,6 +70,7 @@ class Post extends Model implements HasMedia
         return [
             'private' => PostStatus::class,
             'content_mode' => ContentFormat::class,
+            'news_mailed_at' => 'datetime',
         ];
     }
 
