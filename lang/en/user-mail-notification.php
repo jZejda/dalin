@@ -31,7 +31,7 @@ return [
     'sections' => [
         'news' => [
             'heading'     => 'News notifications',
-            'description' => 'Here you can set up notifications for public news and news from the members section.',
+            'description' => 'Here you can set up notifications for public news and news from the members section. New posts arrive once a day as a digest at the hour you set.',
         ],
         'entry_deadline' => [
             'heading'     => 'Notifications about the approaching end of race entries',
@@ -63,6 +63,7 @@ return [
         'news'                         => 'News',
         'news_option_public'           => 'Public news',
         'news_option_members'          => 'Members section news',
+        'news_time_trigger'            => 'Approximate notification hour',
         'sport'                        => 'Sport',
         'sport_time_trigger'           => 'Approximate notification hour',
         'days_before_event_entry_ends' => 'Days before entry deadline',
