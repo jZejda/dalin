@@ -65,7 +65,6 @@ class MailLogResource extends Resource implements HasShieldPermissions
                     ->label(__('mail-log.sent_at'))
                     ->dateTime(AppHelper::DATE_FORMAT)
                     ->description(fn (MailLog $record): ?string => $record->created_at?->format('H:i'))
-                    ->icon('heroicon-o-calendar-days')
                     ->sortable(),
                 ViewColumn::make('recipientUser.name')
                     ->label(__('mail-log.recipient'))
