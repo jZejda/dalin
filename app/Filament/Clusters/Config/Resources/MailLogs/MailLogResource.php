@@ -64,13 +64,17 @@ class MailLogResource extends Resource implements HasShieldPermissions
                 TextColumn::make('created_at')
                     ->label(__('mail-log.sent_at'))
                     ->dateTime(AppHelper::DATE_FORMAT)
+                    ->description(fn (MailLog $record): ?string => $record->created_at?->format('H:i'))
                     ->icon('heroicon-o-calendar-days')
                     ->sortable(),
-                TextColumn::make('recipient')
+                ViewColumn::make('recipientUser.name')
                     ->label(__('mail-log.recipient'))
-                    ->wrap()
-                    ->searchable()
-                    ->copyable(),
+                    ->view('filament.tables.columns.mail-log-recipient')
+                    ->searchable(query: fn (Builder $query, string $search): Builder => $query->where(
+                        fn (Builder $query): Builder => $query
+                            ->where('recipient', 'like', '%'.$search.'%')
+                            ->orWhereHas('recipientUser', fn (Builder $query): Builder => $query->where('name', 'like', '%'.$search.'%')),
+                    )),
                 TextColumn::make('subject')
                     ->label(__('mail-log.subject'))
                     ->wrap()
@@ -150,6 +154,7 @@ class MailLogResource extends Resource implements HasShieldPermissions
                     ->label(__('mail-log.source'))
                     ->options(MailSource::enumArray()),
             ])
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with(['recipientUser', 'sourceUser']))
             ->defaultSort('created_at', 'desc')
             ->striped()
             ->defaultPaginationPageOption(25)

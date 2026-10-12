@@ -43,6 +43,17 @@ class MailLog extends Model
     }
 
     /**
+     * The user account the mail went to. The log only keeps the address, so it is matched by e-mail;
+     * null for an address without an account.
+     *
+     * @return BelongsTo<User, $this>
+     */
+    public function recipientUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'recipient', 'email');
+    }
+
+    /**
      * Short class name of the Mailable (without namespace).
      *
      * @return Attribute<string|null, never>
