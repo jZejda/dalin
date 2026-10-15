@@ -84,7 +84,8 @@ final class OrisApiService
             UserEntry::query()
                 ->where('sport_event_id', $sportEventId)
                 ->where('user_race_profile_id', $raceProfile->id)
-                ->update(['real_start' => $startEntry->StartTime !== null ? Carbon::parse($startEntry->StartTime) : null]);
+                // Classes without assigned start times (HDR, OPEN) come back as '' — Carbon would parse that as "now"
+                ->update(['real_start' => EmptyType::stringNotEmpty($startEntry->StartTime) ? Carbon::parse($startEntry->StartTime) : null]);
         }
 
         return true;
