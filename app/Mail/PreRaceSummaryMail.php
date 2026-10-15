@@ -10,6 +10,7 @@ use App\Models\SportClass;
 use App\Models\SportEvent;
 use App\Models\UserEntry;
 use App\Services\OrisApiService;
+use App\Shared\Helpers\StartOffset;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -108,7 +109,7 @@ class PreRaceSummaryMail extends Mailable
 
         if ($start !== null) {
             $startDisplay = Str::substr($start, 0, 5);
-            $relative = $this->minutesFromFirstStart($start);
+            $relative = StartOffset::minutesFromZero($this->event->start_time, $start);
 
             $lines[] = [
                 'icon' => 'timer',
@@ -136,21 +137,6 @@ class PreRaceSummaryMail extends Mailable
             'extra' => $profile?->reg_number,
             'lines' => $lines,
         ];
-    }
-
-    private function minutesFromFirstStart(string $start): ?int
-    {
-        $entryMinutes = $this->toMinutes($start);
-        $eventMinutes = $this->event->start_time !== null ? $this->toMinutes($this->event->start_time) : null;
-
-        return $entryMinutes !== null && $eventMinutes !== null ? $entryMinutes - $eventMinutes : null;
-    }
-
-    private function toMinutes(string $time): ?int
-    {
-        $parts = explode(':', trim($time));
-
-        return count($parts) >= 2 ? (int) $parts[0] * 60 + (int) $parts[1] : null;
     }
 
     public function attachments(): array

@@ -33,4 +33,6 @@ return [
     'change_password_submit_label' => 'Set new password',
     ],
 
+    'start_offset_tooltip' => 'Start minute from zero time (:zero)',
+
 ];
