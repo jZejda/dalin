@@ -142,3 +142,11 @@ it('drops the cached sitemap when listed content changes', function (): void {
     expect(Cache::has(Sitemap::CACHE_KEY))->toBeFalse();
     $this->get('/sitemap.xml')->assertSee($post->publicUrl());
 });
+
+it('links the default favicon until a club favicon is uploaded', function (): void {
+    expect($this->get('/')->getContent())->toContain('<link rel="icon" href="'.asset('favicon.ico').'">');
+
+    AppSetting::set(AppSetting::SEO_FAVICON, 'seo/favicon.ico');
+
+    expect($this->get('/')->getContent())->toContain('<link rel="icon" href="'.url('storage/seo/favicon.ico').'">');
+});

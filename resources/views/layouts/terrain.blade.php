@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="application-name" content="{{ config('app.name') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @include('partials.favicon')
     @include('partials.frontend.seo')
     <x-ui.theme-script />
     <style>[x-cloak] { display: none !important; }</style>

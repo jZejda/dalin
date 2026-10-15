@@ -62,6 +62,8 @@ return [
             'seo_image_helper' => 'JPG nebo PNG ve velikosti 1200 × 630 px (např. logo na barvách klubu). Použije se v náhledu odkazu na Facebooku, WhatsAppu apod. u stránek bez vlastního obrázku.',
             'seo_logo' => 'Logo klubu',
             'seo_logo_helper' => 'Čtvercové PNG nebo JPG, alespoň 112 × 112 px. Vyhledávače ho mohou zobrazit u výsledků klubu, zobrazuje se i v hlavičce e-mailů (doporučeno PNG).',
+            'seo_favicon' => 'Favicona',
+            'seo_favicon_helper' => 'Ikona webu v záložce prohlížeče a v záložkách (administrace i veřejný web). Soubor ICO nebo čtvercové PNG (např. 48 × 48 px), nejvýše 512 kB. Pokud ji nenahrajete, použije se výchozí ikona DaLinu.',
             'seo_same_as' => 'Profily na sociálních sítích',
             'seo_same_as_helper' => 'Celé adresy profilů klubu (Facebook, Instagram, Strava…). Každou potvrďte klávesou Enter.',
         ],

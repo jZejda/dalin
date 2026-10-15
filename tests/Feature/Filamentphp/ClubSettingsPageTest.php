@@ -195,3 +195,44 @@ it('rejects an accent colour that is not a hex value', function (): void {
         ->call('submit')
         ->assertHasErrors(['accent_color']);
 });
+
+it('saves the favicon and replaces the previous one', function (): void {
+    actingAsSuperAdmin();
+    Storage::fake('public');
+    Storage::disk('public')->put('seo/old.ico', 'x');
+    Storage::disk('public')->putFileAs('seo', UploadedFile::fake()->image('favicon.png', 48, 48), 'favicon.png');
+    AppSetting::set(AppSetting::SEO_FAVICON, 'seo/old.ico');
+
+    Livewire::test(ClubSettings::class)
+        ->assertSet('seo_favicon', fn (mixed $state): bool => is_array($state) && in_array('seo/old.ico', $state, true))
+        ->set('seo_favicon', ['new' => 'seo/favicon.png'])
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    expect(AppSetting::getSeoFaviconPath())->toBe('seo/favicon.png')
+        ->and(AppSetting::getFaviconUrl())->toEndWith('/storage/seo/favicon.png')
+        ->and(Storage::disk('public')->exists('seo/old.ico'))->toBeFalse();
+});
+
+it('ignores a favicon path outside the SEO upload directory', function (): void {
+    actingAsSuperAdmin();
+    Storage::fake('public');
+    Storage::disk('public')->put('avatars/1/avatar.png', 'x');
+
+    Livewire::test(ClubSettings::class)
+        ->set('seo_favicon', ['forged' => 'avatars/1/avatar.png'])
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    expect(AppSetting::getSeoFaviconPath())->toBeNull()
+        ->and(AppSetting::getFaviconUrl())->toBe(asset('favicon.ico'));
+});
+
+it('renders the uploaded favicon in the admin panel', function (): void {
+    actingAsSuperAdmin();
+    AppSetting::set(AppSetting::SEO_FAVICON, 'seo/favicon.png');
+
+    $this->get('/admin/config/club')
+        ->assertOk()
+        ->assertSee('<link rel="icon" href="'.url('storage/seo/favicon.png').'"', false);
+});

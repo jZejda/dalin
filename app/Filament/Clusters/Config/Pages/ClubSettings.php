@@ -72,6 +72,8 @@ class ClubSettings extends Page implements HasForms
 
     public mixed $seo_logo = null;
 
+    public mixed $seo_favicon = null;
+
     /** @var list<string> */
     public array $seo_same_as = [];
 
@@ -97,6 +99,7 @@ class ClubSettings extends Page implements HasForms
             'seo_description' => AppSetting::getSeoDescription(),
             'seo_image' => AppSetting::getSeoImagePath(),
             'seo_logo' => AppSetting::getSeoLogoPath(),
+            'seo_favicon' => AppSetting::getSeoFaviconPath(),
             'seo_same_as' => AppSetting::getSeoSameAs(),
             'accent_color' => AppSetting::getBrandingAccentColor(),
         ]);
@@ -197,6 +200,14 @@ class ClubSettings extends Page implements HasForms
                         ->directory(self::SEO_UPLOAD_DIRECTORY)
                         ->visibility('public')
                         ->maxSize(2048),
+                    FileUpload::make('seo_favicon')
+                        ->label(__('club-settings.form.seo.seo_favicon'))
+                        ->helperText(__('club-settings.form.seo.seo_favicon_helper'))
+                        ->acceptedFileTypes(['image/x-icon', 'image/vnd.microsoft.icon', 'image/png'])
+                        ->disk('public')
+                        ->directory(self::SEO_UPLOAD_DIRECTORY)
+                        ->visibility('public')
+                        ->maxSize(512),
                     TagsInput::make('seo_same_as')
                         ->label(__('club-settings.form.seo.seo_same_as'))
                         ->helperText(__('club-settings.form.seo.seo_same_as_helper'))
@@ -227,6 +238,7 @@ class ClubSettings extends Page implements HasForms
         AppSetting::set(AppSetting::SEO_DESCRIPTION, $seoDescription !== '' ? $seoDescription : null);
         $this->saveSeoUpload(AppSetting::SEO_IMAGE, AppSetting::getSeoImagePath(), $data['seo_image'] ?? null);
         $this->saveSeoUpload(AppSetting::SEO_LOGO, AppSetting::getSeoLogoPath(), $data['seo_logo'] ?? null);
+        $this->saveSeoUpload(AppSetting::SEO_FAVICON, AppSetting::getSeoFaviconPath(), $data['seo_favicon'] ?? null);
         AppSetting::set(AppSetting::SEO_SAME_AS, array_values(array_filter(
             (array) ($data['seo_same_as'] ?? []),
             static fn (mixed $url): bool => is_string($url) && $url !== '',

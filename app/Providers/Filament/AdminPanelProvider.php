@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Models\AppSetting;
 use App\Filament\Clusters\Config\ConfigCluster;
 use App\Filament\Widgets\PostsOverview;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -51,6 +52,7 @@ class AdminPanelProvider extends PanelProvider
 
                 return null;
             })
+            ->favicon(fn (): string => AppSetting::getFaviconUrl())
             ->sidebarCollapsibleOnDesktop()
             // Vypnutá horní lišta: logo a uživatelské menu se automaticky
             // přesouvají do levého menu (nativní chování Filamentu).
