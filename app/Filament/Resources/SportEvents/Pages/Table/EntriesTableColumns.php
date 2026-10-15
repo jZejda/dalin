@@ -74,7 +74,13 @@ class EntriesTableColumns
                 ->tooltip(fn (UserEntry $record): string => $record->club_note ?? ''),
             TextColumn::make('real_start')
                 ->label(__('sport-event.entries_table.start'))
-                ->dateTime('H:i')
+                ->html()
+                ->formatStateUsing(fn ($state, UserEntry $record): HtmlString => new HtmlString(
+                    (string) view('components.entry-start-time', [
+                        'start' => $record->real_start,
+                        'zeroTime' => $sportEvent->start_time,
+                    ])
+                ))
                 ->placeholder(__('sport-event.entries_table.start_placeholder')),
             TextColumn::make('rent_si')
                 ->label(__('sport-event.entries_table.rent_si')),

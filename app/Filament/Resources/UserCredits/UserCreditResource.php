@@ -18,6 +18,8 @@ use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Filament\Resources\UserCredits\Widgets\UserCreditStats;
+use App\Filament\Tables\Columns\PaymentCategoryColumn;
+use App\Filament\Tables\Filters\PaymentCategoryFilter;
 use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserCredit;
@@ -36,6 +38,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Enums\Width;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
@@ -191,6 +194,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('sportService'))
             ->columns([
                 TextColumn::make('id')
                     ->label(__('user-credit.id'))
@@ -221,10 +225,6 @@ class UserCreditResource extends Resource implements HasShieldPermissions
 
                         return $description;
                     }),
-                ViewColumn::make('user.name')
-                    ->label(__('user-race-profile.table.user-name'))
-                    ->view('filament.tables.columns.user-identity')
-                    ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label(__('user-credit.table.registration'))
                     ->html()
@@ -234,10 +234,15 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                             'size' => 'sm',
                         ])
                     )),
+                PaymentCategoryColumn::make(),
                 TextColumn::make('amount')
-                    ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
-                    ->color(fn (UserCredit $record): ?string => $record->credit_type->getColor())
                     ->label(__('user-credit.table.amount_title'))
+                    ->size(TextSize::Large)
+                    ->html()
+                    ->formatStateUsing(fn ($state): HtmlString => new HtmlString(
+                        (string) view('components.money-amount', ['amount' => $state])
+                    ))
+                    ->alignEnd()
                     ->description(function (UserCredit $record): null|string|HtmlString {
                         if ($record->relatedUser !== null) {
                             if ($record->amount < 0) {
@@ -264,6 +269,10 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                     ->formatStateUsing(fn (UserCreditStatus $state): string => __("sport-event.type_enum_credit_status.{$state->value}"))
                     ->colors(self::getUserCreditStatuses())
                     ->searchable(),
+                ViewColumn::make('user.name')
+                    ->label(__('user-race-profile.table.user-name'))
+                    ->view('filament.tables.columns.user-badge')
+                    ->searchable(),
                 ViewColumn::make('sourceUser.name')
                     ->label(__('user-credit.table.source_user_title'))
                     ->view('filament.tables.columns.user-badge'),
@@ -275,6 +284,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                 SelectFilter::make('sport_event_id')
                     ->label(__('user-credit.filters.sport_event'))
                     ->options(SportEvent::all()->sortBy('date')->pluck('sport_event_last_cost_calculate', 'id')),
+                PaymentCategoryFilter::make(),
                 SelectFilter::make('status')
                     ->options(self::getUserCreditStatuses())
                     ->default(''),

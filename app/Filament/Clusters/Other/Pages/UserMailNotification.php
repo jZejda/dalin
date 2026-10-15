@@ -14,12 +14,12 @@ use App\Models\UserSetting;
 use App\Enums\SportEventType;
 use App\Shared\Helpers\EmptyType;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
@@ -349,7 +349,6 @@ class UserMailNotification extends Page implements HasForms
                     ->schema([
                         Section::make(__('user-mail-notification.sections.news.heading'))
                             ->description(__('user-mail-notification.sections.news.description'))
-                            ->aside()
                             ->columns(2)
                             ->schema([
                                 CheckboxList::make('news')
@@ -367,7 +366,6 @@ class UserMailNotification extends Page implements HasForms
                             ]),
                         Section::make(__('user-mail-notification.sections.entry_deadline.heading'))
                             ->description(__('user-mail-notification.sections.entry_deadline.description'))
-                            ->aside()
                             ->columns(3)
                             ->schema([
                                 CheckboxList::make('sport')
@@ -389,7 +387,6 @@ class UserMailNotification extends Page implements HasForms
                             ]),
                         Section::make(__('user-mail-notification.sections.weekly_summary.heading'))
                             ->description(__('user-mail-notification.sections.weekly_summary.description'))
-                            ->aside()
                             ->columns(2)
                             ->schema([
                                 CheckboxList::make('week_report_by_sport')
@@ -398,10 +395,9 @@ class UserMailNotification extends Page implements HasForms
                             ]),
                         Section::make(__('user-mail-notification.sections.other_mails.heading'))
                             ->description(__('user-mail-notification.sections.other_mails.description'))
-                            ->aside()
                             ->columns(3)
                             ->schema([
-                                Toggle::make('pre_race_summary_enabled')
+                                Checkbox::make('pre_race_summary_enabled')
                                     ->label(__('user-mail-notification.form.pre_race_summary_enabled'))
                                     ->columnSpanFull()
                                     ->default(false),
@@ -458,7 +454,6 @@ class UserMailNotification extends Page implements HasForms
                     ->schema([
                         Section::make(__('user-mail-notification.sections.sign_up_permissions.heading'))
                             ->description(__('user-mail-notification.sections.sign_up_permissions.description'))
-                            ->aside()
                             ->schema([
                                 Select::make('users_allow_sign_up_for_race')
                                     ->label(__('user-mail-notification.form.users_allow_sign_up_for_race'))
@@ -473,7 +468,6 @@ class UserMailNotification extends Page implements HasForms
                     ->schema([
                         Section::make(__('user-mail-notification.sections.api_key.heading'))
                             ->description(__('user-mail-notification.sections.api_key.description'))
-                            ->aside()
                             ->schema([
                                 View::make('filament.pages.components.api-key-manager')
                                     ->viewData([
@@ -488,7 +482,6 @@ class UserMailNotification extends Page implements HasForms
                     ->schema([
                         Section::make(__('user-mail-notification.sections.calendar.heading'))
                             ->description(__('user-mail-notification.sections.calendar.description'))
-                            ->aside()
                             ->schema([
                                 View::make('filament.pages.components.calendar-token-manager')
                             ]),

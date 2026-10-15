@@ -116,7 +116,13 @@ class UserEntryResource extends Resource implements HasShieldPermissions
                     ->sortable(),
                 TextColumn::make('real_start')
                     ->label(__('user-entry.table.real_start'))
-                    ->dateTime('H:i')
+                    ->html()
+                    ->formatStateUsing(fn ($state, UserEntry $record): HtmlString => new HtmlString(
+                        (string) view('components.entry-start-time', [
+                            'start' => $record->real_start,
+                            'zeroTime' => $record->sportEvent?->start_time,
+                        ])
+                    ))
                     ->placeholder(__('user-entry.table.real_start_none')),
                 TextColumn::make('requested_start')
                     ->label(__('user-entry.table.requested_start_note'))

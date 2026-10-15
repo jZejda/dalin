@@ -30,7 +30,6 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\HtmlString;
-use Illuminate\Support\Number;
 
 class MemberFinanceResource extends Resource
 {
@@ -228,17 +227,9 @@ class MemberFinanceResource extends Resource
                     ->label(__('member-finance.table.balance'))
                     ->size(TextSize::Large)
                     ->html()
-                    ->formatStateUsing(function ($state): HtmlString {
-                        $amount = floatval($state ?? 0);
-                        $color = $amount >= 0 ? 'text-success-600' : 'text-danger-600';
-
-                        $formatted = Number::format($amount, precision: 2, locale: 'cs') ?: number_format($amount, 2, ',', ' ');
-
-                        return new HtmlString(
-                            '<span class="'.$color.'">'.e($formatted).'</span>'
-                            .'<span class="text-gray-400 dark:text-gray-500 text-sm ml-1">Kč</span>'
-                        );
-                    })
+                    ->formatStateUsing(fn ($state): HtmlString => new HtmlString(
+                        (string) view('components.money-amount', ['amount' => $state ?? 0])
+                    ))
                     ->sortable()
                     ->alignEnd(),
                 TextColumn::make('active')

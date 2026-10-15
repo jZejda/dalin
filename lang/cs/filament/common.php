@@ -33,4 +33,6 @@ return [
         'change_password_submit_label' => 'Nastavit nové heslo',
     ],
 
+    'start_offset_tooltip' => 'Minuta startu od času 00 (:zero)',
+
 ];

@@ -89,6 +89,8 @@ return [
         'event_internal_id' => 'internal event id: :id',
         'comments' => 'Comments',
         'transaction_link' => 'Transaction: :id',
+        'amount_total' => 'Total',
+        'no_event' => 'not linked to an event/race',
     ],
 
     // Filters
@@ -99,6 +101,17 @@ return [
 
     // Actions
     'actions' => [
+        'credit_note' => [
+            'label' => 'Info',
+            'modal_heading' => 'Payment note',
+            'modal_description' => 'If something is not right, please write here why. Please keep it short and to the point.',
+            'modal_submit' => 'Save note',
+            'field_note' => 'Note',
+            'notification_title' => 'Your note has been saved',
+            'notification_body' => 'Thank you for your billing query, we will try to resolve it.',
+            'admin_notification_title' => 'Billing note',
+            'admin_notification_body' => 'User: :user | Billing ID: :id sent a message. Please resolve the note.',
+        ],
         'transport_billing' => [
             'action_group_label' => 'Travel billing',
             'modal_description' => 'Billing of travel costs between club members. This transfers funds between club members

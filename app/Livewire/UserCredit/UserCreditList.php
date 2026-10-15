@@ -7,7 +7,7 @@ use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use App\Enums\AppRoles;
-use App\Enums\UserCreditType;
+use App\Filament\Tables\Columns\PaymentCategoryColumn;
 use App\Models\User;
 use App\Models\UserCredit;
 use App\Models\UserCreditNote;
@@ -37,7 +37,7 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
     public function table(Table $table): Table
     {
         return $table
-            ->query(UserCredit::query()->where('user_id', '=', auth()->user()?->id))
+            ->query(UserCredit::query()->with(['sportService'])->where('user_id', '=', auth()->user()?->id))
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
@@ -61,11 +61,11 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
 
                         return null;
                     })
-                    ->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name !== null ? $record->sportEvent->alt_name : 'nemá vazbu na akci/závod')
+                    ->description(fn (UserCredit $record): string => $record->sportEvent?->alt_name !== null ? $record->sportEvent->alt_name : __('user-credit.table.no_event'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
-                    ->label('Registrace závodníka')
+                    ->label(__('user-credit.table.registration'))
                     ->html()
                     ->formatStateUsing(fn ($state, UserCredit $record): HtmlString => new HtmlString(
                         (string) view('components.race-profile-identity', [
@@ -94,14 +94,10 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
 
                         return null;
                     })
-                    ->summarize(Sum::make())->money('CZK')->label('Celkem'),
-                TextColumn::make('credit_type')
-                    ->label('Typ platby')
-                    ->badge()
-                    ->formatStateUsing(fn (UserCreditType $state): string => UserCreditType::enumArray()[$state->value] ?? $state->value)
-                    ->description(fn (UserCredit $record): ?string => $record->sportService?->service_name_cz),
+                    ->summarize(Sum::make())->money('CZK')->label(__('user-credit.table.amount_total')),
+                PaymentCategoryColumn::make(),
                 ViewColumn::make('user_entry')
-                    ->label('Komentářů')
+                    ->label(__('user-credit.table.comments'))
                     ->view('filament.tables.columns.user-credit-comments-count'),
                 ViewColumn::make('sourceUser.name')
                     ->label(__('user-credit.table.source_user_title'))
@@ -123,36 +119,40 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
 
                         if ($userCreditNote->save()) {
                             Notification::make()
-                                ->title('Poznámku jsme uložili')
-                                ->body('Děkujeme za zaslání dotazu k vyúčtování, pokusíme se to vyřešit.')
+                                ->title(__('user-credit.actions.credit_note.notification_title'))
+                                ->body(__('user-credit.actions.credit_note.notification_body'))
                                 ->success()
                                 ->seconds(8)
                                 ->send();
 
                             $notificationUsers = User::role([AppRoles::BillingSpecialist->value, AppRoles::SuperAdmin->value])->get();
-                            // vytahni si data podle $this->record
                             foreach ($notificationUsers as $recipient) {
+                                // Database notifications store the rendered text, so render it in the recipient's language
+                                $locale = $recipient->preferredLocale();
+
                                 Notification::make()
-                                    ->title('Poznámka k vyúčtování')
-                                    ->body('Uživatel: '.auth()->user()?->name.' | Vyúčtování ID: '.$userCredit->id
-                                    .' zaslal zprávu. Prosíme o vyřešení poznámky.')
+                                    ->title(__('user-credit.actions.credit_note.admin_notification_title', [], $locale))
+                                    ->body(__('user-credit.actions.credit_note.admin_notification_body', [
+                                        'user' => auth()->user()?->name,
+                                        'id' => $userCredit->id,
+                                    ], $locale))
                                     ->sendToDatabase($recipient);
                             }
                         }
                     })
                     ->color('gray')
-                    ->label('Info')
+                    ->label(__('user-credit.actions.credit_note.label'))
                     ->icon('heroicon-s-chat-bubble-oval-left-ellipsis')
-                    ->modalHeading('Poznámka k platbě')
-                    ->modalDescription('Pokud není něco v pořádků, sem prosím napište důvody proč je to jinak. Prosím stručně a věcně.')
-                    ->modalSubmitActionLabel('Uložit poznámku')
+                    ->modalHeading(__('user-credit.actions.credit_note.modal_heading'))
+                    ->modalDescription(__('user-credit.actions.credit_note.modal_description'))
+                    ->modalSubmitActionLabel(__('user-credit.actions.credit_note.modal_submit'))
                     ->modalContentFooter(fn (UserCredit $record): View => view(
                         'filament.modals.user-credit-comment',
                         ['record' => $record],
                     ))
                     ->schema([
                         MarkdownEditor::make('user_note')
-                            ->label('Poznámka'),
+                            ->label(__('user-credit.actions.credit_note.field_note')),
                     ]),
             ])
             ->toolbarActions([

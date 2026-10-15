@@ -89,6 +89,8 @@ return [
         'event_internal_id' => 'interní id závodu: :id',
         'comments' => 'Komentářů',
         'transaction_link' => 'Transakce: :id',
+        'amount_total' => 'Celkem',
+        'no_event' => 'nemá vazbu na akci/závod',
     ],
 
     // Filters
@@ -99,6 +101,17 @@ return [
 
     // Actions
     'actions' => [
+        'credit_note' => [
+            'label' => 'Info',
+            'modal_heading' => 'Poznámka k platbě',
+            'modal_description' => 'Pokud není něco v pořádku, napište sem prosím důvody, proč je to jinak. Prosím stručně a věcně.',
+            'modal_submit' => 'Uložit poznámku',
+            'field_note' => 'Poznámka',
+            'notification_title' => 'Poznámku jsme uložili',
+            'notification_body' => 'Děkujeme za zaslání dotazu k vyúčtování, pokusíme se to vyřešit.',
+            'admin_notification_title' => 'Poznámka k vyúčtování',
+            'admin_notification_body' => 'Uživatel: :user | Vyúčtování ID: :id zaslal zprávu. Prosíme o vyřešení poznámky.',
+        ],
         'transport_billing' => [
             'action_group_label' => 'Cestovní rozúčtování',
             'modal_description' => 'Vyúčtování cestovních nákladů mezi členy klubu. Jedná se převod financí mezi členy klubu,

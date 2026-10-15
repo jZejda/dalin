@@ -90,8 +90,8 @@ it('sends each post in exactly one news digest, even when the job runs repeatedl
     $this->travelTo(now()->addDay()->setTime(8, 0));
     (new SendNewPostsEmailJob())->handle();
 
-    Mail::assertQueuedCount(1);
-    Mail::assertQueued(NewPosts::class, fn (NewPosts $mail): bool => $mail->hasTo($user->email));
+    // Count only this subscriber's digests — the DB may hold other subscribers with the same trigger hour
+    expect(Mail::queued(NewPosts::class, fn (NewPosts $mail): bool => $mail->hasTo($user->email)))->toHaveCount(1);
 });
 
 it('matches a single-digit news trigger hour and respects the public/internal choice', function (): void {
@@ -104,8 +104,8 @@ it('matches a single-digit news trigger hour and respects the public/internal ch
     $this->travelTo(now()->setTime(7, 0));
     (new SendNewPostsEmailJob())->handle();
 
-    Mail::assertQueuedCount(1);
-    Mail::assertQueued(NewPosts::class, fn (NewPosts $mail): bool => $mail->hasTo($legacyPadded->email));
+    expect(Mail::queued(NewPosts::class, fn (NewPosts $mail): bool => $mail->hasTo($legacyPadded->email)))->toHaveCount(1)
+        ->and(Mail::queued(NewPosts::class, fn (NewPosts $mail): bool => $mail->hasTo($publicOnly->email)))->toBeEmpty();
 });
 
 it('leaves a post mailed out manually out of the news digest', function (): void {
