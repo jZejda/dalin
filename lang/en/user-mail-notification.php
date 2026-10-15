@@ -74,7 +74,7 @@ return [
         'event_filters'                => 'User filters for the race and event list.',
         'event_filters_add_action'     => 'Add new filter',
         'filter_name'                  => 'Name',
-        'filter_name_hint'             => 'Will be shown as the filter title.',
+        'filter_name_hint'             => 'Filter title.',
         'filter_sport_list'            => 'Sport',
         'filter_sport_event_type'      => 'Event type',
         'filter_icon'                  => 'Icon',

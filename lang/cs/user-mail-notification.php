@@ -74,7 +74,7 @@ return [
         'event_filters'                => 'Uživatelské filtry listu závodů a událostí.',
         'event_filters_add_action'     => 'Přidej nový filtr',
         'filter_name'                  => 'Název',
-        'filter_name_hint'             => 'Bude zobrazen jako titulek filtru.',
+        'filter_name_hint'             => 'Titulek filtru.',
         'filter_sport_list'            => 'Sport',
         'filter_sport_event_type'      => 'Typ akce',
         'filter_icon'                  => 'Ikona',
