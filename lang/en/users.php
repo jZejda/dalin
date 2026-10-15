@@ -83,7 +83,6 @@ return [
         ],
         'filters' => [
             'sport_event' => 'Race',
-            'payment_category' => 'Payment type',
             'created_from' => 'Date from',
             'created_until' => 'Date to',
         ],

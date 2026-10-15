@@ -18,6 +18,8 @@ use App\Enums\UserCreditSource;
 use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Filament\Resources\UserCredits\Widgets\UserCreditStats;
+use App\Filament\Tables\Columns\PaymentCategoryColumn;
+use App\Filament\Tables\Filters\PaymentCategoryFilter;
 use App\Models\SportEvent;
 use App\Models\User;
 use App\Models\UserCredit;
@@ -191,6 +193,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('sportService'))
             ->columns([
                 TextColumn::make('id')
                     ->label(__('user-credit.id'))
@@ -234,6 +237,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                             'size' => 'sm',
                         ])
                     )),
+                PaymentCategoryColumn::make(),
                 TextColumn::make('amount')
                     ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
                     ->color(fn (UserCredit $record): ?string => $record->credit_type->getColor())
@@ -275,6 +279,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                 SelectFilter::make('sport_event_id')
                     ->label(__('user-credit.filters.sport_event'))
                     ->options(SportEvent::all()->sortBy('date')->pluck('sport_event_last_cost_calculate', 'id')),
+                PaymentCategoryFilter::make(),
                 SelectFilter::make('status')
                     ->options(self::getUserCreditStatuses())
                     ->default(''),
