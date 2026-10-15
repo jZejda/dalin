@@ -87,3 +87,13 @@ it('shows the credit owner as a compact badge in the admin credit overview', fun
         ->assertSeeHtml('Jana Nováková')
         ->assertDontSee($member->email);
 });
+
+it('shows the amount like the member finance balance', function (): void {
+    actingAsSuperAdmin();
+    $member = User::factory()->create();
+    paymentCategoryCredit($member, UserCreditType::MembershipFees, -1250);
+
+    Livewire::test(ListUserCredits::class)
+        // Czech format: non-breaking space as thousands separator
+        ->assertSeeHtml('<span class="text-danger-600">-1'."\u{00A0}".'250,00</span><span class="text-gray-400 dark:text-gray-500 text-sm ml-1">Kč</span>');
+});

@@ -38,6 +38,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Enums\Width;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
@@ -235,9 +236,13 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                     )),
                 PaymentCategoryColumn::make(),
                 TextColumn::make('amount')
-                    ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
-                    ->color(fn (UserCredit $record): ?string => $record->credit_type->getColor())
                     ->label(__('user-credit.table.amount_title'))
+                    ->size(TextSize::Large)
+                    ->html()
+                    ->formatStateUsing(fn ($state): HtmlString => new HtmlString(
+                        (string) view('components.money-amount', ['amount' => $state])
+                    ))
+                    ->alignEnd()
                     ->description(function (UserCredit $record): null|string|HtmlString {
                         if ($record->relatedUser !== null) {
                             if ($record->amount < 0) {
