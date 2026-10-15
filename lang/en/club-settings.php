@@ -62,6 +62,8 @@ return [
             'seo_image_helper' => 'JPG or PNG sized 1200 × 630 px (e.g. the logo on the club colours). Used in link previews on Facebook, WhatsApp etc. for pages without their own image.',
             'seo_logo' => 'Club logo',
             'seo_logo_helper' => 'Square PNG or JPG, at least 112 × 112 px. Search engines may show it next to the club\'s results; it is also shown in the e-mail header (PNG recommended).',
+            'seo_favicon' => 'Favicon',
+            'seo_favicon_helper' => 'Site icon shown in the browser tab and bookmarks (admin panel and public website). An ICO file or a square PNG (e.g. 48 × 48 px), up to 512 kB. When none is uploaded, the default DaLin icon is used.',
             'seo_same_as' => 'Social network profiles',
             'seo_same_as_helper' => 'Full URLs of the club profiles (Facebook, Instagram, Strava…). Confirm each with Enter.',
         ],

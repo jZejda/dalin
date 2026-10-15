@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Override;
 
 /**
@@ -70,6 +71,8 @@ class AppSetting extends Model
     public const string SEO_LOGO = 'seo.logo';
 
     public const string SEO_SAME_AS = 'seo.same_as';
+
+    public const string SEO_FAVICON = 'seo.favicon';
 
     public const string BRANDING_ACCENT_COLOR = 'branding.accent_color';
 
@@ -222,6 +225,24 @@ class AppSetting extends Model
     public static function getSeoLogoPath(): ?string
     {
         return self::nonEmptyString(self::get(self::SEO_LOGO));
+    }
+
+    /**
+     * Path of the uploaded favicon (ICO or PNG) on the `public` disk.
+     */
+    public static function getSeoFaviconPath(): ?string
+    {
+        return self::nonEmptyString(self::get(self::SEO_FAVICON));
+    }
+
+    /**
+     * URL of the site favicon: the per-site upload, or the shared `public/favicon.ico`.
+     */
+    public static function getFaviconUrl(): string
+    {
+        $path = self::getSeoFaviconPath();
+
+        return $path !== null ? url(Storage::disk('public')->url($path)) : asset('favicon.ico');
     }
 
     /**
