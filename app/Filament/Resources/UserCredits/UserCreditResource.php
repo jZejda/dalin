@@ -226,7 +226,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                     }),
                 ViewColumn::make('user.name')
                     ->label(__('user-race-profile.table.user-name'))
-                    ->view('filament.tables.columns.user-identity')
+                    ->view('filament.tables.columns.user-badge')
                     ->searchable(),
                 TextColumn::make('userRaceProfile.reg_number')
                     ->label(__('user-credit.table.registration'))

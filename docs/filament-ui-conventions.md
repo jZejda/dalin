@@ -78,8 +78,9 @@ user), `user-badge` falls back to a neutral gray badge showing "N/A"; `user-iden
 `->searchable()` / `->sortable()` on the column keep working as normal — they operate on the
 underlying dotted relation path, independent of which view renders the cell.
 
-Reference implementation: `app/Filament/Resources/UserCredits/UserCreditResource.php` — "Uživatel"
-(full) and "Zapsal" (compact) side by side in the same table.
+Reference implementations: `app/Filament/Resources/Posts/PostResource.php` — "Autor" (full);
+`app/Filament/Resources/UserCredits/UserCreditResource.php` — "Uživatel" and "Zapsal" (both compact,
+the credit overview is too wide for the full variant).
 
 ### Security note for anything resembling an avatar upload
 

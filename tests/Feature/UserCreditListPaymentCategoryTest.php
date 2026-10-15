@@ -76,3 +76,14 @@ it('notifies billing admins about a payment note in their own language', functio
     expect($notification?->data['title'])->toBe('Billing note')
         ->and($notification?->data['body'])->toBe('User: Jana Nováková | Billing ID: '.$credit->id.' sent a message. Please resolve the note.');
 });
+
+it('shows the credit owner as a compact badge in the admin credit overview', function (): void {
+    actingAsSuperAdmin();
+    $member = User::factory()->create(['name' => 'Jana Nováková']);
+    paymentCategoryCredit($member, UserCreditType::UserDonation, 500);
+
+    Livewire::test(ListUserCredits::class)
+        // Name only as the badge tooltip, no e-mail line from the full x-user-identity
+        ->assertSeeHtml('Jana Nováková')
+        ->assertDontSee($member->email);
+});
