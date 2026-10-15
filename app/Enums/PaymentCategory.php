@@ -136,15 +136,15 @@ enum PaymentCategory: string implements HasColor, HasIcon, HasLabel
     public function getIcon(): LucideIcon
     {
         return match ($this) {
-            self::EntryFee => LucideIcon::Ticket,
+            self::EntryFee => LucideIcon::Flag,
             self::AdditionalService => LucideIcon::ShoppingBag,
             self::Transport => LucideIcon::Car,
             self::Marketplace => LucideIcon::Store,
             self::MembershipFee => LucideIcon::IdCard,
-            self::Deposit => LucideIcon::PiggyBank,
+            self::Deposit => LucideIcon::Coins,
             self::InitialDeposit => LucideIcon::Wallet,
             self::Transfer => LucideIcon::ArrowLeftRight,
-            self::Other => LucideIcon::Receipt,
+            self::Other => LucideIcon::Banknote,
         };
     }
 
