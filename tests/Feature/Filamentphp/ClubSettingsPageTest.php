@@ -236,3 +236,59 @@ it('renders the uploaded favicon in the admin panel', function (): void {
         ->assertOk()
         ->assertSee('<link rel="icon" href="'.url('storage/seo/favicon.png').'"', false);
 });
+
+function validBimiLogo(): string
+{
+    return '<svg xmlns="http://www.w3.org/2000/svg" version="1.2" baseProfile="tiny-ps" viewBox="0 0 100 100">'
+        .'<title>Club</title><circle cx="50" cy="50" r="40"/></svg>';
+}
+
+it('saves the BIMI e-mail logo and serves it at a stable URL', function (): void {
+    actingAsSuperAdmin();
+    Storage::fake('public');
+    Storage::disk('public')->put('seo/bimi.svg', validBimiLogo());
+
+    Livewire::test(ClubSettings::class)
+        ->set('seo_bimi_logo', ['new' => 'seo/bimi.svg'])
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    expect(AppSetting::getSeoBimiLogoPath())->toBe('seo/bimi.svg');
+
+    $this->get('/bimi/logo.svg')
+        ->assertOk()
+        ->assertHeader('Content-Type', 'image/svg+xml')
+        ->assertHeader('X-Content-Type-Options', 'nosniff')
+        ->assertSee('<title>Club</title>', false);
+});
+
+it('rejects an uploaded BIMI logo that is not SVG Tiny PS', function (): void {
+    actingAsSuperAdmin();
+    Storage::fake('public');
+
+    Livewire::test(ClubSettings::class)
+        ->set('seo_bimi_logo', UploadedFile::fake()->createWithContent('logo.svg', '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>'))
+        ->call('submit')
+        ->assertHasErrors();
+
+    expect(AppSetting::getSeoBimiLogoPath())->toBeNull();
+});
+
+it('ignores a stored BIMI logo path pointing at a file that is not SVG Tiny PS', function (): void {
+    actingAsSuperAdmin();
+    Storage::fake('public');
+    Storage::disk('public')->put('seo/favicon.svg', '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>');
+
+    Livewire::test(ClubSettings::class)
+        ->set('seo_bimi_logo', ['forged' => 'seo/favicon.svg'])
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    expect(AppSetting::getSeoBimiLogoPath())->toBeNull();
+});
+
+it('returns 404 for the BIMI logo when none is uploaded', function (): void {
+    Storage::fake('public');
+
+    $this->get('/bimi/logo.svg')->assertNotFound();
+});
