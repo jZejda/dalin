@@ -262,6 +262,21 @@ it('saves the BIMI e-mail logo and serves it at a stable URL', function (): void
         ->assertSee('<title>Club</title>', false);
 });
 
+it('accepts an uploaded SVG Tiny PS BIMI logo', function (string $svg): void {
+    actingAsSuperAdmin();
+    Storage::fake('public');
+
+    Livewire::test(ClubSettings::class)
+        ->set('seo_bimi_logo', UploadedFile::fake()->createWithContent('logo.svg', $svg))
+        ->call('submit')
+        ->assertHasNoErrors();
+
+    expect(AppSetting::getSeoBimiLogoPath())->not->toBeNull();
+})->with([
+    'minimal' => fn (): string => validBimiLogo(),
+    'with XML declaration' => fn (): string => '<?xml version="1.0" encoding="UTF-8"?>'."\n".validBimiLogo(),
+]);
+
 it('rejects an uploaded BIMI logo that is not SVG Tiny PS', function (): void {
     actingAsSuperAdmin();
     Storage::fake('public');
