@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Enums\EntryStatus;
 use App\Mail\PreRaceSummaryMail;
 use App\Models\SportEvent;
 use Illuminate\Console\Command;
@@ -23,6 +24,7 @@ class SendPreRaceSummaryMailCommand extends Command
         $email = (string) $this->argument('email');
 
         $event = SportEvent::with([
+            'userEntry' => fn ($q) => $q->whereIn('entry_status', EntryStatus::activeValues()),
             'userEntry.userRaceProfile',
             'userEntry.sportClassDefinition',
             'sportClasses',

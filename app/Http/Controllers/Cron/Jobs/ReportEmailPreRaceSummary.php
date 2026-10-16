@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron\Jobs;
 
+use App\Enums\EntryStatus;
 use App\Mail\PreRaceSummaryMail;
 use App\Models\SportEvent;
 use App\Models\UserEntry;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -20,9 +22,13 @@ class ReportEmailPreRaceSummary implements CommonCronJobs
         for ($daysBefore = 1; $daysBefore <= self::MAX_DAYS_BEFORE; $daysBefore++) {
             $targetDate = now()->addDays($daysBefore)->toDateString();
 
+            // Cancelled entries stay in the table, so they must not count as being entered
+            $activeEntries = static fn (Builder $query): Builder => $query->whereIn('entry_status', EntryStatus::activeValues());
+
             $events = SportEvent::whereDate('date', $targetDate)
-                ->whereHas('userEntry')
+                ->whereHas('userEntry', $activeEntries)
                 ->with([
+                    'userEntry' => $activeEntries,
                     'userEntry.userRaceProfile.user.mailSetting',
                     'userEntry.sportClassDefinition',
                     'sportClasses',

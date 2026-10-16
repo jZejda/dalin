@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\EntryStatus;
 use App\Enums\SportEventLinkType;
 use App\Enums\SportEventType;
 use App\Enums\UserCreditStatus;
@@ -84,6 +85,7 @@ final class OrisApiService
             UserEntry::query()
                 ->where('sport_event_id', $sportEventId)
                 ->where('user_race_profile_id', $raceProfile->id)
+                ->whereIn('entry_status', EntryStatus::activeValues())
                 // Classes without assigned start times (HDR, OPEN) come back as '' — Carbon would parse that as "now"
                 ->update(['real_start' => EmptyType::stringNotEmpty($startEntry->StartTime) ? Carbon::parse($startEntry->StartTime) : null]);
         }

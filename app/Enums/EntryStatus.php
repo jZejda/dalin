@@ -13,6 +13,16 @@ enum EntryStatus: string implements HasColor, HasLabel
     case Edit = 'edit';
     case Cancel = 'cancel';
 
+    /**
+     * Statuses of an entry that is really entered — a cancelled entry stays in the table.
+     *
+     * @return list<string>
+     */
+    public static function activeValues(): array
+    {
+        return [self::Create->value, self::Edit->value];
+    }
+
     public static function enumArray(): array
     {
         $trKey = 'sport-event.type_enum_entry_status.';

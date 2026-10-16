@@ -55,7 +55,7 @@ function notificationPost(string $title, PostStatus $status, User $author): Post
     ]);
 }
 
-function preRaceEntry(SportEvent $event, User $user): UserEntry
+function preRaceEntry(SportEvent $event, User $user, EntryStatus $status = EntryStatus::Create): UserEntry
 {
     $definition = SportClassDefinition::query()->firstOrCreate(
         ['sport_id' => $event->sport_id, 'name' => 'H21'],
@@ -68,7 +68,7 @@ function preRaceEntry(SportEvent $event, User $user): UserEntry
         'class_definition_id' => $definition->id,
         'user_race_profile_id' => $profile->id,
         'class_name' => 'H21',
-        'entry_status' => EntryStatus::Create->value,
+        'entry_status' => $status->value,
         'rent_si' => false,
         'entry_created' => now(),
     ]);
@@ -189,6 +189,33 @@ it('does not send the pre-race summary when it is disabled', function (): void {
     (new ReportEmailPreRaceSummary())->run();
 
     Mail::assertNothingSent();
+});
+
+it('does not send the pre-race summary when every entry of the user is cancelled', function (): void {
+    $this->travelTo(now()->setTime(17, 42));
+    $user = notificationUser(['pre_race_summary_enabled' => true, 'pre_race_summary_time_trigger' => 17]);
+    $event = SportEvent::factory()->create(['date' => now()->addDay()->toDateString()]);
+    preRaceEntry($event, $user, EntryStatus::Cancel);
+
+    (new ReportEmailPreRaceSummary())->run();
+
+    Mail::assertNothingSent();
+});
+
+it('lists only active entries in the pre-race summary', function (): void {
+    $this->travelTo(now()->setTime(17, 42));
+    $user = notificationUser(['pre_race_summary_enabled' => true, 'pre_race_summary_time_trigger' => 17]);
+    $event = SportEvent::factory()->create(['date' => now()->addDay()->toDateString()]);
+    $cancelled = preRaceEntry($event, $user, EntryStatus::Cancel);
+    $active = preRaceEntry($event, $user, EntryStatus::Edit);
+
+    (new ReportEmailPreRaceSummary())->run();
+
+    Mail::assertSent(PreRaceSummaryMail::class, function (PreRaceSummaryMail $mail) use ($active, $cancelled): bool {
+        $entryIds = (fn (): array => $this->entries->pluck('id')->all())->call($mail);
+
+        return $entryIds === [$active->id] && !in_array($cancelled->id, $entryIds, true);
+    });
 });
 
 it('sends the weekly report for any selected sport, not only the first one', function (): void {

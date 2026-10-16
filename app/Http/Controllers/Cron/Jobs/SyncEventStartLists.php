@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Cron\Jobs;
 
+use App\Enums\EntryStatus;
 use App\Models\SportEvent;
 use App\Services\OrisApiService;
 use Illuminate\Support\Carbon;
@@ -17,7 +18,9 @@ final class SyncEventStartLists implements CommonCronJobs
             ->where('use_oris_for_entries', true)
             ->whereNotNull('oris_id')
             ->whereBetween('date', [Carbon::today(), Carbon::today()->addDays(4)])
-            ->whereHas('userEntry', fn ($q) => $q->whereNull('real_start'))
+            ->whereHas('userEntry', fn ($q) => $q
+                ->whereIn('entry_status', EntryStatus::activeValues())
+                ->whereNull('real_start'))
             ->get();
 
         $service = new OrisApiService();
