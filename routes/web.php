@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Http\Controllers\Cron\CommonCron;
 use App\Http\Controllers\Demo\DemoResetController;
 use App\Http\Controllers\Demo\DemoScreenshotModeController;
+use App\Http\Controllers\Frontend\BimiLogoController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\PostController;
 use App\Http\Controllers\Frontend\ResultListController;
@@ -42,6 +43,7 @@ Route::get('/', function (SiteSeo $siteSeo) {
 
 Route::get('/robots.txt', RobotsTxtController::class);
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::get('/bimi/logo.svg', BimiLogoController::class)->name('bimi.logo');
 
 Route::view('/design-system', 'design-system.showcase')->name('design-system');
 

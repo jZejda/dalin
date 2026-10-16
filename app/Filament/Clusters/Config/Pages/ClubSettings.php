@@ -6,8 +6,10 @@ namespace App\Filament\Clusters\Config\Pages;
 
 use App\Filament\Clusters\Config\ConfigCluster;
 use App\Models\AppSetting;
+use App\Services\Mail\BimiLogoValidator;
 use App\Services\Mail\MailBranding;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use Closure;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TagsInput;
@@ -18,6 +20,7 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -74,6 +77,8 @@ class ClubSettings extends Page implements HasForms
 
     public mixed $seo_favicon = null;
 
+    public mixed $seo_bimi_logo = null;
+
     /** @var list<string> */
     public array $seo_same_as = [];
 
@@ -100,6 +105,7 @@ class ClubSettings extends Page implements HasForms
             'seo_image' => AppSetting::getSeoImagePath(),
             'seo_logo' => AppSetting::getSeoLogoPath(),
             'seo_favicon' => AppSetting::getSeoFaviconPath(),
+            'seo_bimi_logo' => AppSetting::getSeoBimiLogoPath(),
             'seo_same_as' => AppSetting::getSeoSameAs(),
             'accent_color' => AppSetting::getBrandingAccentColor(),
         ]);
@@ -208,6 +214,15 @@ class ClubSettings extends Page implements HasForms
                         ->directory(self::SEO_UPLOAD_DIRECTORY)
                         ->visibility('public')
                         ->maxSize(512),
+                    FileUpload::make('seo_bimi_logo')
+                        ->label(__('club-settings.form.seo.seo_bimi_logo'))
+                        ->helperText(__('club-settings.form.seo.seo_bimi_logo_helper', ['record' => 'v=BIMI1; l='.route('bimi.logo').'; a=']))
+                        ->acceptedFileTypes(['image/svg+xml'])
+                        ->disk('public')
+                        ->directory(self::SEO_UPLOAD_DIRECTORY)
+                        ->visibility('public')
+                        ->maxSize(BimiLogoValidator::MAX_BYTES / 1024)
+                        ->rules([fn (): Closure => $this->bimiLogoRule(...)]),
                     TagsInput::make('seo_same_as')
                         ->label(__('club-settings.form.seo.seo_same_as'))
                         ->helperText(__('club-settings.form.seo.seo_same_as_helper'))
@@ -239,6 +254,7 @@ class ClubSettings extends Page implements HasForms
         $this->saveSeoUpload(AppSetting::SEO_IMAGE, AppSetting::getSeoImagePath(), $data['seo_image'] ?? null);
         $this->saveSeoUpload(AppSetting::SEO_LOGO, AppSetting::getSeoLogoPath(), $data['seo_logo'] ?? null);
         $this->saveSeoUpload(AppSetting::SEO_FAVICON, AppSetting::getSeoFaviconPath(), $data['seo_favicon'] ?? null);
+        $this->saveSeoUpload(AppSetting::SEO_BIMI_LOGO, AppSetting::getSeoBimiLogoPath(), $this->validBimiLogoPath($data['seo_bimi_logo'] ?? null));
         AppSetting::set(AppSetting::SEO_SAME_AS, array_values(array_filter(
             (array) ($data['seo_same_as'] ?? []),
             static fn (mixed $url): bool => is_string($url) && $url !== '',
@@ -268,6 +284,31 @@ class ClubSettings extends Page implements HasForms
         }
 
         AppSetting::set($settingKey, $path);
+    }
+
+    private function bimiLogoRule(string $attribute, mixed $value, Closure $fail): void
+    {
+        $svg = $value instanceof UploadedFile ? $value->get() : false;
+        $errors = is_string($svg) ? app(BimiLogoValidator::class)->errors($svg) : ['not_svg'];
+
+        foreach ($errors as $error) {
+            $fail(__('club-settings.form.seo.bimi_errors.'.$error));
+        }
+    }
+
+    /**
+     * Re-checks the stored file, since the FileUpload path is client-writable and could
+     * point at another upload that never went through the SVG Tiny PS rule.
+     */
+    private function validBimiLogoPath(mixed $path): ?string
+    {
+        if (! is_string($path) || ! $this->isSeoUploadPath($path)) {
+            return null;
+        }
+
+        $svg = Storage::disk('public')->get($path);
+
+        return $svg !== null && app(BimiLogoValidator::class)->isValid($svg) ? $path : null;
     }
 
     private function isSeoUploadPath(string $path): bool

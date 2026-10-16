@@ -74,6 +74,8 @@ class AppSetting extends Model
 
     public const string SEO_FAVICON = 'seo.favicon';
 
+    public const string SEO_BIMI_LOGO = 'seo.bimi_logo';
+
     public const string BRANDING_ACCENT_COLOR = 'branding.accent_color';
 
     /**
@@ -243,6 +245,14 @@ class AppSetting extends Model
         $path = self::getSeoFaviconPath();
 
         return $path !== null ? url(Storage::disk('public')->url($path)) : asset('favicon.ico');
+    }
+
+    /**
+     * Path of the uploaded BIMI e-mail logo (SVG Tiny PS) on the `public` disk.
+     */
+    public static function getSeoBimiLogoPath(): ?string
+    {
+        return self::nonEmptyString(self::get(self::SEO_BIMI_LOGO));
     }
 
     /**
