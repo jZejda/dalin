@@ -11,18 +11,18 @@ function bimiSvg(string $body = '<circle cx="50" cy="50" r="40" fill="#1f2a1f"/>
 }
 
 it('accepts an SVG Tiny PS logo', function (): void {
-    expect((new BimiLogoValidator)->errors(bimiSvg()))->toBe([]);
+    expect((new BimiLogoValidator())->errors(bimiSvg()))->toBe([]);
 });
 
 it('accepts internal references and inline styles', function (): void {
     $body = '<defs><linearGradient id="g"><stop offset="0" stop-color="#fff"/></linearGradient></defs>'
         .'<rect width="100" height="100" fill="url(#g)" style="stroke:#000"/>';
 
-    expect((new BimiLogoValidator)->isValid(bimiSvg($body)))->toBeTrue();
+    expect((new BimiLogoValidator())->isValid(bimiSvg($body)))->toBeTrue();
 });
 
 it('rejects an invalid BIMI logo', function (string $svg, string $error): void {
-    expect((new BimiLogoValidator)->errors($svg))->toContain($error);
+    expect((new BimiLogoValidator())->errors($svg))->toContain($error);
 })->with([
     'not XML' => ['<svg', 'not_svg'],
     'not an SVG' => ['<html xmlns="http://www.w3.org/1999/xhtml"/>', 'not_svg'],

@@ -40,7 +40,7 @@ final class BimiLogoValidator
             return ['doctype'];
         }
 
-        $document = new DOMDocument;
+        $document = new DOMDocument();
         $previous = libxml_use_internal_errors(true);
         $loaded = $document->loadXML($svg, LIBXML_NONET);
         libxml_clear_errors();
