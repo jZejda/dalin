@@ -2,18 +2,24 @@
 
 declare(strict_types=1);
 
+use App\Enums\AppRoles;
 use App\Enums\EntryStatus;
 use App\Enums\OrisPaymentState;
 use App\Http\Controllers\Cron\Jobs\SyncOrisEventStatuses;
+use App\Livewire\SportEvent\OrisEventHeader;
 use App\Models\SportClassDefinition;
 use App\Models\SportEvent;
 use App\Models\SportEventOrisStatus;
+use App\Models\User;
 use App\Models\UserEntry;
 use App\Models\UserRaceProfile;
 use App\Services\SportEvents\OrisEventStatusRefresher;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
+use Spatie\Permission\Models\Role;
+
+use function Pest\Livewire\livewire;
 
 beforeEach(function (): void {
     config(['site-config.club.abbr' => 'ABM', 'demo.enabled' => false]);
@@ -78,6 +84,15 @@ function orisStatusEntry(SportEvent $event, EntryStatus $status = EntryStatus::C
         'rent_si' => false,
         'entry_created' => now(),
     ]);
+}
+
+function orisStatusUser(AppRoles $role): User
+{
+    Role::firstOrCreate(['name' => $role->value, 'guard_name' => 'web']);
+    $user = User::factory()->create(['active' => true]);
+    $user->assignRole($role->value);
+
+    return $user;
 }
 
 it('derives the payment state from the ORIS amounts', function (float $paid, float $toBePaid, OrisPaymentState $state): void {
@@ -176,4 +191,48 @@ it('syncs only recent races with club entries that are not settled yet', functio
 
     expect($upcoming->fresh()?->orisStatus?->to_be_paid)->toBe(340.0);
     Http::assertNotSent(fn (Request $request): bool => in_array((int) ($request['eventid'] ?? $request['id']), [102002, 102003, 102004], true));
+});
+
+it('shows the payment pill with account and variable symbol to a billing specialist', function (): void {
+    $this->actingAs(orisStatusUser(AppRoles::BillingSpecialist));
+    $event = SportEvent::factory()->create(['oris_id' => 109642]);
+    SportEventOrisStatus::factory()->create([
+        'sport_event_id' => $event->id,
+        'bank_account' => '2901296231/2010',
+        'fee_entry' => 520, 'fee_si' => 0, 'fee_service' => 160, 'fee_total' => 680,
+        'paid' => 520, 'to_be_paid' => 160,
+        'payment_vs' => '2631104',
+        'starts_count' => 0,
+    ]);
+
+    livewire(OrisEventHeader::class, ['sportEvent' => $event->fresh()])
+        ->assertSee('Doplatit 160')
+        ->assertSee('2901296231/2010')
+        ->assertSee('2631104')
+        ->assertSee('data:image/svg+xml;base64,', escape: false)
+        ->assertSee('https://oris.ceskyorientak.cz/Startovka?id=109642', escape: false)
+        ->assertSee(__('sport-event.oris_status.start_list_missing'));
+});
+
+it('hides the club money from a member but keeps the ORIS links', function (): void {
+    $this->actingAs(orisStatusUser(AppRoles::Member));
+    $event = SportEvent::factory()->create(['oris_id' => 109642]);
+    SportEventOrisStatus::factory()->published(results: true)->create(['sport_event_id' => $event->id, 'paid' => 0]);
+
+    livewire(OrisEventHeader::class, ['sportEvent' => $event->fresh()])
+        ->assertDontSee(__('sport-event.oris_status.popover.heading'))
+        ->assertDontSee('Nezaplaceno')
+        ->assertSee('https://oris.ceskyorientak.cz/Vysledky?id=109642', escape: false)
+        ->assertDontSee(__('sport-event.oris_status.results_missing'));
+});
+
+it('warns when a manual reload from ORIS fails', function (): void {
+    Http::fake(['*' => Http::response(status: 500)]);
+    $this->actingAs(orisStatusUser(AppRoles::BillingSpecialist));
+    $event = SportEvent::factory()->create(['oris_id' => 109642]);
+    SportEventOrisStatus::factory()->create(['sport_event_id' => $event->id]);
+
+    livewire(OrisEventHeader::class, ['sportEvent' => $event->fresh()])
+        ->call('refreshFromOris')
+        ->assertNotified(__('sport-event.oris_status.notifications.refresh_failed'));
 });

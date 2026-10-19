@@ -593,11 +593,41 @@ return [
     ],
 
     'oris_status' => [
+        'oris_link' => 'Event in ORIS',
+        'start_list' => 'Start list',
+        'start_list_missing' => 'The start list is not published yet (usually 2–3 days before the race)',
+        'results' => 'Results',
+        'results_missing' => 'Results are not published yet (on the race day at the earliest)',
         'payment_states' => [
             'unpaid' => 'Unpaid',
             'partially_paid' => 'Partially paid',
             'paid' => 'Paid',
             'overpaid' => 'Overpaid',
+        ],
+        'pill' => [
+            'unpaid' => 'Unpaid :amount',
+            'partially_paid' => 'Pay :amount more',
+            'paid' => 'Paid',
+            'overpaid' => 'Overpaid :amount',
+        ],
+        'popover' => [
+            'heading' => 'Club entry fees in ORIS',
+            'fee_total' => 'Total',
+            'fee_breakdown' => 'entry fees :entry · SI rental :si · services :service',
+            'paid' => 'Paid',
+            'to_be_paid' => 'Remaining',
+            'bank_account' => 'Account',
+            'payment_vs' => 'Var. symbol',
+            'copy' => 'Copy',
+            'copied' => 'Copied',
+            'qr_alt' => 'QR payment',
+            'qr_hint' => 'QR payment of the remaining amount',
+            'source_note' => 'Paid amounts are recorded by the organizer by hand, a payment may show up in ORIS with a delay.',
+            'fetched_at' => 'Loaded :time',
+            'refresh' => 'Reload from ORIS',
+        ],
+        'notifications' => [
+            'refresh_failed' => 'The status could not be loaded from ORIS, showing the last stored one.',
         ],
     ],
 
