@@ -43,31 +43,6 @@ readonly class EventClubBalance
         return $this->toBePaid <= 0;
     }
 
-    /**
-     * @return array<string, float|string|null>
-     */
-    public function toArray(): array
-    {
-        return get_object_vars($this);
-    }
-
-    /**
-     * @param array<string, float|string|null> $data output of toArray()
-     */
-    public static function fromArray(array $data): self
-    {
-        return new self(
-            feeEntry: (float) $data['feeEntry'],
-            feeSi: (float) $data['feeSi'],
-            feeService: (float) $data['feeService'],
-            feeTotal: (float) $data['feeTotal'],
-            paid: (float) $data['paid'],
-            toBePaid: (float) $data['toBePaid'],
-            currency: (string) $data['currency'],
-            paymentVs: isset($data['paymentVs']) ? (string) $data['paymentVs'] : null,
-        );
-    }
-
     private static function amount(mixed $value): float
     {
         return is_numeric($value) ? (float) $value : 0.0;

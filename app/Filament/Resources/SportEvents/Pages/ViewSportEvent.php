@@ -7,8 +7,6 @@ namespace App\Filament\Resources\SportEvents\Pages;
 use Filament\Actions\EditAction;
 use Filament\Actions\Action;
 use App\Filament\Resources\SportEvents\SportEventResource;
-use App\Filament\Resources\SportEvents\Widgets\OrisPaymentStatus;
-use App\Models\SportEvent;
 use App\Services\OrisApiService;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
@@ -23,15 +21,6 @@ class ViewSportEvent extends ViewRecord
             EditAction::make(),
             $this->showUpdateEventFromOris(),
         ];
-    }
-
-    protected function getHeaderWidgets(): array
-    {
-        $record = $this->getRecord();
-
-        return $record instanceof SportEvent && $record->oris_id !== null
-            ? [OrisPaymentStatus::class]
-            : [];
     }
 
     protected function showUpdateEventFromOris(): ?Action
