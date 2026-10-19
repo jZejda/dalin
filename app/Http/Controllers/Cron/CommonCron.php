@@ -11,6 +11,7 @@ use App\Http\Controllers\Cron\Jobs\ReportEmailEventWeeklyEndsBySport;
 use App\Http\Controllers\Cron\Jobs\ReportEmailPreRaceSummary;
 use App\Http\Controllers\Cron\Jobs\ReportEmailUserDebit;
 use App\Http\Controllers\Cron\Jobs\SyncEventStartLists;
+use App\Http\Controllers\Cron\Jobs\SyncOrisEventStatuses;
 use App\Http\Controllers\Cron\Jobs\UpdateBankTransaction;
 use App\Http\Controllers\Cron\Jobs\UpdateEvent;
 use App\Http\Controllers\Cron\Jobs\UpdateEventWeather;
@@ -68,6 +69,17 @@ class CommonCron extends Controller
             }
         } catch (Exception $e) {
             Log::channel('site')->warning('ERROR ErrorMessage: '.$e->getMessage());
+        }
+
+        /** @description Sync club's ORIS entry-fee settlement and start list / results status */
+        try {
+            if ($this->runJob('sync_oris_event_statuses')) {
+                Log::channel('site')->info('START SyncOrisEventStatuses run cron at '.$this->getActualHour());
+                new SyncOrisEventStatuses()->run();
+                Log::channel('site')->info('STOP SyncOrisEventStatuses run cron at '.$this->getActualHour());
+            }
+        } catch (Exception $e) {
+            Log::channel('site')->warning('ERROR SyncOrisEventStatuses: '.$e->getMessage());
         }
 
         /** @description Send Mail EntryEndsToPay */

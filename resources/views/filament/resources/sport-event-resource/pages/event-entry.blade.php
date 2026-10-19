@@ -4,7 +4,6 @@
     use App\Models\SportClass;
     use App\Models\SportService;
     use App\Enums\AppRoles;
-    use App\Services\OrisApiService;
     use Carbon\Carbon;
 
     /** @var SportEvent $record */
@@ -56,8 +55,8 @@
 
     <section class="bg-white dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700">
         <div class="py-4 px-4">
-            <div class="flex justify-between content-center">
-                <div>
+            <div class="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+                <div class="min-w-0 flex-1">
                     <h2 class="mb-2 text-2xl tracking-tight font-extrabold text-gray-900 dark:text-white">{{ $record->name }}
                         @if ($record->cancelled)
                             <span
@@ -72,22 +71,11 @@
                         @endif
                     </h2>
                 </div>
-                <div>
-                    @if (EmptyType::intNotEmpty($record->oris_id))
-                        <a href="{{ OrisApiService::ORIS_URL }}/Zavod?id={{ $record->oris_id }}" target="_blank">
-                            <span
-                                class="bg-gray-100 text-gray-800 text-sm font-medium mr-1 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">ORIS</span>
-                        </a>
-                        <a href="{{ OrisApiService::ORIS_URL }}/Startovka?id={{ $record->oris_id }}" target="_blank">
-                            <span
-                                class="bg-gray-100 text-gray-800 text-sm font-medium mr-1 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">P</span>
-                        </a>
-                        <a href="{{ OrisApiService::ORIS_URL }}/Vysledky?id={{ $record->oris_id }}" target="_blank">
-                            <span
-                                class="bg-gray-100 text-gray-800 text-sm font-medium mr-1 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">V</span>
-                        </a>
-                    @endif
-                </div>
+                @if (EmptyType::intNotEmpty($record->oris_id))
+                    <div class="shrink-0">
+                        @livewire(\App\Livewire\SportEvent\OrisEventHeader::class, ['sportEvent' => $record])
+                    </div>
+                @endif
             </div>
 
             <p class="mb-2 text-gray-500 dark:text-gray-400">{{ $record->alt_name }}</p>

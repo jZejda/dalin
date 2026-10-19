@@ -8,6 +8,7 @@ use App\Enums\AppRoles;
 use App\Enums\EntryStatus;
 use App\Models\SportEvent;
 use App\Models\User;
+use App\Services\SportEvents\OrisEventStatusRefresher;
 use App\Shared\Helpers\AppHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
@@ -24,7 +25,7 @@ class EntryEndsToPay implements CommonCronJobs
 
             $column = 'entry_date_'.$deadline;
             $sportEvents = SportEvent::query()
-                ->with('sportDiscipline')
+                ->with(['sportDiscipline', 'orisStatus'])
                 ->whereNotNull($column)
                 ->whereHas('userEntry', static fn (Builder $query): Builder => $query->where('entry_status', '!=', EntryStatus::Cancel->value))
                 ->where($column, '<=', Carbon::now()->endOfHour()->format(AppHelper::MYSQL_DATE_TIME))
@@ -32,6 +33,10 @@ class EntryEndsToPay implements CommonCronJobs
                 ->get();
 
             if ($sportEvents->isNotEmpty()) {
+                // Fresh ORIS settlement for the amounts in the mail; a failure keeps the last stored one
+                $refresher = new OrisEventStatusRefresher();
+                $sportEvents->whereNotNull('oris_id')->each(static fn (SportEvent $event) => $refresher->refreshQuietly($event));
+
                 $users = User::role(AppRoles::BillingSpecialist->value)
                     ->where('active', '=', 1)
                     ->get();

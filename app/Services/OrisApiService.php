@@ -11,7 +11,9 @@ use App\Enums\UserCreditStatus;
 use App\Enums\UserCreditType;
 use App\Http\Components\Oris\OrisMethod;
 use App\Http\Components\Oris\Response\Entity\ClassDefinition;
+use App\Http\Components\Oris\Response\Entity\EventClubBalance;
 use App\Http\Components\Oris\Response\Entity\EventEntries;
+use App\Http\Components\Oris\Response\Entity\EventOverview;
 use App\Http\Components\Oris\Response\Entity\Links;
 use App\Http\Components\Oris\Response\Entity\Locations;
 use App\Http\Components\Oris\Response\Entity\News;
@@ -31,6 +33,7 @@ use App\Models\UserEntry;
 use App\Models\UserRaceProfile;
 use App\Shared\Helpers\AppHelper;
 use App\Shared\Helpers\EmptyType;
+use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -110,6 +113,57 @@ final class OrisApiService
         $disciplineId = $orisResponse->json('Data.Discipline.ID');
 
         return is_numeric($disciplineId) ? (int) $disciplineId : null;
+    }
+
+    /**
+     * Returns the organizer's bank account and the start list / results counts of an event from ORIS `getEvent`.
+     *
+     * @throws HttpClientException when ORIS is unreachable or does not answer with status OK
+     */
+    public function getEventOverview(int $orisEventId): EventOverview
+    {
+        $orisResponse = $this->orisGetResponse([
+            'method' => 'getEvent',
+            'id' => $orisEventId,
+        ]);
+
+        $event = $orisResponse->json('Data');
+        if (! $this->orisMethod->checkOrisResponse($orisResponse) || ! is_array($event)) {
+            throw new HttpClientException('ORIS getEvent did not return status OK for event '.$orisEventId);
+        }
+
+        return EventOverview::fromOris($event);
+    }
+
+    /**
+     * Returns the club's entry-fee settlement of an event from ORIS `getEventBalance`,
+     * or null when the club has no entries in it.
+     *
+     * @throws HttpClientException when ORIS is unreachable or does not answer with status OK
+     */
+    public function getEventClubBalance(int $orisEventId, string $clubAbbr): ?EventClubBalance
+    {
+        $orisResponse = $this->orisGetResponse([
+            'method' => 'getEventBalance',
+            'eventid' => $orisEventId,
+        ]);
+
+        if (! $this->orisMethod->checkOrisResponse($orisResponse)) {
+            throw new HttpClientException('ORIS getEventBalance did not return status OK for event '.$orisEventId);
+        }
+
+        $clubs = $orisResponse->json('Data.Clubs');
+        if (! is_array($clubs)) {
+            return null;
+        }
+
+        foreach ($clubs as $club) {
+            if (is_array($club) && strcasecmp((string) ($club['ClubAbbr'] ?? ''), $clubAbbr) === 0) {
+                return EventClubBalance::fromOris($club, (string) ($orisResponse->json('Data.Currency') ?? 'CZK'));
+            }
+        }
+
+        return null;
     }
 
     /**

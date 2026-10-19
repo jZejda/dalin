@@ -16,6 +16,7 @@ use Database\Seeders\Demo\DemoMarketplaceSeeder;
 use Database\Seeders\Demo\DemoPostSeeder;
 use Database\Seeders\Demo\DemoRelaySeeder;
 use Database\Seeders\Demo\DemoSportEventExtrasSeeder;
+use Database\Seeders\Demo\DemoSportEventOrisStatusSeeder;
 use Database\Seeders\Demo\DemoSportEventSeeder;
 use Database\Seeders\Demo\DemoSportServiceSeeder;
 use Database\Seeders\Demo\DemoTransportSeeder;
@@ -103,6 +104,7 @@ class DemoSeeder extends Seeder
             // hangs map markers on them
             DemoRelaySeeder::class,
             DemoSportEventExtrasSeeder::class,
+            DemoSportEventOrisStatusSeeder::class,
             DemoMailLogSeeder::class,
         ]);
     }

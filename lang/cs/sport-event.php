@@ -592,6 +592,45 @@ return [
         ],
     ],
 
+    'oris_status' => [
+        'oris_link' => 'Závod v ORIS',
+        'start_list' => 'Startovka',
+        'start_list_missing' => 'Startovka zatím není zveřejněná (obvykle 2–3 dny před závodem)',
+        'results' => 'Výsledky',
+        'results_missing' => 'Výsledky zatím nejsou zveřejněné (nejdříve v den závodu)',
+        'payment_states' => [
+            'unpaid' => 'Nezaplaceno',
+            'partially_paid' => 'Částečně zaplaceno',
+            'paid' => 'Zaplaceno',
+            'overpaid' => 'Přeplatek',
+        ],
+        'pill' => [
+            'unpaid' => 'Nezaplaceno :amount',
+            'partially_paid' => 'Doplatit :amount',
+            'paid' => 'Zaplaceno',
+            'overpaid' => 'Přeplatek :amount',
+        ],
+        'popover' => [
+            'heading' => 'Startovné klubu v ORIS',
+            'fee_total' => 'Celkem',
+            'fee_breakdown' => 'startovné :entry · čipy :si · služby :service',
+            'paid' => 'Uhrazeno',
+            'to_be_paid' => 'Zbývá uhradit',
+            'bank_account' => 'Účet',
+            'payment_vs' => 'VS',
+            'copy' => 'Kopírovat',
+            'copied' => 'Zkopírováno',
+            'qr_alt' => 'QR platba',
+            'qr_hint' => 'QR platba zbývající částky',
+            'source_note' => 'Uhrazené částky eviduje pořadatel ručně, platba se v ORIS může projevit se zpožděním.',
+            'fetched_at' => 'Načteno :time',
+            'refresh' => 'Načíst znovu z ORIS',
+        ],
+        'notifications' => [
+            'refresh_failed' => 'Stav se nepodařilo načíst z ORIS, zobrazuje se poslední uložený.',
+        ],
+    ],
+
     'widgets' => [
         'map' => [
             'event_date' => 'datum',
