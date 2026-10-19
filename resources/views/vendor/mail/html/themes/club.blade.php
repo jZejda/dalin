@@ -375,6 +375,32 @@ img {
     word-break: break-all;
 }
 
+.club-payment {
+    margin: 0 0 16px;
+    border-radius: 12px;
+}
+
+.club-payment-details {
+    padding: 16px 20px;
+}
+
+.club-payment-qr {
+    padding: 16px 16px 12px 0;
+}
+
+.club-payment-amount {
+    margin: 2px 0 4px;
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1.2;
+    color: {{ \App\Services\Mail\MailBranding::INK }};
+}
+
+.club-payment-value {
+    color: {{ \App\Services\Mail\MailBranding::INK }};
+    white-space: nowrap;
+}
+
 .club-status {
     margin: 0 0 16px;
     border-radius: 12px;
