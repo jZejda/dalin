@@ -148,6 +148,13 @@ return [
             'months' => ['*'],
             'days_in_week' => ['*'],
         ],
+        'sync_oris_event_statuses' => [
+            'active' => true,
+            'hours' => ['*'],
+            'days_in_month' => ['*'],
+            'months' => ['*'],
+            'days_in_week' => ['*'],
+        ],
         'sync_event_start_lists' => [
             'active' => true,
             'hours' => ['20'],

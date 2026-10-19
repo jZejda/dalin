@@ -13,6 +13,7 @@ use App\Http\Components\Oris\OrisMethod;
 use App\Http\Components\Oris\Response\Entity\ClassDefinition;
 use App\Http\Components\Oris\Response\Entity\EventClubBalance;
 use App\Http\Components\Oris\Response\Entity\EventEntries;
+use App\Http\Components\Oris\Response\Entity\EventOverview;
 use App\Http\Components\Oris\Response\Entity\Links;
 use App\Http\Components\Oris\Response\Entity\Locations;
 use App\Http\Components\Oris\Response\Entity\News;
@@ -112,6 +113,26 @@ final class OrisApiService
         $disciplineId = $orisResponse->json('Data.Discipline.ID');
 
         return is_numeric($disciplineId) ? (int) $disciplineId : null;
+    }
+
+    /**
+     * Returns the organizer's bank account and the start list / results counts of an event from ORIS `getEvent`.
+     *
+     * @throws HttpClientException when ORIS is unreachable or does not answer with status OK
+     */
+    public function getEventOverview(int $orisEventId): EventOverview
+    {
+        $orisResponse = $this->orisGetResponse([
+            'method' => 'getEvent',
+            'id' => $orisEventId,
+        ]);
+
+        $event = $orisResponse->json('Data');
+        if (! $this->orisMethod->checkOrisResponse($orisResponse) || ! is_array($event)) {
+            throw new HttpClientException('ORIS getEvent did not return status OK for event '.$orisEventId);
+        }
+
+        return EventOverview::fromOris($event);
     }
 
     /**

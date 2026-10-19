@@ -592,6 +592,15 @@ return [
         ],
     ],
 
+    'oris_status' => [
+        'payment_states' => [
+            'unpaid' => 'Nezaplaceno',
+            'partially_paid' => 'Částečně zaplaceno',
+            'paid' => 'Zaplaceno',
+            'overpaid' => 'Přeplatek',
+        ],
+    ],
+
     'widgets' => [
         'map' => [
             'event_date' => 'datum',

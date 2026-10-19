@@ -592,6 +592,15 @@ return [
         ],
     ],
 
+    'oris_status' => [
+        'payment_states' => [
+            'unpaid' => 'Unpaid',
+            'partially_paid' => 'Partially paid',
+            'paid' => 'Paid',
+            'overpaid' => 'Overpaid',
+        ],
+    ],
+
     'widgets' => [
         'map' => [
             'event_date' => 'date',

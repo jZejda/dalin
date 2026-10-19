@@ -65,6 +65,7 @@ use Illuminate\Support\Carbon;
  * @property-read string $sport_event_oris_compact_title
  * @property-read string $sport_event_oris_title
  * @property-read string $sport_event_last_cost_calculate
+ * @property-read SportEventOrisStatus|null $orisStatus
  */
 #[Fillable([
     'name',
@@ -220,6 +221,12 @@ class SportEvent extends Model
     public function sportEventLinks(): HasMany
     {
         return $this->HasMany(SportEventLink::class, 'sport_event_id', 'id');
+    }
+
+    /** @return HasOne<SportEventOrisStatus, $this> */
+    public function orisStatus(): HasOne
+    {
+        return $this->hasOne(SportEventOrisStatus::class, 'sport_event_id', 'id');
     }
 
     public function sportEventMarkers(): HasMany
