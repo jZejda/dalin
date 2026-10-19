@@ -18,6 +18,7 @@
         "ext-simplexml": "*",
         "bezhansalleh/filament-language-switch": "^5.0",
         "bezhansalleh/filament-shield": "^4.2",
+        "chillerlan/php-qrcode": "^5.0",
         "cknow/laravel-money": "^v8.5",
         "codeat3/blade-weather-icons": "^1.8",
         "codewithdennis/filament-lucide-icons": "*",
