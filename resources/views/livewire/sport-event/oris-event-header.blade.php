@@ -17,20 +17,46 @@
     $hasResults = $status === null || $status->hasResults();
 @endphp
 
-<div class="flex flex-wrap items-center justify-end gap-x-1.5 gap-y-1" wire:init="refreshIfStale">
-    <a
-        href="{{ $orisUrl('Zavod') }}"
-        target="_blank"
-        rel="noopener"
-        class="inline-flex shrink-0 rounded-md focus-visible:outline-2 focus-visible:outline-primary-500"
-        aria-label="{{ __('sport-event.oris_status.oris_link') }}"
-        x-tooltip="{ content: {{ Js::from(__('sport-event.oris_status.oris_link')) }}, theme: $store.theme }"
-    >
-        <x-filament::icon icon="linksource-oris-color" class="h-8 w-8" />
-    </a>
+{{-- Row 1: ORIS logo, then (set apart) start list and results; row 2: payment pill under the logo --}}
+<div class="flex flex-col items-start gap-2" wire:init="refreshIfStale">
+    <div class="flex items-center gap-6">
+        <a
+            href="{{ $orisUrl('Zavod') }}"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex shrink-0 rounded-md focus-visible:outline-2 focus-visible:outline-primary-500"
+            aria-label="{{ __('sport-event.oris_status.oris_link') }}"
+            x-tooltip="{ content: {{ Js::from(__('sport-event.oris_status.oris_link')) }}, theme: $store.theme }"
+        >
+            <img src="{{ asset('images/brands/oris-logo.svg') }}" alt="ORIS" class="h-7 w-auto" />
+        </a>
+
+        <div class="flex items-center gap-1">
+            <x-filament::icon-button
+                tag="a"
+                :href="$orisUrl('Startovka')"
+                target="_blank"
+                :icon="LucideIcon::ListOrdered"
+                :color="$hasStartList ? 'primary' : 'gray'"
+                :label="__('sport-event.oris_status.start_list')"
+                :tooltip="$hasStartList ? __('sport-event.oris_status.start_list') : __('sport-event.oris_status.start_list_missing')"
+                :class="$hasStartList ? null : 'opacity-50'"
+            />
+            <x-filament::icon-button
+                tag="a"
+                :href="$orisUrl('Vysledky')"
+                target="_blank"
+                :icon="LucideIcon::Trophy"
+                :color="$hasResults ? 'primary' : 'gray'"
+                :label="__('sport-event.oris_status.results')"
+                :tooltip="$hasResults ? __('sport-event.oris_status.results') : __('sport-event.oris_status.results_missing')"
+                :class="$hasResults ? null : 'opacity-50'"
+            />
+        </div>
+    </div>
 
     @if ($paymentState !== null && $status !== null)
-        <x-filament::dropdown placement="bottom-end" width="xs" teleport>
+        <x-filament::dropdown placement="bottom-start" width="xs" teleport>
             <x-slot name="trigger">
                 <button type="button" class="inline-flex rounded-md focus-visible:outline-2 focus-visible:outline-primary-500">
                     <x-filament::badge :color="$paymentState->getColor()" :icon="$paymentState->getIcon()" size="lg">
@@ -112,25 +138,4 @@
             </div>
         </x-filament::dropdown>
     @endif
-
-    <x-filament::icon-button
-        tag="a"
-        :href="$orisUrl('Startovka')"
-        target="_blank"
-        :icon="LucideIcon::ListOrdered"
-        :color="$hasStartList ? 'primary' : 'gray'"
-        :label="__('sport-event.oris_status.start_list')"
-        :tooltip="$hasStartList ? __('sport-event.oris_status.start_list') : __('sport-event.oris_status.start_list_missing')"
-        :class="$hasStartList ? null : 'opacity-50'"
-    />
-    <x-filament::icon-button
-        tag="a"
-        :href="$orisUrl('Vysledky')"
-        target="_blank"
-        :icon="LucideIcon::Trophy"
-        :color="$hasResults ? 'primary' : 'gray'"
-        :label="__('sport-event.oris_status.results')"
-        :tooltip="$hasResults ? __('sport-event.oris_status.results') : __('sport-event.oris_status.results_missing')"
-        :class="$hasResults ? null : 'opacity-50'"
-    />
 </div>
