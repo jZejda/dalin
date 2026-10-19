@@ -5,6 +5,9 @@
 @source '../../../../app/Filament';
 @source '../../../../resources/views/filament';
 @source '../../../../resources/views/components';
+/* Livewire components rendered inside the panel (e.g. the ORIS header popover); the public frontend has its own terrain.css */
+@source '../../../../resources/views/livewire';
+@source not '../../../../resources/views/livewire/frontend';
 @source '../../../../vendor/bezhansalleh/filament-language-switch/**';
 
 /*
