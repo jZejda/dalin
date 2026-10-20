@@ -91,6 +91,26 @@ class PostResource extends Resource implements HasShieldPermissions
                                     ->required()
                             ])->columns(1),
 
+                            Section::make(__('content.post.form.section_gallery'))
+                                ->description(__('content.post.form.section_gallery_description', ['max' => Post::GALLERY_MAX_FILES]))
+                                ->schema([
+                                    SpatieMediaLibraryFileUpload::make('gallery')
+                                        ->hiddenLabel()
+                                        ->collection(Post::MEDIA_COLLECTION_GALLERY)
+                                        ->multiple()
+                                        ->reorderable()
+                                        ->appendFiles()
+                                        ->image()
+                                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                                        ->maxSize(8192)
+                                        ->maxFiles(Post::GALLERY_MAX_FILES)
+                                        ->panelLayout('grid'),
+                                ])
+                                ->collapsible()
+                                ->persistCollapsed()
+                                ->id('post-gallery')
+                                ->hidden(fn (Get $get): bool => self::isInternal($get('private'))),
+
                             Section::make(__('content.post.form.section_additional'))
                                 ->description(__('content.post.form.section_additional_description'))
                                 ->schema([

@@ -37,6 +37,8 @@
             @endif
         </div>
 
+        <x-ui.post-gallery :post="$post" />
+
         <dl class="mt-10 flex flex-wrap gap-x-8 gap-y-4 text-sm">
             @if ($post->user)<div><dt class="text-terrain-secondary">{{ __('content.post.public.author') }}</dt><dd class="mt-1 font-semibold">{{ $post->user->name }}</dd></div>@endif
             @if ($post->created_at)<div><dt class="text-terrain-secondary">{{ __('content.post.public.published') }}</dt><dd class="mt-1 font-semibold"><time datetime="{{ $post->created_at->toIso8601String() }}">{{ $post->created_at->format('d. m. Y') }}</time></dd></div>@endif

@@ -64,6 +64,8 @@ class Post extends Model implements HasMedia, HasRichContent
     use HasSEO;
 
     public const string MEDIA_COLLECTION_COVER = 'post_cover';
+    public const string MEDIA_COLLECTION_GALLERY = 'post_gallery';
+    public const int GALLERY_MAX_FILES = 40;
     public const string MEDIA_COLLECTION_CONTENT_ATTACHMENTS = 'content-file-attachments';
 
     /**
@@ -104,6 +106,26 @@ class Post extends Model implements HasMedia, HasRichContent
     }
 
     /**
+     * Gallery photos in the order set in the admin, as thumbnail + lightbox URLs.
+     *
+     * @return list<array{thumb: string, full: string, alt: string}>
+     */
+    public function galleryImages(): array
+    {
+        $images = [];
+
+        foreach ($this->getMedia(self::MEDIA_COLLECTION_GALLERY)->values() as $index => $media) {
+            $images[] = [
+                'thumb' => $media->getAvailableUrl(['card']),
+                'full' => $media->getAvailableUrl(['detail']),
+                'alt' => (string) __('content.post.public.gallery_photo_alt', ['title' => $this->title, 'number' => $index + 1]),
+            ];
+        }
+
+        return $images;
+    }
+
+    /**
      * Public URL with a title slug (/novinka/12-jarni-soustredeni). The id alone identifies the
      * post, so a renamed title keeps old links working via a redirect to the current slug.
      */
@@ -134,22 +156,28 @@ class Post extends Model implements HasMedia, HasRichContent
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
             ->singleFile();
 
+        // Photos from a race or a training; whole race albums stay on Rajče (limited disk on shared hosting)
+        $this->addMediaCollection(self::MEDIA_COLLECTION_GALLERY)
+            ->useDisk('public')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+
         $this->addMediaCollection(self::MEDIA_COLLECTION_CONTENT_ATTACHMENTS)
             ->useDisk('public');
     }
 
     public function registerMediaConversions(?Media $media = null): void
     {
-        // Non-queued: shared hosting sites don't run a queue worker
+        // Non-queued: shared hosting sites don't run a queue worker.
+        // The gallery reuses 'card' as its thumbnail and 'detail' for the lightbox.
         $this->addMediaConversion('card')
-            ->performOnCollections(self::MEDIA_COLLECTION_COVER)
+            ->performOnCollections(self::MEDIA_COLLECTION_COVER, self::MEDIA_COLLECTION_GALLERY)
             ->nonQueued()
             ->fit(Fit::Crop, 800, 600)
             ->format('jpg');
 
         // Detail page shows the whole photo, so only downscale and keep the original aspect ratio
         $this->addMediaConversion('detail')
-            ->performOnCollections(self::MEDIA_COLLECTION_COVER)
+            ->performOnCollections(self::MEDIA_COLLECTION_COVER, self::MEDIA_COLLECTION_GALLERY)
             ->nonQueued()
             ->fit(Fit::Max, 1600, 1600)
             ->format('jpg');

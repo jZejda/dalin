@@ -53,8 +53,15 @@ class DemoPostSeeder extends Seeder
             'Dorostenci na mezinárodním závodě v Rakousku',
         ];
 
+        // Public posts with a photo gallery under the article
+        $galleryTitles = [
+            'Výsledky z krajského přeboru' => 6,
+            'Jarní soustředění v Českém ráji' => 9,
+            'Noční závod v Moravském krasu' => 4,
+        ];
+
         foreach ($titles as $index => $title) {
-            $isPrivate = $faker->boolean(30);
+            $isPrivate = ! isset($galleryTitles[$title]) && $faker->boolean(30);
             $createdAt = Carbon::now()->subDays($faker->numberBetween(1, 300));
 
             /** @var list<string> $paragraphs */
@@ -84,17 +91,21 @@ class DemoPostSeeder extends Seeder
 
             // Two of three posts get a cover so the homepage shows both covers and placeholders
             if ($index % 3 !== 2) {
-                $this->attachCover($post, $index);
+                $this->attachMapImage($post, $index, Post::MEDIA_COLLECTION_COVER, 'novinka-' . $post->id . '.jpg');
+            }
+
+            for ($photo = 1; $photo <= ($galleryTitles[$title] ?? 0); $photo++) {
+                $this->attachMapImage($post, $index * 100 + $photo, Post::MEDIA_COLLECTION_GALLERY, 'galerie-' . $post->id . '-' . $photo . '.jpg');
             }
         }
     }
 
     /**
-     * Generates an orienteering-map-like cover (ISOM colours: yellow open land, green vegetation,
-     * blue water, brown contours) and attaches it to the post's cover collection.
+     * Generates an orienteering-map-like image (ISOM colours: yellow open land, green vegetation,
+     * blue water, brown contours) and attaches it to the given media collection of the post.
      * Keeps the repo free of binary demo photos.
      */
-    private function attachCover(Post $post, int $seed): void
+    private function attachMapImage(Post $post, int $seed, string $collection, string $fileName): void
     {
         mt_srand($seed);
 
@@ -161,8 +172,8 @@ class DemoPostSeeder extends Seeder
         imagedestroy($upscaled);
 
         $post->addMedia($path)
-            ->usingFileName('novinka-' . $post->id . '.jpg')
-            ->toMediaCollection(Post::MEDIA_COLLECTION_COVER);
+            ->usingFileName($fileName)
+            ->toMediaCollection($collection);
 
         unlink($tempBase);
     }

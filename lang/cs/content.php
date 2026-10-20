@@ -85,6 +85,8 @@ return [
             'format'                   => 'Formát',
             'cover'                    => 'Titulní obrázek',
             'cover_helper'             => 'Na titulní stránce se zobrazí na kartě novinky ve formátu 4 : 3, v záhlaví detailu jako široký pruh 7 : 2. Oba výřezy se berou ze středu obrázku – nejlépe nahrajte neořezanou fotku s hlavním motivem uprostřed. JPG, PNG nebo WebP, max. 8 MB.',
+            'section_gallery'          => 'Fotogalerie',
+            'section_gallery_description' => 'Fotky ze závodu nebo tréninku se zobrazí pod článkem jako mřížka náhledů. Pořadí změníte přetažením. JPG, PNG nebo WebP, max. 8 MB na fotku, nejvýše :max fotek. Celá alba ze závodů patří na Rajče – stačí přidat odkaz.',
         ],
 
         'table' => [
@@ -125,6 +127,12 @@ return [
             'index_lead'       => 'Zprávy z oddílu, pozvánky na akce a výsledky – od nejnovějších.',
             'index_empty'      => 'Zatím tu nejsou žádné novinky. Brzy se dozvíte, co se v klubu děje.',
             'index_page_title' => 'Novinky – strana :page',
+            'gallery_heading'  => 'Fotogalerie',
+            'gallery_photo_alt' => 'Fotografie :number – :title',
+            'gallery_close'    => 'Zavřít',
+            'gallery_previous' => 'Předchozí fotka',
+            'gallery_next'     => 'Další fotka',
+            'gallery_counter'  => 'Fotka :current z :total',
         ],
     ],
 
