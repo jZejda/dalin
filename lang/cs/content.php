@@ -83,6 +83,7 @@ return [
             'private'                  => 'Interní novinka',
             'author'                   => 'Autor',
             'format'                   => 'Formát',
+            'format_helper_edit'       => 'Formát hotové novinky nejde přepnout. Markdown novinku převedete akcí „Převést na TipTap“ v záhlaví.',
             'cover'                    => 'Titulní obrázek',
             'cover_helper'             => 'Na titulní stránce se zobrazí na kartě novinky ve formátu 4 : 3, v záhlaví detailu jako široký pruh 7 : 2. Oba výřezy se berou ze středu obrázku – nejlépe nahrajte neořezanou fotku s hlavním motivem uprostřed. JPG, PNG nebo WebP, max. 8 MB.',
             'section_gallery'          => 'Fotogalerie',
@@ -114,6 +115,13 @@ return [
                 'selection'                 => 'Zvolte možnost',
                 'selection_interested'      => 'Uživatelé kteří mají zájem o novinky',
                 'selection_all'             => 'Všem aktivním uživatelům systému',
+            ],
+            'convert_to_tiptap' => [
+                'label'              => 'Převést na TipTap',
+                'modal_heading'      => 'Převést novinku na TipTap?',
+                'modal_description'  => 'Text se převede z Markdownu do vizuálního editoru. Převod nejde vrátit zpět. Obrázky a odkazy zůstanou, zkontrolujte ale formátování.',
+                'modal_submit'       => 'Převést',
+                'notification_title' => 'Novinka převedena na TipTap',
             ],
         ],
 

@@ -7,6 +7,8 @@ use App\Enums\PostStatus;
 use App\Mail\NewPost;
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 function renderingTestPost(ContentFormat $format, string $content): Post
 {
@@ -57,4 +59,20 @@ it('renders TipTap content into the new post mail', function (): void {
     $html = (new NewPost($post, 'Novinka'))->render();
 
     expect($html)->toContain('Výsledky kola')->toContain('Ema doběhla');
+});
+
+it('resolves images attached in the TipTap editor to their media URL', function (): void {
+    Storage::fake('public');
+    $post = renderingTestPost(ContentFormat::TipTapJson, tipTapDocument());
+    $media = $post->addMedia(UploadedFile::fake()->image('cil.jpg', 800, 600))
+        ->toMediaCollection(Post::MEDIA_COLLECTION_CONTENT_ATTACHMENTS);
+
+    $post->update(['content' => json_encode([
+        'type' => 'doc',
+        'content' => [['type' => 'image', 'attrs' => ['id' => $media->uuid, 'src' => null, 'alt' => 'Cíl závodu']]],
+    ])]);
+
+    $this->get($post->refresh()->publicUrl())
+        ->assertOk()
+        ->assertSee('src="'.$media->getUrl().'"', escape: false);
 });

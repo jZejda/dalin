@@ -83,6 +83,7 @@ return [
             'private'                  => 'Internal news',
             'author'                   => 'Author',
             'format'                   => 'Format',
+            'format_helper_edit'       => 'The format of an existing post cannot be switched. Convert a Markdown post with the “Convert to TipTap” action in the header.',
             'cover'                    => 'Cover image',
             'cover_helper'             => 'On the homepage the news card shows it in 4 : 3, the news detail header as a wide 7 : 2 strip. Both crops are taken from the centre of the image – ideally upload an uncropped photo with the key subject in the middle. JPG, PNG or WebP, max 8 MB.',
             'section_gallery'          => 'Photo gallery',
@@ -114,6 +115,13 @@ return [
                 'selection'                 => 'Choose an option',
                 'selection_interested'      => 'Users who are interested in news',
                 'selection_all'             => 'All active users of the system',
+            ],
+            'convert_to_tiptap' => [
+                'label'              => 'Convert to TipTap',
+                'modal_heading'      => 'Convert the post to TipTap?',
+                'modal_description'  => 'The text is converted from Markdown into the visual editor. This cannot be undone. Images and links are kept, but check the formatting.',
+                'modal_submit'       => 'Convert',
+                'notification_title' => 'Post converted to TipTap',
             ],
         ],
 

@@ -209,6 +209,23 @@ class Post extends Model implements HasMedia, HasRichContent
     }
 
     /**
+     * Rewrites a Markdown/HTML post into a TipTap document (one-way, used by the admin action).
+     */
+    public function convertToTipTap(): void
+    {
+        if ($this->content_mode === ContentFormat::TipTapJson) {
+            return;
+        }
+
+        $html = $this->content_mode === ContentFormat::Markdown ? Str::markdown($this->content) : $this->content;
+        $document = RichContentRenderer::make($html)->customBlocks(RichContentBlocks::all())->toArray();
+
+        $this->content = json_encode($document, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        $this->content_mode = ContentFormat::TipTapJson;
+        $this->save();
+    }
+
+    /**
      * Renderer for TipTap content with the post's attachments and custom blocks resolved.
      */
     public function richContentRenderer(): RichContentRenderer

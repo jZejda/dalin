@@ -67,13 +67,16 @@ class DemoPostSeeder extends Seeder
             /** @var list<string> $paragraphs */
             $paragraphs = $faker->paragraphs($faker->numberBetween(2, 5));
 
+            // Posts with a gallery are written in the TipTap editor, like new posts in the admin
+            $isTipTap = isset($galleryTitles[$title]);
+
             // forceCreate: created_at is not fillable, a plain create() would silently date every post "now"
             $post = Post::query()->forceCreate([
                 'user_id'      => $admin->id,
                 'title'        => $title,
                 'editorial'    => $faker->optional(0.7)->sentence(),
-                'content'      => '<p>' . implode('</p><p>', $paragraphs) . '</p>',
-                'content_mode' => ContentFormat::Html->value,
+                'content'      => $isTipTap ? $this->tipTapContent() : '<p>' . implode('</p><p>', $paragraphs) . '</p>',
+                'content_mode' => $isTipTap ? ContentFormat::TipTapJson->value : ContentFormat::Html->value,
                 'private'      => $isPrivate ? PostStatus::Private->value : PostStatus::Public->value,
                 // An urgent notice the editor mailed to everyone right away, so the daily digest skips it
                 'news_mailed_at' => $title === 'Změna termínu závodů v dubnu' ? $createdAt->copy()->addHour()->toDateTimeString() : null,
@@ -98,6 +101,31 @@ class DemoPostSeeder extends Seeder
                 $this->attachMapImage($post, $index * 100 + $photo, Post::MEDIA_COLLECTION_GALLERY, 'galerie-' . $post->id . '-' . $photo . '.jpg');
             }
         }
+    }
+
+    /**
+     * A TipTap document: a lead paragraph, a "Program" heading with a bullet list and a closing paragraph.
+     */
+    private function tipTapContent(): string
+    {
+        $paragraph = static fn (string $text): array => ['type' => 'paragraph', 'content' => [['type' => 'text', 'text' => $text]]];
+        $listItem = static fn (string $text): array => ['type' => 'listItem', 'content' => [$paragraph($text)]];
+
+        $document = [
+            'type' => 'doc',
+            'content' => [
+                $paragraph('Víkend se vydařil: suché počasí, rychlý les a skvělá parta. Díky všem, kteří přijeli, a hlavně pořadatelům za pěkné tratě.'),
+                ['type' => 'heading', 'attrs' => ['level' => 2], 'content' => [['type' => 'text', 'text' => 'Program']]],
+                ['type' => 'bulletList', 'content' => [
+                    $listItem('Pátek: příjezd, ubytování a noční trénink'),
+                    $listItem('Sobota: dopolední middle, odpoledne technika na buzolu'),
+                    $listItem('Neděle: závod na klasické trati a vyhlášení'),
+                ]],
+                $paragraph('Fotky najdete v galerii pod článkem. Kompletní výsledky jsou v ORISu.'),
+            ],
+        ];
+
+        return (string) json_encode($document, JSON_UNESCAPED_UNICODE);
     }
 
     /**
