@@ -43,7 +43,7 @@ class NewPost extends Mailable
 
     public function content(): Content
     {
-        $html = MailRichContent::html($this->post->content, $this->post->content_mode);
+        $html = MailRichContent::html($this->post->content, $this->post->content_mode, $this->post->richContentRenderer());
 
         return new Content(
             markdown: 'emails.site.newPost',

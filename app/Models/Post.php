@@ -6,9 +6,13 @@ namespace App\Models;
 
 use App\Enums\ContentFormat;
 use App\Enums\PostStatus;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\RichContentBlocks;
 use App\Services\Seo\PostSeo;
 use Filament\Forms\Components\RichEditor\FileAttachmentProviders\SpatieMediaLibraryFileAttachmentProvider;
 use Filament\Forms\Components\RichEditor\Models\Concerns\InteractsWithRichContent;
+use Filament\Forms\Components\RichEditor\Models\Contracts\HasRichContent;
+use Filament\Forms\Components\RichEditor\RichContentAttribute;
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -52,7 +56,7 @@ use Override;
     'img_url',
     'editorial',
 ])]
-class Post extends Model implements HasMedia
+class Post extends Model implements HasMedia, HasRichContent
 {
     use SoftDeletes;
     use InteractsWithMedia;
@@ -60,6 +64,7 @@ class Post extends Model implements HasMedia
     use HasSEO;
 
     public const string MEDIA_COLLECTION_COVER = 'post_cover';
+    public const string MEDIA_COLLECTION_CONTENT_ATTACHMENTS = 'content-file-attachments';
 
     /**
      * @return array<string, string>
@@ -128,6 +133,9 @@ class Post extends Model implements HasMedia
             ->useDisk('public')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
             ->singleFile();
+
+        $this->addMediaCollection(self::MEDIA_COLLECTION_CONTENT_ATTACHMENTS)
+            ->useDisk('public');
     }
 
     public function registerMediaConversions(?Media $media = null): void
@@ -154,11 +162,32 @@ class Post extends Model implements HasMedia
             ->format('jpg');
     }
 
-    //    public function setUpRichContent(): void
-    //    {
-    //        $this->registerRichContent('content')
-    //            ->fileAttachmentProvider(SpatieMediaLibraryFileAttachmentProvider::make())
-    //            ->mediaName(fn (TemporaryUploadedFile $file): string => Str::random() . '_' . $file->getClientOriginalName())
-    //            ->collection('content-file-attachments');
-    //    }
+    /**
+     * TipTap content (content_mode = 3): images pasted into the editor live in a Spatie collection
+     * of the post, so they are deleted together with it. Markdown/HTML posts never touch this.
+     */
+    protected function setUpRichContent(): void
+    {
+        $this->registerRichContent('content')
+            ->json()
+            ->customBlocks(RichContentBlocks::all())
+            ->fileAttachmentProvider(
+                SpatieMediaLibraryFileAttachmentProvider::make()
+                    ->collection(self::MEDIA_COLLECTION_CONTENT_ATTACHMENTS)
+                    ->mediaName(fn (TemporaryUploadedFile $file): string => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)),
+            )
+            ->fileAttachmentsDisk('public')
+            ->fileAttachmentsVisibility('public');
+    }
+
+    /**
+     * Renderer for TipTap content with the post's attachments and custom blocks resolved.
+     */
+    public function richContentRenderer(): RichContentRenderer
+    {
+        /** @var RichContentAttribute $attribute */
+        $attribute = $this->getRichContentAttribute('content');
+
+        return $attribute->getRenderer();
+    }
 }

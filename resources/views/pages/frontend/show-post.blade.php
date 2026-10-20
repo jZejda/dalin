@@ -32,6 +32,8 @@
                 {!! $post->content !!}
             @elseif ($post->content_mode === ContentFormat::Markdown)
                 {{ Markdown::parse($post->content) }}
+            @elseif ($post->content_mode === ContentFormat::TipTapJson)
+                {!! $post->richContentRenderer()->toUnsafeHtml() !!}
             @endif
         </div>
 
