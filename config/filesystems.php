@@ -52,6 +52,15 @@ return [
             'throw' => false,
         ],
 
+        // Club documents (annual reports, statutes, minutes): never linked directly, always
+        // streamed by DocumentController so members-only files stay behind the login
+        'documents' => [
+            'driver' => 'local',
+            'root' => storage_path('app/documents'),
+            'visibility' => 'private',
+            'throw' => false,
+        ],
+
         'rich-editor-attachments' => [
             'driver' => 'local',
             'root' => storage_path('app/public/rich-editor-attachments'),
