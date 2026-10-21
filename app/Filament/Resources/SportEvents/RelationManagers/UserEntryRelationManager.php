@@ -12,7 +12,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
-use pxlrbt\FilamentExcel\Actions\Tables\ExportBulkAction;
+use pxlrbt\FilamentExcel\Actions\ExportBulkAction;
 use pxlrbt\FilamentExcel\Columns\Column;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 
@@ -97,7 +97,7 @@ class UserEntryRelationManager extends RelationManager
                                 Column::make('club_note')->heading(__('sport-event.relation_entries.export.club_note')),
                                 Column::make('requested_start')->heading(__('sport-event.relation_entries.export.requested_start')),
                                 Column::make('rent_si')->heading(__('sport-event.relation_entries.export.rent_si'))->formatStateUsing(
-                                    fn ($state) => str_replace('=TRUE()', __('sport-event.relation_entries.export.rent_si_yes'), $state)
+                                    fn ($state): string => $state ? __('sport-event.relation_entries.export.rent_si_yes') : ''
                                 ),
                                 Column::make('stage_x')->heading(__('sport-event.relation_entries.export.stage')),
                             ]),

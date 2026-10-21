@@ -21,7 +21,13 @@ class SendPreRaceSummaryMailCommand extends Command
     public function handle(): int
     {
         $eventId = (int) $this->argument('event_id');
-        $email = (string) $this->argument('email');
+        $email = $this->argument('email');
+
+        if (! is_string($email)) {
+            $this->error('E-mail address must be a string.');
+
+            return self::FAILURE;
+        }
 
         $event = SportEvent::with([
             'userEntry' => fn ($q) => $q->whereIn('entry_status', EntryStatus::activeValues()),
