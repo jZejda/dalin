@@ -19,8 +19,6 @@
                     <p>{{ Markdown::parse($post->editorial) }}</p>
                 @endif
 
-{{--                <p>{!! app(Spatie\LaravelMarkdown\MarkdownRenderer::class)->toHtml($post->content) !!}</p>--}}
-
             <div class="pb-3 flex items-center text-sm text-gray-800 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:after:border-neutral-600">
 
                 <figcaption class="flex items-center space-x-2">
