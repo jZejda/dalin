@@ -11,7 +11,7 @@
     <style>[x-cloak] { display: none !important; }</style>
     @filamentStyles
     @livewireStyles
-    @vite(['resources/css/app.css', 'resources/css/terrain.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/terrain.css'])
     @stack('scripts')
 </head>
 <body class="terrain min-h-screen antialiased">
