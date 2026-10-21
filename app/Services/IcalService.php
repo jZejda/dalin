@@ -105,7 +105,8 @@ final class IcalService
             if ($sportEvent->date_end !== null && $sportEvent->stages > 1) {
                 $fullDay = true;
                 $dateFrom = $sportEvent->date?->startOfDay();
-                $dateEnd = $sportEvent->date_end->endOfDay();
+                // DTEND of a full-day event is exclusive: the day after the last day
+                $dateEnd = $sportEvent->date_end->copy()->addDay()->startOfDay();
             }
 
             $event = Event::create()
@@ -116,7 +117,7 @@ final class IcalService
                 ->startsAt($dateFrom)
                 ->endsAt($dateEnd)
                 ->address($sportEvent->place ?? 'N/A')
-                ->classification(Classification::public())
+                ->classification(Classification::Public)
                 ->url(route('filament.admin.resources.sport-events.entry', ['record' => $sportEvent->id]));
 
             if ($sportEvent->gps_lat !== null && $sportEvent->gps_lon !== null) {
