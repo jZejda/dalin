@@ -91,7 +91,6 @@ nothing less.
 - [Livewire](https://livewire.laravel.com/) 4 - full-stack framework for dynamic interfaces
 - [Alpine.js](https://alpinejs.dev/) - lightweight JavaScript framework
 - [Tailwind CSS](https://tailwindcss.com/) 4 - utility-first CSS framework
-    - [Flowbite](https://flowbite.com/) - open-source Tailwind CSS library
 
 ## Installation
 

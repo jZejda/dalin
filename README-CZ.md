@@ -86,7 +86,6 @@ klubu, …) zajišťují, že každý vidí přesně to, co potřebuje — nic v
 - [Livewire](https://livewire.laravel.com/) 4 - full-stack framework pro dynamická rozhraní
 - [Alpine.js](https://alpinejs.dev/) - odlehčený JavaScript framework
 - [Tailwind CSS](https://tailwindcss.com/) 4 - utility-first CSS framework
-    - [Flowbite](https://flowbite.com/) - open-source knihovna pro Tailwind CSS
 
 ## Instalace
 
