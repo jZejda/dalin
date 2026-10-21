@@ -859,30 +859,6 @@ parameters:
 			path: config/cache.php
 
 		-
-			message: '#^Class Awcodes\\Curator\\Curations\\ThumbnailPreset not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: config/curator.php
-
-		-
-			message: '#^Class Awcodes\\Curator\\Glide\\DefaultServerFactory not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: config/curator.php
-
-		-
-			message: '#^Class Awcodes\\Curator\\Models\\Media not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: config/curator.php
-
-		-
-			message: '#^Class Awcodes\\Curator\\Resources\\MediaResource not found\.$#'
-			identifier: class.notFound
-			count: 1
-			path: config/curator.php
-
-		-
 			message: '#^Parameter \#1 \$title of static method Illuminate\\Support\\Str\:\:slug\(\) expects string, bool\|string given\.$#'
 			identifier: argument.type
 			count: 1

@@ -122,14 +122,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
             FilamentShieldPlugin::make(),
-//                CuratorPlugin::make()
-//                    ->label('Media')
-//                    ->pluralLabel('Media')
-//                    ->navigationIcon('heroicon-o-photo')
-//                    ->navigationGroup('Obsah')
-//                    ->navigationSort(3)
-//                    ->navigationCountBadge(),
-                //->resource(CustomMediaResource::class)
             ]);
     }
 }
