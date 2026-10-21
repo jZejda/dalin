@@ -6,6 +6,7 @@ use App\Http\Controllers\Cron\CommonCron;
 use App\Http\Controllers\Demo\DemoResetController;
 use App\Http\Controllers\Demo\DemoScreenshotModeController;
 use App\Http\Controllers\Frontend\BimiLogoController;
+use App\Http\Controllers\Frontend\DocumentController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\PostController;
 use App\Http\Controllers\Frontend\ResultListController;
@@ -64,6 +65,10 @@ Route::get('/novinka/{post}', [PostController::class, 'post'])
     ->where('post', '[0-9]+(-[a-z0-9-]*)?')
     ->name('posts.show');
 Route::get('/stranka/{slug}', [PageController::class, 'page']);
+Route::get('/dokumenty', [DocumentController::class, 'index'])->name('documents.index');
+Route::get('/dokumenty/{document}', [DocumentController::class, 'show'])
+    ->where('document', '[A-Za-z0-9_-]+')
+    ->name('documents.show');
 Route::get('/startovka/{slug}', [StartListController::class, 'singleStartList']);
 Route::get('/startovka/{slug}/bez-vakantu', [StartListController::class, 'downloadWithoutVakant']);
 Route::get('/vysledky/{slug}', [ResultListController::class, 'singleResultList']);

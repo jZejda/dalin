@@ -44,7 +44,7 @@ class NewPosts extends Mailable
     public function content(): Content
     {
         $articles = $this->postContent->map(static function (Post $post): array {
-            $html = MailRichContent::html($post->content, $post->content_mode);
+            $html = MailRichContent::html($post->content, $post->content_mode, $post->richContentRenderer());
 
             return ['title' => $post->title, 'html' => $html, 'text' => MailRichContent::text($html)];
         })->values()->all();

@@ -53,20 +53,30 @@ class DemoPostSeeder extends Seeder
             'Dorostenci na mezinárodním závodě v Rakousku',
         ];
 
+        // Public posts with a photo gallery under the article
+        $galleryTitles = [
+            'Výsledky z krajského přeboru' => 6,
+            'Jarní soustředění v Českém ráji' => 9,
+            'Noční závod v Moravském krasu' => 4,
+        ];
+
         foreach ($titles as $index => $title) {
-            $isPrivate = $faker->boolean(30);
+            $isPrivate = ! isset($galleryTitles[$title]) && $faker->boolean(30);
             $createdAt = Carbon::now()->subDays($faker->numberBetween(1, 300));
 
             /** @var list<string> $paragraphs */
             $paragraphs = $faker->paragraphs($faker->numberBetween(2, 5));
+
+            // Posts with a gallery are written in the TipTap editor, like new posts in the admin
+            $isTipTap = isset($galleryTitles[$title]);
 
             // forceCreate: created_at is not fillable, a plain create() would silently date every post "now"
             $post = Post::query()->forceCreate([
                 'user_id'      => $admin->id,
                 'title'        => $title,
                 'editorial'    => $faker->optional(0.7)->sentence(),
-                'content'      => '<p>' . implode('</p><p>', $paragraphs) . '</p>',
-                'content_mode' => ContentFormat::Html->value,
+                'content'      => $isTipTap ? $this->tipTapContent() : '<p>' . implode('</p><p>', $paragraphs) . '</p>',
+                'content_mode' => $isTipTap ? ContentFormat::TipTapJson->value : ContentFormat::Html->value,
                 'private'      => $isPrivate ? PostStatus::Private->value : PostStatus::Public->value,
                 // An urgent notice the editor mailed to everyone right away, so the daily digest skips it
                 'news_mailed_at' => $title === 'Změna termínu závodů v dubnu' ? $createdAt->copy()->addHour()->toDateTimeString() : null,
@@ -84,17 +94,46 @@ class DemoPostSeeder extends Seeder
 
             // Two of three posts get a cover so the homepage shows both covers and placeholders
             if ($index % 3 !== 2) {
-                $this->attachCover($post, $index);
+                $this->attachMapImage($post, $index, Post::MEDIA_COLLECTION_COVER, 'novinka-' . $post->id . '.jpg');
+            }
+
+            for ($photo = 1; $photo <= ($galleryTitles[$title] ?? 0); $photo++) {
+                $this->attachMapImage($post, $index * 100 + $photo, Post::MEDIA_COLLECTION_GALLERY, 'galerie-' . $post->id . '-' . $photo . '.jpg');
             }
         }
     }
 
     /**
-     * Generates an orienteering-map-like cover (ISOM colours: yellow open land, green vegetation,
-     * blue water, brown contours) and attaches it to the post's cover collection.
+     * A TipTap document: a lead paragraph, a "Program" heading with a bullet list and a closing paragraph.
+     */
+    private function tipTapContent(): string
+    {
+        $paragraph = static fn (string $text): array => ['type' => 'paragraph', 'content' => [['type' => 'text', 'text' => $text]]];
+        $listItem = static fn (string $text): array => ['type' => 'listItem', 'content' => [$paragraph($text)]];
+
+        $document = [
+            'type' => 'doc',
+            'content' => [
+                $paragraph('Víkend se vydařil: suché počasí, rychlý les a skvělá parta. Díky všem, kteří přijeli, a hlavně pořadatelům za pěkné tratě.'),
+                ['type' => 'heading', 'attrs' => ['level' => 2], 'content' => [['type' => 'text', 'text' => 'Program']]],
+                ['type' => 'bulletList', 'content' => [
+                    $listItem('Pátek: příjezd, ubytování a noční trénink'),
+                    $listItem('Sobota: dopolední middle, odpoledne technika na buzolu'),
+                    $listItem('Neděle: závod na klasické trati a vyhlášení'),
+                ]],
+                $paragraph('Fotky najdete v galerii pod článkem. Kompletní výsledky jsou v ORISu.'),
+            ],
+        ];
+
+        return (string) json_encode($document, JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
+     * Generates an orienteering-map-like image (ISOM colours: yellow open land, green vegetation,
+     * blue water, brown contours) and attaches it to the given media collection of the post.
      * Keeps the repo free of binary demo photos.
      */
-    private function attachCover(Post $post, int $seed): void
+    private function attachMapImage(Post $post, int $seed, string $collection, string $fileName): void
     {
         mt_srand($seed);
 
@@ -161,8 +200,8 @@ class DemoPostSeeder extends Seeder
         imagedestroy($upscaled);
 
         $post->addMedia($path)
-            ->usingFileName('novinka-' . $post->id . '.jpg')
-            ->toMediaCollection(Post::MEDIA_COLLECTION_COVER);
+            ->usingFileName($fileName)
+            ->toMediaCollection($collection);
 
         unlink($tempBase);
     }

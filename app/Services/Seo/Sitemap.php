@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Seo;
 
 use App\Enums\PostStatus;
+use App\Models\Document;
 use App\Models\Page;
 use App\Models\Post;
 use App\Models\SportEvent;
@@ -14,7 +15,7 @@ use Spatie\Sitemap\Sitemap as SpatieSitemap;
 use Spatie\Sitemap\Tags\Url;
 
 /**
- * sitemap.xml of the public frontend: homepage, news, open pages and recent events.
+ * sitemap.xml of the public frontend: homepage, news, open pages, public documents and recent events.
  * Cached, and dropped whenever one of the listed models is saved or deleted (bulk
  * query-builder updates, e.g. from the ORIS sync, still wait for the TTL).
  */
@@ -28,7 +29,7 @@ final class Sitemap
     private const int EVENT_HISTORY_DAYS = 365;
 
     /** @var list<class-string<\Illuminate\Database\Eloquent\Model>> */
-    private const array LISTED_MODELS = [Post::class, Page::class, SportEvent::class];
+    private const array LISTED_MODELS = [Post::class, Page::class, SportEvent::class, Document::class];
 
     public static function flushOnContentChanges(): void
     {
@@ -64,6 +65,19 @@ final class Sitemap
             ->get(['id', 'slug', 'updated_at'])
             ->each(fn (Page $page) => $sitemap->add(
                 $this->url($page->publicUrl(), $page->updated_at)
+            ));
+
+        $sitemap->add(Url::create(route('documents.index')));
+
+        // The files themselves (PDF annual reports are worth indexing); members-only ones never
+        Document::query()
+            ->with('media')
+            ->where('is_public', true)
+            ->ordered()
+            ->get()
+            ->filter(static fn (Document $document): bool => $document->file() !== null)
+            ->each(fn (Document $document) => $sitemap->add(
+                $this->url($document->publicUrl(), $document->updated_at)
             ));
 
         SportEvent::query()

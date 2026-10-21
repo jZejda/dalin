@@ -83,8 +83,11 @@ return [
             'private'                  => 'Internal news',
             'author'                   => 'Author',
             'format'                   => 'Format',
+            'format_helper_edit'       => 'The format of an existing post cannot be switched. Convert a Markdown post with the “Convert to TipTap” action in the header.',
             'cover'                    => 'Cover image',
             'cover_helper'             => 'On the homepage the news card shows it in 4 : 3, the news detail header as a wide 7 : 2 strip. Both crops are taken from the centre of the image – ideally upload an uncropped photo with the key subject in the middle. JPG, PNG or WebP, max 8 MB.',
+            'section_gallery'          => 'Photo gallery',
+            'section_gallery_description' => 'Photos from a race or training are shown below the article as a thumbnail grid. Drag to reorder. JPG, PNG or WebP, max. 8 MB per photo, at most :max photos. Whole race albums belong on Rajče – just add a link.',
         ],
 
         'table' => [
@@ -113,6 +116,13 @@ return [
                 'selection_interested'      => 'Users who are interested in news',
                 'selection_all'             => 'All active users of the system',
             ],
+            'convert_to_tiptap' => [
+                'label'              => 'Convert to TipTap',
+                'modal_heading'      => 'Convert the post to TipTap?',
+                'modal_description'  => 'The text is converted from Markdown into the visual editor. This cannot be undone. Images and links are kept, but check the formatting.',
+                'modal_submit'       => 'Convert',
+                'notification_title' => 'Post converted to TipTap',
+            ],
         ],
 
         'public' => [
@@ -125,6 +135,12 @@ return [
             'index_lead'       => 'Club news, event invitations and results – newest first.',
             'index_empty'      => 'There is no news yet. You will soon find out what is happening in the club.',
             'index_page_title' => 'News – page :page',
+            'gallery_heading'  => 'Photo gallery',
+            'gallery_photo_alt' => 'Photo :number – :title',
+            'gallery_close'    => 'Close',
+            'gallery_previous' => 'Previous photo',
+            'gallery_next'     => 'Next photo',
+            'gallery_counter'  => 'Photo :current of :total',
         ],
     ],
 
