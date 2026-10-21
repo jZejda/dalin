@@ -12,7 +12,7 @@
 
         <style>[x-cloak] { display: none !important; }</style>
         @filamentStyles
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite('resources/css/app.css')
         @stack('scripts')
 
         <script>
@@ -44,11 +44,7 @@
             @livewire('notifications')
         </div>
         @filamentScripts
-        @vite('resources/js/app.js')
     </body>
-
-{{--    <script src="https://unpkg.com/flowbite@1.6.1/dist/flowbite.min.js"></script>--}}
-    <script src="./node_modules/preline/dist/preline.js"></script>
 
     <script>
         function initThemeToggle() {
