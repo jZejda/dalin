@@ -36,7 +36,7 @@
         "livewire/livewire": "^4.2",
         "logtail/monolog-logtail": "^3.3",
         "maatwebsite/excel": "^4.0",
-        "phpdocumentor/reflection-docblock": "^5.6",
+        "phpdocumentor/reflection-docblock": "^6.0",
         "psr/simple-cache": "v3.0",
         "pxlrbt/filament-excel": "^4.1",
         "ralphjsmit/laravel-filament-seo": "^2.2",
@@ -46,9 +46,9 @@
         "spatie/icalendar-generator": "^2.9",
         "spatie/laravel-markdown": "^2.8",
         "spatie/laravel-sitemap": "^8.2",
-        "symfony/property-access": "^7.4",
-        "symfony/property-info": "^7.4",
-        "symfony/serializer": "^7.4"
+        "symfony/property-access": "^8.0",
+        "symfony/property-info": "^8.0",
+        "symfony/serializer": "^8.0"
     },
     "require-dev": {
         "deployer/deployer": "^8.0",

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Components\Iofv3\Entities;
 
-use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 
 final class ClassStart
 {
