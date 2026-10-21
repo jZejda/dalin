@@ -116,3 +116,30 @@ test('event includes URL property linking to event detail page', function () {
     }
     expect($found)->toBeTrue();
 });
+
+test('multi-stage event is a full-day event ending the day after its last day', function () {
+    DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
+    $start = Carbon::now()->addMonth()->startOfDay();
+    $sportEvent = SportEvent::factory()->create([
+        'event_type' => SportEventType::Race,
+        'date' => $start,
+        'date_end' => $start->copy()->addDays(2),
+        'stages' => 3,
+        'oris_id' => null,
+        'cancelled' => false,
+        'discipline_id' => null,
+    ]);
+
+    DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+    $ical = collect((new IcalService())->getEvents(SportEventType::Race))
+        ->map(fn ($event): string => $event->toString())
+        ->first(fn (string $ical): bool => str_contains($ical, 'UID:' . $sportEvent->id . "\r\n"));
+
+    // DTEND is exclusive in iCalendar, so a 3-day event ends on the 4th day
+    expect($ical)->not->toBeNull()
+        ->toMatch('/DTSTART;[^:]*VALUE=DATE:' . $start->format('Ymd') . '\r\n/')
+        ->toMatch('/DTEND;[^:]*VALUE=DATE:' . $start->copy()->addDays(3)->format('Ymd') . '\r\n/')
+        ->toContain('CLASS:PUBLIC');
+});

@@ -43,7 +43,7 @@
         "ralphjsmit/laravel-seo": "^1.8",
         "sentry/sentry-laravel": "^4.25",
         "simplesoftwareio/simple-qrcode": "^4.2",
-        "spatie/icalendar-generator": "^2.9",
+        "spatie/icalendar-generator": "^3.0",
         "spatie/laravel-markdown": "^2.8",
         "spatie/laravel-sitemap": "^8.2",
         "symfony/property-access": "^8.0",
