@@ -90,13 +90,24 @@ class SportEventResource extends Resource implements HasShieldPermissions
         return __('sport-event.plural_label');
     }
 
+    /**
+     * @param  Builder<SportEvent>  $query
+     * @return Builder<SportEvent>
+     */
+    private static function eagerLoadTransportOffers(Builder $query): Builder
+    {
+        if (! AppSetting::isTransportModuleEnabled()) {
+            return $query;
+        }
+
+        return $query->with(['transportOffers' => fn ($offers) => $offers->active()->with('requests')]);
+    }
+
     public static function table(Table $table): Table
     {
         return $table
             ->recordUrl(fn (Model $record): string => route('filament.admin.resources.sport-events.entry', ['record' => $record]), )
-            ->modifyQueryUsing(fn (Builder $query): Builder => AppSetting::isTransportModuleEnabled()
-                ? $query->with(['transportOffers' => fn ($offers) => $offers->active()->with('requests')])
-                : $query)
+            ->modifyQueryUsing(self::eagerLoadTransportOffers(...))
             ->columns([
                 ViewColumn::make('entry_type')
                     ->label(__('sport-event.table.entry_type'))
