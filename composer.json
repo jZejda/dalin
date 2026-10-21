@@ -27,7 +27,7 @@
         "filament/notifications": "^5.5",
         "filament/spatie-laravel-media-library-plugin": "^5.5",
         "filament/tables": "^5.5",
-        "guzzlehttp/guzzle": "^7.10",
+        "guzzlehttp/guzzle": "^8.0",
         "knuckleswtf/scribe": "^5.9",
         "laravel/framework": "^13.0",
         "laravel/mcp": "^1.0",
