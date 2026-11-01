@@ -93,6 +93,17 @@ class CommonCron extends Controller
             Log::channel('site')->warning('ERROR ErrorMessage: '.$e->getMessage());
         }
 
+        /** @description Sync event start lists from ORIS — before the pre-race summary so it shows fresh start times */
+        try {
+            if ($this->runJob('sync_event_start_lists')) {
+                Log::channel('site')->info('START SyncEventStartLists run cron at '.$this->getActualHour());
+                new SyncEventStartLists()->run();
+                Log::channel('site')->info('STOP SyncEventStartLists run cron at '.$this->getActualHour());
+            }
+        } catch (Exception $e) {
+            Log::channel('site')->warning('ERROR SyncEventStartLists: '.$e->getMessage());
+        }
+
         /** @description Send Mail pre-race summary */
         try {
             if ($this->runJob('mail_pre_race_summary')) {
@@ -102,17 +113,6 @@ class CommonCron extends Controller
             }
         } catch (Exception $e) {
             Log::channel('site')->warning('ERROR MailPreRaceSummary: '.$e->getMessage());
-        }
-
-        /** @description Sync event start lists from ORIS */
-        try {
-            if ($this->runJob('sync_event_start_lists')) {
-                Log::channel('site')->info('START SyncEventStartLists run cron at '.$this->getActualHour());
-                new SyncEventStartLists()->run();
-                Log::channel('site')->info('STOP SyncEventStartLists run cron at '.$this->getActualHour());
-            }
-        } catch (Exception $e) {
-            Log::channel('site')->warning('ERROR SyncEventStartLists: '.$e->getMessage());
         }
 
         /** @description Bank Accounts sync */
