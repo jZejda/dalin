@@ -1,7 +1,5 @@
 <?php
 
-use App\Enums\AppRoles;
-
 return [
 
     /*
@@ -26,17 +24,13 @@ return [
             'subject' => 'Předmět zprávy',
             'reply_to' => 'Adresa pro odpovědi',
             'target_users' => 'Cílová skupina uživatelů podle role',
-            'target_users_options' => [
-                'all' => 'Všem aktivním uživatelům',
-                AppRoles::Member->value => 'Členové',
-                AppRoles::EventMaster->value => 'Správce závodů',
-                AppRoles::Redactor->value => 'Redaktor',
-                AppRoles::EventOrganizer->value => 'Organizátor závodů',
-                AppRoles::BillingSpecialist->value => 'Finančník',
-            ],
+            'target_users_helper' => 'E-mail dostanou jen aktivní uživatelé. Kdo spadá do více vybraných skupin, dostane ho jen jednou.',
+            'target_users_all' => 'Všem aktivním uživatelům',
             'content' => 'Zpráva',
             'notification_title' => 'E-mail rozeslán',
-            'notification_body' => 'Cílovým uživatelům byl odeslán e-mail.',
+            'notification_body' => '{1} E-mail byl zařazen k odeslání :count uživateli.|[2,*] E-mail byl zařazen k odeslání :count uživatelům.',
+            'notification_empty_title' => 'E-mail nebyl odeslán',
+            'notification_empty_body' => 'Zvoleným skupinám neodpovídá žádný aktivní uživatel. Zkontrolujte výběr cílové skupiny.',
         ],
     ],
 

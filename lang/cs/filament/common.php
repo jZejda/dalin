@@ -35,4 +35,9 @@ return [
 
     'start_offset_tooltip' => 'Minuta startu od času 00 (:zero)',
 
+    'help_link' => [
+        'label' => 'Nápověda',
+        'tooltip' => 'Otevře podrobnější vysvětlení v nápovědě (nová záložka)',
+    ],
+
 ];
