@@ -89,11 +89,24 @@ final class OrisApiService
                 ->where('sport_event_id', $sportEventId)
                 ->where('user_race_profile_id', $raceProfile->id)
                 ->whereIn('entry_status', EntryStatus::activeValues())
-                // Classes without assigned start times (HDR, OPEN) come back as '' — Carbon would parse that as "now"
-                ->update(['real_start' => EmptyType::stringNotEmpty($startEntry->StartTime) ? Carbon::parse($startEntry->StartTime) : null]);
+                ->update(['real_start' => self::parseStartListTime($startEntry->StartTime)]);
         }
 
         return true;
+    }
+
+    /**
+     * Classes without assigned start times (HDR, P, OPEN, punching start) come back as '' — Carbon would
+     * parse that as "now" and the admin would show the sync time as the start minute. Accept only a full
+     * "YYYY-MM-DD HH:MM[:SS]" value, anything else means "no start time".
+     */
+    private static function parseStartListTime(?string $startTime): ?Carbon
+    {
+        if ($startTime === null || preg_match('/^\d{4}-\d{2}-\d{2} \d{1,2}:\d{2}(:\d{2})?$/', trim($startTime)) !== 1) {
+            return null;
+        }
+
+        return Carbon::parse(trim($startTime));
     }
 
     /**
