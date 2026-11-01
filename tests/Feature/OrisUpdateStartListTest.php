@@ -119,3 +119,24 @@ it('syncs the start list only for events with an active entry still waiting for 
     'edited entry' => [EntryStatus::Edit, true],
     'cancelled entry' => [EntryStatus::Cancel, false],
 ]);
+
+it('treats a malformed ORIS start time as no start time', function (string $startTime): void {
+    $event = SportEvent::factory()->create(['oris_id' => 990004]);
+    $entry = startListEntryFor($event, 'XST4001', 'P');
+
+    Http::fake([
+        '*' => Http::response([
+            'Method' => 'getEventStartLists',
+            'Format' => 'json',
+            'Status' => 'OK',
+            'ExportCreated' => now()->toDateTimeString(),
+            'Data' => [
+                'Startlist_1' => orisStartListRow('1', 'P', 'XST4001', $startTime),
+            ],
+        ]),
+    ]);
+
+    new OrisApiService()->updateStartList($event->id);
+
+    expect($entry->refresh()->real_start)->toBeNull();
+})->with(['', ' ', '0', '00:00', 'now']);

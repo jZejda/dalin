@@ -105,7 +105,9 @@ class PreRaceSummaryMail extends Mailable
         $profile = $entry->userRaceProfile;
         $lines = [];
 
-        $start = $entry->requested_start ?? $entry->real_start?->format('H:i:s');
+        // Only the start time assigned by the organizer (synced from the ORIS start list) — requested_start is just
+        // a wish sent to the organizer that may not have been accepted, so it must not be shown as the start time.
+        $start = $entry->real_start?->format('H:i:s');
 
         if ($start !== null) {
             $startDisplay = Str::substr($start, 0, 5);

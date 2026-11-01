@@ -184,6 +184,7 @@ it('renders the pre-race summary with runners and course details', function (): 
         'user_race_profile_id' => $profile->id,
         'class_name' => 'D35',
         'requested_start' => '10:42',
+        'real_start' => $event->date?->copy()->setTime(10, 57),
         'entry_status' => EntryStatus::Create->value,
         'rent_si' => false,
         'entry_created' => now(),
@@ -192,10 +193,42 @@ it('renders the pre-race summary with runners and course details', function (): 
     (new PreRaceSummaryMail($event, collect([$entry])))
         ->assertSeeInHtml('Vše podstatné před startem.')
         ->assertSeeInHtml('Jana Nováková')
-        ->assertSeeInHtml('Start 10:42 · +12 min')
+        ->assertSeeInHtml('Start 10:57 · +27 min')
+        ->assertDontSeeInHtml('10:42')
         ->assertSeeInHtml('4.8 km · 12 kontrol · ↑ 160 m')
         ->assertSeeInHtml('Zavod?id=9876', false)
         ->assertSeeInText('TST8501');
+});
+
+it('leaves the start out of the pre-race summary when only a requested start is known', function (): void {
+    $event = clubMailWeeklyEvent(['start_time' => '10:30:00']);
+    $definition = SportClassDefinition::query()->firstOrCreate(
+        ['sport_id' => $event->sport_id, 'name' => 'D35'],
+        ['age_from' => 35, 'age_to' => 39, 'gender' => 'F'],
+    );
+    $profile = UserRaceProfile::query()->create([
+        'user_id' => User::factory()->create()->id,
+        'first_name' => 'Jana',
+        'last_name' => 'Nováková',
+        'reg_number' => 'TST8502',
+        'gender' => 'F',
+        'active' => true,
+    ]);
+    $entry = UserEntry::query()->create([
+        'sport_event_id' => $event->id,
+        'class_definition_id' => $definition->id,
+        'user_race_profile_id' => $profile->id,
+        'class_name' => 'D35',
+        'requested_start' => '10:42',
+        'entry_status' => EntryStatus::Create->value,
+        'rent_si' => false,
+        'entry_created' => now(),
+    ]);
+
+    (new PreRaceSummaryMail($event, collect([$entry])))
+        ->assertSeeInHtml('Jana Nováková')
+        ->assertDontSeeInHtml('10:42')
+        ->assertDontSeeInHtml('Start ');
 });
 
 function clubMailTransportRequest(array $attributes = []): TransportRequest
