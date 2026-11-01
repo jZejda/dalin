@@ -6,24 +6,45 @@ namespace App\Filament\Pages\Actions;
 
 use Filament\Schemas\Components\Grid;
 use App\Enums\AppRoles;
+use App\Filament\Actions\HelpLinkAction;
 use App\Filament\Pages\Jobs\SendUserMail;
-use App\Models\SportEvent;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Actions\Action;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 final class UserSendMail
 {
+    /** Roles allowed to send the e-mail; the page's header "Actions" group follows the same list. */
+    public const array SENDER_ROLES = [
+        AppRoles::SuperAdmin,
+        AppRoles::EventMaster,
+        AppRoles::BillingSpecialist,
+        AppRoles::EventOrganizer,
+    ];
+
+    /** Roles offered as target groups, labelled by the role's own name. */
+    private const array TARGET_ROLES = [
+        AppRoles::Member,
+        AppRoles::EventMaster,
+        AppRoles::Redactor,
+        AppRoles::EventOrganizer,
+        AppRoles::BillingSpecialist,
+    ];
+
+    public static function canSend(?User $user): bool
+    {
+        return $user?->hasRole(self::SENDER_ROLES) ?? false;
+    }
+
     public static function getAction(): Action
     {
         return Action::make('sendUserNotification')
             ->action(function (array $data): void {
-                /** @var SportEvent $sportEvent */
-
-                (new SendUserMail(
+                $recipients = (new SendUserMail(
                     $data['subject'],
                     $data['content'],
                     $data['replyTo'],
@@ -31,9 +52,20 @@ final class UserSendMail
                     Auth::user(),
                 ))->send();
 
+                if ($recipients === 0) {
+                    Notification::make()
+                        ->title(__('filament/user-setting.actions.send_mail.notification_empty_title'))
+                        ->body(__('filament/user-setting.actions.send_mail.notification_empty_body'))
+                        ->warning()
+                        ->persistent()
+                        ->send();
+
+                    return;
+                }
+
                 Notification::make()
                     ->title(__('filament/user-setting.actions.send_mail.notification_title'))
-                    ->body(__('filament/user-setting.actions.send_mail.notification_body'))
+                    ->body(trans_choice('filament/user-setting.actions.send_mail.notification_body', $recipients, ['count' => $recipients]))
                     ->success()
                     ->seconds(8)
                     ->send();
@@ -44,12 +76,7 @@ final class UserSendMail
             ->modalHeading(__('filament/user-setting.actions.send_mail.modal_heading'))
             ->modalDescription(__('filament/user-setting.actions.send_mail.modal_description'))
             ->modalSubmitActionLabel(__('filament/user-setting.actions.send_mail.modal_submit'))
-            ->visible(auth()->user()->hasRole([
-                AppRoles::SuperAdmin->value,
-                AppRoles::EventMaster->value,
-                AppRoles::BillingSpecialist->value,
-                AppRoles::EventOrganizer->value,
-            ]))
+            ->visible(fn (): bool => self::canSend(Auth::user()))
             ->schema([
                 Grid::make(1)
                     ->schema([
@@ -58,18 +85,15 @@ final class UserSendMail
                             ->required(),
                         TextInput::make('replyTo')
                             ->label(__('filament/user-setting.actions.send_mail.reply_to'))
+                            ->email()
                             ->default(Auth::user()?->email),
                         Select::make('targetUsers')
                             ->label(__('filament/user-setting.actions.send_mail.target_users'))
+                            ->helperText(__('filament/user-setting.actions.send_mail.target_users_helper'))
+                            ->hintAction(HelpLinkAction::to('stranka-uzivatelska-nastaveni', 'komu-se-e-mail-pošle'))
                             ->multiple()
-                            ->options([
-                                'all' => __('filament/user-setting.actions.send_mail.target_users_options.all'),
-                                AppRoles::Member->value => __('filament/user-setting.actions.send_mail.target_users_options.'.AppRoles::Member->value),
-                                AppRoles::EventMaster->value => __('filament/user-setting.actions.send_mail.target_users_options.'.AppRoles::EventMaster->value),
-                                AppRoles::Redactor->value => __('filament/user-setting.actions.send_mail.target_users_options.'.AppRoles::Redactor->value),
-                                AppRoles::EventOrganizer->value => __('filament/user-setting.actions.send_mail.target_users_options.'.AppRoles::EventOrganizer->value),
-                                AppRoles::BillingSpecialist->value => __('filament/user-setting.actions.send_mail.target_users_options.'.AppRoles::BillingSpecialist->value),
-                            ])
+                            ->options(self::targetOptions())
+                            ->required()
                             ->minItems(1),
                         MarkdownEditor::make('content')
                             ->label(__('filament/user-setting.actions.send_mail.content'))
@@ -77,5 +101,19 @@ final class UserSendMail
                     ]),
 
             ]);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private static function targetOptions(): array
+    {
+        $options = [SendUserMail::TARGET_ALL => __('filament/user-setting.actions.send_mail.target_users_all')];
+
+        foreach (self::TARGET_ROLES as $role) {
+            $options[$role->value] = (string) $role->getLabel();
+        }
+
+        return $options;
     }
 }

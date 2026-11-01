@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Pages;
 
 use Filament\Support\Enums\Width;
-use App\Enums\AppRoles;
 use App\Enums\UserParamType;
 use App\Filament\Pages\Actions\UserChangePassword;
 use App\Filament\Pages\Actions\UserSendMail;
@@ -124,12 +123,7 @@ class UserSettings extends Page
     {
         return [
             UserChangePassword::getAction(),
-            (Auth::user()?->hasRole([
-                AppRoles::EventMaster->value,
-                AppRoles::BillingSpecialist->value,
-                AppRoles::Redactor->value,
-                AppRoles::SuperAdmin->value,
-            ])) ? $this->getGroupActions() : ActionGroup::make([]),
+            UserSendMail::canSend(Auth::user()) ? $this->getGroupActions() : ActionGroup::make([]),
         ];
     }
 

@@ -193,18 +193,6 @@ parameters:
 			path: app/Filament/Pages/Actions/ExportUserRaceProfileData.php
 
 		-
-			message: '#^Cannot call method hasRole\(\) on App\\Models\\User\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: app/Filament/Pages/Actions/UserSendMail.php
-
-		-
-			message: '#^Variable \$sportEvent in PHPDoc tag @var does not exist\.$#'
-			identifier: varTag.variableNotFound
-			count: 1
-			path: app/Filament/Pages/Actions/UserSendMail.php
-
-		-
 			message: '#^Parameter \#1 \$view of function view expects view\-string\|null, string given\.$#'
 			identifier: argument.type
 			count: 1

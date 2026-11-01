@@ -35,4 +35,9 @@ return [
 
     'start_offset_tooltip' => 'Start minute from zero time (:zero)',
 
+    'help_link' => [
+        'label' => 'Help',
+        'tooltip' => 'Opens a more detailed explanation in the user guide (new tab)',
+    ],
+
 ];

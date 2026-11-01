@@ -1,7 +1,5 @@
 <?php
 
-use App\Enums\AppRoles;
-
 return [
 
     /*
@@ -26,17 +24,13 @@ return [
             'subject' => 'Message subject',
             'reply_to' => 'Reply-to address',
             'target_users' => 'Target group of users by role',
-            'target_users_options' => [
-                'all' => 'All active users',
-                AppRoles::Member->value => 'Members',
-                AppRoles::EventMaster->value => 'Event managers',
-                AppRoles::Redactor->value => 'Redactor',
-                AppRoles::EventOrganizer->value => 'Event organizer',
-                AppRoles::BillingSpecialist->value => 'Billing specialist',
-            ],
+            'target_users_helper' => 'Only active users receive the email. Anyone in several selected groups gets it just once.',
+            'target_users_all' => 'All active users',
             'content' => 'Message',
             'notification_title' => 'Email sent',
-            'notification_body' => 'An email has been sent to the target users.',
+            'notification_body' => '{1} The email has been queued for :count user.|[2,*] The email has been queued for :count users.',
+            'notification_empty_title' => 'Email not sent',
+            'notification_empty_body' => 'No active user matches the selected groups. Check the target group selection.',
         ],
     ],
 
