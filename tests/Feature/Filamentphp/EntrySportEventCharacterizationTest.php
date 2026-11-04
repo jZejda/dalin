@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 use App\Enums\RelayType;
 use App\Enums\EntryStatus;
+use App\Enums\UserCreditStatus;
+use App\Enums\UserCreditType;
+use App\Filament\Resources\SportEvents\Pages\EditSportEvent;
 use App\Filament\Resources\SportEvents\Pages\EntrySportEvent;
+use App\Filament\Resources\SportEvents\RelationManagers\UserCreditRelationManager;
 use App\Http\Components\Oris\Response\CreateEntry;
 use App\Http\Components\Oris\Response\Entity\EntryData\Data;
 use App\Http\Components\Oris\Response\Entity\EntryData\Entry as OrisEntry;
@@ -14,6 +18,7 @@ use App\Models\SportClassDefinition;
 use App\Models\SportDiscipline;
 use App\Models\SportEvent;
 use App\Models\User;
+use App\Models\UserCredit;
 use App\Models\UserEntry;
 use App\Models\UserRaceProfile;
 use App\Filament\Resources\SportEvents\Pages\Actions\DeleteEntryAction;
@@ -546,6 +551,88 @@ describe('EntryList live refresh', function (): void {
 
         $component->dispatch('entry-created')
             ->assertSee($this->raceProfile->reg_number);
+    });
+});
+
+// =====================================================================
+// 1.10 EntryList global search (the race profile column renders an accessor,
+//      so the search has to target real columns, not a non-existent one).
+// =====================================================================
+describe('EntryList global search', function (): void {
+    beforeEach(function (): void {
+        actingAsSuperAdmin();
+
+        $this->entry = UserEntry::query()->create([
+            'sport_event_id' => $this->event->id,
+            'class_definition_id' => $this->classDefinition->id,
+            'user_race_profile_id' => $this->raceProfile->id,
+            'class_name' => 'H21',
+            'entry_status' => EntryStatus::Create->value,
+            'rent_si' => false,
+            'entry_created' => now(),
+        ]);
+
+        $otherUser = User::factory()->create(['active' => true]);
+        $otherProfile = UserRaceProfile::query()->create([
+            'user_id' => $otherUser->id,
+            'first_name' => 'Jana',
+            'last_name' => 'Nováková',
+            'reg_number' => 'ABM7002',
+            'gender' => 'F',
+            'active' => true,
+        ]);
+        $this->otherEntry = UserEntry::query()->create([
+            'sport_event_id' => $this->event->id,
+            'class_definition_id' => $this->classDefinition->id,
+            'user_race_profile_id' => $otherProfile->id,
+            'class_name' => 'D21',
+            'entry_status' => EntryStatus::Create->value,
+            'rent_si' => false,
+            'entry_created' => now(),
+        ]);
+    });
+
+    test('finds an entry by race profile field', function (string $search): void {
+        Livewire::test(EntryList::class, ['sportEvent' => $this->event])
+            ->searchTable($search)
+            ->assertCanSeeTableRecords([$this->otherEntry])
+            ->assertCanNotSeeTableRecords([$this->entry]);
+    })->with([
+        'first name' => 'Jana',
+        'last name' => 'Nováková',
+        'registration number' => 'ABM7002',
+        'full name' => 'Jana Nováková',
+        'class name' => 'D21',
+    ]);
+
+    test('a search matching nothing renders an empty table', function (): void {
+        Livewire::test(EntryList::class, ['sportEvent' => $this->event])
+            ->searchTable('neexistuje')
+            ->assertCanNotSeeTableRecords([$this->entry, $this->otherEntry]);
+    });
+
+    test('event credit table finds a credit by race profile field', function (): void {
+        $makeCredit = fn (UserRaceProfile $profile): UserCredit => UserCredit::query()->create([
+            'user_id' => $profile->user_id,
+            'user_race_profile_id' => $profile->id,
+            'sport_event_id' => $this->event->id,
+            'amount' => -200,
+            'currency' => 'CZK',
+            'source' => UserCredit::SOURCE_USER,
+            'status' => UserCreditStatus::Done,
+            'credit_type' => UserCreditType::CashOut,
+        ]);
+
+        $matching = $makeCredit(UserRaceProfile::query()->findOrFail($this->otherEntry->user_race_profile_id));
+        $other = $makeCredit($this->raceProfile);
+
+        Livewire::test(UserCreditRelationManager::class, [
+            'ownerRecord' => $this->event,
+            'pageClass' => EditSportEvent::class,
+        ])
+            ->searchTable('Nováková')
+            ->assertCanSeeTableRecords([$matching])
+            ->assertCanNotSeeTableRecords([$other]);
     });
 });
 

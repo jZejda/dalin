@@ -63,7 +63,7 @@ class EntriesTableColumns
                         'size' => 'sm',
                     ])
                 ))
-                ->searchable(),
+                ->searchable(['first_name', 'last_name', 'reg_number']),
             TextColumn::make('note')
                 ->label(__('sport-event.entries_table.note'))
                 ->limit(15)

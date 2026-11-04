@@ -47,7 +47,7 @@ class UserCreditRelationManager extends RelationManager
                             'size' => 'sm',
                         ])
                     ))
-                    ->searchable(),
+                    ->searchable(['first_name', 'last_name', 'reg_number']),
                 ViewColumn::make('user.userIdentification')
                     ->label(__('sport-event.relation_credits.table.user'))
                     ->view('filament.tables.columns.user-identity'),
