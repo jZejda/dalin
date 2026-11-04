@@ -9,6 +9,7 @@ use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\TextSize;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\ViewAction;
@@ -19,12 +20,14 @@ use App\Filament\Resources\Posts\Pages\EditPost;
 use App\Filament\Resources\Posts\Pages\ViewPost;
 use Filament\Actions\Action;
 use App\Enums\AppRoles;
+use App\Enums\ContentFormat;
 use App\Enums\PostStatus;
 use App\Filament\Resources\Posts\Jobs\SendNewsMail;
 use App\Models\Post;
 use App\Models\User;
 use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
@@ -84,12 +87,36 @@ class PostResource extends Resource implements HasShieldPermissions
 //                                    $set('slug', Str::slug($state));
 //                                }),
 
-                            // Markdown editor
-                            Grid::make()->schema([
-                                MarkdownEditor::make('content')
-                                    ->label(__('content.post.form.content'))
-                                    ->required()
-                            ])->columns(1),
+                            // Editor follows the format: TipTap for posts written in the admin, Markdown for older
+                            // ones and for posts the bot sends via the API (content_mode 2 stays the API default)
+                            // The schema is first built before the form is filled, hence the record / default fallback
+                            Grid::make(1)->schema(fn (Get $get, ?Post $record): array => [
+                                self::isTipTap($get('content_mode') ?? $record->content_mode ?? ContentFormat::TipTapJson)
+                                    ? self::richEditor()
+                                    : MarkdownEditor::make('content')
+                                        ->label(__('content.post.form.content'))
+                                        ->required(),
+                            ]),
+
+                            Section::make(__('content.post.form.section_gallery'))
+                                ->description(__('content.post.form.section_gallery_description', ['max' => Post::GALLERY_MAX_FILES]))
+                                ->schema([
+                                    SpatieMediaLibraryFileUpload::make('gallery')
+                                        ->hiddenLabel()
+                                        ->collection(Post::MEDIA_COLLECTION_GALLERY)
+                                        ->multiple()
+                                        ->reorderable()
+                                        ->appendFiles()
+                                        ->image()
+                                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                                        ->maxSize(8192)
+                                        ->maxFiles(Post::GALLERY_MAX_FILES)
+                                        ->panelLayout('grid'),
+                                ])
+                                ->collapsible()
+                                ->persistCollapsed()
+                                ->id('post-gallery')
+                                ->hidden(fn (Get $get): bool => self::isInternal($get('private'))),
 
                             Section::make(__('content.post.form.section_additional'))
                                 ->description(__('content.post.form.section_additional_description'))
@@ -138,12 +165,22 @@ class PostResource extends Resource implements HasShieldPermissions
                                 ->required(),
                             Select::make('content_mode')
                                 ->label(__('content.post.form.format'))
-                                ->options(
-                                    [
-//                                        1 => 'HTML',
-                                        2 => 'Markdown',
-                                    ]
-                                )->default(2)
+                                ->helperText(function (string $operation): ?string {
+                                    if ($operation !== 'edit') {
+                                        return null;
+                                    }
+
+                                    return __('content.post.form.format_helper_edit');
+                                })
+                                // HTML stays readable for old posts, but nobody writes new ones in it
+                                ->options(collect([ContentFormat::TipTapJson, ContentFormat::Markdown])
+                                    ->mapWithKeys(fn (ContentFormat $format): array => [$format->value => $format->getLabel()]))
+                                ->default(ContentFormat::TipTapJson->value)
+                                ->selectablePlaceholder(false)
+                                ->live()
+                                // The two editors keep different state shapes (TipTap array vs Markdown string)
+                                ->afterStateUpdated(fn (Set $set): mixed => $set('content', null))
+                                ->disabledOn('edit')
                                 ->required(),
                             SpatieMediaLibraryFileUpload::make('cover')
                                 ->label(__('content.post.form.cover'))
@@ -161,6 +198,40 @@ class PostResource extends Resource implements HasShieldPermissions
                         ]),
 
                 ])->columnSpanFull()
+            ]);
+    }
+
+    public static function isTipTap(mixed $state): bool
+    {
+        $value = $state instanceof ContentFormat ? $state->value : (int) $state;
+
+        return $value === ContentFormat::TipTapJson->value;
+    }
+
+    /**
+     * Images pasted into the text go to the post's Spatie collection (Post::setUpRichContent()),
+     * which needs a saved record: on a new post they can be added after the first save.
+     */
+    private static function richEditor(): RichEditor
+    {
+        return RichEditor::make('content')
+            ->label(__('content.post.form.content'))
+            ->required()
+            ->fileAttachmentsAcceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+            ->fileAttachmentsMaxSize(8192)
+            ->toolbarButtons([
+                ['bold', 'italic', 'underline', 'strike', 'link'],
+                ['h2', 'h3', 'alignStart', 'alignCenter'],
+                ['blockquote', 'bulletList', 'orderedList', 'details', 'table'],
+                ['attachFiles', 'customBlocks'],
+                ['undo', 'redo'],
+            ])
+            ->floatingToolbars([
+                'table' => [
+                    'tableAddColumnBefore', 'tableAddColumnAfter', 'tableDeleteColumn',
+                    'tableAddRowBefore', 'tableAddRowAfter', 'tableDeleteRow',
+                    'tableToggleHeaderRow', 'tableDelete',
+                ],
             ]);
     }
 

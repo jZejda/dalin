@@ -32,8 +32,12 @@
                 {!! $post->content !!}
             @elseif ($post->content_mode === ContentFormat::Markdown)
                 {{ Markdown::parse($post->content) }}
+            @elseif ($post->content_mode === ContentFormat::TipTapJson)
+                {!! $post->richContentRenderer()->toUnsafeHtml() !!}
             @endif
         </div>
+
+        <x-ui.post-gallery :post="$post" />
 
         <dl class="mt-10 flex flex-wrap gap-x-8 gap-y-4 text-sm">
             @if ($post->user)<div><dt class="text-terrain-secondary">{{ __('content.post.public.author') }}</dt><dd class="mt-1 font-semibold">{{ $post->user->name }}</dd></div>@endif

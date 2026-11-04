@@ -6,9 +6,13 @@ namespace App\Models;
 
 use App\Enums\ContentFormat;
 use App\Enums\PostStatus;
+use App\Filament\Forms\Components\RichEditor\RichContentCustomBlocks\RichContentBlocks;
 use App\Services\Seo\PostSeo;
 use Filament\Forms\Components\RichEditor\FileAttachmentProviders\SpatieMediaLibraryFileAttachmentProvider;
 use Filament\Forms\Components\RichEditor\Models\Concerns\InteractsWithRichContent;
+use Filament\Forms\Components\RichEditor\Models\Contracts\HasRichContent;
+use Filament\Forms\Components\RichEditor\RichContentAttribute;
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -52,7 +56,7 @@ use Override;
     'img_url',
     'editorial',
 ])]
-class Post extends Model implements HasMedia
+class Post extends Model implements HasMedia, HasRichContent
 {
     use SoftDeletes;
     use InteractsWithMedia;
@@ -60,6 +64,9 @@ class Post extends Model implements HasMedia
     use HasSEO;
 
     public const string MEDIA_COLLECTION_COVER = 'post_cover';
+    public const string MEDIA_COLLECTION_GALLERY = 'post_gallery';
+    public const int GALLERY_MAX_FILES = 40;
+    public const string MEDIA_COLLECTION_CONTENT_ATTACHMENTS = 'content-file-attachments';
 
     /**
      * @return array<string, string>
@@ -99,6 +106,26 @@ class Post extends Model implements HasMedia
     }
 
     /**
+     * Gallery photos in the order set in the admin, as thumbnail + lightbox URLs.
+     *
+     * @return list<array{thumb: string, full: string, alt: string}>
+     */
+    public function galleryImages(): array
+    {
+        $images = [];
+
+        foreach ($this->getMedia(self::MEDIA_COLLECTION_GALLERY)->values() as $index => $media) {
+            $images[] = [
+                'thumb' => $media->getAvailableUrl(['card']),
+                'full' => $media->getAvailableUrl(['detail']),
+                'alt' => (string) __('content.post.public.gallery_photo_alt', ['title' => $this->title, 'number' => $index + 1]),
+            ];
+        }
+
+        return $images;
+    }
+
+    /**
      * Public URL with a title slug (/novinka/12-jarni-soustredeni). The id alone identifies the
      * post, so a renamed title keeps old links working via a redirect to the current slug.
      */
@@ -128,20 +155,29 @@ class Post extends Model implements HasMedia
             ->useDisk('public')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp'])
             ->singleFile();
+
+        // Photos from a race or a training; whole race albums stay on Rajče (limited disk on shared hosting)
+        $this->addMediaCollection(self::MEDIA_COLLECTION_GALLERY)
+            ->useDisk('public')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+
+        $this->addMediaCollection(self::MEDIA_COLLECTION_CONTENT_ATTACHMENTS)
+            ->useDisk('public');
     }
 
     public function registerMediaConversions(?Media $media = null): void
     {
-        // Non-queued: shared hosting sites don't run a queue worker
+        // Non-queued: shared hosting sites don't run a queue worker.
+        // The gallery reuses 'card' as its thumbnail and 'detail' for the lightbox.
         $this->addMediaConversion('card')
-            ->performOnCollections(self::MEDIA_COLLECTION_COVER)
+            ->performOnCollections(self::MEDIA_COLLECTION_COVER, self::MEDIA_COLLECTION_GALLERY)
             ->nonQueued()
             ->fit(Fit::Crop, 800, 600)
             ->format('jpg');
 
         // Detail page shows the whole photo, so only downscale and keep the original aspect ratio
         $this->addMediaConversion('detail')
-            ->performOnCollections(self::MEDIA_COLLECTION_COVER)
+            ->performOnCollections(self::MEDIA_COLLECTION_COVER, self::MEDIA_COLLECTION_GALLERY)
             ->nonQueued()
             ->fit(Fit::Max, 1600, 1600)
             ->format('jpg');
@@ -154,11 +190,49 @@ class Post extends Model implements HasMedia
             ->format('jpg');
     }
 
-    //    public function setUpRichContent(): void
-    //    {
-    //        $this->registerRichContent('content')
-    //            ->fileAttachmentProvider(SpatieMediaLibraryFileAttachmentProvider::make())
-    //            ->mediaName(fn (TemporaryUploadedFile $file): string => Str::random() . '_' . $file->getClientOriginalName())
-    //            ->collection('content-file-attachments');
-    //    }
+    /**
+     * TipTap content (content_mode = 3): images pasted into the editor live in a Spatie collection
+     * of the post, so they are deleted together with it. Markdown/HTML posts never touch this.
+     */
+    protected function setUpRichContent(): void
+    {
+        $this->registerRichContent('content')
+            ->json()
+            ->customBlocks(RichContentBlocks::all())
+            ->fileAttachmentProvider(
+                SpatieMediaLibraryFileAttachmentProvider::make()
+                    ->collection(self::MEDIA_COLLECTION_CONTENT_ATTACHMENTS)
+                    ->mediaName(fn (TemporaryUploadedFile $file): string => pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)),
+            )
+            ->fileAttachmentsDisk('public')
+            ->fileAttachmentsVisibility('public');
+    }
+
+    /**
+     * Rewrites a Markdown/HTML post into a TipTap document (one-way, used by the admin action).
+     */
+    public function convertToTipTap(): void
+    {
+        if ($this->content_mode === ContentFormat::TipTapJson) {
+            return;
+        }
+
+        $html = $this->content_mode === ContentFormat::Markdown ? Str::markdown($this->content) : $this->content;
+        $document = RichContentRenderer::make($html)->customBlocks(RichContentBlocks::all())->toArray();
+
+        $this->content = json_encode($document, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        $this->content_mode = ContentFormat::TipTapJson;
+        $this->save();
+    }
+
+    /**
+     * Renderer for TipTap content with the post's attachments and custom blocks resolved.
+     */
+    public function richContentRenderer(): RichContentRenderer
+    {
+        /** @var RichContentAttribute $attribute */
+        $attribute = $this->getRichContentAttribute('content');
+
+        return $attribute->getRenderer();
+    }
 }

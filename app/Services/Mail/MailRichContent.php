@@ -16,12 +16,16 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
  */
 final class MailRichContent
 {
-    public static function html(string $content, ContentFormat $format): string
+    /**
+     * Pass the model's own renderer (e.g. Post::richContentRenderer()) so images attached in the
+     * editor resolve to their media URLs; without it only the bare document is rendered.
+     */
+    public static function html(string $content, ContentFormat $format, ?RichContentRenderer $renderer = null): string
     {
         $html = match ($format) {
             ContentFormat::Html => $content,
             ContentFormat::Markdown => Str::markdown($content, ['html_input' => 'escape', 'allow_unsafe_links' => false]),
-            ContentFormat::TipTapJson => self::tipTapHtml($content),
+            ContentFormat::TipTapJson => self::tipTapHtml($content, $renderer),
         };
 
         // Filament's sanitizer config: safe elements only, no scripts or event handlers
@@ -46,7 +50,7 @@ final class MailRichContent
         return trim((string) preg_replace("/\n{3,}/", "\n\n", (string) preg_replace("/[ \t]*\n[ \t]*/", "\n", $text)));
     }
 
-    private static function tipTapHtml(string $content): string
+    private static function tipTapHtml(string $content, ?RichContentRenderer $renderer): string
     {
         $document = json_decode($content, true);
 
@@ -55,8 +59,8 @@ final class MailRichContent
         }
 
         return (string) rescue(
-            static fn (): string => RichContentRenderer::make($document)
-                ->customBlocks(RichContentBlocks::all())
+            static fn (): string => ($renderer ?? RichContentRenderer::make($document)->customBlocks(RichContentBlocks::all()))
+                ->content($document)
                 ->toHtml(),
             '',
             report: false,

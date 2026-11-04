@@ -13,6 +13,7 @@ use Database\Seeders\Demo\DemoBankTransactionSeeder;
 use Database\Seeders\Demo\DemoContentSeeder;
 use Database\Seeders\Demo\DemoMailLogSeeder;
 use Database\Seeders\Demo\DemoMarketplaceSeeder;
+use Database\Seeders\Demo\DemoDocumentSeeder;
 use Database\Seeders\Demo\DemoPostSeeder;
 use Database\Seeders\Demo\DemoRelaySeeder;
 use Database\Seeders\Demo\DemoSportEventExtrasSeeder;
@@ -96,6 +97,7 @@ class DemoSeeder extends Seeder
             DemoUserEntrySeeder::class,
             DemoUserCreditSeeder::class,
             DemoPostSeeder::class,
+            DemoDocumentSeeder::class,
             DemoContentSeeder::class,
             DemoMarketplaceSeeder::class,
             DemoTransportSeeder::class,

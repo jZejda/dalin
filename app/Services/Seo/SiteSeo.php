@@ -297,7 +297,7 @@ final class SiteSeo
         return self::clubAbbr() ?? self::clubName();
     }
 
-    private static function clubName(): ?string
+    public static function clubName(): ?string
     {
         return self::filled(config('site-config.club.full_name'));
     }

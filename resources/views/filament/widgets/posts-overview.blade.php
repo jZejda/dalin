@@ -39,6 +39,8 @@
                             <div class="prose dark:prose-invert max-w-none">{!! $post->content !!}</div>
                         @elseif($post->content_mode === ContentFormat::Markdown)
                             <div class="prose dark:prose-invert max-w-none">{!! Str::markdown($post->content) !!}</div>
+                        @elseif($post->content_mode === ContentFormat::TipTapJson)
+                            <div class="prose dark:prose-invert max-w-none">{!! $post->richContentRenderer()->toUnsafeHtml() !!}</div>
                         @endif
                     </div>
                 @endforeach
