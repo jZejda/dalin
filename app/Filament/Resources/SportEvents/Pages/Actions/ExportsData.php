@@ -19,6 +19,13 @@ use Livewire\Features\SupportRedirects\Redirector as LivewireRedirector;
 
 class ExportsData
 {
+    /**
+     * Roles allowed to export entry lists; shared by the panel action and the /admin/export/* routes.
+     *
+     * @var list<AppRoles>
+     */
+    public const array EXPORT_ROLES = [AppRoles::SuperAdmin, AppRoles::EventMaster, AppRoles::EventOrganizer];
+
     private SportEvent $sportEvent;
 
     public function __construct(SportEvent $sportEvent)
@@ -73,7 +80,7 @@ class ExportsData
             ->modalHeading(__('sport-event.actions.export.modal_heading'))
             ->modalDescription(__('sport-event.actions.export.modal_description'))
             ->modalSubmitActionLabel(__('sport-event.actions.export.modal_submit'))
-            ->visible(auth()->user()->hasRole([AppRoles::SuperAdmin, AppRoles::EventMaster, AppRoles::EventOrganizer]))
+            ->visible(auth()->user()->hasRole(self::EXPORT_ROLES))
             ->schema([
                 Grid::make(1)
                     ->schema([
