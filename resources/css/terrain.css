@@ -61,19 +61,34 @@
 @layer components {
     .terrain .terrain-prose { overflow-wrap: anywhere; }
     .terrain .terrain-prose :where(p, ul, ol) { @apply mb-3 leading-relaxed; }
-    .terrain .terrain-prose :where(h2, h3, h4) { @apply my-4 font-bold text-terrain-ink; }
+    /* Heading scale in em, so it follows the surrounding text size (article body vs. the text-sm event panels).
+       More space above than below ties a heading to the section it opens. */
+    .terrain .terrain-prose :where(h1, h2, h3, h4, h5, h6) { @apply font-bold leading-snug text-terrain-ink; margin: 1.6em 0 0.5em; text-wrap: balance; }
+    .terrain .terrain-prose :where(h1) { @apply font-extrabold leading-tight tracking-tight; font-size: 1.875em; margin-top: 1.4em; }
+    .terrain .terrain-prose :where(h2) { @apply font-extrabold leading-tight tracking-tight; font-size: 1.5em; margin-top: 1.5em; }
+    .terrain .terrain-prose :where(h3) { font-size: 1.25em; }
+    .terrain .terrain-prose :where(h4) { font-size: 1.0625em; }
+    .terrain .terrain-prose :where(h5) { font-size: 1em; }
+    .terrain .terrain-prose :where(h6) { @apply font-semibold uppercase tracking-wider text-terrain-secondary; font-size: 0.8125em; }
+    /* A heading directly after another heading is a subtitle: no section gap between them */
+    .terrain .terrain-prose :where(h1, h2, h3, h4, h5, h6) + :where(h1, h2, h3, h4, h5, h6) { margin-top: 0; }
     .terrain .terrain-prose a { @apply font-semibold text-terrain-ink underline decoration-terrain-accent underline-offset-4; }
     .terrain .terrain-prose ul { @apply list-disc pl-5; }
     .terrain .terrain-prose ol { @apply list-decimal pl-5; }
     .terrain .terrain-prose img { @apply h-auto max-w-full rounded-terrain-control; }
+    .terrain .terrain-prose > :first-child { margin-top: 0; }
     .terrain .terrain-prose :last-child { margin-bottom: 0; }
     .terrain .terrain-partners svg { max-width: 100%; height: auto; }
     .terrain .terrain-partners { @apply rounded-terrain-panel bg-white p-4; }
 }
 
 @layer components {
-    .terrain .terrain-prose :where(table) { @apply block max-w-full overflow-x-auto text-sm; }
+    /* display:block (needed for the horizontal scroll) drops the table's default spacing, so set it explicitly */
+    .terrain .terrain-prose :where(table) { @apply mt-4 mb-8 block max-w-full overflow-x-auto text-sm; }
     .terrain .terrain-prose :where(th, td) { @apply border-b border-terrain-line px-3 py-2 text-left; }
-    .terrain .terrain-prose :where(pre) { @apply max-w-full overflow-x-auto rounded-terrain-control bg-terrain-muted p-4; }
+    .terrain .terrain-prose :where(th) { @apply border-b-2 font-semibold whitespace-nowrap text-terrain-secondary; }
+    .terrain .terrain-prose :where(pre) { @apply my-6 max-w-full overflow-x-auto rounded-terrain-control bg-terrain-muted p-4; }
+    .terrain .terrain-prose :where(blockquote) { @apply my-6 border-l-2 border-terrain-accent pl-4 text-terrain-secondary; }
+    .terrain .terrain-prose :where(hr) { @apply my-8 border-terrain-line; }
     .terrain .terrain-prose :where(iframe, video) { max-width: 100%; }
 }

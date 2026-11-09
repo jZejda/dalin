@@ -35,9 +35,25 @@
             @endif
         </div>
 
-        <dl class="mt-10 flex flex-wrap gap-x-8 gap-y-4 text-sm">
-            @if ($post->user)<div><dt class="text-terrain-secondary">{{ __('content.post.public.author') }}</dt><dd class="mt-1 font-semibold">{{ $post->user->name }}</dd></div>@endif
-            @if ($post->created_at)<div><dt class="text-terrain-secondary">{{ __('content.post.public.published') }}</dt><dd class="mt-1 font-semibold"><time datetime="{{ $post->created_at->toIso8601String() }}">{{ $post->created_at->format('d. m. Y') }}</time></dd></div>@endif
-        </dl>
+        <footer class="mt-10 flex flex-wrap items-center justify-between gap-x-8 gap-y-2 border-t border-terrain-line pt-5 text-sm md:mt-12">
+            <dl class="flex flex-wrap gap-x-6 gap-y-2">
+                @if ($post->user)
+                    <div class="flex min-h-11 items-center gap-2">
+                        <dt class="text-terrain-secondary">@svg('lucide-user-round', 'size-4', ['aria-hidden' => 'true'])<span class="sr-only">{{ __('content.post.public.author') }}</span></dt>
+                        <dd class="font-semibold">{{ $post->user->name }}</dd>
+                    </div>
+                @endif
+                @if ($post->created_at)
+                    <div class="flex min-h-11 items-center gap-2">
+                        <dt class="text-terrain-secondary">@svg('lucide-calendar-days', 'size-4', ['aria-hidden' => 'true'])<span class="sr-only">{{ __('content.post.public.published') }}</span></dt>
+                        <dd class="text-terrain-secondary"><time datetime="{{ $post->created_at->toIso8601String() }}">{{ $post->created_at->format('j. n. Y') }}</time></dd>
+                    </div>
+                @endif
+            </dl>
+            <a href="{{ route('posts.index') }}" class="inline-flex min-h-11 items-center gap-2 font-semibold hover:underline">
+                @svg('lucide-arrow-left', 'size-4 text-terrain-secondary', ['aria-hidden' => 'true'])
+                {{ __('content.post.public.more_link') }}
+            </a>
+        </footer>
     </div>
 @endsection
