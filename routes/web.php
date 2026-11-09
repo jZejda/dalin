@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Enums\AppRoles;
+use App\Filament\Resources\SportEvents\Pages\Actions\ExportsData;
 use App\Http\Controllers\Cron\CommonCron;
 use App\Http\Controllers\Demo\DemoResetController;
 use App\Http\Controllers\Demo\DemoScreenshotModeController;
@@ -81,11 +83,18 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::prefix('admin')->group(function () {
-    Route::get('/export/event-entry/{eventId}', [UserEntryController::class, 'export']);
-    Route::get('/export/event-entry-iof/{eventId}', [UserEntryController::class, 'exportEntryListIofV3'])->name('admin.export.event-entry-iof');
-    Route::get('/export/event-entry-csos/{eventId}', [UserEntryController::class, 'exportEntryListCsos'])->name('admin.export.event-entry-csos');
-})->middleware(['auth', 'verified']);
+// Middleware must be set before group(): group() registers its routes immediately, so a trailing
+// ->middleware() would never apply. Roles match the panel export action (ExportsData::EXPORT_ROLES).
+Route::prefix('admin')
+    ->middleware([
+        'auth',
+        'verified',
+        'role:' . implode('|', array_map(fn (AppRoles $role): string => $role->value, ExportsData::EXPORT_ROLES)),
+    ])
+    ->group(function () {
+        Route::get('/export/event-entry-iof/{eventId}', [UserEntryController::class, 'exportEntryListIofV3'])->name('admin.export.event-entry-iof');
+        Route::get('/export/event-entry-csos/{eventId}', [UserEntryController::class, 'exportEntryListCsos'])->name('admin.export.event-entry-csos');
+    });
 
 //Route::get('/admin/webhook', [DiscordRaceEventNotification::class, 'notification']);
 

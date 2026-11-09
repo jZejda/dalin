@@ -24,7 +24,8 @@ return Application::configure(basePath: dirname(__DIR__))
                 Request::HEADER_X_FORWARDED_AWS_ELB,
         );
 
-        $middleware->redirectGuestsTo(fn () => route('login'));
+        // The panel login is the only login route; route('login') no longer exists
+        $middleware->redirectGuestsTo(fn () => route('filament.admin.auth.login'));
         $middleware->redirectUsersTo('/dashboard');
 
         // Attribute mails dispatched during a web request to the logged-in user
