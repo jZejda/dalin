@@ -48,7 +48,6 @@ return [
             'label'               => 'Reset password',
             'modal_heading'       => 'New password',
             'modal_description'   => 'Resets the user\'s password.<br><br> After confirming, the user: :user <strong>will be sent an email with the new password.</strong>',
-            'field_password'      => 'New password',
             'notification_title'  => 'Password reset',
             'notification_body'   => 'A new password has been reset and sent to the user\'s email address: :email.',
         ],

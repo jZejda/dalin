@@ -48,7 +48,6 @@ return [
             'label'               => 'Resetovat heslo',
             'modal_heading'       => 'Nové heslo',
             'modal_description'   => 'Resetuje heslo uživateli.<br><br> Po potvrzení se uživatelovi: :user <strong>zašle e-mail s novým heslem.</strong>',
-            'field_password'      => 'Nové heslo',
             'notification_title'  => 'Reset hesla',
             'notification_body'   => 'Nové heslo bylo resetováno a odesláno uživateli na jeho e-mailovou schránku: :email.',
         ],

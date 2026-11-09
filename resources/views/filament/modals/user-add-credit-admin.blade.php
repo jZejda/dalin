@@ -19,7 +19,7 @@
                         </time>
                         <h4 class="text-lg font-semibold text-gray-900 dark:text-white">{{$userName}}</h4>
                         <div class="app-front-content">
-                            <span>{!! \Illuminate\Support\Str::markdown($userCreditNote->note ?? '') !!}</span>
+                            <span>{{ \App\Shared\Helpers\Markdown::userText($userCreditNote->note) }}</span>
                         </div>
                     </li>
                 @else
@@ -35,7 +35,7 @@
                         </time>
                         <h4 class="text-lg font-semibold text-gray-900 dark:text-white">{{$userName}}</h4>
                         <p class="app-front-content">
-                            <span>{!! \Illuminate\Support\Str::markdown($userCreditNote->note ?? '') !!}</span>
+                            <span>{{ \App\Shared\Helpers\Markdown::userText($userCreditNote->note) }}</span>
                         </p>
                     </li>
             @endif
