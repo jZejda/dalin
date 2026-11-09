@@ -71,20 +71,23 @@
         @foreach($mapData['markers'] as $marker)
         @php
             /** @var Marker $marker */
-            $popupContent = '<strong><span class="text-black">'. $marker->label.'</span></strong>';
-            if ($marker->secondaryLabel !== null || $marker->secondaryLabel !== '') {
-                $popupContent .= '<br /> <span class="text-sm text-lime-700 dark:text-lime-700">' . $marker->secondaryLabel .'</span>';
+            // Labels come from the database or from ORIS, so every value is encoded before it is put into the popup HTML
+            $popupContent = '<strong><span class="text-black">' . e($marker->label) . '</span></strong>';
+            if ($marker->secondaryLabel !== null && $marker->secondaryLabel !== '') {
+                $popupContent .= '<br /> <span class="text-sm text-lime-700 dark:text-lime-700">' . e($marker->secondaryLabel) . '</span>';
             }
 
             if (!$mapData['eventMap']) {
                 if ($marker->date !== null) {
-                $popupContent .= '<br /><span class="text-sm text-black">Datum konání: ' . $marker->date->format(\App\Shared\Helpers\AppHelper::DATE_FORMAT) .'</span>';
-                }
+                    $popupContent .= '<br /><span class="text-sm text-black">Datum konání: ' . $marker->date->format(\App\Shared\Helpers\AppHelper::DATE_FORMAT);
 
-                if ($marker->date !== null && is_array($marker->region)) {
-                    foreach($marker->region as $region) {
-                        $popupContent .= ' | ' . $region . '</span>';
+                    if (is_array($marker->region)) {
+                        foreach ($marker->region as $region) {
+                            $popupContent .= ' | ' . e((string) $region);
+                        }
                     }
+
+                    $popupContent .= '</span>';
                 }
 
                 if (!$mapData['publicMap']) {
@@ -115,7 +118,7 @@
                 iconAnchor: [19, 40],
                 popupAnchor: [0, -39],
             })
-        }).addTo(map).bindPopup('{!! $popupContent !!}');
+        }).addTo(map).bindPopup({{ Js::from($popupContent) }});
 
         @endforeach
 

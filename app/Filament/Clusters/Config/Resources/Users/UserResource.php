@@ -241,24 +241,19 @@ class UserResource extends Resource implements HasShieldPermissions
             ->label(__('users.actions.reset_password.label'))
             ->icon('heroicon-m-arrow-uturn-right')
             ->color('danger')
+            ->authorize(fn (User $record): bool => self::canManageAccount($record))
+            ->requiresConfirmation()
             ->modalHeading(__('users.actions.reset_password.modal_heading'))
             ->modalDescription(function (User $user): HtmlString {
-                return new HtmlString(__('users.actions.reset_password.modal_description', ['user' => $user->userIdentification]));
+                return new HtmlString(__('users.actions.reset_password.modal_description', ['user' => e($user->userIdentification)]));
             })
             ->modalIcon('heroicon-m-arrow-uturn-right')
-            ->schema([
-                TextInput::make('password')
-                    ->label(__('users.actions.reset_password.field_password'))
-                    ->required()
-                    ->readOnly()
-                    ->default(Str::random(AppHelper::GENERATED_PASSWORD_LENGTH)),
-
-            ])
-            ->action(function (User $user, array $data): void {
-                (new UserSendPassword())->sendNewPassword($user, $data['password'], UserPasswordSend::ACTION_RESET_PASSWORD);
+            ->action(function (User $user): void {
+                // The new password is generated here and only ever leaves in the mail to the user
+                (new UserSendPassword())->sendNewPassword($user, null, UserPasswordSend::ACTION_RESET_PASSWORD);
                 Notification::make()
                     ->title(__('users.actions.reset_password.notification_title'))
-                    ->body(__('users.actions.reset_password.notification_body', ['email' => $user->email]))
+                    ->body(__('users.actions.reset_password.notification_body', ['email' => e($user->email)]))
                     ->success()
                     ->send();
             });
@@ -269,6 +264,7 @@ class UserResource extends Resource implements HasShieldPermissions
         return Action::make('change_status')
             ->label(__('users.actions.change_status.label'))
             ->icon('heroicon-m-power')
+            ->authorize(fn (User $record): bool => self::canManageAccount($record))
             ->modalHeading(__('users.actions.change_status.modal_heading'))
             ->modalDescription(function (User $user): HtmlString {
                 $currentStatus = $user->active
@@ -276,7 +272,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     : __('users.actions.change_status.current_status_inactive');
 
                 return new HtmlString(__('users.actions.change_status.modal_description', [
-                    'user' => $user->userIdentification,
+                    'user' => e($user->userIdentification),
                     'status' => $currentStatus,
                 ]));
             })
@@ -292,7 +288,7 @@ class UserResource extends Resource implements HasShieldPermissions
                     ->required(),
             ])
             ->action(function (User $user, array $data): void {
-                $user->active = $data['active'];
+                $user->active = (bool) $data['active'];
                 $user->save();
 
                 $status = $data['active']
@@ -302,11 +298,26 @@ class UserResource extends Resource implements HasShieldPermissions
                 Notification::make()
                     ->title(__('users.actions.change_status.notification_title'))
                     ->body(__('users.actions.change_status.notification_body', [
-                        'user' => $user->userIdentification,
+                        'user' => e($user->userIdentification),
                         'status' => $status,
                     ]))
                     ->success()
                     ->send();
             });
+    }
+
+    /**
+     * Row actions that change an account need the same right as editing it; an account holding
+     * the super admin role can only be managed by another super admin.
+     */
+    private static function canManageAccount(User $record): bool
+    {
+        $actor = auth()->user();
+
+        if (! $actor instanceof User || ! $actor->can('update', $record)) {
+            return false;
+        }
+
+        return ! $record->hasRole(AppRoles::SuperAdmin->value) || $actor->hasRole(AppRoles::SuperAdmin->value);
     }
 }
