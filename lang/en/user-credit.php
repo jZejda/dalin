@@ -153,7 +153,7 @@ return [
         'oris_balance' => [
             'label' => 'Load billing from ORIS',
             'modal_heading' => 'Downloads the billing from the ORIS event',
-            'modal_description' => 'Choose the event and load the billing. You can repeat the action.',
+            'modal_description' => 'Choose the event and load the billing. You can repeat the action. The list shows the latest 100 events; when you start typing a name or ORIS ID, the search covers all events in the database.',
             'modal_submit_action_label' => 'Download billing',
             'sport_event' => 'Race/event',
             'badge_billed' => 'Billed',

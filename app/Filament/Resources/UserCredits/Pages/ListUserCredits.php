@@ -138,7 +138,7 @@ class ListUserCredits extends ListRecords
                 });
             })
             ->orderByDesc('date')
-            ->limit(50)
+            ->limit(100)
             ->get()
             ->sortBy('date')
             ->mapWithKeys(fn (SportEvent $sportEvent): array => [

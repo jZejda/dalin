@@ -153,7 +153,7 @@ return [
         'oris_balance' => [
             'label' => 'Načti vyúčtování z ORISu',
             'modal_heading' => 'Stáhne vyúčtování z ORIS závodu',
-            'modal_description' => 'Vyber závod a načti vyúčtování. Akci můžeš provést opakovaně.',
+            'modal_description' => 'Vyber závod a načti vyúčtování. Akci můžeš provést opakovaně. V seznamu je posledních 100 závodů; když začneš psát název nebo ORIS ID, hledá se mezi všemi závody v databázi.',
             'modal_submit_action_label' => 'Stáhnout vyúčtování',
             'sport_event' => 'Závod/událost',
             'badge_billed' => 'Vyúčtováno',
