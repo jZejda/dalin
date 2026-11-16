@@ -45,9 +45,9 @@
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/icalendar-generator": "^3.0",
         "spatie/laravel-sitemap": "^8.2",
-        "symfony/property-access": "^8.0",
-        "symfony/property-info": "^8.0",
-        "symfony/serializer": "^8.0"
+        "symfony/property-access": "^8.1",
+        "symfony/property-info": "^8.1",
+        "symfony/serializer": "^8.1"
     },
     "require-dev": {
         "deployer/deployer": "^8.0",

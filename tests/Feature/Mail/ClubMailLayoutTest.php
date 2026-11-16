@@ -46,6 +46,7 @@ use App\Models\UserRaceProfile;
 use App\Models\Vehicle;
 use App\Services\Mail\MailBranding;
 use App\Services\Mail\MailMoney;
+use Filament\Facades\Filament;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 
@@ -435,6 +436,12 @@ it('sends login details after a password reset', function (): void {
         ->assertSeeInHtml('Po přihlášení si můžeš nastavit vlastní heslo.')
         ->assertDontSeeInHtml('Vítej ve svém klubu.');
 });
+
+it('fails loudly when the admin panel is not registered', function (): void {
+    Filament::shouldReceive('getPanel')->with('admin')->andReturn(null);
+
+    (new UserPasswordSend('Ukazka-7xP4', User::factory()->create()))->content();
+})->throws(LogicException::class, 'Admin panel is not registered.');
 
 it('shows the balance and the bank reference of a credited payment', function (): void {
     $user = User::factory()->create();

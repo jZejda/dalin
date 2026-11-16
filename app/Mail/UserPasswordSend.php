@@ -55,7 +55,8 @@ class UserPasswordSend extends Mailable implements ShouldQueue
 
     public function content(): Content
     {
-        $loginUrl = (string) Filament::getPanel('admin')->getLoginUrl();
+        $panel = Filament::getPanel('admin') ?? throw new \LogicException('Admin panel is not registered.');
+        $loginUrl = (string) $panel->getLoginUrl();
 
         return new Content(
             markdown: 'emails.user.userSendPassword',
