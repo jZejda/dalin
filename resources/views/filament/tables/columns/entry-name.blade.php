@@ -12,7 +12,7 @@ $sportEvent = $getRecord();
 <div>
     @if ($sportEvent !== null)
         <div class="ml-2 mb-1">
-            <p>
+            <p class="font-semibold">
                 @if ($sportEvent->cancelled)
                     <span class="line-through text-red-800">{{ Str::limit($sportEvent->name, 40) }}</span>
                 @else
