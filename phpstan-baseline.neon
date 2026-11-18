@@ -649,12 +649,6 @@ parameters:
 			path: app/Livewire/Shared/Maps/LeafletMap.php
 
 		-
-			message: '#^Anonymous function never returns null so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 2
-			path: app/Livewire/UserCredit/UserCreditList.php
-
-		-
 			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1

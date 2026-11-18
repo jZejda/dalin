@@ -16,6 +16,7 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
+use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
@@ -76,11 +77,14 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('amount')
-                    ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
-                    ->color(fn (UserCredit $record): ?string => $record->credit_type->getColor())
-                    ->numeric(decimalPlaces: 0)
                     ->label(__('user-credit.table.amount_title'))
-                    ->money('CZK')
+                    ->size(TextSize::Large)
+                    ->html()
+                    // Same money rendering as the member finance balance: large colored amount, small gray currency.
+                    ->formatStateUsing(fn ($state): HtmlString => new HtmlString(
+                        (string) view('components.money-amount', ['amount' => $state])
+                    ))
+                    ->alignEnd()
                     ->description(function (UserCredit $record): ?string {
                         if ($record->relatedUser !== null) {
                             if ($record->amount < 0) {
@@ -94,7 +98,11 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
 
                         return null;
                     })
-                    ->summarize(Sum::make())->money('CZK')->label(__('user-credit.table.amount_total')),
+                    ->summarize(Sum::make()
+                        ->label(__('user-credit.table.amount_total'))
+                        ->formatStateUsing(fn ($state): HtmlString => new HtmlString(
+                            (string) view('components.money-amount', ['amount' => $state ?? 0])
+                        ))),
                 PaymentCategoryColumn::make(),
                 ViewColumn::make('user_entry')
                     ->label(__('user-credit.table.comments'))
