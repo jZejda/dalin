@@ -17,6 +17,7 @@ use App\Models\SportEvent;
 use App\Models\UserCredit;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\Summarizers\Sum;
+use Filament\Support\Enums\TextSize;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
@@ -118,9 +119,19 @@ class UserCreditRelationManager extends RelationManager
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('amount')
-                    ->color(fn (UserCredit $record): string => $record->amount >= 0 ? 'success' : 'danger')
                     ->label(__('user-credit.table.amount_title'))
-                    ->summarize(Sum::make())->money('CZK')->label(__('users.user_credit_relation.table.amount_total')),
+                    ->size(TextSize::Large)
+                    ->html()
+                    // Same money rendering as the member finance balance: large colored amount, small gray currency.
+                    ->formatStateUsing(fn ($state): HtmlString => new HtmlString(
+                        (string) view('components.money-amount', ['amount' => $state])
+                    ))
+                    ->alignEnd()
+                    ->summarize(Sum::make()
+                        ->label(__('users.user_credit_relation.table.amount_total'))
+                        ->formatStateUsing(fn ($state): HtmlString => new HtmlString(
+                            (string) view('components.money-amount', ['amount' => $state ?? 0])
+                        ))),
                 ViewColumn::make('user_entry')
                     ->label(__('users.user_credit_relation.table.comments'))
                     ->view('filament.tables.columns.user-credit-notes-popover'),
