@@ -179,4 +179,8 @@ return [
             'unassigned_count' => 'Počet nepřiřazených',
         ],
     ],
+    'notes_popover' => [
+        'aria_label' => 'Komentáře k platbě (:count)',
+        'unknown_author' => 'Neznámý autor',
+    ],
 ];

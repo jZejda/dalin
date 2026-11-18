@@ -179,4 +179,8 @@ return [
             'unassigned_count' => 'Number of unassigned',
         ],
     ],
+    'notes_popover' => [
+        'aria_label' => 'Payment comments (:count)',
+        'unknown_author' => 'Unknown author',
+    ],
 ];

@@ -80,7 +80,7 @@ class UserCreditRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('sportService'))
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with(['sportService', 'userCreditNotes.userNoteMade']))
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
@@ -123,7 +123,7 @@ class UserCreditRelationManager extends RelationManager
                     ->summarize(Sum::make())->money('CZK')->label(__('users.user_credit_relation.table.amount_total')),
                 ViewColumn::make('user_entry')
                     ->label(__('users.user_credit_relation.table.comments'))
-                    ->view('filament.tables.columns.user-credit-comments-count'),
+                    ->view('filament.tables.columns.user-credit-notes-popover'),
                 ViewColumn::make('sourceUser.name')
                     ->label(__('user-credit.table.source_user_title'))
                     ->view('filament.tables.columns.user-badge'),
