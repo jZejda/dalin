@@ -64,8 +64,10 @@
             </div>
         </template>
 
-        <button
-            type="button"
+        {{-- A span, not a <button>: Filament wraps cells of clickable rows in a <button>, and nested buttons are invalid HTML. --}}
+        <span
+            role="button"
+            tabindex="0"
             x-data
             x-tooltip="{
                 content: $el.parentElement.querySelector('template').content.firstElementChild.cloneNode(true),
@@ -82,6 +84,6 @@
         >
             <x-filament::icon :icon="\CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon::MessageCircleMore" class="h-6 w-6" />
             <span class="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary-600 px-1 text-[10px] font-semibold leading-none text-white">{{ $notes->count() }}</span>
-        </button>
+        </span>
     </div>
 @endif
