@@ -96,6 +96,8 @@ class AddMemberCreditAction
                         UserCreditType::CashOut->value        => __('member-finance.actions.deduct.type_cashout'),
                         UserCreditType::MembershipFees->value => __('member-finance.actions.deduct.type_membership'),
                         UserCreditType::TransportBilling->value => __('member-finance.actions.deduct.type_transport'),
+                        UserCreditType::Accommodation->value => __('member-finance.actions.deduct.type_accommodation'),
+                        UserCreditType::Meals->value => __('member-finance.actions.deduct.type_meals'),
                     ])
                     ->default(UserCreditType::CashOut->value)
                     ->required(),

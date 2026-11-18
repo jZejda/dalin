@@ -77,7 +77,7 @@ return [
             'registration'      => 'Racer registration',
             'amount_total'      => 'Total',
             'comments'          => 'Comments',
-            'record_id'         => 'id: :id',
+            'record_id'         => '#:id',
             'event_internal_id' => 'internal event id: :id',
         ],
         'filters' => [

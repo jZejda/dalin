@@ -17,6 +17,7 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -66,13 +67,14 @@ class RaceProfilePaymentList extends Component implements HasActions, HasForms, 
                     ->state(fn (UserRaceProfile $record): HtmlString => $this->renderCategories($record)),
                 TextColumn::make('event_payment_sum')
                     ->label('Platby na závod')
-                    ->money('CZK')
-                    ->color(fn (?float $state): string => match (true) {
-                        $state === null || $state === 0.0 => 'gray',
-                        $state < 0 => 'danger',
-                        default => 'success',
-                    })
+                    ->size(TextSize::Large)
+                    ->html()
+                    // Same money rendering as the member finance balance: large colored amount, small gray currency.
+                    ->formatStateUsing(fn ($state): ?HtmlString => $state === null
+                        ? null
+                        : new HtmlString((string) view('components.money-amount', ['amount' => $state])))
                     ->placeholder('— bez platby —')
+                    ->alignEnd()
                     ->sortable(),
                 TextColumn::make('event_payment_count')
                     ->label('Počet plateb')
@@ -137,6 +139,8 @@ class RaceProfilePaymentList extends Component implements HasActions, HasForms, 
                     BulkReverseService::make($this->sportEvent),
                 ]),
             ])
+            // One overall total (all pages, current filters); Filament would add a summary row under every group.
+            ->contentFooter(fn (): View => view('livewire.sport-event.race-profile-payment-total', $this->paymentTotals()))
             ->recordClasses('!py-0')
             ->defaultPaginationPageOption(50)
             ->defaultSort('reg_number', 'asc');
@@ -148,6 +152,23 @@ class RaceProfilePaymentList extends Component implements HasActions, HasForms, 
         $template = 'livewire.sport-event.race-profile-payment-list';
 
         return view($template);
+    }
+
+    /**
+     * @return array{sum: float, count: int}
+     */
+    private function paymentTotals(): array
+    {
+        $totals = UserRaceProfile::query()
+            ->fromSub(($this->getFilteredTableQuery() ?? $this->baseQuery())->reorder()->toBase(), 'profiles')
+            ->selectRaw('COALESCE(SUM(event_payment_sum), 0) AS payment_sum, COALESCE(SUM(event_payment_count), 0) AS payment_count')
+            ->toBase()
+            ->first();
+
+        return [
+            'sum' => (float) ($totals->payment_sum ?? 0),
+            'count' => (int) ($totals->payment_count ?? 0),
+        ];
     }
 
     private function baseQuery(): Builder

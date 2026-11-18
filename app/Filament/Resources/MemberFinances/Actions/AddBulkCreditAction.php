@@ -96,6 +96,8 @@ class AddBulkCreditAction
             UserCreditType::CashOut->value          => __(($trKey) . UserCreditType::CashOut->value),
             UserCreditType::InitialDeposit->value   => __(($trKey) . UserCreditType::InitialDeposit->value),
             UserCreditType::TransportBilling->value => __(($trKey) . UserCreditType::TransportBilling->value),
+            UserCreditType::Accommodation->value => __(($trKey) . UserCreditType::Accommodation->value),
+            UserCreditType::Meals->value => __(($trKey) . UserCreditType::Meals->value),
         ];
     }
 }

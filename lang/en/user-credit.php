@@ -49,6 +49,8 @@ return [
         'entry_fee' => 'Entry fee',
         'additional_service' => 'Additional service',
         'transport' => 'Transport',
+        'accommodation' => 'Accommodation',
+        'meals' => 'Meals',
         'marketplace' => 'Marketplace',
         'membership_fee' => 'Membership fees',
         'deposit' => 'Deposit',
@@ -162,7 +164,7 @@ return [
     ],
 
     'list' => [
-        'navigation_label' => 'My credit',
+        'navigation_label' => 'My finances',
         'page_title' => 'Finance',
         'new_billing_label' => 'New billing',
         'new_record_label' => 'New record',
@@ -178,5 +180,9 @@ return [
             'unassigned_amount' => 'Unassigned transactions Kč',
             'unassigned_count' => 'Number of unassigned',
         ],
+    ],
+    'notes_popover' => [
+        'aria_label' => 'Payment comments (:count)',
+        'unknown_author' => 'Unknown author',
     ],
 ];

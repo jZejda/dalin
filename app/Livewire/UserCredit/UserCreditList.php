@@ -16,6 +16,8 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
@@ -37,14 +39,12 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
     public function table(Table $table): Table
     {
         return $table
-            ->query(UserCredit::query()->with(['sportService'])->where('user_id', '=', auth()->user()?->id))
+            ->query(UserCredit::query()->with(['sportService', 'userCreditNotes.userNoteMade'])->where('user_id', '=', auth()->user()?->id))
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
                     ->dateTime(AppHelper::DATE_FORMAT)
-                    ->description(function (UserCredit $record): string {
-                        return 'ID:'.$record->id;
-                    })
+                    ->description(fn (UserCredit $record): string => '#'.$record->id)
                     ->sortable(),
                 TextColumn::make('sportEvent.date')
                     ->label(__('user-credit.table.sport_event_date'))
@@ -54,6 +54,7 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
                     ->sortable(),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
+                    ->weight(FontWeight::Bold)
                     ->url(function (UserCredit $record): ?string {
                         if (! is_null($record->sport_event_id)) {
                             return route('filament.admin.resources.sport-events.entry', ['record' => $record->sport_event_id]);
@@ -76,11 +77,14 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('amount')
-                    ->icon(fn (UserCredit $record): ?string => $record->credit_type->getIcon())
-                    ->color(fn (UserCredit $record): ?string => $record->credit_type->getColor())
-                    ->numeric(decimalPlaces: 0)
                     ->label(__('user-credit.table.amount_title'))
-                    ->money('CZK')
+                    ->size(TextSize::Large)
+                    ->html()
+                    // Same money rendering as the member finance balance: large colored amount, small gray currency.
+                    ->formatStateUsing(fn ($state): HtmlString => new HtmlString(
+                        (string) view('components.money-amount', ['amount' => $state])
+                    ))
+                    ->alignEnd()
                     ->description(function (UserCredit $record): ?string {
                         if ($record->relatedUser !== null) {
                             if ($record->amount < 0) {
@@ -94,11 +98,15 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
 
                         return null;
                     })
-                    ->summarize(Sum::make())->money('CZK')->label(__('user-credit.table.amount_total')),
+                    ->summarize(Sum::make()
+                        ->label(__('user-credit.table.amount_total'))
+                        ->formatStateUsing(fn ($state): HtmlString => new HtmlString(
+                            (string) view('components.money-amount', ['amount' => $state ?? 0])
+                        ))),
                 PaymentCategoryColumn::make(),
                 ViewColumn::make('user_entry')
                     ->label(__('user-credit.table.comments'))
-                    ->view('filament.tables.columns.user-credit-comments-count'),
+                    ->view('filament.tables.columns.user-credit-notes-popover'),
                 ViewColumn::make('sourceUser.name')
                     ->label(__('user-credit.table.source_user_title'))
                     ->view('filament.tables.columns.user-badge'),

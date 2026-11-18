@@ -103,6 +103,8 @@ return [
             'notification_body'  => 'Platba byla úspěšně odečtena z konta člena.',
             'type_cashout'       => 'Výdej',
             'type_membership'    => 'Členský příspěvek',
+            'type_accommodation' => 'Ubytování',
+            'type_meals'         => 'Strava',
             'type_transport'     => 'Cestovní náklady',
         ],
 

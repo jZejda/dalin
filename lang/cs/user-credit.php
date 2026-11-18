@@ -49,6 +49,8 @@ return [
         'entry_fee' => 'Startovné',
         'additional_service' => 'Doplňková služba',
         'transport' => 'Doprava',
+        'accommodation' => 'Ubytování',
+        'meals' => 'Strava',
         'marketplace' => 'Tržiště',
         'membership_fee' => 'Členské příspěvky',
         'deposit' => 'Vklad',
@@ -162,7 +164,7 @@ return [
     ],
 
     'list' => [
-        'navigation_label' => 'Můj kredit',
+        'navigation_label' => 'Moje finance',
         'page_title' => 'Finance',
         'new_billing_label' => 'Nové vyúčtování',
         'new_record_label' => 'Nový záznam',
@@ -178,5 +180,9 @@ return [
             'unassigned_amount' => 'Nepřiřazené transakce Kč',
             'unassigned_count' => 'Počet nepřiřazených',
         ],
+    ],
+    'notes_popover' => [
+        'aria_label' => 'Komentáře k platbě (:count)',
+        'unknown_author' => 'Neznámý autor',
     ],
 ];

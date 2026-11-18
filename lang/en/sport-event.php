@@ -286,15 +286,22 @@ return [
         ],
 
         'assign_payment' => [
-            'label' => 'Assign entry fee',
-            'modal_heading' => 'Assign an entry fee to the selected race profiles',
-            'modal_description' => 'Enter the entry fee amount. A record will be created in the billing for each selected profile.',
-            'modal_submit' => 'Assign entry fee',
+            'label' => 'Add payment',
+            'modal_heading' => 'Assign a payment to the selected race profiles',
+            'modal_description' => 'Choose the payment type and enter the amount. A record will be created in the billing for each selected profile.',
+            'modal_submit' => 'Add payment',
+            'type' => 'Payment type',
+            'types' => [
+                'entry_fee' => 'Entry fee',
+                'accommodation' => 'Accommodation',
+                'transport' => 'Travel costs',
+                'meals' => 'Meals',
+            ],
             'amount' => 'Amount (CZK)',
             'amount_hint' => 'Enter a positive amount. It will be saved as negative (expense).',
             'note' => 'Note',
             'note_hint' => 'Optional.',
-            'notification_title' => 'Entry fees assigned',
+            'notification_title' => 'Payment added',
             'notification_body' => 'Records created: :count',
         ],
         'assign_service' => [
@@ -484,6 +491,8 @@ return [
         UserCreditType::InitialDeposit->value => 'Initial deposit',
         UserCreditType::TransportBilling->value => 'Travel billing',
         UserCreditType::ServiceFee->value => 'Additional service',
+        UserCreditType::Accommodation->value => 'Accommodation',
+        UserCreditType::Meals->value => 'Meals',
         UserCreditType::MarketplaceBilling->value => 'Marketplace purchase',
     ],
 
@@ -590,6 +599,12 @@ return [
             'user' => 'User',
             'amount_total' => 'Total',
         ],
+    ],
+
+    'payment_list' => [
+        'payments_word' => '{1} payment|[2,*] payments',
+        'total_event' => 'Event total',
+        'total' => 'Total',
     ],
 
     'oris_status' => [

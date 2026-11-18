@@ -286,15 +286,22 @@ return [
         ],
 
         'assign_payment' => [
-            'label' => 'Přiřadit startovné',
-            'modal_heading' => 'Přiřazení startovného vybraným závodním profilům',
-            'modal_description' => 'Zadej částku startovného. Pro každý vybraný profil vznikne záznam ve vyúčtování.',
-            'modal_submit' => 'Přiřadit startovné',
+            'label' => 'Přidat platbu',
+            'modal_heading' => 'Přiřazení platby vybraným závodním profilům',
+            'modal_description' => 'Vyber typ platby a zadej částku. Pro každý vybraný profil vznikne záznam ve vyúčtování.',
+            'modal_submit' => 'Přidat platbu',
+            'type' => 'Typ platby',
+            'types' => [
+                'entry_fee' => 'Startovné',
+                'accommodation' => 'Ubytování',
+                'transport' => 'Cestovní náklady',
+                'meals' => 'Strava',
+            ],
             'amount' => 'Částka (Kč)',
             'amount_hint' => 'Zadej kladnou částku. Uloží se jako záporná (výdaj).',
             'note' => 'Poznámka',
             'note_hint' => 'Nepovinné.',
-            'notification_title' => 'Startovné přiřazeno',
+            'notification_title' => 'Platba přidána',
             'notification_body' => 'Vytvořeno záznamů: :count',
         ],
         'assign_service' => [
@@ -484,6 +491,8 @@ return [
         UserCreditType::InitialDeposit->value => 'Počáteční vklad',
         UserCreditType::TransportBilling->value => 'Cestovní vyúčtování',
         UserCreditType::ServiceFee->value => 'Doplňková služba',
+        UserCreditType::Accommodation->value => 'Ubytování',
+        UserCreditType::Meals->value => 'Strava',
         UserCreditType::MarketplaceBilling->value => 'Nákup na tržišti',
     ],
 
@@ -590,6 +599,12 @@ return [
             'user' => 'Uživatel',
             'amount_total' => 'Celkem',
         ],
+    ],
+
+    'payment_list' => [
+        'payments_word' => '{1} platba|[2,4] platby|[0,*] plateb',
+        'total_event' => 'Celkem za závod',
+        'total' => 'Celkem',
     ],
 
     'oris_status' => [

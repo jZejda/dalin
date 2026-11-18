@@ -77,7 +77,7 @@ return [
             'registration'      => 'Registrace závodníka',
             'amount_total'      => 'Celkem',
             'comments'          => 'Komentářů',
-            'record_id'         => 'id: :id',
+            'record_id'         => '#:id',
             'event_internal_id' => 'interní id závodu: :id',
         ],
         'filters' => [

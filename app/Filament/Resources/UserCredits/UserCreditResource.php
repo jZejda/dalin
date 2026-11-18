@@ -194,7 +194,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with('sportService'))
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query->with(['sportService', 'userCreditNotes.userNoteMade']))
             ->columns([
                 TextColumn::make('id')
                     ->label(__('user-credit.id'))
@@ -262,7 +262,7 @@ class UserCreditResource extends Resource implements HasShieldPermissions
                     }),
                 ViewColumn::make('user_entry')
                     ->label(__('user-credit.table.comments'))
-                    ->view('filament.tables.columns.user-credit-comments-count'),
+                    ->view('filament.tables.columns.user-credit-notes-popover'),
                 TextColumn::make('status')
                     ->label(__('user-credit.status'))
                     ->badge()
