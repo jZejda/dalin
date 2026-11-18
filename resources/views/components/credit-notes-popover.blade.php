@@ -80,7 +80,7 @@
             class="relative inline-flex items-center rounded-md p-1 text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400"
             aria-label="{{ __('user-credit.notes_popover.aria_label', ['count' => $notes->count()]) }}"
         >
-            <x-filament::icon :icon="\CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon::MessageSquareText" class="h-6 w-6" />
+            <x-filament::icon :icon="\CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon::MessageCircleMore" class="h-6 w-6" />
             <span class="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary-600 px-1 text-[10px] font-semibold leading-none text-white">{{ $notes->count() }}</span>
         </button>
     </div>
