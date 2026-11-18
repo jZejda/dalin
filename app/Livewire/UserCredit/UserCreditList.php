@@ -43,9 +43,9 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
                     ->dateTime(AppHelper::DATE_FORMAT)
-                    ->description(function (UserCredit $record): string {
-                        return 'ID:'.$record->id;
-                    })
+                    ->description(fn (UserCredit $record): HtmlString => new HtmlString(
+                        '<span class="font-mono">#'.e((string) $record->id).'</span>'
+                    ))
                     ->sortable(),
                 TextColumn::make('sportEvent.date')
                     ->label(__('user-credit.table.sport_event_date'))
