@@ -484,6 +484,8 @@ return [
         UserCreditType::InitialDeposit->value => 'Initial deposit',
         UserCreditType::TransportBilling->value => 'Travel billing',
         UserCreditType::ServiceFee->value => 'Additional service',
+        UserCreditType::Accommodation->value => 'Accommodation',
+        UserCreditType::Meals->value => 'Meals',
         UserCreditType::MarketplaceBilling->value => 'Marketplace purchase',
     ],
 

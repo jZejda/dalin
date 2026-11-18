@@ -21,6 +21,8 @@ enum PaymentCategory: string implements HasColor, HasIcon, HasLabel
     case EntryFee = 'entry_fee';
     case AdditionalService = 'additional_service';
     case Transport = 'transport';
+    case Accommodation = 'accommodation';
+    case Meals = 'meals';
     case Marketplace = 'marketplace';
     case MembershipFee = 'membership_fee';
     case Deposit = 'deposit';
@@ -37,6 +39,8 @@ enum PaymentCategory: string implements HasColor, HasIcon, HasLabel
         return match ($credit->credit_type) {
             UserCreditType::CashOut => $credit->sport_event_id !== null ? self::EntryFee : self::Other,
             UserCreditType::TransportBilling => self::Transport,
+            UserCreditType::Accommodation => self::Accommodation,
+            UserCreditType::Meals => self::Meals,
             UserCreditType::MarketplaceBilling => self::Marketplace,
             UserCreditType::MembershipFees => self::MembershipFee,
             UserCreditType::UserDonation => self::Deposit,
@@ -124,6 +128,8 @@ enum PaymentCategory: string implements HasColor, HasIcon, HasLabel
             self::EntryFee, self::Other => UserCreditType::CashOut,
             self::AdditionalService => UserCreditType::ServiceFee,
             self::Transport => UserCreditType::TransportBilling,
+            self::Accommodation => UserCreditType::Accommodation,
+            self::Meals => UserCreditType::Meals,
             self::Marketplace => UserCreditType::MarketplaceBilling,
             self::MembershipFee => UserCreditType::MembershipFees,
             self::Deposit => UserCreditType::UserDonation,
@@ -139,6 +145,8 @@ enum PaymentCategory: string implements HasColor, HasIcon, HasLabel
             self::EntryFee => LucideIcon::Flag,
             self::AdditionalService => LucideIcon::ShoppingBag,
             self::Transport => LucideIcon::Car,
+            self::Accommodation => LucideIcon::BedDouble,
+            self::Meals => LucideIcon::Utensils,
             self::Marketplace => LucideIcon::Store,
             self::MembershipFee => LucideIcon::IdCard,
             self::Deposit => LucideIcon::Coins,
@@ -154,7 +162,7 @@ enum PaymentCategory: string implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::EntryFee => 'primary',
             self::AdditionalService => 'info',
-            self::Transport, self::Marketplace => 'warning',
+            self::Transport, self::Accommodation, self::Meals, self::Marketplace => 'warning',
             self::Deposit, self::InitialDeposit => 'success',
             self::MembershipFee, self::Transfer, self::Other => 'gray',
         };

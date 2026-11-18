@@ -103,6 +103,8 @@ return [
             'notification_body'  => 'The payment was successfully deducted from the member\'s account.',
             'type_cashout'       => 'Cash out',
             'type_membership'    => 'Membership fee',
+            'type_accommodation' => 'Accommodation',
+            'type_meals'         => 'Meals',
             'type_transport'     => 'Travel costs',
         ],
 

@@ -49,6 +49,8 @@ return [
         'entry_fee' => 'Entry fee',
         'additional_service' => 'Additional service',
         'transport' => 'Transport',
+        'accommodation' => 'Accommodation',
+        'meals' => 'Meals',
         'marketplace' => 'Marketplace',
         'membership_fee' => 'Membership fees',
         'deposit' => 'Deposit',

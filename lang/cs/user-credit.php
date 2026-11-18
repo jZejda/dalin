@@ -49,6 +49,8 @@ return [
         'entry_fee' => 'Startovné',
         'additional_service' => 'Doplňková služba',
         'transport' => 'Doprava',
+        'accommodation' => 'Ubytování',
+        'meals' => 'Strava',
         'marketplace' => 'Tržiště',
         'membership_fee' => 'Členské příspěvky',
         'deposit' => 'Vklad',

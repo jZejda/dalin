@@ -484,6 +484,8 @@ return [
         UserCreditType::InitialDeposit->value => 'Počáteční vklad',
         UserCreditType::TransportBilling->value => 'Cestovní vyúčtování',
         UserCreditType::ServiceFee->value => 'Doplňková služba',
+        UserCreditType::Accommodation->value => 'Ubytování',
+        UserCreditType::Meals->value => 'Strava',
         UserCreditType::MarketplaceBilling->value => 'Nákup na tržišti',
     ],
 
