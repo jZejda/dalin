@@ -16,6 +16,7 @@ use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
+use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\TextSize;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
@@ -53,6 +54,7 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
                     ->sortable(),
                 TextColumn::make('sportEvent.name')
                     ->label(__('user-credit.table.sport_event_title'))
+                    ->weight(FontWeight::Bold)
                     ->url(function (UserCredit $record): ?string {
                         if (! is_null($record->sport_event_id)) {
                             return route('filament.admin.resources.sport-events.entry', ['record' => $record->sport_event_id]);
