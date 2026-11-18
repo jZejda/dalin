@@ -37,7 +37,7 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
     public function table(Table $table): Table
     {
         return $table
-            ->query(UserCredit::query()->with(['sportService'])->where('user_id', '=', auth()->user()?->id))
+            ->query(UserCredit::query()->with(['sportService', 'userCreditNotes.userNoteMade'])->where('user_id', '=', auth()->user()?->id))
             ->columns([
                 TextColumn::make('created_at')
                     ->label(__('user-credit.table.created_at_title'))
@@ -98,7 +98,7 @@ class UserCreditList extends Component implements HasForms, HasTable, HasActions
                 PaymentCategoryColumn::make(),
                 ViewColumn::make('user_entry')
                     ->label(__('user-credit.table.comments'))
-                    ->view('filament.tables.columns.user-credit-comments-count'),
+                    ->view('filament.tables.columns.user-credit-notes-popover'),
                 ViewColumn::make('sourceUser.name')
                     ->label(__('user-credit.table.source_user_title'))
                     ->view('filament.tables.columns.user-badge'),
