@@ -164,7 +164,7 @@ return [
     ],
 
     'list' => [
-        'navigation_label' => 'Můj kredit',
+        'navigation_label' => 'Moje finance',
         'page_title' => 'Finance',
         'new_billing_label' => 'Nové vyúčtování',
         'new_record_label' => 'Nový záznam',
