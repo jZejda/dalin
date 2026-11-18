@@ -441,3 +441,55 @@ describe('SportEvent::sport_event_oris_title', function (): void {
         'with alt name' => ['Přebor', 9123, 'Přebor | Oddílový přebor | (ORIS ID: 9123)'],
     ]);
 });
+
+describe('RaceProfilePaymentList payment types and totals', function (): void {
+    it('assigns the chosen payment type', function (string $type, PaymentCategory $category): void {
+        $this->actingAs($this->billing);
+
+        Livewire::test(RaceProfilePaymentList::class, ['sportEvent' => $this->event])
+            ->selectTableRecords([$this->profile->id])
+            ->callAction(TestAction::make('assignEventPayment')->table()->bulk(), ['credit_type' => $type, 'amount' => 300])
+            ->assertHasNoFormErrors();
+
+        $credit = UserCredit::query()->where('user_race_profile_id', $this->profile->id)->sole();
+
+        expect($credit->credit_type->value)->toBe($type)
+            ->and((float) $credit->amount)->toBe(-300.0)
+            ->and(PaymentCategory::fromCredit($credit))->toBe($category);
+    })->with([
+        'entry fee' => [UserCreditType::CashOut->value, PaymentCategory::EntryFee],
+        'accommodation' => [UserCreditType::Accommodation->value, PaymentCategory::Accommodation],
+        'transport' => [UserCreditType::TransportBilling->value, PaymentCategory::Transport],
+        'meals' => [UserCreditType::Meals->value, PaymentCategory::Meals],
+    ]);
+
+    it('rejects a payment type outside the allowed list', function (): void {
+        $this->actingAs($this->billing);
+
+        Livewire::test(RaceProfilePaymentList::class, ['sportEvent' => $this->event])
+            ->selectTableRecords([$this->profile->id])
+            ->callAction(TestAction::make('assignEventPayment')->table()->bulk(), ['credit_type' => UserCreditType::MembershipFees->value, 'amount' => 300])
+            ->assertHasFormErrors(['credit_type']);
+    });
+
+    it('renders the payment count only from one payment and pluralizes the word', function (int $count, ?string $word): void {
+        $html = trim(view('components.payment-count-summary', ['count' => $count])->render());
+
+        $word === null ? expect($html)->toBe('') : expect($html)->toContain((string) $count)->toContain($word);
+    })->with([
+        'zero hides it' => [0, null],
+        'one' => [1, 'platba'],
+        'two' => [2, 'platby'],
+        'four' => [4, 'platby'],
+        'five' => [5, 'plateb'],
+    ]);
+
+    it('shows the event total in the table summary', function (): void {
+        $this->actingAs($this->billing);
+
+        Livewire::test(RaceProfilePaymentList::class, ['sportEvent' => $this->event])
+            ->selectTableRecords([$this->profile->id, $this->secondProfile->id])
+            ->callAction(TestAction::make('assignEventPayment')->table()->bulk(), ['credit_type' => UserCreditType::Meals->value, 'amount' => 200])
+            ->assertSee('-400,00');
+    });
+});

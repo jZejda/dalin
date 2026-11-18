@@ -15,6 +15,7 @@ use App\Models\UserRaceProfile;
 use App\Shared\Helpers\EmptyType;
 use Filament\Actions\BulkAction;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Collection;
@@ -28,12 +29,17 @@ class BulkAssignPayment
         return BulkAction::make('assignEventPayment')
             ->label(__('sport-event.actions.assign_payment.label'))
             ->icon('heroicon-o-banknotes')
-            ->color('primary')
             ->modalHeading(__('sport-event.actions.assign_payment.modal_heading'))
             ->modalDescription(__('sport-event.actions.assign_payment.modal_description'))
             ->modalSubmitActionLabel(__('sport-event.actions.assign_payment.modal_submit'))
             ->visible(fn (): bool => Auth::user()?->hasRole([AppRoles::BillingSpecialist, AppRoles::SuperAdmin]) ?? false)
             ->schema([
+                Select::make('credit_type')
+                    ->label(__('sport-event.actions.assign_payment.type'))
+                    ->options(self::typeOptions())
+                    ->default(UserCreditType::CashOut->value)
+                    ->required()
+                    ->native(false),
                 TextInput::make('amount')
                     ->label(__('sport-event.actions.assign_payment.amount'))
                     ->numeric()
@@ -56,7 +62,7 @@ class BulkAssignPayment
                         $credit->sport_event_id = $sportEvent->id;
                         $credit->amount = -(float) $data['amount'];
                         $credit->currency = UserCredit::CURRENCY_CZK;
-                        $credit->credit_type = UserCreditType::CashOut;
+                        $credit->credit_type = UserCreditType::from($data['credit_type'] ?? UserCreditType::CashOut->value);
                         $credit->source = UserCreditSource::User->value;
                         $credit->source_user_id = Auth::user()?->id;
                         $credit->status = UserCreditStatus::Done;
@@ -86,4 +92,18 @@ class BulkAssignPayment
             ->deselectRecordsAfterCompletion();
     }
 
+    /**
+     * Credit types that can be assigned to a race profile for an event, keyed by UserCreditType value.
+     *
+     * @return array<string, string>
+     */
+    private static function typeOptions(): array
+    {
+        return [
+            UserCreditType::CashOut->value => __('sport-event.actions.assign_payment.types.entry_fee'),
+            UserCreditType::Accommodation->value => __('sport-event.actions.assign_payment.types.accommodation'),
+            UserCreditType::TransportBilling->value => __('sport-event.actions.assign_payment.types.transport'),
+            UserCreditType::Meals->value => __('sport-event.actions.assign_payment.types.meals'),
+        ];
+    }
 }
