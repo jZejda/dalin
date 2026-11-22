@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Clusters\Config\Resources\Users\RelationManagers;
 
+use App\Filament\Forms\Components\SiChipsSection;
 use App\Services\OrisApiService;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Utilities\Set;
@@ -174,15 +175,7 @@ class UserRaceProfilesRelationManager extends RelationManager
                     ])
                     ->columns(2)
                     ->columnSpan(2),
-                Section::make(__('user-race-profile.common.si'))
-                    ->schema([
-                        TextInput::make('si')
-                            ->label(__('user-race-profile.form.si'))
-                            ->helperText(__('user-race-profile.form.si_helper'))
-                            ->numeric()
-                            ->integer()
-                            ->columnSpan('full'),
-                    ])->columns(2)
+                SiChipsSection::make()
                     ->columnSpan(2),
                 Section::make(__('user-race-profile.form.section_licence'))
                     ->schema([
@@ -236,6 +229,10 @@ class UserRaceProfilesRelationManager extends RelationManager
                     ->label(__('user-race-profile.table.oris_id')),
                 TextColumn::make('si')
                     ->label(__('user-race-profile.table.si')),
+                TextColumn::make('chips.si')
+                    ->label(__('si-chip.table.extra_chips'))
+                    ->badge()
+                    ->color('gray'),
             ])
             ->filters([])
             ->headerActions([

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Clusters\Other\Resources\UserRaceProfiles;
 
 use App\Filament\Clusters\Other\OtherCluster;
+use App\Filament\Forms\Components\SiChipsSection;
 use App\Shared\Helpers\AppHelper;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Schemas\Schema;
@@ -172,16 +173,7 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                                     ->label(__('user-race-profile.table.phone')),
                             ])
                             ->columns(2),
-                        Section::make(__('user-race-profile.common.si'))
-                            ->schema([
-                                TextInput::make('si')
-                                    ->label(__('user-race-profile.form.si'))
-                                    ->helperText(__('user-race-profile.form.si_helper'))
-                                    ->numeric()
-                                    ->integer()
-                                    ->columnSpan('full'),
-                            ])
-                            ->columns(2),
+                        SiChipsSection::make(),
                     ])
                     ->columnSpan(['lg' => 2]),
 
@@ -278,6 +270,10 @@ class UserRaceProfileResource extends Resource implements HasShieldPermissions
                     ->label(__('user-race-profile.common.si'))
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('chips.si')
+                    ->label(__('si-chip.table.extra_chips'))
+                    ->badge()
+                    ->color('gray'),
                 TextColumn::make('first_name')
                     ->label(__('user-race-profile.table.first_name'))
                     ->searchable()

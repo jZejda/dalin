@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Database\Seeders\Demo;
 
+use App\Enums\SiChipSport;
+use App\Enums\SiChipType;
 use App\Models\User;
+use App\Models\UserRaceProfileChip;
 use App\Models\UserRaceProfile;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
@@ -21,14 +24,14 @@ class DemoUserRaceProfileSeeder extends Seeder
         })->get();
 
         $licences = ['A', 'B', 'C', 'D', 'E', null];
-        $genders  = ['M', 'F'];
+        $genders  = ['H', 'D'];
 
         foreach ($users as $user) {
             $firstName = explode(' ', $user->name)[0] ?? $faker->firstName();
             $lastName  = explode(' ', $user->name)[1] ?? $faker->lastName();
             $gender    = $faker->randomElement($genders);
 
-            UserRaceProfile::create([
+            $profile = UserRaceProfile::create([
                 'user_id'      => $user->id,
                 'first_name'   => $firstName,
                 'last_name'    => $lastName,
@@ -46,6 +49,14 @@ class DemoUserRaceProfileSeeder extends Seeder
                 'active_until' => Carbon::now()->addYear()->toDateString(),
                 'active'       => true,
             ]);
+
+            // Some racers also own a dedicated chip for another sport (e.g. contactless for MTBO)
+            if ($profile->si !== null && $faker->boolean(25)) {
+                UserRaceProfileChip::factory()->forSport(SiChipSport::Mtbo)->create([
+                    'user_race_profile_id' => $profile->id,
+                    'type' => SiChipType::Contactless,
+                ]);
+            }
         }
     }
 }

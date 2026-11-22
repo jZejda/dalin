@@ -88,7 +88,7 @@ class CreateEntryAction
                 ->afterStateUpdated(function (string $state, Set $set) use ($sportEvent): void {
                     if (! ($sportEvent->oris_id !== null && $sportEvent->use_oris_for_entries)) {
                         $userProfile = UserRaceProfile::find((int) $state);
-                        $set('si', $userProfile?->si);
+                        $set('si', $userProfile?->siForSport($sportEvent->sport_id));
 
                         return;
                     }
@@ -136,7 +136,7 @@ class CreateEntryAction
                         ->success();
 
                     $set('specific_response_class_id', $selectData);
-                    $set('si', $userProfile?->si);
+                    $set('si', $userProfile?->siForSport($sportEvent->sport_id));
                 }),
 
             Select::make('classId')

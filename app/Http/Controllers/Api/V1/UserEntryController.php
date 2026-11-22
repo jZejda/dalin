@@ -37,7 +37,7 @@ final class UserEntryController extends Controller
     #[BodyParam('race_profile_id', 'integer', description: 'ID of one of the authenticated user\'s race profiles (see GET /api/v1/user/race-profiles).', example: 12)]
     #[BodyParam('class_id', 'integer', description: 'ID of the event class (see classes[].id in GET /api/v1/sport-event/{id}). Required for non-relay events.', required: false, example: 351)]
     #[BodyParam('relay_team_member_id', 'integer', description: 'Free relay slot ID (see relay_teams[].members[].relay_team_member_id in the event detail). Required for relay events instead of class_id.', required: false, example: null)]
-    #[BodyParam('si', 'integer', description: 'SI chip number. Defaults to the SI stored on the race profile.', required: false, example: 8123456)]
+    #[BodyParam('si', 'integer', description: 'SI chip number. Defaults to the race profile chip matching the event sport (or the primary chip).', required: false, example: 8123456)]
     #[BodyParam('rent_si', 'boolean', description: 'Request an SI chip rental.', required: false, example: false)]
     #[BodyParam('note', 'string', description: 'Note for the event organizer.', required: false, example: 'Note for organizer')]
     #[BodyParam('club_note', 'string', description: 'Internal club note.', required: false, example: null)]
@@ -93,7 +93,7 @@ final class UserEntryController extends Controller
             'note' => $validated['note'] ?? null,
             'club_note' => $validated['club_note'] ?? null,
             'requested_start' => $validated['requested_start'] ?? null,
-            'si' => $validated['si'] ?? $raceProfile->si,
+            'si' => $validated['si'] ?? $raceProfile->siForSport($sportEvent->sport_id),
             'rent_si' => (int) ($validated['rent_si'] ?? 0),
         ];
 
