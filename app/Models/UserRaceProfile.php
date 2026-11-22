@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -42,32 +43,30 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, UserEntry> $userEntries
  * @property-read Collection<int, UserCredit> $userCredits
  */
+#[Fillable([
+    'first_name',
+    'last_name',
+    'user_id',
+    'reg_number',
+    'oris_id',
+    'club_user_id',
+    'iof_id',
+    'email',
+    'phone',
+    'gender',
+    'street',
+    'city',
+    'zip',
+    'si',
+    'licence_ob',
+    'licence_lob',
+    'licence_mtbo',
+    'active_until',
+    'active',
+])]
 class UserRaceProfile extends Model
 {
     use HasFactory;
-
-    /** @var list<string> */
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'user_id',
-        'reg_number',
-        'oris_id',
-        'club_user_id',
-        'iof_id',
-        'email',
-        'phone',
-        'gender',
-        'street',
-        'city',
-        'zip',
-        'si',
-        'licence_ob',
-        'licence_lob',
-        'licence_mtbo',
-        'active_until',
-        'active',
-    ];
 
     protected $casts = [
         'active_until' => 'date',
