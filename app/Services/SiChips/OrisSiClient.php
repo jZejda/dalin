@@ -8,7 +8,10 @@ use App\Enums\SiChipSport;
 use App\Enums\SiChipType;
 use App\Http\Components\Oris\GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 /**
  * Reads SI chips of the club members from ORIS (getClubUserList, needs the club key).
@@ -18,6 +21,11 @@ class OrisSiClient
     public const string METHOD = 'getClubUserList';
 
     public const string CACHE_KEY = 'oris.club-members-si.v2';
+
+    public const string ERROR_CACHE_KEY = 'oris.club-members-si.error';
+
+    /** A failed read is remembered briefly so every Livewire request does not wait for a dead ORIS again. */
+    public const int ERROR_CACHE_TTL_SECONDS = 60;
 
     public const int CACHE_TTL_SECONDS = 600;
 
@@ -56,24 +64,53 @@ class OrisSiClient
      */
     public function clubMembers(bool $fresh = false): array
     {
-        if ($fresh) {
-            // The caller needs the person record (it is written back to ORIS), so it is returned
-            // from the fresh read but never stored - the cache only holds chips.
-            $members = $this->fetch();
-            Cache::put(self::CACHE_KEY, $this->toCache($members), self::CACHE_TTL_SECONDS);
+        if (! $this->isConfigured()) {
+            throw new OrisSiException(__('si-chip.errors.not_configured'));
+        }
 
-            return $members;
+        if ($fresh) {
+            return $this->load();
         }
 
         // Only plain arrays go to the cache: Laravel does not unserialize custom classes from it.
-        /** @var array<int, array<string, mixed>> $cached */
+        /** @var array<int, array<string, mixed>>|null $cached */
         $cached = Cache::get(self::CACHE_KEY);
 
-        if (! is_array($cached)) {
-            return $this->clubMembers(true);
+        if (is_array($cached)) {
+            return array_map(fn (array $data): OrisClubMember => OrisClubMember::fromArray($data), $cached);
         }
 
-        return array_map(fn (array $data): OrisClubMember => OrisClubMember::fromArray($data), $cached);
+        $error = Cache::get(self::ERROR_CACHE_KEY);
+
+        if (is_string($error)) {
+            throw new OrisSiException($error);
+        }
+
+        return $this->load();
+    }
+
+    /**
+     * Fresh read of the club. The caller gets the person records (they are written back to ORIS on a
+     * push), but only chips are stored in the cache.
+     *
+     * @return array<int, OrisClubMember>
+     *
+     * @throws OrisSiException
+     */
+    private function load(): array
+    {
+        try {
+            $members = $this->fetch();
+        } catch (OrisSiException $e) {
+            Cache::put(self::ERROR_CACHE_KEY, $e->getMessage(), self::ERROR_CACHE_TTL_SECONDS);
+
+            throw $e;
+        }
+
+        Cache::forget(self::ERROR_CACHE_KEY);
+        Cache::put(self::CACHE_KEY, $this->toCache($members), self::CACHE_TTL_SECONDS);
+
+        return $members;
     }
 
     /**
@@ -88,6 +125,7 @@ class OrisSiClient
     public function forget(): void
     {
         Cache::forget(self::CACHE_KEY);
+        Cache::forget(self::ERROR_CACHE_KEY);
     }
 
     /**
@@ -97,13 +135,11 @@ class OrisSiClient
      */
     private function fetch(): array
     {
-        if (blank(config('site-config.oris_credentials.general.clubkey'))) {
-            throw new OrisSiException(__('si-chip.errors.no_club_key'));
-        }
-
         $payload = $this->post(self::METHOD);
 
         if (($payload['Status'] ?? null) !== 'OK' || ! is_array($payload['Data']['ClubMembers'] ?? null)) {
+            $this->logFailure(self::METHOD, $payload);
+
             throw new OrisSiException(__('si-chip.errors.invalid_response'));
         }
 
@@ -248,6 +284,8 @@ class OrisSiClient
         $response = $this->post(self::EDIT_METHOD, $payload);
 
         if (($response['Status'] ?? null) !== 'OK') {
+            $this->logFailure(self::EDIT_METHOD, $response, ['userId' => $member->userId]);
+
             throw new OrisSiException(__('si-chip.errors.edit_failed', ['status' => (string) ($response['Status'] ?? '?')]));
         }
 
@@ -268,11 +306,31 @@ class OrisSiClient
                 'connect_timeout' => self::CONNECT_TIMEOUT_SECONDS,
                 'timeout' => self::TIMEOUT_SECONDS,
             ]);
-            $payload = json_decode($response->getBody()->getContents(), true);
+            $body = $response->getBody()->getContents();
+            $payload = json_decode($body, true);
         } catch (GuzzleException $e) {
+            Log::warning('ORIS request failed', ['method' => $method, 'error' => $e->getMessage()]);
+
             throw new OrisSiException(__('si-chip.errors.request_failed'), 0, $e);
         }
 
-        return is_array($payload) ? $payload : [];
+        if (! is_array($payload)) {
+            Log::warning('ORIS returned a non-JSON response', ['method' => $method, 'body' => Str::limit(strip_tags($body), 200)]);
+
+            return [];
+        }
+
+        return $payload;
+    }
+
+    /**
+     * Log a rejected ORIS call without its Data part (it may hold personal data).
+     *
+     * @param  array<mixed>  $response
+     * @param  array<string, mixed>  $context
+     */
+    private function logFailure(string $method, array $response, array $context = []): void
+    {
+        Log::warning('ORIS call was rejected', ['method' => $method, 'response' => Arr::except($response, ['Data'])] + $context);
     }
 }

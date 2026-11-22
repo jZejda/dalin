@@ -8,6 +8,7 @@ use App\Filament\Clusters\Other\Resources\UserRaceProfiles\UserRaceProfileResour
 use App\Models\UserRaceProfile;
 use App\Services\SiChips\OrisSiClient;
 use App\Services\SiChips\OrisSiException;
+use App\Services\SiChips\SiChipComparator;
 use App\Services\SiChips\SiChipComparison;
 use App\Services\SiChips\SiChipData;
 use App\Services\SiChips\SiChipPusher;
@@ -16,6 +17,7 @@ use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Throwable;
 
 class EditUserRaceProfile extends EditRecord
 {
@@ -24,6 +26,8 @@ class EditUserRaceProfile extends EditRecord
     private ?SiChipComparison $siComparison = null;
 
     private bool $siComparisonLoaded = false;
+
+    private ?string $chipsBeforeSave = null;
 
     protected function getHeaderActions(): array
     {
@@ -47,6 +51,11 @@ class EditUserRaceProfile extends EditRecord
         ]);
     }
 
+    protected function beforeSave(): void
+    {
+        $this->chipsBeforeSave = $this->chipSignature();
+    }
+
     /**
      * After a change of the chips offer to bring ORIS up to date as well.
      */
@@ -54,6 +63,11 @@ class EditUserRaceProfile extends EditRecord
     {
         $profile = $this->profile();
         $profile->unsetRelation('chips');
+
+        // Saving e.g. a phone number must not cost an ORIS round trip.
+        if ($this->chipSignature() === $this->chipsBeforeSave) {
+            return;
+        }
 
         // The member is deciding right now, so show what ORIS really holds, not a cached list.
         app(OrisSiClient::class)->forget();
@@ -122,9 +136,28 @@ class EditUserRaceProfile extends EditRecord
             $comparison = app(SiChipPusher::class)->compare($this->profile());
         } catch (OrisSiException) {
             return null;
+        } catch (Throwable $e) {
+            // The ORIS sync is an optional extra - it must never break the profile page.
+            report($e);
+
+            return null;
         }
 
         return $this->siComparison = $comparison->orisMember === null ? null : $comparison;
+    }
+
+    /**
+     * Fingerprint of the chips as Dalin holds them (reads the relation again).
+     */
+    private function chipSignature(): string
+    {
+        $profile = $this->profile();
+        $profile->unsetRelation('chips');
+
+        return implode('|', array_map(
+            fn (SiChipData $chip): string => $chip->key(),
+            (new SiChipComparator())->dalinChips($profile),
+        ));
     }
 
     private function profile(): UserRaceProfile

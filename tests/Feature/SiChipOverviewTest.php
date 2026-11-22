@@ -413,3 +413,123 @@ describe('ORIS member cache', function (): void {
         Cache::forget(OrisSiClient::CACHE_KEY);
     });
 });
+
+describe('review fixes', function (): void {
+    function partialClient(): Mockery\MockInterface
+    {
+        config(['site-config.oris_credentials.general.clubkey' => 'test-key', 'demo.enabled' => false]);
+        Cache::forget(OrisSiClient::CACHE_KEY);
+        Cache::forget(OrisSiClient::ERROR_CACHE_KEY);
+
+        return Mockery::mock(OrisSiClient::class)->makePartial()->shouldAllowMockingProtectedMethods();
+    }
+
+    it('pulls from a fresh ORIS read, not from the cached list', function (): void {
+        $profile = UserRaceProfile::factory()->create(['si' => 111, 'oris_id' => '77']);
+
+        $client = Mockery::mock(OrisSiClient::class);
+        // the cached (stale) list would still say 222 ...
+        $client->shouldReceive('clubMembers')->with(false)->andReturn([77 => orisMember(77, [new SiChipData(222)])]);
+        // ... but the member changed the chip in ORIS meanwhile
+        $client->shouldReceive('clubMembers')->with(true)->once()->andReturn([77 => orisMember(77, [new SiChipData(333)])]);
+
+        (new SiChipImporter($client))->pullFresh($profile);
+
+        expect($profile->refresh()->si)->toBe(333);
+    });
+
+    it('remembers a failed ORIS read briefly instead of calling ORIS on every request', function (): void {
+        $client = partialClient();
+        $client->shouldReceive('post')->once()->andThrow(new OrisSiException('ORIS is down'));
+
+        try {
+            $client->clubMembers();
+        } catch (OrisSiException) {
+        }
+
+        expect(fn () => $client->clubMembers())->toThrow(OrisSiException::class, 'ORIS is down');
+
+        Cache::forget(OrisSiClient::ERROR_CACHE_KEY);
+    });
+
+    it('does not call ORIS at all when it is not configured', function (): void {
+        config(['site-config.oris_credentials.general.clubkey' => null]);
+
+        $client = Mockery::mock(OrisSiClient::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $client->shouldReceive('post')->never();
+
+        expect(fn () => $client->clubMembers())->toThrow(OrisSiException::class);
+    });
+
+    it('shows a neutral warning instead of a persistent error on an unconfigured site', function (): void {
+        actingAsSuperAdmin();
+        $client = Mockery::mock(OrisSiClient::class);
+        $client->shouldReceive('isConfigured')->andReturn(false);
+        $client->shouldReceive('clubMembers')->andThrow(new OrisSiException('not configured'));
+        app()->instance(OrisSiClient::class, $client);
+
+        Livewire::test(SiChipOverview::class)
+            ->assertNotified(__('si-chip.overview.not_configured'));
+    });
+
+    it('logs a rejected editPerson call without personal data', function (): void {
+        Log::spy();
+        $client = partialClient();
+        $client->shouldReceive('post')->once()->andReturn(['Status' => 'ERR', 'Data' => ['Email' => 'jana@example.cz']]);
+
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [], completePerson());
+
+        expect(fn () => $client->editChips($member, [new SiChipData(111)]))->toThrow(OrisSiException::class);
+
+        Log::shouldHaveReceived('warning')->once()->withArgs(
+            fn (string $message, array $context): bool => $context['method'] === 'editPerson'
+                && ! str_contains(json_encode($context), 'jana@example.cz')
+        );
+    });
+
+    it('does not contact ORIS when saving a profile without a chip change', function (): void {
+        $user = actingAsSuperAdmin();
+        $profile = UserRaceProfile::factory()->create(['si' => 111, 'oris_id' => '77', 'user_id' => $user->id, 'gender' => 'H']);
+
+        $client = pushableClient([77 => new OrisClubMember(77, 1077, 'ABM0001', [new SiChipData(999)], completePerson())]);
+        $client->shouldReceive('forget')->never();
+        app()->instance(OrisSiClient::class, $client);
+
+        Livewire::test(App\Filament\Clusters\Other\Resources\UserRaceProfiles\Pages\EditUserRaceProfile::class, ['record' => $profile->getKey()])
+            ->fillForm(['phone' => '123456789'])
+            ->call('save')
+            ->assertActionNotMounted('sync_si_to_oris');
+    });
+
+    it('keeps the profile page working when the ORIS lookup throws an unexpected error', function (): void {
+        $user = actingAsSuperAdmin();
+        $profile = UserRaceProfile::factory()->create(['si' => 111, 'oris_id' => '77', 'user_id' => $user->id, 'gender' => 'H']);
+
+        $client = Mockery::mock(OrisSiClient::class);
+        $client->shouldReceive('isConfigured')->andReturn(true);
+        $client->shouldReceive('clubMembers')->andThrow(new ErrorException('broken cache entry'));
+        app()->instance(OrisSiClient::class, $client);
+
+        Livewire::test(App\Filament\Clusters\Other\Resources\UserRaceProfiles\Pages\EditUserRaceProfile::class, ['record' => $profile->getKey()])
+            ->assertSuccessful();
+    });
+
+    it('rejects an extra chip equal to the default chip and out-of-range numbers', function (): void {
+        $user = actingAsSuperAdmin();
+        $profile = UserRaceProfile::factory()->create(['si' => 111, 'user_id' => $user->id, 'gender' => 'H']);
+
+        $page = fn () => Livewire::test(App\Filament\Clusters\Other\Resources\UserRaceProfiles\Pages\EditUserRaceProfile::class, ['record' => $profile->getKey()]);
+
+        $page()->fillForm(['si' => 111, 'chips' => [['si' => 111, 'sport' => 3, 'type' => 0]]])
+            ->call('save')
+            ->assertHasFormErrors(['chips.0.si']);
+
+        $page()->fillForm(['si' => 111, 'chips' => [['si' => 4294967296, 'sport' => 0, 'type' => 0]]])
+            ->call('save')
+            ->assertHasFormErrors(['chips.0.si']);
+
+        $page()->fillForm(['si' => 5000000000])
+            ->call('save')
+            ->assertHasFormErrors(['si']);
+    });
+});

@@ -11,6 +11,31 @@ use Throwable;
 
 class SiChipImporter
 {
+    public function __construct(
+        private readonly ?OrisSiClient $client = null,
+        private readonly ?SiChipComparator $comparator = null,
+    ) {
+    }
+
+    /**
+     * Same as pullFromOris(), but reads ORIS fresh first - the cached list can be minutes old
+     * and would overwrite Dalin with outdated chips.
+     *
+     * @throws OrisSiException
+     * @throws Throwable
+     */
+    public function pullFresh(UserRaceProfile $profile): void
+    {
+        $client = $this->client ?? app(OrisSiClient::class);
+        $comparison = ($this->comparator ?? new SiChipComparator())->compare($profile, $client->clubMembers(true));
+
+        if (! $comparison->orisMember instanceof OrisClubMember) {
+            throw new OrisSiException(__('si-chip.errors.not_linked'));
+        }
+
+        $this->pullFromOris($profile, $comparison->orisMember);
+    }
+
     /**
      * Overwrite the Dalin chips of a profile with the ORIS ones: the first ORIS chip becomes
      * the primary chip, the others the additional chips.

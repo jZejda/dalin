@@ -7,7 +7,6 @@ namespace App\Filament\Clusters\Config\Pages;
 use App\Enums\SiSyncStatus;
 use App\Filament\Clusters\Config\ConfigCluster;
 use App\Models\UserRaceProfile;
-use App\Services\SiChips\OrisClubMember;
 use App\Services\SiChips\OrisSiClient;
 use App\Services\SiChips\OrisSiException;
 use App\Services\SiChips\SiChipComparator;
@@ -69,14 +68,21 @@ class SiChipOverview extends Page implements HasForms, HasTable
     {
         $this->comparisons();
 
-        if ($this->orisError !== null) {
-            Notification::make()
-                ->title(__('si-chip.overview.load_failed'))
-                ->body($this->orisError)
-                ->danger()
-                ->persistent()
-                ->send();
+        if ($this->orisError === null) {
+            return;
         }
+
+        // A site without the club key (or the demo) is not an error, only a missing setup.
+        $notification = Notification::make()
+            ->body($this->orisError);
+
+        if (app(OrisSiClient::class)->isConfigured()) {
+            $notification->title(__('si-chip.overview.load_failed'))->danger()->persistent();
+        } else {
+            $notification->title(__('si-chip.overview.not_configured'))->warning();
+        }
+
+        $notification->send();
     }
 
     protected function getHeaderActions(): array
@@ -221,14 +227,17 @@ class SiChipOverview extends Page implements HasForms, HasTable
                     })
                     ->modalSubmitActionLabel(__('si-chip.overview.actions.pull.modal_submit'))
                     ->action(function (UserRaceProfile $record): void {
-                        $member = $this->comparisonFor($record)->orisMember;
-
-                        if (! $member instanceof OrisClubMember) {
-                            return;
-                        }
-
                         try {
-                            app(SiChipImporter::class)->pullFromOris($record, $member);
+                            app(SiChipImporter::class)->pullFresh($record);
+                        } catch (OrisSiException $e) {
+                            Notification::make()
+                                ->title(__('si-chip.errors.pull_failed'))
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->persistent()
+                                ->send();
+
+                            return;
                         } catch (Throwable $e) {
                             report($e);
 

@@ -42,6 +42,7 @@ return [
     ],
 
     'errors' => [
+        'not_configured' => 'The ORIS club key is missing or demo mode is on.',
         'too_many_chips' => 'ORIS can store at most :max chips.',
         'person_incomplete' => 'ORIS is missing required person data (:fields), so the chips cannot be written safely. Fill it in in ORIS.',
         'edit_failed' => 'ORIS rejected the chip change (status: :status).',
@@ -57,6 +58,7 @@ return [
         'navigation_label' => 'Chips Dalin × ORIS',
         'title' => 'SI chips comparison Dalin × ORIS',
         'description' => 'Overview of registrations and their SI chips in Dalin and in ORIS. You can take the chips over from ORIS into Dalin for each registration separately.',
+        'not_configured' => 'ORIS connection is not set up',
         'load_failed' => 'Could not load ORIS',
         'columns' => [
             'member' => 'Registration',
@@ -105,6 +107,10 @@ return [
         'modal_cancel' => 'No, keep it',
         'notification_title' => 'The chip was updated in ORIS',
         'notification_failed' => 'Could not update the chip in ORIS',
+    ],
+
+    'validation' => [
+        'same_as_primary' => 'This chip is already set as the default one.',
     ],
 
 ];

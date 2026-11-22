@@ -42,6 +42,7 @@ return [
     ],
 
     'errors' => [
+        'not_configured' => 'Chybí klubový klíč ORIS, nebo běží demo režim.',
         'too_many_chips' => 'ORIS umí uložit nejvýše :max čipy.',
         'person_incomplete' => 'V ORISu chybí povinné údaje osoby (:fields), čipy proto nelze bezpečně zapsat. Doplň je v ORISu.',
         'edit_failed' => 'ORIS odmítl změnu čipů (stav: :status).',
@@ -57,6 +58,7 @@ return [
         'navigation_label' => 'Čipy Dalin × ORIS',
         'title' => 'Porovnání SI čipů Dalin × ORIS',
         'description' => 'Přehled registrací a jejich SI čipů v Dalinu a v ORISu. Čip z ORISu si můžeš převzít do Dalinu u každé registrace zvlášť.',
+        'not_configured' => 'Napojení na ORIS není nastaveno',
         'load_failed' => 'ORIS se nepodařilo načíst',
         'columns' => [
             'member' => 'Registrace',
@@ -105,6 +107,10 @@ return [
         'modal_cancel' => 'Ne, nechat',
         'notification_title' => 'Čip byl aktualizován v ORISu',
         'notification_failed' => 'Čip se nepodařilo aktualizovat v ORISu',
+    ],
+
+    'validation' => [
+        'same_as_primary' => 'Tento čip je už nastavený jako výchozí.',
     ],
 
 ];

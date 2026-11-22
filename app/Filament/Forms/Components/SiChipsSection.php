@@ -6,10 +6,12 @@ namespace App\Filament\Forms\Components;
 
 use App\Enums\SiChipSport;
 use App\Enums\SiChipType;
+use Closure;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 
 /**
  * SI chips of a race profile: the primary chip (`si` column) + up to 2 additional chips.
@@ -18,6 +20,9 @@ use Filament\Schemas\Components\Section;
 final class SiChipsSection
 {
     public const int MAX_EXTRA_CHIPS = 2;
+
+    /** Upper bound of the unsigned INT columns the chip numbers are stored in. */
+    public const int MAX_SI = 4294967295;
 
     public static function make(): Section
     {
@@ -28,6 +33,8 @@ final class SiChipsSection
                     ->helperText(__('user-race-profile.form.si_helper'))
                     ->numeric()
                     ->integer()
+                    ->minValue(1)
+                    ->maxValue(self::MAX_SI)
                     ->columnSpan(1),
                 Select::make('si_sport')
                     ->label(__('si-chip.form.sport'))
@@ -56,7 +63,17 @@ final class SiChipsSection
                             ->numeric()
                             ->integer()
                             ->minValue(1)
-                            ->distinct(),
+                            ->maxValue(self::MAX_SI)
+                            ->distinct()
+                            ->rules([
+                                fn (Get $get): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get): void {
+                                    $primary = $get('../../si');
+
+                                    if (filled($primary) && (int) $value === (int) $primary) {
+                                        $fail(__('si-chip.validation.same_as_primary'));
+                                    }
+                                },
+                            ]),
                         Select::make('sport')
                             ->label(__('si-chip.form.sport'))
                             ->options(SiChipSport::class)
