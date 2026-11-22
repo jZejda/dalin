@@ -27,6 +27,7 @@ function fakeOris(array $members): void
     $client = Mockery::mock(OrisSiClient::class);
     $client->shouldReceive('clubMembers')->andReturn($members);
     $client->shouldReceive('forget');
+    $client->shouldReceive('isConfigured')->andReturn(false);
     app()->instance(OrisSiClient::class, $client);
 }
 
@@ -193,11 +194,197 @@ describe('overview page', function (): void {
         $profile = UserRaceProfile::factory()->create(['active' => true]);
         $client = Mockery::mock(OrisSiClient::class);
         $client->shouldReceive('clubMembers')->andThrow(new OrisSiException('boom'));
+        $client->shouldReceive('isConfigured')->andReturn(false);
         app()->instance(OrisSiClient::class, $client);
 
         Livewire::test(SiChipOverview::class)
             ->searchTable($profile->reg_number)
             ->assertCanSeeTableRecords([$profile])
             ->assertTableActionHidden('pull_from_oris', $profile);
+    });
+});
+
+function completePerson(array $override = []): array
+{
+    return array_merge([
+        'firstname' => 'Jana', 'lastname' => 'Nováková', 'email' => 'jana@example.cz',
+        'street' => 'Lesní 1', 'city' => 'Praha', 'zip' => '11000', 'country' => 'CZ',
+    ], $override);
+}
+
+describe('editPerson payload', function (): void {
+    it('replaces all three chip slots and keeps the person data', function (): void {
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [new SiChipData(111)], completePerson(['phone' => '123456789']));
+
+        $payload = (new OrisSiClient())->buildEditPayload($member, [
+            new SiChipData(222, SiChipSport::Ob, SiChipType::Contact),
+            new SiChipData(333, SiChipSport::Mtbo, SiChipType::Contactless),
+        ]);
+
+        expect($payload)->toMatchArray([
+            'userid' => 77, 'firstname' => 'Jana', 'email' => 'jana@example.cz', 'phone' => '123456789',
+            'si' => 222, 'sisport' => 1, 'sitype' => 1,
+            'si2' => 333, 'sisport2' => 3, 'sitype2' => 2,
+            'si3' => '', 'sisport3' => 0, 'sitype3' => 0,
+        ]);
+    });
+
+    it('refuses to write when ORIS lacks a required person field', function (): void {
+        $person = completePerson();
+        unset($person['email']);
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [], $person);
+
+        (new OrisSiClient())->buildEditPayload($member, [new SiChipData(222)]);
+    })->throws(OrisSiException::class);
+
+    it('refuses more than three chips', function (): void {
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [], completePerson());
+
+        (new OrisSiClient())->buildEditPayload($member, array_map(fn (int $si): SiChipData => new SiChipData($si), [1, 2, 3, 4]));
+    })->throws(OrisSiException::class);
+
+    it('keeps blank optional ORIS fields out of the parsed person', function (): void {
+        $members = (new OrisSiClient())->parseMembers([[
+            'ID' => 1, 'UserID' => 1, 'FirstName' => 'Jana', 'LastName' => 'N', 'Email' => 'a@b.cz',
+            'Street' => 'x', 'City' => 'y', 'Zip' => '1', 'Country' => 'CZ',
+            'Phone' => '', 'AddressGPSLat' => 0, 'IOFID' => '0',
+        ]]);
+
+        expect($members[1]->person)->not->toHaveKeys(['phone', 'gpslat', 'iofid'])
+            ->and($members[1]->person['email'])->toBe('a@b.cz');
+    });
+});
+
+describe('push to ORIS', function (): void {
+    function pushableClient(array $members): Mockery\MockInterface
+    {
+        $client = Mockery::mock(OrisSiClient::class)->makePartial();
+        $client->shouldReceive('isConfigured')->andReturn(true);
+        $client->shouldReceive('clubMembers')->andReturn($members);
+
+        return $client;
+    }
+
+    it('sends the Dalin chips after reading ORIS fresh', function (): void {
+        $profile = UserRaceProfile::factory()->create(['si' => 111, 'oris_id' => '77']);
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [new SiChipData(999)], completePerson());
+
+        $client = pushableClient([77 => $member]);
+        $client->shouldReceive('editChips')->once()->withArgs(
+            fn (OrisClubMember $m, array $chips): bool => $m->userId === 77 && $chips[0]->si === 111
+        );
+
+        (new App\Services\SiChips\SiChipPusher($client, new SiChipComparator()))->push($profile);
+    });
+
+    it('sends nothing when the chips already match', function (): void {
+        $profile = UserRaceProfile::factory()->create(['si' => 111, 'oris_id' => '77']);
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [new SiChipData(111)], completePerson());
+
+        $client = pushableClient([77 => $member]);
+        $client->shouldReceive('editChips')->never();
+
+        (new App\Services\SiChips\SiChipPusher($client, new SiChipComparator()))->push($profile);
+    });
+
+    it('never wipes ORIS when Dalin has no chip', function (): void {
+        $profile = UserRaceProfile::factory()->create(['si' => null, 'oris_id' => '77']);
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [new SiChipData(111)], completePerson());
+
+        $client = pushableClient([77 => $member]);
+        $client->shouldReceive('editChips')->never();
+
+        (new App\Services\SiChips\SiChipPusher($client, new SiChipComparator()))->push($profile);
+    })->throws(OrisSiException::class);
+
+    it('does nothing in demo mode or without a club key', function (): void {
+        $profile = UserRaceProfile::factory()->create(['si' => 111, 'oris_id' => '77']);
+        config(['demo.enabled' => true]);
+
+        (new App\Services\SiChips\SiChipPusher(new OrisSiClient(), new SiChipComparator()))->push($profile);
+    })->throws(OrisSiException::class);
+
+    it('shows the push action in the overview and sends after confirmation', function (): void {
+        actingAsSuperAdmin();
+        $profile = UserRaceProfile::factory()->create(['si' => 111, 'oris_id' => '77', 'active' => true]);
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [new SiChipData(999)], completePerson());
+
+        $client = pushableClient([77 => $member]);
+        $client->shouldReceive('editChips')->once();
+        app()->instance(OrisSiClient::class, $client);
+
+        Livewire::test(SiChipOverview::class)
+            ->searchTable($profile->reg_number)
+            ->assertTableActionVisible('push_to_oris', $profile)
+            ->callTableAction('push_to_oris', $profile)
+            ->assertNotified(__('si-chip.overview.actions.push.notification_title'));
+    });
+
+    it('hides the push action when ORIS is not configured', function (): void {
+        actingAsSuperAdmin();
+        $profile = UserRaceProfile::factory()->create(['si' => 111, 'oris_id' => '77', 'active' => true]);
+        $client = Mockery::mock(OrisSiClient::class);
+        $client->shouldReceive('isConfigured')->andReturn(false);
+        $client->shouldReceive('clubMembers')->andReturn([77 => orisMember(77, [new SiChipData(999)])]);
+        app()->instance(OrisSiClient::class, $client);
+
+        Livewire::test(SiChipOverview::class)
+            ->searchTable($profile->reg_number)
+            ->assertTableActionHidden('push_to_oris', $profile);
+    });
+});
+
+describe('profile edit page', function (): void {
+    it('offers to update ORIS after the chip is saved', function (): void {
+        $user = actingAsSuperAdmin();
+        $profile = UserRaceProfile::factory()->create(['si' => 111, 'oris_id' => '77', 'user_id' => $user->id, 'gender' => 'H']);
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [new SiChipData(111)], completePerson());
+
+        $client = pushableClient([77 => $member]);
+        $client->shouldReceive('forget');
+        app()->instance(OrisSiClient::class, $client);
+
+        Livewire::test(App\Filament\Clusters\Other\Resources\UserRaceProfiles\Pages\EditUserRaceProfile::class, ['record' => $profile->getKey()])
+            ->fillForm(['si' => 555])
+            ->call('save')
+            ->assertActionMounted('sync_si_to_oris');
+    });
+
+    it('does not ask when the chips are the same in both systems', function (): void {
+        $user = actingAsSuperAdmin();
+        $profile = UserRaceProfile::factory()->create(['si' => 111, 'oris_id' => '77', 'user_id' => $user->id, 'gender' => 'H']);
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [new SiChipData(555)], completePerson());
+
+        $client = pushableClient([77 => $member]);
+        $client->shouldReceive('forget');
+        app()->instance(OrisSiClient::class, $client);
+
+        Livewire::test(App\Filament\Clusters\Other\Resources\UserRaceProfiles\Pages\EditUserRaceProfile::class, ['record' => $profile->getKey()])
+            ->fillForm(['si' => 555])
+            ->call('save')
+            ->assertActionNotMounted('sync_si_to_oris');
+    });
+});
+
+describe('ORIS member cache', function (): void {
+    it('round-trips members through the cache as plain arrays', function (): void {
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [
+            new SiChipData(222, SiChipSport::Mtbo, SiChipType::Manual),
+        ], completePerson());
+
+        $copy = OrisClubMember::fromArray($member->toArray());
+
+        expect($copy)->toEqual($member);
+    });
+
+    it('serves club members from the cache without custom class objects', function (): void {
+        $member = new OrisClubMember(77, 1077, 'ABM0001', [new SiChipData(222)], completePerson());
+        Cache::put(OrisSiClient::CACHE_KEY, [77 => $member->toArray()], 60);
+
+        $members = (new OrisSiClient())->clubMembers();
+
+        expect($members[77])->toEqual($member);
+
+        Cache::forget(OrisSiClient::CACHE_KEY);
     });
 });

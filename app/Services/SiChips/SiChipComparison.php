@@ -27,4 +27,12 @@ final readonly class SiChipComparison
     {
         return $this->orisChips !== [] && in_array($this->status, [SiSyncStatus::Differs, SiSyncStatus::MissingInDalin], true);
     }
+
+    /**
+     * Pushing Dalin chips to ORIS is only meaningful when Dalin actually has some.
+     */
+    public function canPushToOris(): bool
+    {
+        return $this->dalinChips !== [] && in_array($this->status, [SiSyncStatus::Differs, SiSyncStatus::MissingInOris], true);
+    }
 }

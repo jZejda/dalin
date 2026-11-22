@@ -14,6 +14,7 @@ use App\Services\SiChips\SiChipComparator;
 use App\Services\SiChips\SiChipComparison;
 use App\Services\SiChips\SiChipData;
 use App\Services\SiChips\SiChipImporter;
+use App\Services\SiChips\SiChipPusher;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use CodeWithDennis\FilamentLucideIcons\Enums\LucideIcon;
 use Filament\Actions\Action;
@@ -163,6 +164,45 @@ class SiChipOverview extends Page implements HasForms, HasTable
                     }),
             ])
             ->recordActions([
+                Action::make('push_to_oris')
+                    ->label(__('si-chip.overview.actions.push.label'))
+                    ->icon(LucideIcon::Upload)
+                    ->color('warning')
+                    ->visible(fn (UserRaceProfile $record): bool => app(OrisSiClient::class)->isConfigured() && $this->comparisonFor($record)->canPushToOris())
+                    ->requiresConfirmation()
+                    ->modalHeading(__('si-chip.overview.actions.push.modal_heading'))
+                    ->modalDescription(function (UserRaceProfile $record): string {
+                        $comparison = $this->comparisonFor($record);
+
+                        return __('si-chip.overview.actions.push.modal_description', [
+                            'name' => $record->user_race_full_name,
+                            'dalin' => implode(', ', $this->chipLabels($comparison->dalinChips)),
+                            'oris' => implode(', ', $this->chipLabels($comparison->orisChips)) ?: __('si-chip.overview.columns.none'),
+                        ]);
+                    })
+                    ->modalSubmitActionLabel(__('si-chip.overview.actions.push.modal_submit'))
+                    ->action(function (UserRaceProfile $record): void {
+                        try {
+                            app(SiChipPusher::class)->push($record);
+                        } catch (OrisSiException $e) {
+                            Notification::make()
+                                ->title(__('si-chip.overview.actions.push.notification_failed'))
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->persistent()
+                                ->send();
+
+                            return;
+                        }
+
+                        $this->comparisons = null;
+
+                        Notification::make()
+                            ->title(__('si-chip.overview.actions.push.notification_title'))
+                            ->body(__('si-chip.overview.actions.push.notification_body', ['name' => $record->user_race_full_name]))
+                            ->success()
+                            ->send();
+                    }),
                 Action::make('pull_from_oris')
                     ->label(__('si-chip.overview.actions.pull.label'))
                     ->icon(LucideIcon::ArrowLeftRight)
