@@ -26,6 +26,14 @@ final readonly class OrisClubMember
     }
 
     /**
+     * Copy without the personal data - used for the cache, where only chips are needed.
+     */
+    public function withoutPerson(): self
+    {
+        return new self($this->userId, $this->clubUserId, $this->regNum, $this->chips);
+    }
+
+    /**
      * Plain-array form for the cache (Laravel does not restore custom classes from the cache).
      *
      * @return array{userId: int, clubUserId: int, regNum: string, chips: list<array{si: int, sport: int, type: int}>, person: array<string, string>}

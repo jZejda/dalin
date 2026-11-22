@@ -379,11 +379,36 @@ describe('ORIS member cache', function (): void {
 
     it('serves club members from the cache without custom class objects', function (): void {
         $member = new OrisClubMember(77, 1077, 'ABM0001', [new SiChipData(222)], completePerson());
-        Cache::put(OrisSiClient::CACHE_KEY, [77 => $member->toArray()], 60);
+        Cache::put(OrisSiClient::CACHE_KEY, [77 => $member->withoutPerson()->toArray()], 60);
 
         $members = (new OrisSiClient())->clubMembers();
 
-        expect($members[77])->toEqual($member);
+        expect($members[77])->toEqual($member->withoutPerson())
+            ->and($members[77]->person)->toBe([]);
+
+        Cache::forget(OrisSiClient::CACHE_KEY);
+    });
+
+    it('returns the person record from a fresh read but never caches it', function (): void {
+        Cache::forget(OrisSiClient::CACHE_KEY);
+        config(['site-config.oris_credentials.general.clubkey' => 'test-key']);
+
+        $client = Mockery::mock(OrisSiClient::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $client->shouldReceive('post')->once()->andReturn(['Status' => 'OK', 'Data' => ['ClubMembers' => [[
+            'ID' => 1, 'UserID' => 77, 'RegNum' => 'ABM0001', 'SI' => '111', 'FirstName' => 'Jana', 'LastName' => 'N',
+            'Email' => 'jana@example.cz', 'Street' => 'x', 'City' => 'y', 'Zip' => '1', 'Country' => 'CZ',
+        ]]]]);
+
+        $fresh = $client->clubMembers(true);
+
+        expect($fresh[77]->person['email'])->toBe('jana@example.cz');
+
+        // second (cached) read does not call ORIS again and carries no personal data
+        $cached = $client->clubMembers();
+
+        expect($cached[77]->chips[0]->si)->toBe(111)
+            ->and($cached[77]->person)->toBe([])
+            ->and(json_encode(Cache::get(OrisSiClient::CACHE_KEY)))->not->toContain('jana@example.cz');
 
         Cache::forget(OrisSiClient::CACHE_KEY);
     });

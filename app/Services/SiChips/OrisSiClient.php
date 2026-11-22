@@ -21,6 +21,10 @@ class OrisSiClient
 
     public const int CACHE_TTL_SECONDS = 600;
 
+    private const int CONNECT_TIMEOUT_SECONDS = 5;
+
+    private const int TIMEOUT_SECONDS = 20;
+
     public const string EDIT_METHOD = 'editPerson';
 
     /** editPerson fields that ORIS requires - they are never sent blank. */
@@ -53,18 +57,32 @@ class OrisSiClient
     public function clubMembers(bool $fresh = false): array
     {
         if ($fresh) {
-            $this->forget();
+            // The caller needs the person record (it is written back to ORIS), so it is returned
+            // from the fresh read but never stored - the cache only holds chips.
+            $members = $this->fetch();
+            Cache::put(self::CACHE_KEY, $this->toCache($members), self::CACHE_TTL_SECONDS);
+
+            return $members;
         }
 
         // Only plain arrays go to the cache: Laravel does not unserialize custom classes from it.
         /** @var array<int, array<string, mixed>> $cached */
-        $cached = Cache::remember(
-            self::CACHE_KEY,
-            self::CACHE_TTL_SECONDS,
-            fn (): array => array_map(fn (OrisClubMember $member): array => $member->toArray(), $this->fetch()),
-        );
+        $cached = Cache::get(self::CACHE_KEY);
+
+        if (! is_array($cached)) {
+            return $this->clubMembers(true);
+        }
 
         return array_map(fn (array $data): OrisClubMember => OrisClubMember::fromArray($data), $cached);
+    }
+
+    /**
+     * @param  array<int, OrisClubMember>  $members
+     * @return array<int, array<string, mixed>>
+     */
+    private function toCache(array $members): array
+    {
+        return array_map(fn (OrisClubMember $member): array => $member->withoutPerson()->toArray(), $members);
     }
 
     public function forget(): void
@@ -246,7 +264,10 @@ class OrisSiClient
     {
         try {
             $client = new GuzzleClient();
-            $response = $client->create()->request('POST', 'API', $client->generateMultipartForm($method, $params));
+            $response = $client->create()->request('POST', 'API', $client->generateMultipartForm($method, $params) + [
+                'connect_timeout' => self::CONNECT_TIMEOUT_SECONDS,
+                'timeout' => self::TIMEOUT_SECONDS,
+            ]);
             $payload = json_decode($response->getBody()->getContents(), true);
         } catch (GuzzleException $e) {
             throw new OrisSiException(__('si-chip.errors.request_failed'), 0, $e);
