@@ -57,7 +57,7 @@ return [
         'club_user_id'     => 'Club ORIS ID',
         'user_id_helper'   => 'Automatically assigned to the user',
         'si'               => 'SI chip',
-        'si_helper'        => 'Preferred SI chip',
+        'si_helper'        => 'Default SI chip',
         'licence_ob'       => 'OB licence',
         'licence_lob'      => 'LOB licence',
         'licence_mtbo'     => 'MTBO licence',

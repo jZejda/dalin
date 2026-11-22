@@ -57,7 +57,7 @@ return [
         'club_user_id'     => 'Klub ORIS ID',
         'user_id_helper'   => 'Automaticky přiřazeno uživateli',
         'si'               => 'Si čip',
-        'si_helper'        => 'Preferovaný SI čip',
+        'si_helper'        => 'Výchozí SI čip',
         'licence_ob'       => 'Licence OB',
         'licence_lob'      => 'Licence LOB',
         'licence_mtbo'     => 'Licence MTBO',
