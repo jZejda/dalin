@@ -15,6 +15,7 @@ enum SiChipType: int implements HasLabel
     case Contact = 1;
     case Contactless = 2;
     case ContactlessBs11 = 3;
+    case Manual = 4;
     case ToePunch = 5;
 
     public function getLabel(): string

@@ -70,8 +70,7 @@ describe('profile form', function (): void {
     });
 
     it('saves the primary chip sport and extra chips', function (): void {
-        // The form offers H/D while the factory generates M/F
-        $profile = UserRaceProfile::factory()->create(['si' => 111111, 'gender' => 'H']);
+        $profile = UserRaceProfile::factory()->create(['si' => 111111]);
 
         Livewire\Livewire::test(App\Filament\Clusters\Other\Resources\UserRaceProfiles\Pages\EditUserRaceProfile::class, ['record' => $profile->getKey()])
             ->fillForm([
