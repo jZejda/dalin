@@ -26,7 +26,7 @@ class UserRaceProfileFactory extends Factory
             'iof_id'       => null,
             'email'        => $this->faker->safeEmail(),
             'phone'        => $this->faker->phoneNumber(),
-            'gender'       => $this->faker->randomElement(['M', 'F']),
+            'gender'       => $this->faker->randomElement(['H', 'D']),
             'street'       => $this->faker->streetAddress(),
             'city'         => $this->faker->city(),
             'zip'          => $this->faker->postcode(),

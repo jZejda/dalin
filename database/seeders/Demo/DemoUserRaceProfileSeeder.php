@@ -24,7 +24,7 @@ class DemoUserRaceProfileSeeder extends Seeder
         })->get();
 
         $licences = ['A', 'B', 'C', 'D', 'E', null];
-        $genders  = ['M', 'F'];
+        $genders  = ['H', 'D'];
 
         foreach ($users as $user) {
             $firstName = explode(' ', $user->name)[0] ?? $faker->firstName();
